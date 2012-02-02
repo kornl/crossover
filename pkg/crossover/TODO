@@ -1,0 +1,18 @@
+kornel@zen:~/Arbeitsfläche/Cross-Over Design Efficiency Calculator/Catalogue/CatalogueFiles$ diff . -r catalogue
+diff -r ./PattersonLucas(pbib).txt catalogue/PattersonLucas(pbib).txt
+97c97
+< PL Design 102 p = 2, n = 48, t = 8
+---
+> PL Design 102 p = 3, n = 48, t = 6
+
+
+Look at R crossover package
+
+Bose, Dey: Optimal Crossover Designs
+
+Adaptive crossovers (also taking speed of recruition into account)
+
+A B C D E
+- B A E C D
+- - D E A C B
+and so on…
