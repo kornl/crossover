@@ -16,3 +16,6 @@ A B C D E
 - B A E C D
 - - D E A C B
 and so on…
+
+Look at http://cran.r-project.org/web/views/ExperimentalDesign.html
+especially http://cran.r-project.org/web/packages/crossdes/index.html
