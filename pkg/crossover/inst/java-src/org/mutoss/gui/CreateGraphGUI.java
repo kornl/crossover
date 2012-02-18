@@ -75,16 +75,24 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		setVisible(true);
 	}
-	
+
 	/** Two methods to set and save the default values */
 	private String getValue(String key, String def) { return conf.getProperty(key, def); }
 	private void setValue(String key, String value) { conf.setProperty(key, value); }
-	
+
+	public String[] designs = new String[] {"anderson", "andersonPreece", "archdeacon", "atkinson3t", "atkinson4t", 
+			"atkinson5t", "balaam3t", "balaam4t", "balaam5t", "balaam6t", 
+			"bateJones5t", "bateJones8t", "berenblut3t", "berenblut4t", "berenblut5t", 
+			"blaisdellRaghavarao6t", "blaisdellRaghavarao8t", "blaisdellRaghavarao9t", 
+			"davisHall6ta", "davisHall6tb", "davisHall6tc", "davisHall7ta", 
+			"davisHall7tb", "davisHall7tc", "davisHall8ta", "davisHall8tb", 
+			"davisHall8tc", "davisHall9ta", "davisHall9tb", "davisHall9tc"};
+
 	private void makeContent() {
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		//JPanel topPanel = getTopPanel();
-		
+
 		//JPanel panelcont = getContPanel();
 		//tabbedPane.addTab("Continuous endpoint", panelcont);
 

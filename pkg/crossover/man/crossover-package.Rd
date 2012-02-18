@@ -1,5 +1,5 @@
-\name{nvm-package}
-\alias{nvm-package}
+\name{crossover-package}
+\alias{crossover-package}
 \docType{package}
 \title{
 A graphical mask

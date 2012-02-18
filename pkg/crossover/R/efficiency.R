@@ -25,7 +25,7 @@ design.efficiency<-function(design,nseq,ntrt,nper,nrep){
 	
 	## create the factors for groups, subjects, periods, treatments and carry-over effects
 	
-	
+	n<-rep(1,nseq)
 	## group factor
 	group<-rep(1:nseq,nper*n)
 	##subject factor
