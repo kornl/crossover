@@ -1,11 +1,10 @@
 Package: crossover
 Type: Package
-Title: NV Mask
+Title: Crossover Designs
 Version: 0.1-0
-Author: Kornelius Rohmeyer
+Author: Byron Jones, Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
-Description: This package provides a mask.
-Depends: R (>= 2.8.0), rJava (>= 0.8-3), methods
+Description: This package provides different crossover designs and a GUI to access them.
+Depends: R (>= 2.8.0), rJava (>= 0.8-3), methods, MASS
 SystemRequirements: Java (>= 5.0) 
 License: Other
-LazyLoad: yes
