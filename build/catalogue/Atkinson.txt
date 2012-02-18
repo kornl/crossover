@@ -1,0 +1,46 @@
+ATKINSON DESIGNS
+
+File: Atkinson.txt
+
+Source: Atkinson, G.F. (1966) Designs for sequences of treatments
+with carry-over effects. Biometrics, 22, 292--309.
+
+THREE TREATMENTS: 
+
+p = 6, n = 6, t = 3
+
+1 2 3  3 1 2
+1 2 3  3 1 2
+2 3 1  2 3 1
+2 3 1  2 3 1
+3 1 2  1 2 3
+3 1 2  1 2 3
+
+FOUR TREATMENTS: 
+
+p = 8, n = 4, t = 4
+
+1 2 3 4
+1 2 3 4
+2 3 4 1
+2 3 4 1
+4 1 2 3
+4 1 2 3
+3 4 1 2
+3 4 1 2
+
+FIVE TREATMENTS: 
+
+p = 10, n = 10, t = 5
+
+1 2 3 4 5  4 5 1 2 3
+1 2 3 4 5  4 5 1 2 3
+2 3 4 5 1  3 4 5 1 2
+2 3 4 5 1  3 4 5 1 2
+5 1 2 3 4  5 1 2 3 4
+5 1 2 3 4  5 1 2 3 4
+3 4 5 1 2  2 3 4 5 1
+3 4 5 1 2  2 3 4 5 1
+4 5 1 2 3  1 2 3 4 5
+4 5 1 2 3  1 2 3 4 5
+
