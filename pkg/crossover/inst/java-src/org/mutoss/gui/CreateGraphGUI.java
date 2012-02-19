@@ -25,8 +25,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -35,7 +37,11 @@ import org.af.commons.Localizer;
 import org.af.commons.tools.OSTools;
 import org.af.commons.widgets.validate.IntegerTextField;
 import org.af.commons.widgets.validate.RealTextField;
+import org.af.jhlir.call.RDataFrame;
 import org.mutoss.config.Configuration;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 public class CreateGraphGUI extends JFrame implements WindowListener, ActionListener, ChangeListener {
 	
@@ -72,6 +78,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		addWindowListener(this);
 		
 		//loadDefaults();
+		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");		
 		
 		setVisible(true);
 	}
@@ -105,7 +112,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		getContentPane().setLayout(new GridBagLayout());		
 		
-		//getContentPane().add(topPanel, c);
+		getContentPane().add(getInterface(), c);
 		c.gridy++;		 
 		c.weighty=1;
 		getContentPane().add(tabbedPane, c);	
@@ -115,10 +122,49 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		//getContentPane().add(getButtonPane(), c);	
 	}
 	
-	
+	JSpinner spinnerT;
+	JSpinner spinnerP;
+	JSpinner spinnerS1;
+	JSpinner spinnerS2;
 	
 	public JPanel getInterface() {
 		JPanel panel = new JPanel();
+		String cols = "5dlu, fill:pref:grow, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu";
+        
+        panel.setLayout(new FormLayout(cols, rows));
+        CellConstraints cc = new CellConstraints();
+		
+		int row = 2;
+		
+		spinnerT = new JSpinner(new SpinnerNumberModel(3, 2, 100, 1));    	
+    	spinnerT.addChangeListener(this);
+    	
+    	panel.add(new JLabel("Number of treatments:"), cc.xyw(2, row, 3));
+        panel.add(spinnerT, cc.xy(6, row));
+		
+        row+=2;
+		
+    	spinnerP = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));    	
+    	spinnerP.addChangeListener(this);
+    	
+    	panel.add(new JLabel("Number of periods:"), cc.xyw(2, row, 3));
+        panel.add(spinnerP, cc.xy(6, row));		
+		
+        row+=2;
+		
+    	spinnerS1 = new JSpinner(new SpinnerNumberModel(4, 1, 100, 1));    	
+    	spinnerS1.addChangeListener(this);
+		
+    	spinnerS2 = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1));    	
+    	spinnerS2.addChangeListener(this);
+    	
+    	panel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
+    	panel.add(new JLabel("Min:"), cc.xy(4, row));
+        panel.add(spinnerS1, cc.xy(6, row));
+        panel.add(new JLabel("Max:"), cc.xy(8, row));
+        panel.add(spinnerS2, cc.xy(10, row));
+		
 		return panel;
 	}
 	
@@ -189,7 +235,16 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	public void windowOpened(WindowEvent e) {}
 	
 
-	public void stateChanged(ChangeEvent e) {}
+	public void stateChanged(ChangeEvent e) {
+		int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
+		int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
+		int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
+		int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
+		RDataFrame df = RControl.getR().eval(".st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+"]").asRDataFrame();
+		for (int i=0; i<df.getRowCount(); i++) {
+			
+		}
+	}
 
 	/**
 	 * Method to call from R
