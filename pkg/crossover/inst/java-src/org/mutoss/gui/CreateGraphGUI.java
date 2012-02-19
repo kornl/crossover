@@ -115,6 +115,13 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		//getContentPane().add(getButtonPane(), c);	
 	}
 	
+	
+	
+	public JPanel getInterface() {
+		JPanel panel = new JPanel();
+		return panel;
+	}
+	
 	/**
 	 * This function handles events from buttons, check boxes and combo boxes. 
 	 */
