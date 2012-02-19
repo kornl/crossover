@@ -73,14 +73,18 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		RControl.getRControl(true);
 		Localizer.getInstance().addResourceBundle("org.mutoss.gui.ResourceBundle");
 		
-		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");		
+		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");
+		RControl.getR().evalVoid("crossover:::loadAllDatasets()"); 
 		
 		makeContent();
 		pack();
 
-		Dimension dim = getToolkit().getScreenSize();
-		Rectangle bounds = getBounds();
-		setLocation((dim.width - bounds.width) / 2, (dim.height - bounds.height) / 2);
+		 // Place the frame in the middle of the screen with a border of inset = 50 pixel.
+		int inset = 50;
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setBounds(inset, inset,
+				screenSize.width  - inset*2,
+				screenSize.height - inset*2);
 
 		addWindowListener(this);
 		
@@ -259,11 +263,14 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];
 		if (n>0) {
 			int[] s = RControl.getR().eval(".df$s").asRInteger().getData();
+			String[] dataset = RControl.getR().eval(".df$dataset").asRChar().getData();
 			String[] title = RControl.getR().eval(".df$title").asRChar().getData();
-			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();	
+			String[] reference = RControl.getR().eval(".df$reference").asRChar().getData();
+			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();			
 			for (int i=0; i<n; i++) {
-				String lmS = title[i]+" ("+signature[i]+")";
-				lmDesign.addElement(lmS);
+				String result = RControl.getR().eval("paste(capture.output(dput("+dataset[i]+")), collapse=\"\")").asRChar().getData()[0];
+				Design design = new Design(title[i], reference[i], signature[i], t, s[i], p, result);
+				lmDesign.addElement(design);
 			}
 		}
 	}
