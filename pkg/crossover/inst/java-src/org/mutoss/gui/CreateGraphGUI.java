@@ -83,23 +83,18 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	private String getValue(String key, String def) { return conf.getProperty(key, def); }
 	private void setValue(String key, String value) { conf.setProperty(key, value); }
 
-	public String[] designs = new String[] {"anderson", "andersonPreece", "archdeacon", "atkinson3t", "atkinson4t", 
-			"atkinson5t", "balaam3t", "balaam4t", "balaam5t", "balaam6t", 
-			"bateJones5t", "bateJones8t", "berenblut3t", "berenblut4t", "berenblut5t", 
-			"blaisdellRaghavarao6t", "blaisdellRaghavarao8t", "blaisdellRaghavarao9t", 
-			"davisHall6ta", "davisHall6tb", "davisHall6tc", "davisHall7ta", 
-			"davisHall7tb", "davisHall7tc", "davisHall8ta", "davisHall8tb", 
-			"davisHall8tc", "davisHall9ta", "davisHall9tb", "davisHall9tc"};
-
 	DesignSelectionPanel designPanel;
+	DesignInputPanel designInputPanel;
 	
 	private void makeContent() {
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		designPanel = new DesignSelectionPanel();
+		designInputPanel = new DesignInputPanel();
+		designInputPanel.addActionListener(this);
 		tabbedPane.addTab("Catalogue", designPanel);
 		tabbedPane.addTab("Algorithm Search", new JPanel());
-		tabbedPane.addTab("Input own design", new JPanel());
+		tabbedPane.addTab("Input own design", designInputPanel);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
