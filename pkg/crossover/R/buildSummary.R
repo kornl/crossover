@@ -8,12 +8,15 @@ buildSummaryTable <- function() {
 			title <- attr(design, "title")
 			reference <- attr(design, "reference")
 			signature <- attr(design, "signature")
-			t <- dim(design)[1]
-			p <- dim(design)[2]
-			s <- length(levels(as.factor(design)))
+			p <- dim(design)[1]
+			s <- dim(design)[2]
+			t <- length(levels(as.factor(design)))			
 			summaryTable <- rbind(summaryTable, 
-					data.frame(title=t, reference=reference, signature=signature, t=t, p=p, s=s))
+					data.frame(title=title, reference=reference, signature=signature, t=t, p=p, s=s))
 		}
 	}
+	summaryTable$title <- as.character(summaryTable$title)
+	summaryTable$signature <- as.character(summaryTable$signature)
+	summaryTable$reference <- as.character(summaryTable$reference)
 	return(summaryTable)
 }

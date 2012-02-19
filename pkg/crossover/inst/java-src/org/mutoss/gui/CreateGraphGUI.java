@@ -16,22 +16,27 @@ import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.af.commons.Localizer;
 import org.af.commons.tools.OSTools;
@@ -43,7 +48,7 @@ import org.mutoss.config.Configuration;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class CreateGraphGUI extends JFrame implements WindowListener, ActionListener, ChangeListener {
+public class CreateGraphGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener {
 	
 	Configuration conf = Configuration.getInstance();
 	
@@ -66,7 +71,9 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		Locale.setDefault(Locale.ENGLISH);
 		RControl.getRControl(true);
-		Localizer.getInstance().addResourceBundle("org.mutoss.gui.ResourceBundle");		
+		Localizer.getInstance().addResourceBundle("org.mutoss.gui.ResourceBundle");
+		
+		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");		
 		
 		makeContent();
 		pack();
@@ -78,7 +85,6 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		addWindowListener(this);
 		
 		//loadDefaults();
-		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");		
 		
 		setVisible(true);
 	}
@@ -117,20 +123,28 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		c.weighty=1;
 		getContentPane().add(tabbedPane, c);	
 		
+		lmDesign = new DefaultListModel();
+		designList = new JList(lmDesign);
+		designList.addListSelectionListener(this);
+		
 		c.gridy++;		 
-		c.weighty=0;
-		//getContentPane().add(getButtonPane(), c);	
+		c.weighty=1;
+		getContentPane().add(designList, c);
+		
+		stateChanged(null);
 	}
 	
 	JSpinner spinnerT;
 	JSpinner spinnerP;
 	JSpinner spinnerS1;
 	JSpinner spinnerS2;
+	JList designList;
+	DefaultListModel lmDesign;
 	
 	public JPanel getInterface() {
 		JPanel panel = new JPanel();
 		String cols = "5dlu, fill:pref:grow, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
-        String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         panel.setLayout(new FormLayout(cols, rows));
         CellConstraints cc = new CellConstraints();
@@ -156,7 +170,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
     	spinnerS1 = new JSpinner(new SpinnerNumberModel(4, 1, 100, 1));    	
     	spinnerS1.addChangeListener(this);
 		
-    	spinnerS2 = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1));    	
+    	spinnerS2 = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));    	
     	spinnerS2.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
@@ -164,7 +178,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
         panel.add(spinnerS1, cc.xy(6, row));
         panel.add(new JLabel("Max:"), cc.xy(8, row));
         panel.add(spinnerS2, cc.xy(10, row));
-		
+        
 		return panel;
 	}
 	
@@ -236,13 +250,21 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	
 
 	public void stateChanged(ChangeEvent e) {
+		lmDesign.removeAllElements();
 		int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
 		int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
 		int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
 		int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
-		RDataFrame df = RControl.getR().eval(".st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+"]").asRDataFrame();
-		for (int i=0; i<df.getRowCount(); i++) {
-			
+		RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
+		int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];
+		if (n>0) {
+			int[] s = RControl.getR().eval(".df$s").asRInteger().getData();
+			String[] title = RControl.getR().eval(".df$title").asRChar().getData();
+			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();	
+			for (int i=0; i<n; i++) {
+				String lmS = title[i]+" ("+signature[i]+")";
+				lmDesign.addElement(lmS);
+			}
 		}
 	}
 
@@ -265,6 +287,11 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		RControl.getR().eval(".setenv <- if (exists(\"Sys.setenv\")) Sys.setenv else Sys.putenv");
 		RControl.getR().eval(".setenv(\"JAVAGD_CLASS_NAME\"=\"org/mutoss/gui/JavaGD\")");
 		new CreateGraphGUI();
+	}
+
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
