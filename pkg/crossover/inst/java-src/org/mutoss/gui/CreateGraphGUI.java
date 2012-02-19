@@ -250,20 +250,20 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
 		RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
 		int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];
+		List<Design> list = new Vector<Design>();
 		if (n>0) {
 			int[] s = RControl.getR().eval(".df$s").asRInteger().getData();
 			String[] dataset = RControl.getR().eval(".df$dataset").asRChar().getData();
 			String[] title = RControl.getR().eval(".df$title").asRChar().getData();
 			String[] reference = RControl.getR().eval(".df$reference").asRChar().getData();
 			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();
-			List<Design> list = new Vector<Design>();
 			for (int i=0; i<n; i++) {
 				String result = RControl.getR().eval("paste(capture.output(dput("+dataset[i]+")), collapse=\"\")").asRChar().getData()[0];
 				Design design = new Design(title[i], reference[i], signature[i], t, s[i], p, result);
 				list.add(design);
-			}
-			designPanel.setDesigns(list);
+			}			
 		}
+		designPanel.setDesigns(list);
 	}
 
 	/**

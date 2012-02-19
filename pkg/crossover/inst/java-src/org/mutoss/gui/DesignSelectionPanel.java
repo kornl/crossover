@@ -65,10 +65,11 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		lmDesign.removeAllElements();
 		for (Design design : designs) {
 			lmDesign.addElement(design);	
-		}
+		}		
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
+		if (designList.getSelectedIndex()==-1) return;
 		Design design = (Design) lmDesign.get(designList.getSelectedIndex());
 		jta.setText(design.getTextDesign());
 	}
