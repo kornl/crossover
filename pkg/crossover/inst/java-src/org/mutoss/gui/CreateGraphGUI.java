@@ -12,7 +12,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -71,7 +73,6 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		Locale.setDefault(Locale.ENGLISH);
 		RControl.getRControl(true);
-		Localizer.getInstance().addResourceBundle("org.mutoss.gui.ResourceBundle");
 		
 		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");
 		RControl.getR().evalVoid("crossover:::loadAllDatasets()"); 
@@ -105,16 +106,15 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 			"davisHall7tb", "davisHall7tc", "davisHall8ta", "davisHall8tb", 
 			"davisHall8tc", "davisHall9ta", "davisHall9tb", "davisHall9tc"};
 
+	DesignSelectionPanel designPanel;
+	
 	private void makeContent() {
 		JTabbedPane tabbedPane = new JTabbedPane();
 
-		//JPanel topPanel = getTopPanel();
-
-		//JPanel panelcont = getContPanel();
-		//tabbedPane.addTab("Continuous endpoint", panelcont);
-
-		//JPanel panelbinary = getBinPanel();
-		//tabbedPane.addTab("Binary endpoint", panelbinary);
+		designPanel = new DesignSelectionPanel();
+		tabbedPane.addTab("Catalogue", designPanel);
+		tabbedPane.addTab("Algorithm Search", new JPanel());
+		tabbedPane.addTab("Input own design", new JPanel());
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
@@ -127,14 +127,6 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		c.weighty=1;
 		getContentPane().add(tabbedPane, c);	
 		
-		lmDesign = new DefaultListModel();
-		designList = new JList(lmDesign);
-		designList.addListSelectionListener(this);
-		
-		c.gridy++;		 
-		c.weighty=1;
-		getContentPane().add(designList, c);
-		
 		stateChanged(null);
 	}
 	
@@ -142,12 +134,10 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	JSpinner spinnerP;
 	JSpinner spinnerS1;
 	JSpinner spinnerS2;
-	JList designList;
-	DefaultListModel lmDesign;
 	
 	public JPanel getInterface() {
 		JPanel panel = new JPanel();
-		String cols = "5dlu, fill:pref:grow, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+		String cols = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, fill:pref:grow";
         String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         panel.setLayout(new FormLayout(cols, rows));
@@ -254,7 +244,6 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	
 
 	public void stateChanged(ChangeEvent e) {
-		lmDesign.removeAllElements();
 		int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
 		int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
 		int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
@@ -266,12 +255,14 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 			String[] dataset = RControl.getR().eval(".df$dataset").asRChar().getData();
 			String[] title = RControl.getR().eval(".df$title").asRChar().getData();
 			String[] reference = RControl.getR().eval(".df$reference").asRChar().getData();
-			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();			
+			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();
+			List<Design> list = new Vector<Design>();
 			for (int i=0; i<n; i++) {
 				String result = RControl.getR().eval("paste(capture.output(dput("+dataset[i]+")), collapse=\"\")").asRChar().getData()[0];
 				Design design = new Design(title[i], reference[i], signature[i], t, s[i], p, result);
-				lmDesign.addElement(design);
+				list.add(design);
 			}
+			designPanel.setDesigns(list);
 		}
 	}
 
