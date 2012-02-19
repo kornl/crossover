@@ -56,7 +56,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	 * Constructor - you will not need to change things here
 	 */
 	public CreateGraphGUI() {		
-		super("QTD (Quantitative Trial Design) GUI Version 1.1");
+		super("CROSS-OVER DESIGN SEARCH TOOL Version 0.1");
 		//setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/graph/images/rjavaicon64.png"))).getImage());
 		
 		/* This Errorhandling should be uncommented for testing versions that should report errors:
