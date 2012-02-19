@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="nvm" default="build">
+<project name="crossover" default="build">
 	
 	<dirname property="content.root" file="${ant.file}"/>
 	
@@ -59,7 +59,7 @@
 		    </fileset>
 		</copy>
 		
-		<jar destfile="${jar.dir}/nvm.jar">
+		<jar destfile="${jar.dir}/crossover.jar">
 			<fileset dir="${output.dir}"/>		
 		</jar>
 		
