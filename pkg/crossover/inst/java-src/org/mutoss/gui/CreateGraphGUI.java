@@ -3,8 +3,6 @@ package org.mutoss.gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,35 +14,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.af.commons.Localizer;
+import org.af.commons.errorhandling.ErrorHandler;
+import org.af.commons.logging.ApplicationLog;
+import org.af.commons.logging.LoggingSystem;
 import org.af.commons.tools.OSTools;
-import org.af.commons.widgets.validate.IntegerTextField;
-import org.af.commons.widgets.validate.RealTextField;
-import org.af.jhlir.call.RDataFrame;
 import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -61,7 +46,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		super("CROSS-OVER DESIGN SEARCH TOOL Version 0.1");
 		//setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/graph/images/rjavaicon64.png"))).getImage());
 		
-		/* This Errorhandling should be uncommented for testing versions that should report errors:
+		// This Errorhandling should be uncommented for testing versions that should report errors:
 		 if (!LoggingSystem.alreadyInitiated()) {
 			LoggingSystem.init(
 					"/org/mutoss/gui/commons-logging.properties",
@@ -69,7 +54,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 					false,
 					new ApplicationLog());
 			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
-		}*/
+		}
 		
 		Locale.setDefault(Locale.ENGLISH);
 		RControl.getRControl(true);
@@ -233,7 +218,9 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	 * WindowListener methods - the first one closes the R console if  
 	 */
 	public void windowClosing(WindowEvent e) {
-		RControl.getR().eval("q(save=\"no\")");
+		if (RControl.getR().eval("exists(\".isBundle\")").asRLogical().getData()[0]) {
+			RControl.getR().eval("q(save=\"no\")");
+		}
 	}
 	public void windowActivated(WindowEvent e) {}
 	public void windowClosed(WindowEvent e) {}
