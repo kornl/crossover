@@ -151,7 +151,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		int row = 2;
 		
-		spinnerT = new JSpinner(new SpinnerNumberModel(3, 2, 100, 1));    	
+		spinnerT = new JSpinner(new SpinnerNumberModel(8, 2, 100, 1));    	
     	spinnerT.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of treatments:"), cc.xyw(2, row, 3));
@@ -159,7 +159,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
         row+=2;
 		
-    	spinnerP = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));    	
+    	spinnerP = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1));    	
     	spinnerP.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of periods:"), cc.xyw(2, row, 3));
@@ -167,10 +167,10 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
         row+=2;
 		
-    	spinnerS1 = new JSpinner(new SpinnerNumberModel(4, 1, 100, 1));    	
+    	spinnerS1 = new JSpinner(new SpinnerNumberModel(7, 1, 100, 1));    	
     	spinnerS1.addChangeListener(this);
 		
-    	spinnerS2 = new JSpinner(new SpinnerNumberModel(6, 1, 100, 1));    	
+    	spinnerS2 = new JSpinner(new SpinnerNumberModel(10, 1, 100, 1));    	
     	spinnerS2.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of sequences:"), cc.xy(2, row));

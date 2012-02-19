@@ -520,5 +520,5 @@ fletcher31 <- t
 
 
 
-save(fletcher1, fletcher2, fletcher3, fletcher4, fletcher5, fletcher6, fletcher7, fletcher8, fletcher9, fletcher10, fletcher11, fletcher12, fletcher13, fletcher14, fletcher15, fletcher16, fletcher17, fletcher18, fletcher19, fletcher20, fletcher21, fletcher22, fletcher23, fletcher24, fletcher25, fletcher26, fletcher27, fletcher28, fletcher29, fletcher30, fletcher31, file="federerAtkinson.rda")
+save(fletcher1, fletcher2, fletcher3, fletcher4, fletcher5, fletcher6, fletcher7, fletcher8, fletcher9, fletcher10, fletcher11, fletcher12, fletcher13, fletcher14, fletcher15, fletcher16, fletcher17, fletcher18, fletcher19, fletcher20, fletcher21, fletcher22, fletcher23, fletcher24, fletcher25, fletcher26, fletcher27, fletcher28, fletcher29, fletcher30, fletcher31, file="fletcher.rda")
 
