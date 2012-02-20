@@ -7,16 +7,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 
+import org.af.commons.io.FileTools;
 import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -49,7 +51,7 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
         row+=2;
         
 		jta = new JTextArea("");
-		jta.setBorder(LineBorder.createBlackLineBorder());
+		//jta.setBorder(LineBorder.createBlackLineBorder());
 		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		jta.setLineWrap(false);		
 		jta.setMargin(new Insets(4,4,4,4));
@@ -100,16 +102,7 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	public void keyPressed(KeyEvent e) {}
 
 	public void keyReleased(KeyEvent e) {
-		try {
-			String input = jta.getText();
-			RControl.getR().evalVoid(".con <- textConnection(\""+input+"\")");
-			RControl.getR().eval(".newDesign <- as.matrix(read.table(.con, header = FALSE))");
-			int[] dim = RControl.getR().eval("dim(.newDesign)").asRInteger().getData(); 
-			int t = RControl.getR().eval("length(levels(as.factor(.newDesign)))").asRInteger().getData()[0];	
-			label.setText("p = "+dim[0]+", s = "+dim[1]+", t = "+t);
-		} catch (Exception error) {
-			label.setText("Design is not valid, please correct it.");
-		}
+		checkDesign();
 	}
 
 	public void keyTyped(KeyEvent e) {	}
@@ -117,16 +110,33 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loadFile) {
 			JFileChooser fc = new JFileChooser(Configuration.getInstance().getClassProperty(this.getClass(), "DesignDirectory"));		
-			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);			
-
+			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 	        int returnVal = fc.showOpenDialog(this);
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	        	File f = fc.getSelectedFile();
 	        	Configuration.getInstance().setClassProperty(this.getClass(), "DesignDirectory", f.getParent());
-	        	// load f
+	        	try {
+					String text = FileTools.readFileAsString(f);
+					jta.setText(text);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(this, "File could not be opened:\n"+e1.getMessage(), "Error opening file", JOptionPane.ERROR_MESSAGE);
+				}	        	
 	        }
+		}		
+	}
+
+	private void checkDesign() {
+		try {
+			String input = jta.getText();
+			RControl.getR().evalVoid(".con <- textConnection(\""+input+"\")");
+			RControl.getR().eval(".newDesign <- try(as.matrix(read.table(.con, header = FALSE)), silent=TRUE)");
+			if (RControl.getR().eval("(\"try-error\" %in% class(.newDesign))").asRLogical().getData()[0]) throw new Exception();
+			int[] dim = RControl.getR().eval("dim(.newDesign)").asRInteger().getData(); 
+			int t = RControl.getR().eval("length(levels(as.factor(.newDesign)))").asRInteger().getData()[0];	
+			label.setText("p = "+dim[0]+", s = "+dim[1]+", t = "+t);
+		} catch (Exception error) {
+			label.setText("Design is not valid, please correct it.");
 		}
-		
 	}
 	
 }
