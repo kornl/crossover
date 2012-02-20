@@ -1,16 +1,13 @@
-kornel@zen:~/Arbeitsfläche/Cross-Over Design Efficiency Calculator/Catalogue/CatalogueFiles$ diff . -r catalogue
-diff -r ./PattersonLucas(pbib).txt catalogue/PattersonLucas(pbib).txt
-97c97
-< PL Design 102 p = 2, n = 48, t = 8
----
-> PL Design 102 p = 3, n = 48, t = 6
 
+Warn if the choosen combination of t, s and p does not 
+allow to estimate all parameters due to insufficient degrees of freedom.
+
+(CrossOver algorithm paper claims on page 4 that this is the case for "p = 3, n = 4, t = 4"
+e.g. "FLETCHER FACTORIAL 2 x 2 DESIGN 1" for second-order carry-over effects.)
 
 Look at R crossover package
 
-Bose, Dey: Optimal Crossover Designs
-
-Adaptive crossovers (also taking speed of recruition into account)
+Adaptive crossovers (also taking speed of recruiting into account)
 
 A B C D E
 - B A E C D

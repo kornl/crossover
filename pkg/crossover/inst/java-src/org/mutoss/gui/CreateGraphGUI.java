@@ -85,6 +85,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 
 	DesignSelectionPanel designPanel;
 	DesignInputPanel designInputPanel;
+	AlgorithmPanel algorithmPanel;
 	
 	private void makeContent() {
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -92,8 +93,9 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		designPanel = new DesignSelectionPanel();
 		designInputPanel = new DesignInputPanel();
 		designInputPanel.addActionListener(this);
+		algorithmPanel = new AlgorithmPanel();
 		tabbedPane.addTab("Catalogue", designPanel);
-		tabbedPane.addTab("Algorithm Search", new JPanel());
+		tabbedPane.addTab("Algorithm Search", algorithmPanel);
 		tabbedPane.addTab("Input own design", designInputPanel);
 		
 		GridBagConstraints c = new GridBagConstraints();
