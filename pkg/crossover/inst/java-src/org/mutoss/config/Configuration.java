@@ -84,6 +84,31 @@ public class Configuration {
             return s;
         }
     }
+    
+    /**
+     * Sets for one Class a key to some String value.
+     * @param c Class
+     * @param key Key
+     * @param value Value
+     */
+    public void setClassProperty(Class c, String key, String value) {
+    	String cn = c.getName().substring(c.getName().lastIndexOf('.'));
+    	setProperty(keyPrefix + cn+"."+key, value);
+    }
+
+    /**
+     * Returns for one Class the associated value to a key.
+     * @param c Class
+     * @param key Key
+     */
+    public String getClassProperty(Class c, String key) {    	
+    	return getClassProperty(c, key, Configuration.NOTFOUND);
+    }
+    
+    public String getClassProperty(Class c, String key, String def) {
+    	String cn = c.getName().substring(c.getName().lastIndexOf('.'));
+    	return getProperty(keyPrefix + cn+"."+key, def);
+    }
 
     /**
      * Sets a string value for a property key string.

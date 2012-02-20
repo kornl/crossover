@@ -2,34 +2,38 @@ package org.mutoss.gui;
 
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
+
+import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class DesignInputPanel extends JPanel implements KeyListener {
+public class DesignInputPanel extends JPanel implements KeyListener, ActionListener {
 	
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
 	JButton ok = new JButton("Ready");
+	JButton loadFile = new JButton("Load File");
 	JTextArea jta;
 	JLabel label = new JLabel();
 	
 	public DesignInputPanel() {
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
-        String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu";
+        String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu, pref, 5dlu";
         
         FormLayout layout = new FormLayout(cols, rows);
         layout.setColumnGroups(new int[][]{ {2, 4} });
@@ -53,6 +57,11 @@ public class DesignInputPanel extends JPanel implements KeyListener {
 		
 		add(new JScrollPane(jta), cc.xy(2, row));
 		add(new JScrollPane(getRightSidePanel()), cc.xy(4, row));
+		
+		row+=2;
+		
+		loadFile.addActionListener(this);
+		add(loadFile, cc.xy(2, row));
 	}
 	
 	public JPanel getRightSidePanel() {
@@ -104,5 +113,20 @@ public class DesignInputPanel extends JPanel implements KeyListener {
 	}
 
 	public void keyTyped(KeyEvent e) {	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == loadFile) {
+			JFileChooser fc = new JFileChooser(Configuration.getInstance().getClassProperty(this.getClass(), "DesignDirectory"));		
+			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);			
+
+	        int returnVal = fc.showOpenDialog(this);
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	        	File f = fc.getSelectedFile();
+	        	Configuration.getInstance().setClassProperty(this.getClass(), "DesignDirectory", f.getParent());
+	        	// load f
+	        }
+		}
+		
+	}
 	
 }
