@@ -16,8 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import org.af.commons.io.FileTools;
 import org.mutoss.config.Configuration;
@@ -68,6 +70,8 @@ public class AlgorithmPanel extends JPanel implements KeyListener, ActionListene
 		add(loadFile, cc.xy(2, row));
 	}
 	
+	JSpinner spinnerS;
+	
 	public JPanel getRightSidePanel() {
 		JPanel panel = new JPanel();
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
@@ -95,8 +99,10 @@ public class AlgorithmPanel extends JPanel implements KeyListener, ActionListene
 		
         row+=2;
         
-        panel.add(new JLabel("Reference"), cc.xy(2, row));
-		panel.add(jtReference, cc.xy(4, row));
+    	spinnerS = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1));      	
+        
+        panel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
+        panel.add(spinnerS, cc.xy(4, row));
 		
         row+=2;
         

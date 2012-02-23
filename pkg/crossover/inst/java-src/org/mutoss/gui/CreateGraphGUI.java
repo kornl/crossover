@@ -247,6 +247,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 				list.add(design);
 			}			
 		}
+		list.addAll(CrossDes.getDesigns(t, p, s1, s2));
 		designPanel.setDesigns(list);
 	}
 
