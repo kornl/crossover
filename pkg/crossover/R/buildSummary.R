@@ -23,6 +23,21 @@ buildSummaryTable <- function() {
 	return(summaryTable)
 }
 
+getSignatureStr <- function(design) {
+	p <- dim(design)[1]
+	s <- dim(design)[2]
+	t <- length(levels(as.factor(design)))
+	return(paste("p=",p,", s=",s,",t=",t,sep=""))
+}
+
+getSignature <- function(design) {
+	p <- dim(design)[1]
+	s <- dim(design)[2]
+	t <- length(levels(as.factor(design)))
+	return(c(p,s,t))
+}
+
+
 loadAllDatasets <- function() {
 	path <- system.file("data", package="crossover")
 	for (file in dir(path=path)) {		 

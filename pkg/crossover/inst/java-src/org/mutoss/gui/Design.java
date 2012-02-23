@@ -8,6 +8,7 @@ public class Design {
 	int t, s, p;
 	String design;
 	Double efficiency = null;
+	String result = null;
 	
 	public Design(String title, String reference, String signature, int t, int s, int p, String design) {
 		this.title = title;
@@ -28,7 +29,8 @@ public class Design {
 	}
 	
 	public String getTextDesign() {
-		String result = RControl.getR().eval("paste(capture.output(print("+design+")), collapse=\"\\n\")").asRChar().getData()[0];
+		if (result != null) return result;
+		result = RControl.getR().eval("paste(capture.output(print("+design+")), collapse=\"\\n\")").asRChar().getData()[0];
 		/*if (efficiency == null) {
 			RControl.getR().eval("design.out<-design.efficiency(design,nseq,ntrt,nper,nrep)");
 		}*/
