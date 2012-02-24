@@ -7,7 +7,7 @@
 ##############################################################################
 
 
-design.efficiency<-function(design,nseq,ntrt,nper,nrep){
+design.efficiency<-function(design){
 	## function to read in a cross-over design and create the design matrix X,
 	## the variance-covariance matrix of the parameter estimates (X'X)^{-1},
 	## the variance of each pairwise comparison and
@@ -25,7 +25,11 @@ design.efficiency<-function(design,nseq,ntrt,nper,nrep){
 	
 	## create the factors for groups, subjects, periods, treatments and carry-over effects
 	
+	nper <- dim(design)[2]
+	nseq <- dim(design)[1]
+	ntrt <- length(levels(as.factor(design)))	
 	n<-rep(1,nseq)
+	
 	## group factor
 	group<-rep(1:nseq,nper*n)
 	##subject factor

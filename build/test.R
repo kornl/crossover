@@ -1,4 +1,4 @@
-library(MASS)
+library(crossover)
 
 ## simulate design for 7 (placebo + 6 active treatments) in 42 subjects in two periods
 
