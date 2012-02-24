@@ -137,7 +137,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
         row+=2;
 		
-    	spinnerP = new JSpinner(new SpinnerNumberModel(5, 1, maxSp, 1));    	
+    	spinnerP = new JSpinner(new SpinnerNumberModel(5, 2, maxSp, 1));    	
     	spinnerP.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of periods:"), cc.xyw(2, row, 3));
@@ -145,10 +145,10 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
         row+=2;
 		
-    	spinnerS1 = new JSpinner(new SpinnerNumberModel(7, 1, maxSp, 1));    	
+    	spinnerS1 = new JSpinner(new SpinnerNumberModel(7, 2, maxSp, 1));    	
     	spinnerS1.addChangeListener(this);
 		
-    	spinnerS2 = new JSpinner(new SpinnerNumberModel(10, 1, maxSp, 1));    	
+    	spinnerS2 = new JSpinner(new SpinnerNumberModel(10, 2, maxSp, 1));    	
     	spinnerS2.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
@@ -234,6 +234,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
 		int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
 		int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
+		//if (t==1 || p==1) return;
 		RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
 		int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];
 		List<Design> list = new Vector<Design>();
