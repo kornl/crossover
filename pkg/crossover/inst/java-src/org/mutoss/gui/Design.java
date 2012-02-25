@@ -20,6 +20,12 @@ public class Design {
 		this.design = design;
 	}
 	
+	public String getRSignature() {
+		String rSignature = "p = "+p+", n = "+s+", t = "+t;
+		if (signature.startsWith(rSignature)) return "same";
+		return rSignature;
+	}
+	
 	public String toString() {
 		return title+" ("+signature+")";
 	}

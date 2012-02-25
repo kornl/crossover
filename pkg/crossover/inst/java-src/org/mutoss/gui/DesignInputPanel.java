@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,6 +33,7 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	JButton loadFile = new JButton("Load File");
 	JTextArea jta;
 	JLabel label = new JLabel();
+	JComboBox jcbRows = new JComboBox(new String[] {"periods", "sequences"});
 	
 	public DesignInputPanel() {
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
@@ -69,26 +71,35 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	public JPanel getRightSidePanel() {
 		JPanel panel = new JPanel();
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         panel.setLayout(new FormLayout(cols, rows));
         CellConstraints cc = new CellConstraints();
-		
-		int row = 2;
-    	
-		panel.add(new JLabel("Title"), cc.xy(2, row));
-		panel.add(jtTitle, cc.xy(4, row));
-		
-        row+=2;
+
+        int row = 2;
+
+        panel.add(new JLabel("Title"), cc.xy(2, row));
+        panel.add(jtTitle, cc.xy(4, row));
         
+        row+=2;
+
         panel.add(new JLabel("Reference"), cc.xy(2, row));
-		panel.add(jtReference, cc.xy(4, row));
-		
+        panel.add(jtReference, cc.xy(4, row));
+
         row+=2;
+
+        panel.add(new JLabel("Rows represent"), cc.xy(2, row));
+        panel.add(jcbRows, cc.xy(4, row));
         
+        row+=2;
+
         panel.add(label, cc.xyw(2, row, 3));
         
         return panel;
+	}
+	
+	public boolean transpose() {
+		return !jcbRows.getSelectedItem().equals("periods");
 	}
 	
 	public void addActionListener(ActionListener al) {
@@ -130,6 +141,9 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 			String input = jta.getText();
 			RControl.getR().evalVoid(".con <- textConnection(\""+input+"\")");
 			RControl.getR().eval(".newDesign <- try(as.matrix(read.table(.con, header = FALSE)), silent=TRUE)");
+			if (transpose()) {
+				RControl.getR().eval(".newDesign <- t(.newDesign)");
+			}
 			if (RControl.getR().eval("(\"try-error\" %in% class(.newDesign))").asRLogical().getData()[0]) throw new Exception();
 			int[] dim = RControl.getR().eval("dim(.newDesign)").asRInteger().getData(); 
 			int t = RControl.getR().eval("length(levels(as.factor(.newDesign)))").asRInteger().getData()[0];	

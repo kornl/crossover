@@ -5,18 +5,17 @@ import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-public class DesignTableModel implements TableModel {
+public class DesignTableModel extends AbstractTableModel {
 
 	List<Design> designs = new Vector<Design>();
 	
-	public DesignTableModel() {
-		
-	}
+	//DesignTable table;
 	
-	public void addTableModelListener(TableModelListener l) {
-
+	public DesignTableModel(/*DesignTable table*/) {
+		//this.table = table;
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
@@ -24,14 +23,14 @@ public class DesignTableModel implements TableModel {
 	}
 
 	public int getColumnCount() {
-		return 2;
+		return 3;
 	}
 
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
-		case 0:  return "Title";
-		case 1:  return "Signature";                   
-		case 2:  
+		case 0: return "Title";
+		case 1: return "Signature";                   
+		case 2: return "RSignature"; 
 		default: return null;
 		}
 	}
@@ -43,9 +42,9 @@ public class DesignTableModel implements TableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Design design = designs.get(rowIndex);
 		switch (columnIndex) {
-		case 0:  return design.title;
-		case 1:  return design.signature;                   
-		case 2:  
+		case 0: return design.title;
+		case 1: return design.signature;                   
+		case 2: return design.getRSignature(); 
 		default: return null;
 		}
 	}
@@ -54,18 +53,14 @@ public class DesignTableModel implements TableModel {
 		return false;
 	}
 
-	public void removeTableModelListener(TableModelListener l) {
-
-	}
-
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		
+		fireTableStructureChanged();
 	}
 	
 	public void setDesigns(List<Design> designs) {
 		this.designs = designs;
 		//for (int i=0; i<designs.size(); i++) {}
-		
+		fireTableStructureChanged();
 	}
 
 	public List<Design> getDesigns() {

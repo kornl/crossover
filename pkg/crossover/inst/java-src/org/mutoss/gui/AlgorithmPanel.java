@@ -61,8 +61,8 @@ public class AlgorithmPanel extends JPanel implements KeyListener, ActionListene
 		jta.setMargin(new Insets(4,4,4,4));
 		jta.addKeyListener(this);
 		
-		add(new JScrollPane(jta), cc.xy(2, row));
-		add(new JScrollPane(getRightSidePanel()), cc.xy(4, row));
+		//add(new JScrollPane(jta), cc.xy(2, row));
+		add(new JScrollPane(getRightSidePanel()), cc.xyw(2, row, 3));
 		
 		row+=2;
 		

@@ -129,7 +129,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		int row = 2;
 		
-		spinnerT = new JSpinner(new SpinnerNumberModel(8, 2, maxSp, 1));    	
+		spinnerT = new JSpinner(new SpinnerNumberModel(4, 2, maxSp, 1));    	
     	spinnerT.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of treatments:"), cc.xyw(2, row, 3));
@@ -137,7 +137,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
         row+=2;
 		
-    	spinnerP = new JSpinner(new SpinnerNumberModel(5, 2, maxSp, 1));    	
+    	spinnerP = new JSpinner(new SpinnerNumberModel(4, 2, maxSp, 1));    	
     	spinnerP.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of periods:"), cc.xyw(2, row, 3));
@@ -145,10 +145,10 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
         row+=2;
 		
-    	spinnerS1 = new JSpinner(new SpinnerNumberModel(7, 2, maxSp, 1));    	
+    	spinnerS1 = new JSpinner(new SpinnerNumberModel(4, 2, maxSp, 1));    	
     	spinnerS1.addChangeListener(this);
 		
-    	spinnerS2 = new JSpinner(new SpinnerNumberModel(10, 2, maxSp, 1));    	
+    	spinnerS2 = new JSpinner(new SpinnerNumberModel(8, 2, maxSp, 1));    	
     	spinnerS2.addChangeListener(this);
     	
     	panel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
@@ -236,7 +236,8 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
 		//if (t==1 || p==1) return;
 		RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
-		int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];
+		//RControl.getR().eval(".df <- .st");
+		int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];		
 		List<Design> list = new Vector<Design>();
 		if (n>0) {
 			int[] s = RControl.getR().eval(".df$s").asRInteger().getData();
@@ -244,9 +245,11 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 			String[] title = RControl.getR().eval(".df$title").asRChar().getData();
 			String[] reference = RControl.getR().eval(".df$reference").asRChar().getData();
 			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();
+			int[] tList = RControl.getR().eval(".df$t").asRInteger().getData();
+			int[] pList = RControl.getR().eval(".df$p").asRInteger().getData();
 			for (int i=0; i<n; i++) {
 				String result = RControl.getR().eval("paste(capture.output(dput("+dataset[i]+")), collapse=\"\")").asRChar().getData()[0];
-				Design design = new Design(title[i], reference[i], signature[i], t, s[i], p, result);
+				Design design = new Design(title[i], reference[i], signature[i], tList[i], s[i], pList[i], result);
 				list.add(design);
 			}			
 		}

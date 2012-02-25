@@ -9,6 +9,7 @@ public class DesignTable extends JTable {
 
 	public DesignTable() {
 		super(new DesignTableModel());
+		//setModel(new DesignTableModel(this));
 	}
 	
 	public DesignTableModel getModel() {
