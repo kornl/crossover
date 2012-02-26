@@ -22,7 +22,7 @@ design<-matrix(c(1,2,1,3,1,4,1,5,1,6,1,7,
 				6,1,6,2,6,3,6,4,6,5,6,7,
 				7,1,7,2,7,3,7,4,7,5,7,6),nseq,nper,byrow=T)
 
-design.out<-design.efficiency(design,nseq,ntrt,nper,n)
+design.out<-design.efficiency(design)
 
 ########################################################################
 ## end of efficiency calculations                                     ##

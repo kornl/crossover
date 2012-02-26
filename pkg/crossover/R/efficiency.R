@@ -62,7 +62,7 @@ design.efficiency<-function(design){
 	
 	mean01<-matrix(1,ndata,1)
 	subj01<-matrix(0,ndata,nsubj)
-	per01<-matrix(0,ndata,2)
+	per01<-matrix(0,ndata,nper)
 	trt01<-matrix(0,ndata,ntrt)
 	car01<-matrix(0,ndata,ntrt)
 	## subjects

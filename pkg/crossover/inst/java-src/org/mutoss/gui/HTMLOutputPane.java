@@ -29,11 +29,17 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     public HTMLOutputPane() {
         makeComponents();
         doTheLayout();
-        MyJPopupMenu popup = new MyJPopupMenu(new String[]{"Clear"}, new String[]{"clear"}, this);
-        textArea.setComponentPopupMenu(popup);
     }
 
-    public void showError(Throwable e) throws BadLocationException, IOException {    	
+    public void showDesign(Design design) {
+    	textArea.clear();
+    	textArea.appendParagraph(textArea.makeBold(design.title + " ("+design.getRSignature()+")"));
+    	textArea.appendParagraph("");
+    	textArea.appendHTML(design.getHTMLTable());
+    	textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference+"</i>");
+	}
+
+	public void showError(Throwable e) throws BadLocationException, IOException {    	
         String s = e.getMessage();
         String tok = "af.statguitoolkit.rinterface.exceptions.REvalException: ";
         if (s.startsWith(tok)) {            
@@ -77,6 +83,6 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        textArea.clear();
+        
     }
 }

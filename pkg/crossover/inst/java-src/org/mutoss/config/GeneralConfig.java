@@ -197,4 +197,20 @@ public class GeneralConfig extends SpecificConfig {
 		setProperty("showRejected", ""+showRejected);
 	}
 	
+	public void setVersionNumber(String version) {
+		setProperty("packageVersion", version);
+	}
+
+	public String getVersionNumber() {
+		return getProperty("packageVersion", "unknown");
+	}
+	
+	public void setRVersionNumber(String version) {
+		setProperty("Rversion", version);
+	}
+
+	public String getRVersionNumber() {
+		return getProperty("Rversion", "unknown");
+	}
+	
 }

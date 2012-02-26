@@ -37,10 +37,20 @@ getSignature <- function(design) {
 	return(c(p,s,t))
 }
 
-
 loadAllDatasets <- function() {
 	path <- system.file("data", package="crossover")
 	for (file in dir(path=path)) {		 
 		designs <- load(paste(path, file, sep="/"), envir=globalenv())
 	}
+}
+
+getTable <- function(design) {
+	rownames(design) <- paste("p", 1:dim(design)[1], sep="")
+	colnames(design) <- paste("s", 1:dim(design)[2], sep="")
+	return(paste(capture.output(print(xtable(design), type="html")), collapse="\n"))
+}
+
+getEff <- function(design) {
+	l <- design.efficiency(t(design))
+	return(c(l$av.eff.trt.pair, l$av.eff.trt.pair.adj))
 }

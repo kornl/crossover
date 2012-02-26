@@ -3,10 +3,7 @@ package org.mutoss.gui;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 public class DesignTableModel extends AbstractTableModel {
 
@@ -19,7 +16,8 @@ public class DesignTableModel extends AbstractTableModel {
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
-		return String.class;   
+		if (columnIndex < 2) return String.class;
+		return Double.class;
 	}
 
 	public int getColumnCount() {
@@ -29,8 +27,9 @@ public class DesignTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case 0: return "Title";
-		case 1: return "Signature";                   
-		case 2: return "RSignature"; 
+		case 1: return "Signature";
+		//case 2: return "av.eff.trt.pair";
+		case 2: return "av.eff.trt.pair.adj";
 		default: return null;
 		}
 	}
@@ -42,9 +41,10 @@ public class DesignTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Design design = designs.get(rowIndex);
 		switch (columnIndex) {
-		case 0: return design.title;
-		case 1: return design.signature;                   
-		case 2: return design.getRSignature(); 
+		case 0: return design.title;		                   
+		case 1: return design.getRSignature(); 
+		//case 2: return design.efficiencyUnadj;
+		case 2: return design.efficiencyAdj;
 		default: return null;
 		}
 	}

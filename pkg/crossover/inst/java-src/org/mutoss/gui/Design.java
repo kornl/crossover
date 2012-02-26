@@ -7,7 +7,8 @@ public class Design {
 	String signature;
 	int t, s, p;
 	String design;
-	Double efficiency = null;
+	Double efficiencyAdj = null;
+	Double efficiencyUnadj = null;
 	String result = null;
 	
 	public Design(String title, String reference, String signature, int t, int s, int p, String design) {
@@ -18,11 +19,14 @@ public class Design {
 		this.s = s;
 		this.p = p;
 		this.design = design;
+		double[] eff = RControl.getR().eval("crossover:::getEff("+design+")").asRNumeric().getData();
+		efficiencyUnadj = eff[0];
+		efficiencyAdj = eff[1];		
 	}
 	
 	public String getRSignature() {
 		String rSignature = "p = "+p+", n = "+s+", t = "+t;
-		if (signature.startsWith(rSignature)) return "same";
+		//if (signature.startsWith(rSignature)) return "same";
 		return rSignature;
 	}
 	
@@ -40,6 +44,11 @@ public class Design {
 		/*if (efficiency == null) {
 			RControl.getR().eval("design.out<-design.efficiency(design,nseq,ntrt,nper,nrep)");
 		}*/
+		return result;
+	}
+
+	public String getHTMLTable() {		
+		String result = RControl.getR().eval("crossover:::getTable("+design+")").asRChar().getData()[0];
 		return result;
 	}
 }

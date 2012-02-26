@@ -2,13 +2,9 @@ package org.mutoss.gui;
 
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -23,7 +19,8 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 	DesignTable designTable;
 	//JList designList;
 	//DefaultListModel lmDesign;
-	JTextArea jta;
+	//JTextArea jta;
+	HTMLOutputPane jta;
 	List<Design> designs;
 	
 	
@@ -47,10 +44,10 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
         designTable = new DesignTable();		
 		designTable.getSelectionModel().addListSelectionListener(this);
 		
-		jta = new JTextArea("");
+		jta = new HTMLOutputPane();
 		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		jta.setLineWrap(false);		
-		jta.setMargin(new Insets(4,4,4,4));
+		/*jta.setLineWrap(false);		
+		jta.setMargin(new Insets(4,4,4,4));*/
 		
     	add(new JScrollPane(designTable), cc.xy(2, row));
         add(new JScrollPane(jta), cc.xy(4, row));
@@ -70,8 +67,7 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		int i = designTable.getSelectedRow();
 		if (i == -1) return;
 		Design design = designTable.getModel().getDesigns().get(i);
-		jta.setText(design.getTextDesign());
-		
+		jta.showDesign(design);		
 	}
 
 

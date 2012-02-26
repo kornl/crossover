@@ -88,6 +88,7 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 
         row+=2;
 
+        jcbRows.addActionListener(this);
         panel.add(new JLabel("Rows represent"), cc.xy(2, row));
         panel.add(jcbRows, cc.xy(4, row));
         
@@ -133,7 +134,9 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 					JOptionPane.showMessageDialog(this, "File could not be opened:\n"+e1.getMessage(), "Error opening file", JOptionPane.ERROR_MESSAGE);
 				}	        	
 	        }
-		}		
+		} else if (e.getSource() == jcbRows) {
+			checkDesign();
+		}
 	}
 
 	private void checkDesign() {

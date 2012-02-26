@@ -39,11 +39,23 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	
 	Configuration conf = Configuration.getInstance();
 	
+	public static final String[] models = new String[] {
+			"Standard additive model",
+			"Second-order carry-over effects",
+			"Full set of interactions",
+			"Self-adjacency model",
+			"Placebo model",
+			"No carry-over into self model",
+			"Treatment decay model",
+			"Proportionality model",
+			//"No carry-over effects"
+	};
+	
 	/**
 	 * Constructor - you will not need to change things here
 	 */
 	public CreateGraphGUI() {		
-		super("CROSS-OVER DESIGN SEARCH TOOL Version 0.1");
+		super("CROSS-OVER DESIGN SEARCH TOOL");
 		//setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/graph/images/rjavaicon64.png"))).getImage());
 		
 		// This Errorhandling should be uncommented for testing versions that should report errors:
@@ -58,6 +70,15 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		Locale.setDefault(Locale.ENGLISH);
 		RControl.getRControl(true);
+		
+		/* Get and save R and gMCP version numbers */
+		try {		
+			Configuration.getInstance().getGeneralConfig().setRVersionNumber(RControl.getR().eval("paste(R.version$major,R.version$minor,sep=\".\")").asRChar().getData()[0]);
+			Configuration.getInstance().getGeneralConfig().setVersionNumber(RControl.getR().eval("gMCP:::gMCPVersion()").asRChar().getData()[0]);
+			this.setTitle("CROSS-OVER DESIGN SEARCH TOOL "+Configuration.getInstance().getGeneralConfig().getVersionNumber());
+		} catch (Exception e) {
+			// This is no vital information and will fail for e.g. R 2.8.0, so no error handling here...
+		}
 		
 		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");
 		RControl.getR().evalVoid("crossover:::loadAllDatasets()"); 

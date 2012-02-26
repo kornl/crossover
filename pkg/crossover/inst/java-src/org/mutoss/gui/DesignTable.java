@@ -3,7 +3,6 @@ package org.mutoss.gui;
 import java.util.List;
 
 import javax.swing.JTable;
-import javax.swing.table.TableModel;
 
 public class DesignTable extends JTable {
 
