@@ -125,7 +125,7 @@ public class ErrorDialogSGTK extends ErrorDialog {
 
     protected Hashtable<String, String> getInfoTable() {
     	Hashtable<String, String> table = super.getInfoTable();
-    	table.put("Subject", "QTD (Quantitative Trial Design) bug report from "+System.getProperty("user.name", "<unknown user name>")+" on "+System.getProperty("os.name", "<unknown OS>"));
+    	table.put("Subject", "Crossover bug report from "+System.getProperty("user.name", "<unknown user name>")+" on "+System.getProperty("os.name", "<unknown OS>"));
     	return table;
     }
   
