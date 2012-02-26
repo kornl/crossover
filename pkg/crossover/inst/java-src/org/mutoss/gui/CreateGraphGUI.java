@@ -74,7 +74,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		/* Get and save R and gMCP version numbers */
 		try {		
 			Configuration.getInstance().getGeneralConfig().setRVersionNumber(RControl.getR().eval("paste(R.version$major,R.version$minor,sep=\".\")").asRChar().getData()[0]);
-			Configuration.getInstance().getGeneralConfig().setVersionNumber(RControl.getR().eval("gMCP:::gMCPVersion()").asRChar().getData()[0]);
+			Configuration.getInstance().getGeneralConfig().setVersionNumber(RControl.getR().eval("crossover:::crossoverVersion()").asRChar().getData()[0]);
 			this.setTitle("CROSS-OVER DESIGN SEARCH TOOL "+Configuration.getInstance().getGeneralConfig().getVersionNumber());
 		} catch (Exception e) {
 			// This is no vital information and will fail for e.g. R 2.8.0, so no error handling here...

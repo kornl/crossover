@@ -54,3 +54,12 @@ getEff <- function(design) {
 	l <- design.efficiency(t(design))
 	return(c(l$av.eff.trt.pair, l$av.eff.trt.pair.adj))
 }
+
+crossoverVersion <- function() {
+	x <- try(as.character(packageVersion("crossover")), silent=TRUE)
+	if (class(x)!="try-error") {
+		return(x)
+	} else {
+		return("unknown")
+	}
+}
