@@ -30,14 +30,18 @@ import org.af.commons.errorhandling.ErrorHandler;
 import org.af.commons.logging.ApplicationLog;
 import org.af.commons.logging.LoggingSystem;
 import org.af.commons.tools.OSTools;
+import org.af.commons.widgets.InfiniteProgressPanel;
+import org.af.commons.widgets.InfiniteProgressPanel.AbortListener;
+import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class CreateGraphGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener {
+public class CreateGraphGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener, AbortListener {
 	
 	Configuration conf = Configuration.getInstance();
+	public InfiniteProgressPanel glassPane;
 	
 	public static final String[] models = new String[] {
 			"Standard additive model",
@@ -82,6 +86,10 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 		
 		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");
 		RControl.getR().evalVoid("crossover:::loadAllDatasets()"); 
+
+		glassPane = new InfiniteProgressPanel(this, "Calculating");
+	    setGlassPane(glassPane);
+	    glassPane.addAbortListener(this);
 		
 		makeContent();
 		pack();
@@ -251,31 +259,42 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	
 
 	public void stateChanged(ChangeEvent e) {
-		int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
-		int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
-		int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
-		int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
-		//if (t==1 || p==1) return;
-		RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
-		//RControl.getR().eval(".df <- .st");
-		int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];		
-		List<Design> list = new Vector<Design>();
-		if (n>0) {
-			int[] s = RControl.getR().eval(".df$s").asRInteger().getData();
-			String[] dataset = RControl.getR().eval(".df$dataset").asRChar().getData();
-			String[] title = RControl.getR().eval(".df$title").asRChar().getData();
-			String[] reference = RControl.getR().eval(".df$reference").asRChar().getData();
-			String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();
-			int[] tList = RControl.getR().eval(".df$t").asRInteger().getData();
-			int[] pList = RControl.getR().eval(".df$p").asRInteger().getData();
-			for (int i=0; i<n; i++) {
-				String result = RControl.getR().eval("paste(capture.output(dput("+dataset[i]+")), collapse=\"\")").asRChar().getData()[0];
-				Design design = new Design(title[i], reference[i], signature[i], tList[i], s[i], pList[i], result);
-				list.add(design);
-			}			
-		}
-		list.addAll(CrossDes.getDesigns(t, p, s1, s2));
-		designPanel.setDesigns(list);
+		glassPane.start();
+		//startTesting();		
+		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
+				int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
+				int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
+				int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
+				//if (t==1 || p==1) return;
+				RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
+				//RControl.getR().eval(".df <- .st");
+				int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];		
+				List<Design> list = new Vector<Design>();
+				if (n>0) {
+					int[] s = RControl.getR().eval(".df$s").asRInteger().getData();
+					String[] dataset = RControl.getR().eval(".df$dataset").asRChar().getData();
+					String[] title = RControl.getR().eval(".df$title").asRChar().getData();
+					String[] reference = RControl.getR().eval(".df$reference").asRChar().getData();
+					String[] signature = RControl.getR().eval(".df$signature").asRChar().getData();
+					int[] tList = RControl.getR().eval(".df$t").asRInteger().getData();
+					int[] pList = RControl.getR().eval(".df$p").asRInteger().getData();
+					for (int i=0; i<n; i++) {
+						String result = RControl.getR().eval("paste(capture.output(dput("+dataset[i]+")), collapse=\"\")").asRChar().getData()[0];
+						Design design = new Design(title[i], reference[i], signature[i], tList[i], s[i], pList[i], result);
+						list.add(design);
+					}			
+				}
+				list.addAll(CrossDes.getDesigns(t, p, s1, s2));
+				designPanel.setDesigns(list);
+				glassPane.stop();				
+				return null;
+			}  
+		};
+		worker.execute();		
+		
 	}
 
 	/**
@@ -300,6 +319,12 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void abort() {
 		// TODO Auto-generated method stub
 		
 	}

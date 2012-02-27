@@ -36,7 +36,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     	textArea.appendParagraph(textArea.makeBold(design.title + " ("+design.getRSignature()+")"));
     	textArea.appendParagraph("");
     	textArea.appendHTML(design.getHTMLTable());
-    	textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference+"</i>");
+    	textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference.replaceAll("\\n", "<br>")+"</i>");
 	}
 
 	public void showError(Throwable e) throws BadLocationException, IOException {    	
