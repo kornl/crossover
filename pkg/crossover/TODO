@@ -20,3 +20,6 @@ especially http://cran.r-project.org/web/packages/crossdes/index.html
 design <- structure(c(1, 5, 1, 3, 2, 6, 2, 4, 3, 7, 9, 5, 4, 8, 10, 6), .Dim = c(4L, 4L))
 design.efficiency(design)$av.eff.trt.pair.adj 
 is bigger than 1
+
+design <- structure(c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3), .Dim = c(5L, 3L))
+design.efficiency(design)$av.eff.trt.pair.adj == 6.907292

@@ -4,15 +4,13 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableColumnModel;
 
 public class DesignTableModel extends AbstractTableModel {
 
 	List<Design> designs = new Vector<Design>();
-	
-	//DesignTable table;
-	
-	public DesignTableModel(/*DesignTable table*/) {
-		//this.table = table;
+
+	public DesignTableModel() {
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
