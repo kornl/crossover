@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,7 +40,11 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class CreateGraphGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener, AbortListener {
-	
+	 static { // Static initializer block to set the Locale
+		 Locale.setDefault(Locale.ENGLISH);
+		 JComponent.setDefaultLocale(Locale.ENGLISH);			 
+	 };
+	 
 	Configuration conf = Configuration.getInstance();
 	public InfiniteProgressPanel glassPane;
 	
@@ -72,7 +77,6 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
 		}
 		
-		Locale.setDefault(Locale.ENGLISH);
 		RControl.getRControl(true);
 		
 		/* Get and save R and gMCP version numbers */
