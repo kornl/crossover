@@ -1,7 +1,17 @@
 .onLoad <- function(libname, pkgname) {
+	if (!.jniInitialized) {
+		.jinit(parameters="-Xrs")
+	}
 	.jpackage(pkgname)
 	.jpackage("JavaGD")
 	
+	jars <- c("afcommons",
+			"commons-logging", "forms", 
+			"iText", "jhlir.jar", "jxlayer", 
+			"log4j", "swing-worker")
+	
+	loadJars(jars)
+		
     classes <- system.file("jri", package = "rJava", lib.loc = NULL)
 	if (nchar(classes)) {
 		.jaddClassPath(classes)
