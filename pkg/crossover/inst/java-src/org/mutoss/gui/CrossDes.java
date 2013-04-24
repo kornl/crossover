@@ -18,7 +18,7 @@ public class CrossDes {
 		String signature = null;
 		String result = null;
 		if (p<=t) { /* all.combin */
-			RControl.getR().evalVoid(".tmpDesign <- t(all.combin("+t+","+p+"))");
+			RControl.getR().evalVoid(".tmpDesign <- t(allcombs("+t+","+p+"))");
 			int[] signatureNr =  RControl.getR().eval("crossover:::getSignature(.tmpDesign)").asRInteger().getData();
 			if (s1<=signatureNr[1] && signatureNr[1]<=s2) {
 				title = "Carryover balanced generalized Youden design (uniform on the columns)";
