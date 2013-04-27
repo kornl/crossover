@@ -3,3 +3,5 @@ import(rJava)
 export(startGUI)
 export(design.efficiency)
 export(general.carryover)
+
+export(searchCrossOverDesign)

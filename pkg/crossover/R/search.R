@@ -54,7 +54,7 @@ models <- c("Standard additive model",
             "No carry-over into self model",
             "Treatment decay model",
             "Proportionality model")
-            #"No carry-over effects")
+#"No carry-over effects")
 
 createRowColumnDesign <- function(X, v=unique(as.character(X))) {
   X <- matrix(as.numeric(as.factor(D)), dim(D)[1])
@@ -73,3 +73,9 @@ getInfMatrixOfRCDesign <- function(X, Z, method) {
 
 myInv <- ginv(createRowColumnDesign(D))
 
+searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE) {
+  if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
+    stop("The sum of argument v.rep must equal s times p.")
+  }
+  
+}
