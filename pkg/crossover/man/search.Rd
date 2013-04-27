@@ -14,7 +14,7 @@
   \item{s}{ Number of sequences. }
   \item{p}{ Number of periods. }
   \item{v}{ Number of treatments. }
-  \item{s}{ Model - one of the following: "Standard additive model" (2),
+  \item{model}{ Model - one of the following: "Standard additive model" (2),
             "Second-order carry-over effects" (3),
             "Full set of interactions" (3),
             "Self-adjacency model" (3),

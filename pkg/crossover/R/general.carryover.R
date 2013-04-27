@@ -1,4 +1,6 @@
-
+#TODO general.carryover: no visible binding for global variable ‘par.val’
+#TODO general.carryover: no visible binding for global variable ‘sigw’
+#TODO general.carryover: no visible binding for global variable ‘sigs’
 
 ################################################################################################
 ##           FUNCTION                                                     ######################

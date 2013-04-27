@@ -1,4 +1,5 @@
 import(rJava)
+importFrom(CommonJavaJars, loadJars)
 
 export(startGUI)
 export(design.efficiency)

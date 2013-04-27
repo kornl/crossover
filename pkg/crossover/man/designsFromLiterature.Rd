@@ -47,7 +47,7 @@
   ...
 }
 \examples{
-
+data(anderson)
 }
 \keyword{datasets}
 
