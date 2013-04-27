@@ -56,19 +56,23 @@ models <- c("Standard additive model",
             "Proportionality model")
 #"No carry-over effects")
 
-createRowColumnDesign <- function(X, v=unique(as.character(X))) {
-  X <- matrix(as.numeric(as.factor(D)), dim(D)[1])
-  
+createRowColumnDesign <- function(X, v=length(unique(as.character(X)))) {
+  if (!is.numeric(X) || max(X)!=v) {
+    X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
+  }
+  rcDesign <- X + v*rbind(0, X[-dim(X)[1],])
 }
 
-getInfMatrixOfRCDesign <- function(X, Z, method) {
-  if (missing(method) || method==1) {
-    
-  } else {
-    nr <- dim(X)[1]
-    P <- Z %*% ginv(t(Z) %*% Z) %*% t(Z)
-    return(t(X) %*% (diag(nr)-P) %*% X)
-  }
+getInfMatrixOfRCDesign <- function(X, r, s, p) { #, Z, method) {
+  nr <- dim(X)[1]
+  NP <- # t times p label row incidence matrix
+  NS <- # t times s label column incidence matrix
+  #if (missing(method) || method==1) {
+  A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
+  #} else {    
+  #  P <- Z %*% ginv(t(Z) %*% Z) %*% t(Z)
+  #  return(t(X) %*% (diag(nr)-P) %*% X)
+  #}
 }
 
 myInv <- ginv(createRowColumnDesign(D))
@@ -82,5 +86,6 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   # random start design (respecting v.rep)
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
   rcDesign <- createRowColumnDesign(design)
+  iMatrix <- getInfMatrixOfRCDesign(rcDesign, v.rep, s, p)
   return(design)
 }
