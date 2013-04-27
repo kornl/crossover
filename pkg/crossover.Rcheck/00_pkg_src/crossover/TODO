@@ -1,0 +1,25 @@
+
+Warn if the choosen combination of t, s and p does not 
+allow to estimate all parameters due to insufficient degrees of freedom.
+
+(CrossOver algorithm paper claims on page 4 that this is the case for "p = 3, n = 4, t = 4"
+e.g. "FLETCHER FACTORIAL 2 x 2 DESIGN 1" for second-order carry-over effects.)
+
+Look at R crossover package
+
+Adaptive crossovers (also taking speed of recruiting into account)
+
+A B C D E
+- B A E C D
+- - D E A C B
+and so on…
+
+Look at http://cran.r-project.org/web/views/ExperimentalDesign.html
+especially http://cran.r-project.org/web/packages/crossdes/index.html
+
+design <- structure(c(1, 5, 1, 3, 2, 6, 2, 4, 3, 7, 9, 5, 4, 8, 10, 6), .Dim = c(4L, 4L))
+design.efficiency(design)$av.eff.trt.pair.adj 
+is bigger than 1
+
+design <- structure(c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3), .Dim = c(5L, 3L))
+design.efficiency(design)$av.eff.trt.pair.adj == 6.907292

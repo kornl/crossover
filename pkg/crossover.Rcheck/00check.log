@@ -1,0 +1,52 @@
+* using log directory ‘/home/kornel/git/misc/crossover/pkg/crossover.Rcheck’
+* using R version 2.15.3 (2013-03-01)
+* using platform: x86_64-pc-linux-gnu (64-bit)
+* using session charset: UTF-8
+* checking for file ‘crossover/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘crossover’ version ‘0.1-1’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking whether package ‘crossover’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking DESCRIPTION meta-information ... WARNING
+Non-standard license specification:
+  Other
+Standardizable: FALSE
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... WARNING
+Fehler: .onLoad in loadNamespace() für ‘crossover’ fehlgeschlagen, Details:
+  Aufruf: fun(libname, pkgname)
+  Fehler: konnte Funktion "loadJars" nicht finden
+Ausführung angehalten
+
+A namespace must be able to be loaded with just the base namespace
+loaded: otherwise if the namespace gets loaded by a saved object, the
+session will be unable to start.
+
+Probably some imports need to be declared in the NAMESPACE file.
+* checking whether the namespace can be unloaded cleanly ... WARNING
+Fehler: .onLoad in loadNamespace() für ‘crossover’ fehlgeschlagen, Details:
+  Aufruf: fun(libname, pkgname)
+  Fehler: konnte Funktion "loadJars" nicht finden
+Ausführung angehalten
+* checking loading without being on the library search path ... OK
+* checking for unstated dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ...

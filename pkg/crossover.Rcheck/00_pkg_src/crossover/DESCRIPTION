@@ -1,0 +1,12 @@
+Package: crossover
+Type: Package
+Title: Crossover Designs
+Version: 0.1-1
+Author: Byron Jones, Kornelius Rohmeyer
+Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
+Description: This package provides different crossover designs and a GUI to access them.
+Depends: R (>= 2.8.0), rJava (>= 0.8-3), methods, MASS, crossdes (>=
+        1.1-1), xtable, CommonJavaJars (>= 1.0.3)
+SystemRequirements: Java (>= 5.0)
+License: Other
+Packaged: 2013-04-27 19:00:26 UTC; kornel
