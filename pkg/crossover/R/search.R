@@ -74,8 +74,13 @@ getInfMatrixOfRCDesign <- function(X, Z, method) {
 myInv <- ginv(createRowColumnDesign(D))
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE) {
-  if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
+  if (missing(v.rep)) {
+    v.rep = rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
+  } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
     stop("The sum of argument v.rep must equal s times p.")
   }
-  
+  # random start design (respecting v.rep)
+  design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  rcDesign <- createRowColumnDesign(design)
+  return(design)
 }
