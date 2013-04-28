@@ -8,7 +8,7 @@
 	Search for a Cross-Over Design
 }
 \usage{
-	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE)
+	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE)
 }
 \arguments{
   \item{s}{ Number of sequences. }
@@ -26,6 +26,7 @@
   \item{v.rep}{ Integer vector specifying how often each treatment should be assigned (sum must equal s*p).}
   \item{balance.s}{ Boolean specifying whether to allocate the treatments as equally as possible to each sequence (can result in loss of efficiency). }  
   \item{balance.p}{ Boolean specifying whether to allocate the treatments as equally as possible to each period (can result in loss of efficiency). }  
+  \item{verbose}{ Boolean specifying whether verbose output should be printed. }  
 }
 \details{
 	See the vignette of this package for further details.
