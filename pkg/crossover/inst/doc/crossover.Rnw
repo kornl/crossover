@@ -1,0 +1,244 @@
+\documentclass[a4paper, 10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{decorations,arrows,shapes}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xspace}
+\usepackage{tabularx}
+\usepackage{makeidx}\makeindex
+\usepackage[numbers]{natbib}
+\usepackage{algorithmic} 
+\usepackage{algorithm}
+%\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\bibliographystyle{plainnat}
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1mm}
+\newcommand{\commentout}[1]{}
+\renewcommand{\hlcomment}[1]{\textcolor[rgb]{0.4,0.4,0.4}{#1}}
+\renewcommand{\theequation}{\thesection.\arabic{\equation}}
+\numberwithin{equation}{section}
+
+\theoremstyle{definition}
+\newtheorem{Def}{Definition}[section]
+\newtheorem{Rem}[Def]{Remark}
+\newtheorem{RemDef}[Def]{Remark und Definition}
+\newtheorem{DefRem}[Def]{Definition und Remark}
+\newtheorem{Example}[Def]{Example}
+\theoremstyle{plain}
+\newtheorem{Theorem}[Def]{Theorem}
+\newtheorem{DefTheorem}[Def]{Definition and Theorem}
+\newtheorem{Corollary}[Def]{Corollary}
+\newtheorem{Lemma}[Def]{Lemma}
+
+\newcommand{\C}{\ensuremath{\mathbb{C}}\xspace}
+\newcommand{\R}{\ensuremath{\mathbb{R}}\xspace}
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}\xspace}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\NN}{\ensuremath{\mathbb{N}_0}\xspace}
+\newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
+\newcommand{\sF}{\ensuremath{\mathcal{F}}\xspace}
+\newcommand{\Pot}{\ensuremath{\mathfrak{Pot}}\xspace}
+\newcommand{\kronecker}{\raisebox{1pt}{\ensuremath{\:\otimes\:}}}
+
+\DeclareMathOperator{\range}{range}
+
+\newcommand{\skp}[1]{\left\langle#1\right\rangle}
+
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\newcommand{\id}{\text{id}}
+
+\newenvironment{Proof}{\par\noindent\upshape\textit{Proof. }\nopagebreak}{\qed\par}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\begin{document}
+
+% \VignetteIndexEntry{crossover - A search algorithm and GUI for cross-over designs}
+
+\title{crossover - A search algorithm and GUI for cross-over designs} 
+
+\author{Kornelius Rohmeyer}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+<<OptionsAndLibraries, include=FALSE, message=FALSE>>=
+if (exists("opts_chunk")) {
+  opts_chunk$set(concordance=TRUE)
+  opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=95))
+  opts_chunk$set(size="footnotesize")
+}
+library(crossover, quietly=TRUE)
+options(width=140)
+options(digits=4)
+startGUI <- function(...) {invisible(NULL)}
+#options(prompt="> ", continue="+ ")
+
+@
+
+\newpage
+
+\section{Introduction}
+
+
+
+\subsection{Installation}
+
+If you don't already have R on your system, you can download a bundled
+version of R and gMCP from \url{http://www.algorithm-forge.com/gMCP/bundle/}.
+
+Otherwise open R and type \texttt{install.packages("gMCP")}, 
+select an arbitrary mirror and gMCP will be downloaded and installed.
+
+Once it is installed, whenever you start R you can load the gMCP
+package by entering \texttt{library(gMCP)} into the R Console. The
+graphical user interface is started with the command
+\texttt{graphGUI()}.
+
+If you run into problems, see
+\url{http://cran.r-project.org/web/packages/gMCP/INSTALL} or please write us
+an email at
+\href{mailto:help@small-projects.de}{\texttt{help@small-projects.de}}.
+We are eager to help and to learn about existing problems. 
+
+\subsection{Basic Theoretical Background}
+
+
+\begin{algorithm}
+\caption{Removing node $i$, passing the weight and updating the graph edges}
+\label{rmNodeAlg}
+\begin{algorithmic}
+\FOR{$l \in I$} 
+  \STATE $w_l \gets w_l+w_i\cdot g_{il}$
+  \FOR{$k \in I$}    
+    \IF{$l \neq k$ \textbf{and} $g_{lj}\cdot g_{jl}\neq1$}
+      \STATE $g_{lk} \gets \frac{g_{lk}+g_{lj}\cdot g_{jk}}{1-g_{lj}\cdot g_{jl}}$
+    \ELSE
+      \STATE $g_{lk} \gets 0$
+    \ENDIF    
+  \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Example and diving in}
+
+\begin{Example}
+  We give an example for the Bonferroni-Holm-Procedure that will
+  be used repeatedly throughout this manual. Of course this 
+  package is made for more advanced tests (you find a selection in 
+  section \ref{caseStudies}),
+  but since most readers are already familiar with this procedure,
+  for a first introduction of gMCP, we stick to this simple example.  
+  
+  Let $p_1=0.01$, $p_2=0.07$ and $p_3=0.02$ be three p-values and
+  $\alpha=0.05$.  In the first step $H_1$ can be rejected since
+  $p_1<\alpha/3$.  The updated graph can be seen in figure
+  \ref{exampleHolmP} and now also $H_3$ can be rejected since
+  $p_1<\alpha/2$.  Again the graph is updated, but $H_2$
+  can not be rejected.
+\end{Example}
+
+Let's reproduce this with the \texttt{gMCP} package. We start R and enter:
+
+<<echo=TRUE, eval=FALSE>>=
+library(crossover)
+startGUI()
+@
+
+The GUI seen in Figure \ref{fullGUI} is shown and we select from the
+menu "\emph{Example graphs}" the entry "\emph{Bonferroni-Holm Test}".
+We enter the three p-values in the respective fields on the right
+side.  By clicking on the button with the green arrow we start the
+test procedure and can sequentially reject all three hypotheses.
+
+\begin{appendix} 
+
+\section{Appendix - Multiple Testing Basics}
+
+Let $\Theta$ be a parameter space indexing a family of probabilities
+$\{P_\theta\;|\;\theta\in\Theta\}$ and $(\Omega, \sF, P_\theta)$ the
+associated probability spaces.  For a family of null hypotheses
+$H_i\subset\Theta$, $i\in\{1,\ldots,n\}=:I$ a multiple test procedure
+$\phi$ is defined as a family of $(\sF, \Pot(\{0,1\}^n))$-measurable
+functions $\{\phi_J:\; \Omega \rightarrow \{0,1\}^n\;|\;J\subset I\}$.
+(We'll write $\phi_j$ for $\phi_\{j\}$). 
+
+The family of hypotheses $\{H_i \;|\;i\in I\}$ is called
+\emph{closed}\index{closed family} if it is closed under intersection. 
+
+\begin{Def}[Familywise Error Rate]\index{familywise error rate}
+  Let $H_J:=\bigcap_{j\in J} H_j$. The multiple test procedure $\phi$
+  controls the \emph{familywise error rate at level $\alpha$ in the
+    weak sense} if
+  \[\forall \theta\in H_I: \; P_\theta(\phi_J=1\text{ for some }J\subset I)\leq\alpha.\]
+  The multiple test procedure $\phi$ controls the \emph{familywise
+    error rate at level $\alpha$ in the strong sense} if
+  \[\forall \theta\in\Theta: \; P_\theta\left(\max\limits_{J\subset I, \theta\in H_J}\phi_J=1\right)\leq\alpha.\]
+  %\[\forall \theta\in\Theta: \; P_\theta(\phi_J=1\text{ and }\theta\in H_J\text{ for some }J\subset I)\leq\alpha.\]
+\end{Def}
+
+This section is work in progress.
+
+%\subsection{Closed testing principle}\index{closed testing principle}
+\begin{Theorem}[Closed testing principle]\index{closed testing principle}
+ \cite{marcus1976closed}
+\end{Theorem}
+
+\end{appendix}
+
+\newpage
+
+\addcontentsline{toc}{section}{Index}
+\printindex
+
+\newpage
+
+\listofalgorithms
+\listoffigures
+\listoftables
+
+\newpage
+
+\addcontentsline{toc}{section}{Literatur}
+\bibliography{literatur}
+
+\addcontentsline{toc}{section}{Table of Symbols}
+\section*{Table of Symbols}\footnotesize
+%\twocolumn[\section{Symbolverzeichnis}]
+\begin{tabularx}{\textwidth}{lX}
+\multicolumn{2}{l}{\textbf{Sets}}\\
+\R& set of real numbers\\
+\NN& set of natural numbers (including 0)\\
+$\Pot(X)$ & power set of set $X$, i.e.\ the set of all subsets of $X$\\
+\\
+%\multicolumn{2}{l}{\textbf{Relationen}}\\
+%$X\Subset Y$& $X$ ist relativ kompakt in $Y$\\
+%\end{tabularx}\\
+%\begin{tabularx}{\textwidth}{lX}
+\multicolumn{2}{l}{\textbf{Functions}}\\
+$\skp{\cdot,\cdot}$ & standard direct product $\skp{x,y}=\sum_{j=1}^nx_j\cdot y_j$ for $x,y\in\R^n$\\
+$\id_X$ & identity on $X$, i.e.\ $\id_X:\;X\rightarrow X,\;x\mapsto x$\\
+%\\
+%\multicolumn{2}{l}{\textbf{Andere Symbole}}\\
+\end{tabularx}
+%\onecolumn
+
+\normalsize
+
+\newpage
+
+
+\end{document}
