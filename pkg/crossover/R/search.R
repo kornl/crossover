@@ -63,26 +63,33 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X)))) {
   rcDesign <- X + v*rbind(0, X[-dim(X)[1],])
 }
 
-getInfMatrixOfRCDesign <- function(X, r, s, p) { #, Z, method) {
-  nr <- dim(X)[1]
-  NP <- # t times p label row incidence matrix
-  NS <- # t times s label column incidence matrix
+getInfMatrixOfDesign <- function(X) { #, Z, method) {
+  if (!is.numeric(X) || max(X)!=v) {
+    X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
+  }
+  r <-sapply(1:4, function(x) {sum(X==x)})
+  p <- dim(D)[1]
+  s <- dim(D)[2]
+  NP <- getNp(X) # t times p label row incidence matrix
+  NS <- getNs(X) # t times s label column incidence matrix
   #if (missing(method) || method==1) {
   A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
   #} else {    
+  #  nr <- dim(X)[1]
   #  P <- Z %*% ginv(t(Z) %*% Z) %*% t(Z)
   #  return(t(X) %*% (diag(nr)-P) %*% X)
   #}
+  return(A)
 }
 
 myInv <- ginv(createRowColumnDesign(D))
 
 # D has to be numeric (integer) matrix with values 1, ..., v
 getTDesign <- function(D) {
-  v <- dim(D)[2]
-  X <- matrix(0, prod(dim(D)), max(D))
+  v <- max(D)
+  X <- matrix(0, prod(dim(D)), v)
   for (i in 1:dim(D)[1]) {
-    for (j in 1:v) {
+    for (j in 1:dim(D)[2]) {
       X[j+(i-1)*v, D[i,j]] <- 1
     }
   }
@@ -93,6 +100,31 @@ getBDesign <- function(D, model) {
   
 }
 
+# D has to be numeric (integer) matrix with values 1, ..., v
+getNp <- function(D) {
+  v <- max(D)
+  Np <- matrix(0, v, dim(D)[1])
+  for (i in 1:dim(D)[1]) {
+    for (j in 1:v) {
+      Np[j,i] <- sum(D[i,]==j)
+    }
+  }
+  return(Np)
+}
+
+# D has to be numeric (integer) matrix with values 1, ..., v
+getNs <- function(D) {
+  v <- max(D)
+  Ns <- matrix(0, v, dim(D)[2])
+  for (i in 1:dim(D)[2]) {
+    for (j in 1:v) {
+      Ns[j,i] <- sum(D[,i]==j)
+    }
+  }
+  return(Ns)
+}
+
+
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE) {
   if (missing(v.rep)) {
     v.rep = rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
@@ -101,7 +133,8 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   # random start design (respecting v.rep)
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  iMatrix <- getInfMatrixOfDesign(design)
   rcDesign <- createRowColumnDesign(design)
-  iMatrix <- getInfMatrixOfRCDesign(rcDesign, v.rep, s, p)
+  iMatrix <- getInfMatrixOfRCDesign(rcDesign)
   return(design)
 }
