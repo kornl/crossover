@@ -77,6 +77,22 @@ getInfMatrixOfRCDesign <- function(X, r, s, p) { #, Z, method) {
 
 myInv <- ginv(createRowColumnDesign(D))
 
+# D has to be numeric (integer) matrix with values 1, ..., v
+getTDesign <- function(D) {
+  v <- dim(D)[2]
+  X <- matrix(0, prod(dim(D)), max(D))
+  for (i in 1:dim(D)[1]) {
+    for (j in 1:v) {
+      X[j+(i-1)*v, D[i,j]] <- 1
+    }
+  }
+  return(X)
+}
+
+getBDesign <- function(D, model) {
+  
+}
+
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE) {
   if (missing(v.rep)) {
     v.rep = rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))

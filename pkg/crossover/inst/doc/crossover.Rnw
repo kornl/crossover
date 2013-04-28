@@ -62,7 +62,8 @@
 
 \begin{document}
 
-% \VignetteIndexEntry{crossover - A search algorithm and GUI for cross-over designs}
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{crossover - A search algorithm and GUI for cross-over designs}
 
 \title{crossover - A search algorithm and GUI for cross-over designs} 
 
