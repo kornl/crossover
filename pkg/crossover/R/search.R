@@ -178,7 +178,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     S2 <- 1 # We set this constant for the moment
     S1 <- sum(diag(ginv(t(H) %*% Ar %*% H) %*% CC)) #TODO t(C) %*% C can be calculated outside the loop   
     #print(ginv(t(H) %*% Ar %*% H) %*% t(C) %*% C)
-    gco <- general.carryover(design, model=1)
+    gco <- general.carryover(t(design), model=1)
     var <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
     #
     cat(S2/S1, " vs. ", eOld, " ")    

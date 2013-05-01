@@ -2,8 +2,10 @@ test.design.functions <- function () {
   s <- 3
   p <- 4
   v <- 3
+  
   v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  
   rcDesign <- createRowColumnDesign(design)
   # JRW, p 2650, first equation on that page, whithout number
   Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
@@ -16,7 +18,10 @@ test.design.functions <- function () {
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))
   H <- linkMatrix(model, v)
-  diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C))
-  general.carryover(design, model=1)
+  var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
   
+  gco <- general.carryover(t(design), model=1)
+  var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+  
+  checkTrue(abs(var1-var2)<0.00001)
 }
