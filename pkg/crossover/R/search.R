@@ -100,7 +100,7 @@ getRCDesignMatrix <- function(rcDesign, v) {
   X <- matrix(0, prod(dim(rcDesign)), v)
   for (j in 1:(dim(rcDesign)[2])) {
     for (i in 1:(dim(rcDesign)[1])) {
-      X[(i-1)*v+j,rcDesign[i,j]] <- 1
+      X[(i-1)*(dim(rcDesign)[2])+j,rcDesign[i,j]] <- 1
     }
   }
   return(X)
@@ -122,6 +122,17 @@ getNp <- function(D, v) {
   return(Np)
 }
 
+# block design matrix
+getZ <- function(s, p) {
+  # Z x (p_1, ..., p_p, s_1, ..., s_s)
+  return(cbind(kronecker(diag(p), matrix(1,s,1)),kronecker(matrix(1,p,1),diag(s))))
+}
+
+getPZ <- function(s,p) {
+  Z <- getZ(s,p)
+  return(Z %*% ginv(t(Z) %*% Z) %*% t(Z))
+}
+
 # D has to be numeric (integer) matrix with values 1, ..., v
 getNs <- function(D, v) {
   #v <- max(D)
@@ -136,7 +147,7 @@ getNs <- function(D, v) {
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE) {
   if (missing(v.rep)) {
-    v.rep = rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
+    v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
     stop("The sum of argument v.rep must equal s times p.")
   }
