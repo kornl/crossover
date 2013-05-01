@@ -93,6 +93,10 @@ startGUI <- function(...) {invisible(NULL)}
 
 \section{Introduction}
 
+For a given cross-over design we create a row-column design, calculate the information matrix $A_r$ for this design from
+\[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr'.\]
+
+See \cite{j1995cyclic}.
 
 
 \subsection{Installation}

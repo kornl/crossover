@@ -63,15 +63,15 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X)))) {
   rcDesign <- X + v*rbind(0, X[-dim(X)[1],])
 }
 
-getInfMatrixOfDesign <- function(X) { #, Z, method) {
-  if (!is.numeric(X) || max(X)!=v) {
-    X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
-  }
-  r <-sapply(1:4, function(x) {sum(X==x)})
-  p <- dim(D)[1]
-  s <- dim(D)[2]
-  NP <- getNp(X) # t times p label row incidence matrix
-  NS <- getNs(X) # t times s label column incidence matrix
+getInfMatrixOfDesign <- function(X, v) { #, Z, method) {
+  #if (!is.numeric(X) || max(X)!=v) {
+  #  X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
+  #}
+  r <-sapply(1:v, function(x) {sum(X==x)})
+  p <- dim(X)[1]
+  s <- dim(X)[2]
+  NP <- getNp(X, v) # t times p label row incidence matrix
+  NS <- getNs(X, v) # t times s label column incidence matrix
   #if (missing(method) || method==1) {
   A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
   #} else {    
@@ -96,13 +96,23 @@ getTDesign <- function(D) {
   return(X)
 }
 
+getRCDesignMatrix <- function(rcDesign, v) {
+  X <- matrix(0, prod(dim(rcDesign)), v)
+  for (j in 1:(dim(rcDesign)[2])) {
+    for (i in 1:(dim(rcDesign)[1])) {
+      X[(i-1)*v+j,rcDesign[i,j]] <- 1
+    }
+  }
+  return(X)
+}
+
 getBDesign <- function(D, model) {
   
 }
 
 # D has to be numeric (integer) matrix with values 1, ..., v
-getNp <- function(D) {
-  v <- max(D)
+getNp <- function(D, v) {
+  #v <- max(D)
   Np <- matrix(0, v, dim(D)[1])
   for (i in 1:dim(D)[1]) {
     for (j in 1:v) {
@@ -113,8 +123,8 @@ getNp <- function(D) {
 }
 
 # D has to be numeric (integer) matrix with values 1, ..., v
-getNs <- function(D) {
-  v <- max(D)
+getNs <- function(D, v) {
+  #v <- max(D)
   Ns <- matrix(0, v, dim(D)[2])
   for (i in 1:dim(D)[2]) {
     for (j in 1:v) {
@@ -124,7 +134,6 @@ getNs <- function(D) {
   return(Ns)
 }
 
-
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE) {
   if (missing(v.rep)) {
     v.rep = rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
@@ -133,8 +142,47 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   # random start design (respecting v.rep)
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
-  iMatrix <- getInfMatrixOfDesign(design)
-  rcDesign <- createRowColumnDesign(design)
-  iMatrix <- getInfMatrixOfRCDesign(rcDesign)
+  #iMatrix <- getInfMatrixOfDesign(design)
+  eOld <- 0
+  varOld <- Inf
+  # precalculations that are needed in every step
+  Csub <- contrMat(n=rep(1, v), type="Tukey")
+  class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+  C <- as.matrix(bdiag(Csub,Csub))  
+  CC <- t(C) %*% C
+  for (i in 1:100) {
+    oldDesign <- design    
+    #print(design)
+    while (all(oldDesign==design)) {
+      ij <- ceiling(runif(4)*c(p,s,p,s))    
+      tmp <- design[ij[1],ij[2]]
+      design[ij[1],ij[2]] <- design[ij[3],ij[4]]
+      design[ij[3],ij[4]] <- tmp
+    }
+    #print(design)
+    rcDesign <- createRowColumnDesign(design)
+    Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
+    #print(Ar)
+    H <- linkMatrix(model, v)
+    S2 <- 1 # We set this constant for the moment
+    S1 <- sum(diag(ginv(t(H) %*% Ar %*% H) %*% CC)) #TODO t(C) %*% C can be calculated outside the loop   
+    #print(ginv(t(H) %*% Ar %*% H) %*% t(C) %*% C)
+    gco <- general.carryover(design, model=1)
+    var <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+    #
+    cat(S2/S1, " vs. ", eOld, " ")    
+    if (S2/S1 > eOld) {
+      cat("=> Accepting new matrix.\n")
+      eOld <- S2/S1
+      if (varOld < var) cat("********** BUT: ",var," > ",varOld," *****************\n")
+      varOld <- var
+    } else {
+      cat("=> Keeping old matrix.\n")
+      design <- oldDesign       
+      if (varOld > var) cat("********** BUT: ",var," < ",varOld," *****************\n")
+      var <- varOld
+    }
+  }  
   return(design)
 }
+
