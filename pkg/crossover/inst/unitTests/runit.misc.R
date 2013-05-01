@@ -25,3 +25,17 @@ test.design.functions <- function () {
   
   checkTrue(abs(var1-var2)<0.00001)
 }
+
+test.strangeDesigns <- function() {
+  s <- 4 # number of sequences
+  p <- 4 # number of periods
+  v <- 4 # number of treatments
+  
+  D <- rbind(c("A","B","C","D"),
+             c("B","C","D","A"),
+             c("C","D","A","B"),
+             c("D","A","B","C"))
+  
+  myInv <- ginv(createRowColumnDesign(D))
+  
+}

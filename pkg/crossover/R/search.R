@@ -1,16 +1,3 @@
-library(expm)
-library(MASS) # ginv
-
-#c <- 1
-s <- 4 # number of sequences
-p <- 4 # number of periods
-v <- 4 # number of treatments
-
-D <- rbind(c("A","B","C","D"),
-           c("B","C","D","A"),
-           c("C","D","A","B"),
-           c("D","A","B","C"))
-
 linkMatrix <- function(model, v) {
   if(missing(v)) stop("Please specify number of treatments")
   mI <- diag(v)
@@ -63,7 +50,7 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X)))) {
   rcDesign <- X + v*rbind(0, X[-dim(X)[1],])
 }
 
-getInfMatrixOfDesign <- function(X, v) { #, Z, method) {
+getInfMatrixOfDesign <- function(X, v, method) {
   #if (!is.numeric(X) || max(X)!=v) {
   #  X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
   #}
@@ -72,17 +59,15 @@ getInfMatrixOfDesign <- function(X, v) { #, Z, method) {
   s <- dim(X)[2]
   NP <- getNp(X, v) # t times p label row incidence matrix
   NS <- getNs(X, v) # t times s label column incidence matrix
-  #if (missing(method) || method==1) {
-  A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
-  #} else {    
-  #  nr <- dim(X)[1]
-  #  P <- Z %*% ginv(t(Z) %*% Z) %*% t(Z)
-  #  return(t(X) %*% (diag(nr)-P) %*% X)
-  #}
+  if (missing(method) || method==1) {
+   A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
+  } else {    
+    Xr <- getRCDesignMatrix(rcDesign, v)
+    # JRW, p 2650, second equation on that page, number 11
+    A <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
+  }
   return(A)
 }
-
-myInv <- ginv(createRowColumnDesign(D))
 
 # D has to be numeric (integer) matrix with values 1, ..., v
 getTDesign <- function(D) {
@@ -104,10 +89,6 @@ getRCDesignMatrix <- function(rcDesign, v) {
     }
   }
   return(X)
-}
-
-getBDesign <- function(D, model) {
-  
 }
 
 # D has to be numeric (integer) matrix with values 1, ..., v
