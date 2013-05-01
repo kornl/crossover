@@ -3,3 +3,11 @@
 *.idx
 *.ilg
 *.ind
+*.loa
+*.lof
+*.log
+*.lot
+crossover.pdf
+*.synctex.gz
+crossover.tex
+*.toc
