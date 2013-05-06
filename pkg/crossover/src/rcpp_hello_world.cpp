@@ -11,8 +11,11 @@ SEXP rcpp_hello_world(){
 }
 
 SEXP rcpp_hello_world2(SEXP vs) {
-  arma::vec v = Rcpp::as<arma::vec>(vs);
-  arma::mat op = v * v.t();
-  double ip = arma::as_scalar(v.t() * v);
-  return Rcpp::List::create(Rcpp::Named("outer")=op, Rcpp::Named("inner")=ip);
+  using namespace arma;
+  using namespace Rcpp;
+  
+  vec v = as<vec>(vs);
+  mat op = v * v.t();
+  double ip = as_scalar(v.t() * v);
+  return List::create(Named("outer")=op, Named("inner")=ip);
 }
