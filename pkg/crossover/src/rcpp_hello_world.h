@@ -1,7 +1,7 @@
 #ifndef _myRcpp_RCPP_HELLO_WORLD_H
 #define _myRcpp_RCPP_HELLO_WORLD_H
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 /*
  * note : RcppExport is an alias to `extern "C"` defined by Rcpp.
@@ -15,5 +15,6 @@
  * on Rcpp-devel for a misuse of RcppExport
  */
 RcppExport SEXP rcpp_hello_world() ;
+RcppExport SEXP rcpp_hello_world2(SEXP vs) ;
 
 #endif
