@@ -126,6 +126,25 @@ getNs <- function(D, v) {
   return(Ns)
 }
 
+searchCrossOverDesignCTest <- function() {
+  s <- 4
+  p <- 4
+  v <- 4
+  model <- "Standard additive model"
+  eff.factor <- NULL
+  v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
+  balance.s=FALSE 
+  balance.p=FALSE
+  verbose=TRUE
+  design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  Csub <- contrMat(n=rep(1, v), type="Tukey")
+  class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+  C <- as.matrix(bdiag(Csub,Csub))  
+  CC <- t(C) %*% C
+  H <- linkMatrix(model, v)
+  .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, PACKAGE = "crossover" )
+}
+
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE) {
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
