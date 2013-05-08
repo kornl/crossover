@@ -142,6 +142,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))  
   CC <- t(C) %*% C
+  H <- linkMatrix(model, v)
   for (i in 1:100) {
     oldDesign <- design    
     #print(design)
@@ -154,8 +155,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     #print(design)
     rcDesign <- createRowColumnDesign(design)
     Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
-    #print(Ar)
-    H <- linkMatrix(model, v)
+    #print(Ar)    
     S2 <- 1 # We set this constant for the moment
     S1 <- sum(diag(ginv(t(H) %*% Ar %*% H) %*% CC)) #TODO t(C) %*% C can be calculated outside the loop   
     #print(ginv(t(H) %*% Ar %*% H) %*% t(C) %*% C)

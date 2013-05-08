@@ -19,3 +19,4 @@ SEXP rcpp_hello_world2(SEXP vs) {
   double ip = as_scalar(v.t() * v);
   return List::create(Named("outer")=op, Named("inner")=ip);
 }
+
