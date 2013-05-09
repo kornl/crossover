@@ -1,6 +1,6 @@
 #include "search.h"
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS) {
                  
   using namespace arma; //TODO Where should I place this?
   using namespace Rcpp;
@@ -13,6 +13,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int s = IntegerVector(sS)[0];
   int p = IntegerVector(sS)[0];
   int v = IntegerVector(sS)[0];
+  int n = IntegerVector(nS)[0];
   vec vRep = as<vec>(vRepS);
   //TODO Perhaps using umat or imat for some matrices?
   mat design = as<mat>(designS);
@@ -28,7 +29,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   double varOld = 10000000; // TODO Make this look less arbitrary. :) - It's really okay for all reasonable cases.
   double s1, s2;
   NumericVector rows, cols;
-  for(int i=0; i<20000; i++) {  
+  for(int i=0; i<n; i++) {  
     designOld = design;
     rows = ceil(runif(2)*s); 
     cols = ceil(runif(2)*p);  
