@@ -1,4 +1,5 @@
-linkMatrix <- function(model, v) {
+# ppp=proportionality parameter
+linkMatrix <- function(model, v, ppp=0.5) {
   if(missing(v)) stop("Please specify number of treatments")
   mI <- diag(v)
   m1 <- matrix(1,v,1)
@@ -13,8 +14,12 @@ linkMatrix <- function(model, v) {
                  cbind(kronecker(kronecker(m1,m1),mI), kronecker(kronecker(m1,mI),m1),kronecker(kronecker(mI,m1),m1))))
   }
   if(model=="Full set of interactions") {
-    #return(rbind(linkMatrix("Standard additive model", v),
-    #             ))
+    M <- matrix(0, sum(1:v)*2, v*v)    
+    for (j in (v+1):(sum(1:v)*2)) {
+      jv <- (j-1)%/%v
+      M[j, v*(j-1-v*jv)+jv] <- 1
+    }
+    return(cbind(linkMatrix("Standard additive model", v), M))
   }
   if(model=="Self-adjacency model") {
     
@@ -23,13 +28,39 @@ linkMatrix <- function(model, v) {
     
   }
   if(model=="No carry-over into self model") {
-    
+    M <- linkMatrix("Standard additive model", v)
+    for (j in (v+1):(sum(1:v)*2)) {
+      jv <- (j-1)%/%v
+      if (jv==j-v*jv) {
+        M[j,v+jv] <- 0
+      }
+    }
+    return(M)
   }
   if(model=="Treatment decay model") {
-    
+    M <- matrix(0, sum(1:v)*2, 2*v)     
+    for (j in 1:(sum(1:v)*2)) {
+      jv <- (j-1)%/%v
+      M[j,j-v*jv] <- 1
+      if (j>v && jv==j-v*jv) {
+        M[j,v+jv] <- -1
+      }
+    }
+    return(M)
   }
   if(model=="Proportionality model") {
-    
+    M <- matrix(0, sum(1:v)*2, v) 
+    M[1:v,1:v] <- diag(j)
+    for (j in (v+1):(sum(1:v)*2)) {
+      jv <- (j-1)%/%v
+      if (jv==j-v*jv) {
+        M[j, jv] <- 1+ppp
+      } else {
+        M[j, j-v*jv] <- 1
+        M[j, jv] <- ppp
+      }
+    }
+    return(M)
   }
 }
 
@@ -135,14 +166,14 @@ searchCrossOverDesignCTest <- function() {
   v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   balance.s=FALSE 
   balance.p=FALSE
-  verbose=TRUE
+  verbose=FALSE
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
   Csub <- contrMat(n=rep(1, v), type="Tukey")
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))  
   CC <- t(C) %*% C
   H <- linkMatrix(model, v)
-  .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, PACKAGE = "crossover" )
+  .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 50000, PACKAGE = "crossover" )
 }
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE) {
