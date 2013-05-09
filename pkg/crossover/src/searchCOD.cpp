@@ -2,7 +2,7 @@
 
 SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS) {
                  
-  using namespace arma;
+  using namespace arma; //TODO Where should I place this?
   using namespace Rcpp;
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
@@ -14,6 +14,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int p = IntegerVector(sS)[0];
   int v = IntegerVector(sS)[0];
   vec vRep = as<vec>(vRepS);
+  //TODO Perhaps using umat or imat for some matrices?
   mat design = as<mat>(designS);
   mat linkM = as<mat>(linkMS);
   mat tCC = as<mat>(tCCS); // t(C) %*% C
@@ -22,12 +23,12 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   GetRNGstate();
   
   if (verbose) Rprintf("Starting search algorithm!\n");
-  mat designOld, rcDesign, Ar;
+  mat designOld, rcDesign, Ar;  
   double eOld = 0;
   double varOld = 10000000; // TODO Make this look less arbitrary. :) - It's really okay for all reasonable cases.
   double s1, s2;
   NumericVector rows, cols;
-  for(int i=0; i<1000; i++) {  
+  for(int i=0; i<2; i++) {  
     designOld = design;
     rows = ceil(runif(2)*s); 
     cols = ceil(runif(2)*p);  
@@ -38,7 +39,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
     double tmp = design[rows[0],cols[0]];
     design[rows[0],cols[0]] = design[rows[1],cols[1]];
     design[rows[1],cols[1]] = tmp;
-    rcDesign = createRowColumnDesign(design);
+    rcDesign = createRowColumnDesign(design, v);
     Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
     s2 = 1; // We set this constant for the moment
@@ -60,10 +61,50 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   END_RCPP
 }
 
-arma::mat createRowColumnDesign(arma::mat design) {
-  return design;
+arma::mat createRowColumnDesign(arma::mat design, int v) {
+  using namespace arma;
+  mat rcDesign = design;
+  for (int i=1; i<rcDesign.n_cols; i++) {
+    rcDesign.row(i) = rcDesign.row(i)*v+rcDesign.row(i-1);
+  }
+  //rowvec zeroRow = rowvec(rcDesign.n_cols);
+  //rcDesign.insert_rows(0, zeroRow);
+  //for (= rcDesign <- X + v*rbind(0, X[-dim(X)[1],])
+  return rcDesign;
 }
 
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
-  return rcDesign; 
+  using namespace arma;
+  int p = rcDesign.n_rows;
+  int s = rcDesign.n_cols;
+  vec r = zeros<vec>(v);  
+  mat NP = zeros<mat>(v, p);
+  mat NS = zeros<mat>(v, s);
+  int t;
+  for (int i=0; i<p; i++) {
+    for (int j=0; j<s; j++) {
+      t = rcDesign[i,j]-1;
+      NP[t, i]++;
+      NS[t, j]++;
+      r[t]++;
+    }
+  }
+  rcDesign.print("RCDesign:");
+  NP.print("NP:");
+  NS.print("NS:");
+  r.print("r:");
+  mat A = diagmat(r) - (1/s)* NP * trans(NP) - (1/p)* NS * trans(NS) + (1/(p*s))* r * trans(r);
+  /*r <-sapply(1:v, function(x) {sum(X==x)})
+  p <- dim(X)[1]
+  s <- dim(X)[2]
+  NP <- getNp(X, v) # t times p label row incidence matrix
+  NS <- getNs(X, v) # t times s label column incidence matrix
+  if (missing(method) || method==1) {
+   A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
+  } else {    
+    Xr <- getRCDesignMatrix(rcDesign, v)
+    # JRW, p 2650, second equation on that page, number 11
+    A <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
+  }*/
+  return A; 
 }
