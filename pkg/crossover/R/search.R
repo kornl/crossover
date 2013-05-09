@@ -1,5 +1,5 @@
 # ppp=proportionality parameter
-linkMatrix <- function(model, v, ppp=0.5) {
+linkMatrix <- function(model, v, ppp=0.5, placebos=1) {
   if(missing(v)) stop("Please specify number of treatments")
   mI <- diag(v)
   m1 <- matrix(1,v,1)
@@ -22,10 +22,26 @@ linkMatrix <- function(model, v, ppp=0.5) {
     return(cbind(linkMatrix("Standard additive model", v), M))
   }
   if(model=="Self-adjacency model") {
-    
+    M <- cbind(linkMatrix("Standard additive model", v), matrix(0, sum(1:v)*2, v))
+    for (j in (v+1):(sum(1:v)*2)) {
+      jv <- (j-1)%/%v      
+      if (jv==j-v*jv) {
+        M[j,v+jv] <- 0
+        M[j,2*v+jv] <- 1
+      }
+    }
+    return(M)
   }
   if(model=="Placebo model") {
-    
+    M <- matrix(0, sum(1:v)*2, 2*v)     
+    for (j in 1:(sum(1:v)*2)) {
+      jv <- (j-1)%/%v
+      M[j,j-v*jv] <- 1
+      if (j>v*(placebos+1)) {
+        M[j,v+jv] <- 1
+      }
+    }
+    return(M)
   }
   if(model=="No carry-over into self model") {
     M <- linkMatrix("Standard additive model", v)

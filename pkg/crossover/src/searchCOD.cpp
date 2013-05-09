@@ -15,7 +15,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int v = IntegerVector(sS)[0];
   int n = IntegerVector(nS)[0];
   vec vRep = as<vec>(vRepS);
-  //TODO Perhaps using umat or imat for some matrices?
+  //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
   mat design = as<mat>(designS);
   mat linkM = as<mat>(linkMS);
   mat tCC = as<mat>(tCCS); // t(C) %*% C
