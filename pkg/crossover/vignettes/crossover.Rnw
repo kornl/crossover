@@ -125,8 +125,22 @@ graphical user interface is started with the command
 
 \subsection{Standard additive model}
 
+\[Y_{ijk}=\mu+\pi_j+\tau_{d[i,j]}+\lambda_{d[i,j-1]}+s_{ik}+e_{ijk}\]
+
+with
+
+\begin{description}
+  \item[$\mu$] intercept
+  \item[$\pi_j$] period effect for period $j$
+  \item[$\tau_{d[i,j]}$] direct treatment effect for treatment $d[i,j]$ in period $j$ of sequence $i$.
+  \item[$\lambda_{d[i,j-1]}$] first-order carry-over effect (0 for $j-1$=0)
+  \item[$s_{ik}$] $k$th subject effect on sequence $i$
+  \item[$e_{ijk}$] random error with zero mean and variance $\sigma^2$.
+\end{description}
+
+
 <<echo=TRUE, eval=TRUE>>=
-design <- rbind(c(
+design <- rbind(c())
 
 v <- 4
 # Link matrix:
