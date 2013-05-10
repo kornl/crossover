@@ -95,6 +95,8 @@ startGUI <- function(...) {invisible(NULL)}
 
 \section{Introduction}
 
+%\subsection{}
+
 For a given cross-over design we create a row-column design, calculate the information matrix $A_r$ for this design from
 \[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr'.\]
 
@@ -369,8 +371,10 @@ This section is work in progress.
 \NN& set of natural numbers (including 0)\\
 $\Pot(X)$ & power set of set $X$, i.e.\ the set of all subsets of $X$\\
 \\
-%\multicolumn{2}{l}{\textbf{Relationen}}\\
-%$X\Subset Y$& $X$ ist relativ kompakt in $Y$\\
+\multicolumn{2}{l}{\textbf{Variables}}\\
+$v$& number of treatments\\
+$p$& number of periods\\
+$s$& number of sequences\\
 %\end{tabularx}\\
 %\begin{tabularx}{\textwidth}{lX}
 \multicolumn{2}{l}{\textbf{Functions}}\\
