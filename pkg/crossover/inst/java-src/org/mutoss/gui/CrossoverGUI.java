@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -87,6 +88,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		} catch (Exception e) {
 			// This is no vital information and will fail for e.g. R 2.8.0, so no error handling here...
 		}
+		
+		setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/rjavaicon64.png"))).getImage());
 		
 		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");
 		RControl.getR().evalVoid("crossover:::loadAllDatasets()"); 
