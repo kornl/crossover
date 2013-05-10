@@ -79,7 +79,9 @@
 if (exists("opts_chunk")) {
   opts_chunk$set(concordance=TRUE)
   opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=95))
-  opts_chunk$set(size="footnotesize")
+  #opts_chunk$set(size="footnotesize")
+  #opts_chunk$set(size="tiny")
+  opts_chunk$set(size="scriptsize")  
 }
 library(crossover, quietly=TRUE)
 options(width=140)
@@ -96,7 +98,7 @@ startGUI <- function(...) {invisible(NULL)}
 For a given cross-over design we create a row-column design, calculate the information matrix $A_r$ for this design from
 \[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr'.\]
 
-See \cite{j1995cyclic} and \cite{jones2003design}.
+See \cite{j1995cyclic} and .
 
 
 \subsection{Installation}
@@ -127,24 +129,48 @@ graphical user interface is started with the command
 
 \[Y_{ijk}=\mu+\pi_j+\tau_{d[i,j]}+\lambda_{d[i,j-1]}+s_{ik}+e_{ijk}\]
 
-with
+with\footnote{cf. \cite{jones2003design}, page 8}
 
 \begin{description}
-  \item[$\mu$] intercept
-  \item[$\pi_j$] period effect for period $j$
-  \item[$\tau_{d[i,j]}$] direct treatment effect for treatment $d[i,j]$ in period $j$ of sequence $i$.
-  \item[$\lambda_{d[i,j-1]}$] first-order carry-over effect (0 for $j-1$=0)
-  \item[$s_{ik}$] $k$th subject effect on sequence $i$
+  \item[$\mu$] intercept,
+  \item[$\pi_j$] period effect for period $j$,
+  \item[$\tau_{d[i,j]}$] direct treatment effect for treatment $d[i,j]$ in period $j$ of sequence $i$,
+  \item[$\lambda_{d[i,j-1]}$] first-order carry-over effect (0 for $j-1$=0),
+  \item[$s_{ik}$] $k$th subject effect on sequence $i$, %TODO What is the most elegant way to handle this? We only need/want s_i?
   \item[$e_{ijk}$] random error with zero mean and variance $\sigma^2$.
 \end{description}
 
+which we can write as
+
+\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
+\tau\\ \lambda
+\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
+
+with $X$ and $Z$ called the \emph{treatment} and \emph{block design matrices}, respectively.
 
 <<echo=TRUE, eval=TRUE>>=
-design <- rbind(c())
-
-v <- 4
+# Design:
+design <- rbind(c(3,2,1),
+                c(2,1,3),
+                c(1,2,3),
+                c(3,2,1))
+design
+v <- 3 # number of treatments
 # Link matrix:
-crossover:::linkMatrix(model="Standard additive model", v)
+H <- crossover:::linkMatrix(model="Standard additive model", v)
+H
+# Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
+rcDesign <- crossover:::createRowColumnDesign(design, model=1)
+rcDesign
+# Design Matrix of Row-Column Design:
+Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v*v)
+Xr
+# Design Matrix of Cross-Over Design:
+X <- Xr %*% H
+X
+
 @
 
 \subsection{Second-order carry-over effects}
