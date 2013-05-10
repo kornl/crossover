@@ -157,7 +157,7 @@ with $X$ and $Z$ called the \emph{treatment}\index{treatment design matrix} and 
 
 We call $H$ a \emph{link matrix}\index{link matrix} if $X=X_rH$ were $X_r$ is the design matrix for the row-column design.
 
-<<echo=TRUE, eval=TRUE>>=
+<<StandardAdditive, echo=TRUE>>=
 # Design:
 design <- rbind(c(3,2,1),
                 c(2,1,3),
@@ -188,19 +188,19 @@ X
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
-<<echo=TRUE, eval=TRUE>>=
+<<SecondOrder, echo=TRUE>>=
 # Link matrix:
-H <- crossover:::linkMatrix(model="Full set of interactions", v)
-H
+#H <- crossover:::linkMatrix(model="Full set of interactions", v)
+#H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::createRowColumnDesign(design, model=8)
-rcDesign
+#rcDesign <- crossover:::createRowColumnDesign(design, model=8)
+#rcDesign
 # Design Matrix of Row-Column Design:
-Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
-Xr
+#Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
+#Xr
 # Design Matrix of Cross-Over Design:
-X <- Xr %*% H
-X
+#X <- Xr %*% H
+#X
 
 @
 
@@ -212,22 +212,6 @@ X
 \end{smallmatrix} \right)+Z\bigl( \begin{smallmatrix}
 \pi\\ s
 \end{smallmatrix} \bigr)\]
-
-<<echo=TRUE, eval=TRUE>>=
-# Link matrix:
-H <- crossover:::linkMatrix(model="Full set of interactions", v)
-H
-# Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::createRowColumnDesign(design, model=1)
-rcDesign
-# Design Matrix of Row-Column Design:
-Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
-Xr
-# Design Matrix of Cross-Over Design:
-X <- Xr %*% H
-X
-
-@
 
 
 \subsection{Self-adjacency model}
