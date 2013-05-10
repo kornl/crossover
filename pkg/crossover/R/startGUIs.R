@@ -1,3 +1,3 @@
 crossoverGUI <- function() {
-	invisible(.jnew("org/mutoss/gui/CreateGraphGUI"))	
+	invisible(.jnew("org/mutoss/gui/CrossoverGUI"))	
 }

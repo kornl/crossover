@@ -28,9 +28,9 @@ public class MenuBarMGraph extends JMenuBar implements ActionListener {
     JMenu fmenu = new JMenu("File");
     JMenu extraMenu = new JMenu("Extras");
     JMenu exampleMenu = new JMenu("Example graphs");
-    CreateGraphGUI control;
+    CrossoverGUI control;
 
-	public MenuBarMGraph(CreateGraphGUI control) {
+	public MenuBarMGraph(CrossoverGUI control) {
 		
 		this.control = control;		
 
@@ -58,8 +58,6 @@ public class MenuBarMGraph extends JMenuBar implements ActionListener {
 		fmenu.setMnemonic(KeyEvent.VK_F);
 		add(fmenu);
 		
-		createExampleMenu();
-		add(exampleMenu);
 		exampleMenu.setMnemonic(KeyEvent.VK_X);
 
 		JMenu menu = new JMenu("Analysis");
@@ -79,10 +77,8 @@ public class MenuBarMGraph extends JMenuBar implements ActionListener {
 		menu = new JMenu("Help");
 		menu.setMnemonic(KeyEvent.VK_H);
 		menu.add(makeMenuItem("About", "showAbout", KeyEvent.VK_B));         
-		menu.add(makeMenuItem("Introduction to gMCP", "showAppHelp", KeyEvent.VK_I));
-		menu.add(makeMenuItem("Weighted parametric tests defined by graphs", "showParametric", KeyEvent.VK_P));
-		menu.add(makeMenuItem("gMCP R Online Reference manual", "showManual", KeyEvent.VK_M));
-		menu.add(makeMenuItem("Paper about gMCP in the Biometrical Journal", "showPaper1", KeyEvent.VK_P));
+		menu.add(makeMenuItem("Package vignette", "showAppHelp", KeyEvent.VK_I));
+		menu.add(makeMenuItem("crossover R Online Reference manual", "showManual", KeyEvent.VK_M));
 		menu.add(makeMenuItem("References", "showReferences", KeyEvent.VK_R));
 		//menu.add(makeMenuItem("Theoretical Background", "showAppHelp"));
 		/*menu.addSeparator();
@@ -91,55 +87,6 @@ public class MenuBarMGraph extends JMenuBar implements ActionListener {
 		menu.add(makeMenuItem("Version Info / NEWS", "showNEWS", KeyEvent.VK_N));
 		add(menu);
 
-	}
-	
-	public void createExampleMenu() {
-		exampleMenu.removeAll();
-		
-		JMenu subMenu = new JMenu("Common test procedures for any number of hypotheses");		
-		subMenu.add(makeMenuItem("Bonferroni-Holm procedure", "bht"));
-		subMenu.add(makeMenuItem("Fixed sequence test", "fixedSequence"));
-		subMenu.add(makeMenuItem("Fallback procedure", "fallback"));
-		exampleMenu.add(subMenu);
-		
-		subMenu = new JMenu("3 unstructured hypotheses");
-		subMenu.add(makeMenuItem("Improved fallback procedure I", "fallbackI"));
-		subMenu.add(makeMenuItem("Improved fallback procedure II", "fallbackII"));
-		exampleMenu.add(subMenu);		
-		
-		subMenu = new JMenu("2 primary & 2 secondary hypotheses");		
-		subMenu.add(makeMenuItem("Parallel Gatekeeping with 4 Hypotheses", "pg"));
-		subMenu.add(makeMenuItem("Improved Parallel Gatekeeping with 4 Hypotheses", "pgi"));
-		subMenu.addSeparator();
-		subMenu.add(makeMenuItem("Truncated Holm procedure", "truncHolm"));
-		subMenu.addSeparator();
-		subMenu.add(makeMenuItem("General successive graph", "gSuccessive"));
-		subMenu.add(makeMenuItem("   Simple successive graph I from Maurer et al. (2011)", "successiveI"));
-		subMenu.add(makeMenuItem("   Simple successive graph II from Maurer et al. (2011)", "successiveII"));
-		subMenu.addSeparator();
-		subMenu.add(makeMenuItem("Graph from Hung and Wang (2010)", "hung"));
-		subMenu.add(makeMenuItem("Graph from Huque, Alosh and Bhore (2011)", "huque"));
-		exampleMenu.add(subMenu);
-
-		subMenu = new JMenu("3 primary & 3 secondary hypotheses");		
-		subMenu.add(makeMenuItem("Graph from Bauer et al. (2001)", "bauer"));
-		subMenu.add(makeMenuItem("Graph from Bretz et al. (2011)", "bretzEtAl"));
-		exampleMenu.add(subMenu);
-		
-		subMenu = new JMenu("2 primary & 2 secondary & 2 tertiary hypotheses");		
-		subMenu.add(makeMenuItem("Graph from Bretz et al. (2009), Figure 14a", "bretzEtAl2009a"));
-		subMenu.add(makeMenuItem("Graph from Bretz et al. (2009), Figure 14b", "bretzEtAl2009b"));
-		subMenu.add(makeMenuItem("Graph from Bretz et al. (2009), Figure 15", "bretzEtAl2009c"));
-		exampleMenu.add(subMenu);
-		
-		subMenu = new JMenu("Miscellaneous");		
-		subMenu.add(makeMenuItem("Graph from Hommel et al. (2007)", "hommelEtAl"));
-		subMenu.add(makeMenuItem("Graph from Hommel et al. (2007) simplified", "hommelEtAlSimple"));
-		//subMenu.addSeparator();
-		subMenu.add(makeMenuItem("Drug clinical trial example (serial gatekeeping) from Maurer et al. (1995)", "maurer1995"));
-		subMenu.add(makeMenuItem("Graph I from Ferber et al. (2011)", "ferber2011"));
-		subMenu.add(makeMenuItem("Graph II from Ferber et al. (2011)", "ferber2011b"));
-		exampleMenu.add(subMenu);
 	}
 	
 	public void createExtraMenu() {

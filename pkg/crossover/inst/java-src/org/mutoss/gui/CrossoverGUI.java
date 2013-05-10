@@ -39,7 +39,7 @@ import org.mutoss.config.Configuration;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class CreateGraphGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener, AbortListener {
+public class CrossoverGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener, AbortListener {
 	 static { // Static initializer block to set the Locale
 		 Locale.setDefault(Locale.ENGLISH);
 		 JComponent.setDefaultLocale(Locale.ENGLISH);			 
@@ -63,7 +63,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	/**
 	 * Constructor - you will not need to change things here
 	 */
-	public CreateGraphGUI() {		
+	public CrossoverGUI() {		
 		super("CROSS-OVER DESIGN SEARCH TOOL");
 		//setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/graph/images/rjavaicon64.png"))).getImage());
 		
@@ -307,7 +307,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	public static void startGUI() {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new CreateGraphGUI();
+				new CrossoverGUI();
 			}
 		});		
 	}	
@@ -319,7 +319,7 @@ public class CreateGraphGUI extends JFrame implements WindowListener, ActionList
 	public static void main(String[] args) {
 		RControl.getR().eval(".setenv <- if (exists(\"Sys.setenv\")) Sys.setenv else Sys.putenv");
 		RControl.getR().eval(".setenv(\"JAVAGD_CLASS_NAME\"=\"org/mutoss/gui/JavaGD\")");
-		new CreateGraphGUI();
+		new CrossoverGUI();
 	}
 
 	public void valueChanged(ListSelectionEvent e) {

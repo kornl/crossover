@@ -24,14 +24,14 @@ public class RObjectLoadingDialog extends JDialog implements ActionListener, Lis
 	JButton ok = new JButton("Load");
 	JButton cancel = new JButton("Cancel");
 
-    CreateGraphGUI parent;    
+    CrossoverGUI parent;    
     JList jlMatrices;
     JList jlGraphs;
     String[] matrices;
     String[] graphs;
     JTextArea jtInfo = new JTextArea(12, 40);
     
-	public RObjectLoadingDialog(CreateGraphGUI parent) {
+	public RObjectLoadingDialog(CrossoverGUI parent) {
 		super(parent, "Select an R object to load", true);
 		this.parent = parent;
 		jtInfo.setEditable(false);

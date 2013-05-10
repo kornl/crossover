@@ -48,7 +48,7 @@ public class VariableNameDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	public VariableNameDialog(CreateGraphGUI graphGUI) {
+	public VariableNameDialog(CrossoverGUI graphGUI) {
 		this(graphGUI, Configuration.getInstance().getClassProperty(VariableNameDialog.class, "variableName", ""));
 	}
 

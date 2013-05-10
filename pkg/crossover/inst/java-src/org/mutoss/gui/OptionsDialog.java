@@ -27,12 +27,12 @@ public class OptionsDialog extends JDialog implements ActionListener {
 
     private Configuration conf;
 
-    CreateGraphGUI parent;
+    CrossoverGUI parent;
 
     /**
      * Standard constructor
      */
-    public OptionsDialog(CreateGraphGUI p) {
+    public OptionsDialog(CrossoverGUI p) {
     	super(p);
     	this.parent = p;
         this.conf = Configuration.getInstance();
@@ -97,7 +97,6 @@ public class OptionsDialog extends JDialog implements ActionListener {
         if (e.getActionCommand().equals(OkApplyCancelButtonPane.CANCEL_CMD)) {
             dispose();
         }
-        ((MenuBarMGraph)parent.getJMenuBar()).createExampleMenu();
         ((MenuBarMGraph)parent.getJMenuBar()).createExtraMenu();
     }
 

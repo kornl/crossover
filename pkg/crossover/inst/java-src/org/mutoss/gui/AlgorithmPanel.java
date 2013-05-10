@@ -70,7 +70,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener {
 		
 		int row = 2;
     	
-		jCBmodel = new JComboBox(CreateGraphGUI.models);
+		jCBmodel = new JComboBox(CrossoverGUI.models);
 		
 		panel.add(new JLabel("Model"), cc.xy(2, row));
 		panel.add(jCBmodel, cc.xy(4, row));
