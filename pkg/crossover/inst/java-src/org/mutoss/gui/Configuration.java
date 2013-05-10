@@ -15,7 +15,7 @@ public class Configuration {
 	protected static Log logger = LogFactory.getLog(Configuration.class);
     protected Preferences prefs;
     protected static Configuration instance = null;
-    private final String keyPrefix = "gMCP.";
+    private final String keyPrefix = "crossover.";
     public final static String NOTFOUND = "___NOT_FOUND___";
 
     /**

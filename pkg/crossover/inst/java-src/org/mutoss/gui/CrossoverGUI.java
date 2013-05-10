@@ -96,6 +96,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	    glassPane.addAbortListener(this);
 		
 		makeContent();
+		setJMenuBar(new MenuBarCrossover(this));
 		pack();
 
 		 // Place the frame in the middle of the screen with a border of inset = 50 pixel.

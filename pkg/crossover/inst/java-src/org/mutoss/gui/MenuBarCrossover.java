@@ -22,15 +22,15 @@ import org.af.commons.tools.OSTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class MenuBarMGraph extends JMenuBar implements ActionListener {
+public class MenuBarCrossover extends JMenuBar implements ActionListener {
 
-	private static final Log logger = LogFactory.getLog(MenuBarMGraph.class);
+	private static final Log logger = LogFactory.getLog(MenuBarCrossover.class);
     JMenu fmenu = new JMenu("File");
     JMenu extraMenu = new JMenu("Extras");
     JMenu exampleMenu = new JMenu("Example graphs");
     CrossoverGUI control;
 
-	public MenuBarMGraph(CrossoverGUI control) {
+	public MenuBarCrossover(CrossoverGUI control) {
 		
 		this.control = control;		
 
@@ -190,19 +190,15 @@ public class MenuBarMGraph extends JMenuBar implements ActionListener {
         } else if (e.getActionCommand().equals("exit")) {       	
         	 control.windowClosing(null);
         } else if (e.getActionCommand().equals("showAppHelp")) {
-        	showFile("doc/gMCP.pdf");       	 	
-        } else if (e.getActionCommand().equals("showParametric")) {
-        	showFile("doc/parametric.pdf");       	 	
+        	showFile("doc/crossover.pdf");       	 	
         } else if (e.getActionCommand().equals("showManual")) {
         	showURL("http://cran.at.r-project.org/web/packages/gMCP/gMCP.pdf");
-        } else if (e.getActionCommand().equals("showPaper1")) {
-        	showURL("http://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239/full");
         } else if (e.getActionCommand().equals("showReferences")) {
         	showFile("References.html");
         } else if (e.getActionCommand().equals("showEpsDoc")) {
         	showFile("doc/EpsilonEdges.pdf");       	 	
         } else if (e.getActionCommand().equals("showNEWS")) {
-        	new TextFileViewer(control, new File(RControl.getR().eval("system.file(\"NEWS\", package=\"gMCP\")").asRChar().getData()[0]));      	 	
+        	new TextFileViewer(control, new File(RControl.getR().eval("system.file(\"NEWS\", package=\"crossover\")").asRChar().getData()[0]));      	 	
         } else if (e.getActionCommand().equals("showAbout")) {
         	new AboutDialog(control);
         } else if (e.getActionCommand().equals("showOptions")) {
@@ -233,7 +229,7 @@ public class MenuBarMGraph extends JMenuBar implements ActionListener {
 	}
 
 	public void showFile(String s) {
-		File f = new File(RControl.getR().eval("system.file(\""+s+"\", package=\"gMCP\")").asRChar().getData()[0]);
+		File f = new File(RControl.getR().eval("system.file(\""+s+"\", package=\"crossover\")").asRChar().getData()[0]);
 		if (OSTools.isWindows() && s.indexOf('.') == -1) {
 			try {
 				f = FileTransfer.copyFile(f, new File(System.getProperty("java.io.tmpdir"), f.getName()+"TXT"));

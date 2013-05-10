@@ -27,7 +27,7 @@ public class AboutDialog extends InfoDialog implements ActionListener {
     
 	
     public AboutDialog(JFrame parent) {
-    	super(parent, "About gMCP-GUI "+Configuration.getInstance().getGeneralConfig().getVersionNumber());
+    	super(parent, "About Crossover-GUI "+Configuration.getInstance().getGeneralConfig().getVersionNumber());
 
         jtAbout.setStyledDocument(getDocument());
         jtAbout.setEditable(false);
@@ -47,9 +47,9 @@ public class AboutDialog extends InfoDialog implements ActionListener {
         logger.info("Creating About-Text.");
 		try {			
 			doc.insertString(doc.getLength(),					
-					"gMCP "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+"\n\n", getH1());			
+					"Crossover "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+"\n\n", getH1());			
 			doc.insertString(doc.getLength(),
-					"by Kornelius Rohmeyer, Florian Klinglmueller and Bjoern Bornkamp is distributed under GPL>=2.0."+"\n\n", getT());			
+					"by Kornelius Rohmeyer"/* is distributed under GPL>=2.0."*/+"\n\n", getT());			
 			doc.insertString(doc.getLength(), "This program uses the libraries log4j, JLaTeXMath, iText (2.1.4), jxlayer,\n swingworker, commons logging/lang, JRI and JGoodies Forms.\n", getT());
 			doc.setParagraphAttributes(0, doc.getLength(), getC(), true);
         } catch (BadLocationException ble) {

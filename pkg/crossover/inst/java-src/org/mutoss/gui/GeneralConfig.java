@@ -174,11 +174,11 @@ public class GeneralConfig extends SpecificConfig {
 	}
 	
 	public void setVersionNumber(String version) {
-		setProperty("gMCPversion", version);
+		setProperty("CrossoverVersion", version);
 	}
 
 	public String getVersionNumber() {
-		return getProperty("gMCPversion", "<= 0.6.0");
+		return getProperty("CrossoverVersion", "<= 0.1.1");
 	}
 	
 	public void setRVersionNumber(String version) {
