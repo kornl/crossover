@@ -100,7 +100,7 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model) {
     return( X + v*rbind(0, X[-dim(X)[1],]) )
   }
   if(model=="Second-order carry-over effects" || model==8) {
-    return(M)
+    return( X + v*rbind(0, X[-dim(X)[1],]) + v*v*rbind(0, 0, X[c(-(dim(X)[1]-1),-dim(X)[1]),]) )
   }
   if(model=="Full set of interactions" || model==7) {
     return(M)

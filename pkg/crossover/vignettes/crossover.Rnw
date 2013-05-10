@@ -114,14 +114,17 @@ package by entering \texttt{library(crossover)} into the R Console. The
 graphical user interface is started with the command
 \texttt{graphGUI()}.
 
+\begin{figure}[ht]
+  \centering    
+  \includegraphics[width=0.7\textwidth]{figures/GUI.png}      
+  \caption{\label{GUI} Cross-Over Design GUI.}
+\end{figure}
+
 %If you run into problems, see
 %\url{http://cran.r-project.org/web/packages/gMCP/INSTALL} or please write us
 %an email at
 %\href{mailto:help@small-projects.de}{\texttt{help@small-projects.de}}.
 %We are eager to help and to learn about existing problems. 
-
-\subsection{Basic Theoretical Background}
-
 
 \section{Models}
 
@@ -148,7 +151,9 @@ which we can write as
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
-with $X$ and $Z$ called the \emph{treatment} and \emph{block design matrices}, respectively.
+with $X$ and $Z$ called the \emph{treatment}\index{treatment design matrix} and \emph{block design matrices}\index{block design matrix}, respectively.
+
+We call $H$ a \emph{link matrix}\index{link matrix} if $X=X_rH$ were $X_r$ is the design matrix for the row-column design.
 
 <<echo=TRUE, eval=TRUE>>=
 # Design:
@@ -174,13 +179,110 @@ X
 @
 
 \subsection{Second-order carry-over effects}
+
+\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
+\tau\\ \lambda
+\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
+
+<<echo=TRUE, eval=TRUE>>=
+# Link matrix:
+H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H
+# Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
+rcDesign <- crossover:::createRowColumnDesign(design, model=8)
+rcDesign
+# Design Matrix of Row-Column Design:
+Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
+Xr
+# Design Matrix of Cross-Over Design:
+X <- Xr %*% H
+X
+
+@
+
+
 \subsection{Full set of interactions}
+
+\[E(Y)=\mu + X \left( \begin{smallmatrix}
+\tau\\ \lambda\\ \gamma
+\end{smallmatrix} \right)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
+
+<<echo=TRUE, eval=TRUE>>=
+# Link matrix:
+H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H
+# Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
+rcDesign <- crossover:::createRowColumnDesign(design, model=1)
+rcDesign
+# Design Matrix of Row-Column Design:
+Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
+Xr
+# Design Matrix of Cross-Over Design:
+X <- Xr %*% H
+X
+
+@
+
+
 \subsection{Self-adjacency model}
+
+\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
+\tau\\ \lambda
+\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
+
 \subsection{Placebo model}
+
+\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
+\tau\\ \lambda
+\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
+
+<<echo=TRUE, eval=TRUE>>=
+# Link matrix:
+H <- crossover:::linkMatrix(model="Placebo model", v, placebos=1)
+H
+# Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
+rcDesign <- crossover:::createRowColumnDesign(design, model=1)
+rcDesign
+# Design Matrix of Row-Column Design:
+Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v*v)
+Xr
+# Design Matrix of Cross-Over Design:
+X <- Xr %*% H
+X
+
+@
+
 \subsection{No carry-over into self model}
+
+\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
+\tau\\ \lambda
+\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
+
 \subsection{Treatment decay model}
+
+\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
+\tau\\ \lambda
+\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
+
 \subsection{Proportionality model}
 
+\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
+\tau\\ \lambda
+\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+\pi\\ s
+\end{smallmatrix} \bigr)\]
 
 \subsection{Example and diving in}
 
@@ -195,7 +297,7 @@ library(crossover)
 crossoverGUI()
 @
 
-The GUI seen in Figure \ref{fullGUI} is shown and
+The GUI seen in Figure \ref{GUI} is shown and
 
 <<Introduction, echo=TRUE, eval=TRUE>>=
   s <- 3

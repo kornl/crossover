@@ -1,5 +1,5 @@
-\name{startGUI}
-\alias{startGUI}
+\name{crossoverGUI}
+\alias{crossoverGUI}
 
 \title{
 	Graphical User Interface for the Creation of SRMTP Graphs
@@ -8,14 +8,14 @@
 	Starts a graphical user interface for the creation of SRMTP graphs.
 }
 \usage{
-	startGUI()
+	crossoverGUI()
 }
 
 \details{
 	See the vignette of this package for further details, since describing a GUI interface is better done with a lot of nice pictures.
 }
 \value{
-	The function itself returns NULL. But with the GUI a graph can be created or edited that will be available in R under the specified variable name after saving.
+	The function itself returns NULL. But from the GUI designs and objects can be created or edited that will be available in R under the specified variable name after saving.
 }
 \author{
 	Kornelius Rohmeyer \email{rohmeyer@small-projects.de}

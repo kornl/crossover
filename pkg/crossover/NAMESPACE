@@ -3,7 +3,7 @@ useDynLib(crossover)
 import(rJava)
 importFrom(CommonJavaJars, loadJars)
 
-export(startGUI)
+export(crossoverGUI)
 export(design.efficiency)
 export(general.carryover)
 
