@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableColumnModel;
 
 public class DesignTableModel extends AbstractTableModel {
 

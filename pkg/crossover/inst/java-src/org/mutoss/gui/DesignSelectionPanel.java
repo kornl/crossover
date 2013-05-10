@@ -1,13 +1,11 @@
 package org.mutoss.gui;
 
 import java.awt.Font;
-import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 

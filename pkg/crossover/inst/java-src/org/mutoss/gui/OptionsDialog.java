@@ -5,13 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import org.af.commons.errorhandling.ErrorHandler;
 import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.buttons.OkApplyCancelButtonPane;
-import org.af.commons.widgets.validate.ValidationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
