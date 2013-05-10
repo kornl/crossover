@@ -1,0 +1,5 @@
+Changes in version 0.1-1 (??-??-2013, Rev. 1???)
+================================================
+
+- The output of graph2latex has greatly improved and you nearly get 
+  in TikZ what you can see in the Java GUI. 
