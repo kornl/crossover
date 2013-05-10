@@ -93,11 +93,11 @@ models <- c("Standard additive model",
 
 createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model) {
   M <- diag(3)
-  if (!is.numeric(X) || max(X)!=v) {
-    return( X + v*rbind(0, X[-dim(X)[1],]) )
+  if (!is.numeric(X) || max(X)!=v) { #TODO Check where I need these checks really and where they are still missing.
+    X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
   }
   if(model=="Standard additive model" || model==1) {
-    return(M)
+    return( X + v*rbind(0, X[-dim(X)[1],]) )
   }
   if(model=="Second-order carry-over effects" || model==8) {
     return(M)

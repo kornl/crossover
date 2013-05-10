@@ -101,103 +101,101 @@ See \cite{j1995cyclic} and \cite{jones2003design}.
 
 \subsection{Installation}
 
-If you don't already have R on your system, you can download a bundled
-version of R and gMCP from \url{http://www.algorithm-forge.com/gMCP/bundle/}.
+%If you don't already have R on your system, you can download a bundled
+%version of R and crossover from \url{http://www.algorithm-forge.com/gMCP/bundle/}.
 
-Otherwise open R and type \texttt{install.packages("gMCP")}, 
-select an arbitrary mirror and gMCP will be downloaded and installed.
+Open R and type \texttt{install.packages("crossover")}, 
+select an arbitrary mirror and crossover will be downloaded and installed.
 
-Once it is installed, whenever you start R you can load the gMCP
-package by entering \texttt{library(gMCP)} into the R Console. The
+Once it is installed, whenever you start R you can load the crossover
+package by entering \texttt{library(crossover)} into the R Console. The
 graphical user interface is started with the command
 \texttt{graphGUI()}.
 
-If you run into problems, see
-\url{http://cran.r-project.org/web/packages/gMCP/INSTALL} or please write us
-an email at
-\href{mailto:help@small-projects.de}{\texttt{help@small-projects.de}}.
-We are eager to help and to learn about existing problems. 
+%If you run into problems, see
+%\url{http://cran.r-project.org/web/packages/gMCP/INSTALL} or please write us
+%an email at
+%\href{mailto:help@small-projects.de}{\texttt{help@small-projects.de}}.
+%We are eager to help and to learn about existing problems. 
 
 \subsection{Basic Theoretical Background}
 
 
-\begin{algorithm}
-\caption{Removing node $i$, passing the weight and updating the graph edges}
-\label{rmNodeAlg}
-\begin{algorithmic}
-\FOR{$l \in I$} 
-  \STATE $w_l \gets w_l+w_i\cdot g_{il}$
-  \FOR{$k \in I$}    
-    \IF{$l \neq k$ \textbf{and} $g_{lj}\cdot g_{jl}\neq1$}
-      \STATE $g_{lk} \gets \frac{g_{lk}+g_{lj}\cdot g_{jk}}{1-g_{lj}\cdot g_{jl}}$
-    \ELSE
-      \STATE $g_{lk} \gets 0$
-    \ENDIF    
-  \ENDFOR
-\ENDFOR
-\end{algorithmic}
-\end{algorithm}
+\section{Models}
+
+\subsection{Standard additive model}
+
+<<echo=TRUE, eval=TRUE>>=
+design <- rbind(c(
+
+v <- 4
+# Link matrix:
+crossover:::linkMatrix(model="Standard additive model", v)
+@
+
+\subsection{Second-order carry-over effects}
+\subsection{Full set of interactions}
+\subsection{Self-adjacency model}
+\subsection{Placebo model}
+\subsection{No carry-over into self model}
+\subsection{Treatment decay model}
+\subsection{Proportionality model}
+
 
 \subsection{Example and diving in}
 
 \begin{Example}
-  We give an example for the Bonferroni-Holm-Procedure that will
-  be used repeatedly throughout this manual. Of course this 
-  package is made for more advanced tests (you find a selection in 
-  section \ref{caseStudies}),
-  but since most readers are already familiar with this procedure,
-  for a first introduction of gMCP, we stick to this simple example.  
-  
-  Let $p_1=0.01$, $p_2=0.07$ and $p_3=0.02$ be three p-values and
-  $\alpha=0.05$.  In the first step $H_1$ can be rejected since
-  $p_1<\alpha/3$.  The updated graph can be seen in figure
-  \ref{exampleHolmP} and now also $H_3$ can be rejected since
-  $p_1<\alpha/2$.  Again the graph is updated, but $H_2$
-  can not be rejected.
+ Lorem ipsum
 \end{Example}
 
-Let's reproduce this with the \texttt{gMCP} package. We start R and enter:
+Let's reproduce this with the \texttt{crossover} package. We start R and enter:
 
-<<echo=TRUE, eval=FALSE>>=
+<<startGUI, echo=TRUE, eval=FALSE>>=
 library(crossover)
-startGUI()
+crossoverGUI()
 @
 
-The GUI seen in Figure \ref{fullGUI} is shown and we select from the
-menu "\emph{Example graphs}" the entry "\emph{Bonferroni-Holm Test}".
-We enter the three p-values in the respective fields on the right
-side.  By clicking on the button with the green arrow we start the
-test procedure and can sequentially reject all three hypotheses.
+The GUI seen in Figure \ref{fullGUI} is shown and
+
+<<Introduction, echo=TRUE, eval=TRUE>>=
+  s <- 3
+  p <- 4
+  v <- 3
+  
+  v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
+  design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  
+  rcDesign <- crossover:::createRowColumnDesign(design, model=1)
+  # JRW, p 2650, first equation on that page, whithout number
+  Ar <- crossover:::getInfMatrixOfDesign(rcDesign, v+v*v)
+  Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v*v)
+  # JRW, p 2650, second equation on that page, number 11
+  Ar2 <- t(Xr) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% Xr
+  max(abs(Ar-Ar2))
+  
+  Csub <- contrMat(n=rep(1, v), type="Tukey")
+  class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+  C <- as.matrix(bdiag(Csub,Csub))
+  H <- crossover:::linkMatrix(model=1, v)
+  var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
+  
+  gco <- general.carryover(t(design), model=1)
+  var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+  
+  abs(var1-var2)
+@
 
 \begin{appendix} 
 
 \section{Appendix - Multiple Testing Basics}
 
-Let $\Theta$ be a parameter space indexing a family of probabilities
-$\{P_\theta\;|\;\theta\in\Theta\}$ and $(\Omega, \sF, P_\theta)$ the
-associated probability spaces.  For a family of null hypotheses
-$H_i\subset\Theta$, $i\in\{1,\ldots,n\}=:I$ a multiple test procedure
-$\phi$ is defined as a family of $(\sF, \Pot(\{0,1\}^n))$-measurable
-functions $\{\phi_J:\; \Omega \rightarrow \{0,1\}^n\;|\;J\subset I\}$.
-(We'll write $\phi_j$ for $\phi_\{j\}$). 
-
-The family of hypotheses $\{H_i \;|\;i\in I\}$ is called
-\emph{closed}\index{closed family} if it is closed under intersection. 
-
 \begin{Def}[Familywise Error Rate]\index{familywise error rate}
   Let $H_J:=\bigcap_{j\in J} H_j$. The multiple test procedure $\phi$
-  controls the \emph{familywise error rate at level $\alpha$ in the
-    weak sense} if
-  \[\forall \theta\in H_I: \; P_\theta(\phi_J=1\text{ for some }J\subset I)\leq\alpha.\]
-  The multiple test procedure $\phi$ controls the \emph{familywise
-    error rate at level $\alpha$ in the strong sense} if
-  \[\forall \theta\in\Theta: \; P_\theta\left(\max\limits_{J\subset I, \theta\in H_J}\phi_J=1\right)\leq\alpha.\]
-  %\[\forall \theta\in\Theta: \; P_\theta(\phi_J=1\text{ and }\theta\in H_J\text{ for some }J\subset I)\leq\alpha.\]
+  
 \end{Def}
 
 This section is work in progress.
 
-%\subsection{Closed testing principle}\index{closed testing principle}
 \begin{Theorem}[Closed testing principle]\index{closed testing principle}
  \cite{marcus1976closed}
 \end{Theorem}
@@ -244,6 +242,5 @@ $\id_X$ & identity on $X$, i.e.\ $\id_X:\;X\rightarrow X,\;x\mapsto x$\\
 \normalsize
 
 \newpage
-
 
 \end{document}
