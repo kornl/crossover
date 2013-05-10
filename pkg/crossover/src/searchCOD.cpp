@@ -8,8 +8,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
   bool verbose = is_true( any( LogicalVector(verboseS) ) );
-  bool balanceS = is_true( any( LogicalVector(balanceS) ) );
-  bool balanceP = is_true( any( LogicalVector(balanceP) ) );
+  bool balanceS = is_true( any( LogicalVector(balanceSS) ) );
+  bool balanceP = is_true( any( LogicalVector(balancePS) ) );
   int s = IntegerVector(sS)[0];
   int p = IntegerVector(sS)[0];
   int v = IntegerVector(sS)[0];
@@ -26,7 +26,6 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   if (verbose) Rprintf("Starting search algorithm!\n");
   mat designOld, rcDesign, Ar;  
   double eOld = 0;
-  double varOld = 10000000; // TODO Make this look less arbitrary. :) - It's really okay for all reasonable cases.
   double s1, s2;
   NumericVector rows, cols;
   for(int i=0; i<n; i++) {  
@@ -65,7 +64,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
 arma::mat createRowColumnDesign(arma::mat design, int v) {
   using namespace arma;
   mat rcDesign = design;
-  for (int i=1; i<rcDesign.n_cols; i++) {
+  for (unsigned i=1; i<rcDesign.n_cols; i++) {
     rcDesign.row(i) = design.row(i)*v+design.row(i-1);
   }
   //rowvec zeroRow = rowvec(rcDesign.n_cols);
