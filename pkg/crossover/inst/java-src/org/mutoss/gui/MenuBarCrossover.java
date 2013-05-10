@@ -27,14 +27,14 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 	private static final Log logger = LogFactory.getLog(MenuBarCrossover.class);
     JMenu fmenu = new JMenu("File");
     JMenu extraMenu = new JMenu("Extras");
-    JMenu exampleMenu = new JMenu("Example graphs");
+    
     CrossoverGUI control;
 
 	public MenuBarCrossover(CrossoverGUI control) {
 		
 		this.control = control;		
 
-		fmenu.add(makeMenuItem("New Graph", "new graph", KeyEvent.VK_N));
+		/*fmenu.add(makeMenuItem("New Graph", "new graph", KeyEvent.VK_N));
 		fmenu.add(makeMenuItem("Load Graph from R", "load graph from R", KeyEvent.VK_L));
 		fmenu.add(makeMenuItem("Load Graph from RData file", "load graph"));
 		fmenu.addSeparator();
@@ -54,19 +54,18 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 		fmenu.add(item);
 		//fmenu.add(makeMenuItem("Save PDF Report", "save pdf"));
 		fmenu.addSeparator();
-		createLastUsed();
+		createLastUsed();*/
+		fmenu.add(makeMenuItem("Exit", "exit", KeyEvent.VK_X));
 		fmenu.setMnemonic(KeyEvent.VK_F);
 		add(fmenu);
 		
-		exampleMenu.setMnemonic(KeyEvent.VK_X);
-
 		JMenu menu = new JMenu("Analysis");
 		menu.setMnemonic(KeyEvent.VK_A);
 
-		menu.add(makeMenuItem("Graph analysis", "graphAnalysis"));
+		menu.add(makeMenuItem("Extended analysis", "analysis"));
 		//if (Configuration.getInstance().getGeneralConfig().experimentalFeatures()) {
-		menu.addSeparator();
-		menu.add(makeMenuItem("Power analysis (still experimental)", "powerAnalysis"));		
+		//menu.addSeparator();
+		//menu.add(makeMenuItem("Power analysis (still experimental)", "powerAnalysis"));		
 		//}
 
 		add(menu);
@@ -78,8 +77,8 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 		menu.setMnemonic(KeyEvent.VK_H);
 		menu.add(makeMenuItem("About", "showAbout", KeyEvent.VK_B));         
 		menu.add(makeMenuItem("Package vignette", "showAppHelp", KeyEvent.VK_I));
-		menu.add(makeMenuItem("crossover R Online Reference manual", "showManual", KeyEvent.VK_M));
-		menu.add(makeMenuItem("References", "showReferences", KeyEvent.VK_R));
+		//menu.add(makeMenuItem("crossover R Online Reference manual", "showManual", KeyEvent.VK_M));
+		//menu.add(makeMenuItem("References", "showReferences", KeyEvent.VK_R));
 		//menu.add(makeMenuItem("Theoretical Background", "showAppHelp"));
 		/*menu.addSeparator();
          menu.add(makeMenuItem("Description of Edges with Infinitesimal Small Epsilon Weights", "showEpsDoc"));*/
@@ -93,13 +92,13 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 		extraMenu.removeAll();
 		extraMenu.add(makeMenuItem("Options", "showOptions", KeyEvent.VK_O));
 		extraMenu.add(makeMenuItem("Set all options back to default", "clearOptions", KeyEvent.VK_C));
-		extraMenu.addSeparator();
-		extraMenu.add(makeMenuItem("Change Layout of graph", "changeGraphLayout", KeyEvent.VK_G));
-		extraMenu.add(makeMenuItem("Set variables to specific real values", "replaceVariables", KeyEvent.VK_V));
+		//extraMenu.addSeparator();
+		//extraMenu.add(makeMenuItem("Change Layout of graph", "changeGraphLayout", KeyEvent.VK_G));
+		//extraMenu.add(makeMenuItem("Set variables to specific real values", "replaceVariables", KeyEvent.VK_V));
 		extraMenu.addSeparator();
 		extraMenu.add(makeMenuItem("Log", "showLog", KeyEvent.VK_L));
 		extraMenu.add(makeMenuItem("Report error", "reportError", KeyEvent.VK_R));
-		extraMenu.add(makeMenuItem("Submit your own graph to gMCP archive", "submitGraph"));
+		//extraMenu.add(makeMenuItem("Submit your own graph to gMCP archive", "submitGraph"));
 		if (System.getProperty("eclipse") != null) {		
 			extraMenu.add(makeMenuItem("Debug console", "debugConsole", KeyEvent.VK_D));
 		}

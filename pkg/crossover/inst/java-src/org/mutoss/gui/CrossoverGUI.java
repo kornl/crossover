@@ -253,6 +253,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	public void windowClosing(WindowEvent e) {
 		if (RControl.getR().eval("exists(\".isBundle\")").asRLogical().getData()[0]) {
 			RControl.getR().eval("q(save=\"no\")");
+		} else {
+			System.exit(0);
 		}
 	}
 	public void windowActivated(WindowEvent e) {}
