@@ -190,17 +190,17 @@ X
 
 <<SecondOrder, echo=TRUE>>=
 # Link matrix:
-#H <- crossover:::linkMatrix(model="Full set of interactions", v)
-#H
+H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-#rcDesign <- crossover:::createRowColumnDesign(design, model=8)
-#rcDesign
+rcDesign <- crossover:::createRowColumnDesign(design, model=8)
+rcDesign
 # Design Matrix of Row-Column Design:
 #Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
-#Xr
+Xr
 # Design Matrix of Cross-Over Design:
-#X <- Xr %*% H
-#X
+X <- Xr %*% H
+X
 
 @
 
