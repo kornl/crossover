@@ -3,3 +3,5 @@
 /.Rhistory
 misc.Rproj
 .Rhistory
+src-i386
+src-x64
