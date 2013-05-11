@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -107,10 +109,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         
         row+=2;
         
+        ButtonGroup group = new ButtonGroup();
+        group.add(jbBalanceNothing);
+        group.add(jbBalanceSequences);
+        group.add(jbBalancePeriods);
+        
         return lsPanel;
 	}
 	
-	GridBagConstraints cbcWeights = new GridBagConstraints();
 	int rowTNP;
 	
 	private void createWeightsPanel() {
@@ -119,11 +125,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		}
 
 		weightsPanel = new JPanel();
+		GridBagConstraints cbcWeights = new GridBagConstraints();
 		cbcWeights.fill = GridBagConstraints.BOTH;	
 		cbcWeights.gridx=0; cbcWeights.gridy=0;
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
+		weightsPanel.setBorder(BorderFactory.createTitledBorder("Contrast Weights (redesign in future!)"));
 
 		weightsPanel.setLayout(new GridBagLayout());
 		/*} else {
@@ -161,11 +169,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		}
 
 		weightsPanel = new JPanel();
+		GridBagConstraints cbcWeights = new GridBagConstraints();
 		cbcWeights.fill = GridBagConstraints.BOTH;	
 		cbcWeights.gridx=0; cbcWeights.gridy=0;
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
+		weightsPanel.setBorder(BorderFactory.createTitledBorder("Contrast Weights (redesign in future!)"));
 
 		weightsPanel.setLayout(new GridBagLayout());
 		/*} else {
