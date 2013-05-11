@@ -23,3 +23,7 @@ is bigger than 1
 
 design <- structure(c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3), .Dim = c(5L, 3L))
 design.efficiency(design)$av.eff.trt.pair.adj == 6.907292
+
+Random Number Seed
+
+Correlation?

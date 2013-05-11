@@ -315,18 +315,17 @@ The GUI seen in Figure \ref{GUI} is shown and
 
 \begin{appendix} 
 
-\section{Appendix - Multiple Testing Basics}
+\section{Appendix - Row-Column Designs}
 
-\begin{Def}[Familywise Error Rate]\index{familywise error rate}
-  Let $H_J:=\bigcap_{j\in J} H_j$. The multiple test procedure $\phi$
-  
-\end{Def}
+%\begin{Def}[Familywise Error Rate]\index{familywise error rate}
+%  Let $H_J:=\bigcap_{j\in J} H_j$. The multiple test procedure $\phi$
+%\end{Def}
 
 This section is work in progress.
 
-\begin{Theorem}[Closed testing principle]\index{closed testing principle}
- \cite{marcus1976closed}
-\end{Theorem}
+%\begin{Theorem}[Closed testing principle]\index{closed testing principle}
+% \cite{marcus1976closed}
+%\end{Theorem}
 
 \end{appendix}
 
