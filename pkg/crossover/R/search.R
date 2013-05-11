@@ -258,7 +258,14 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     stop("The sum of argument v.rep must equal s times p.")
   }
   # random start design (respecting v.rep)
-  design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")
+  if (balance.s) {
+    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
+  } else if (balance.p) {
+    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
+  } else {
+    design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  }
   #iMatrix <- getInfMatrixOfDesign(design)
   eOld <- 0
   varOld <- Inf
