@@ -265,48 +265,53 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
   } else {
     design <- matrix(sample(rep(1:v, v.rep)), p, s)
-  }
-  #iMatrix <- getInfMatrixOfDesign(design)
-  eOld <- 0
-  varOld <- Inf
-  # precalculations that are needed in every step
+  }  
   Csub <- contrMat(n=rep(1, v), type="Tukey")
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))  
   CC <- t(C) %*% C
   H <- linkMatrix(model, v)
-  for (i in 1:100) {
-    oldDesign <- design    
-    #print(design)
-    while (all(oldDesign==design)) {
-      ij <- ceiling(runif(4)*c(p,s,p,s))    
-      tmp <- design[ij[1],ij[2]]
-      design[ij[1],ij[2]] <- design[ij[3],ij[4]]
-      design[ij[3],ij[4]] <- tmp
-    }
-    #print(design)
-    rcDesign <- createRowColumnDesign(design, model=model)
-    Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
-    #print(Ar)    
-    S2 <- 1 # We set this constant for the moment
-    S1 <- sum(diag(ginv(t(H) %*% Ar %*% H) %*% CC))   
-    #print(ginv(t(H) %*% Ar %*% H) %*% t(C) %*% C)
-    gco <- general.carryover(t(design), model=1)
-    var <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
-    #
-    cat(S2/S1, " vs. ", eOld, " ")    
-    if (S2/S1 > eOld) {
-      cat("=> Accepting new matrix.\n")
-      eOld <- S2/S1
-      if (varOld < var) cat("********** BUT: ",var," > ",varOld," *****************\n")
-      varOld <- var
-    } else {
-      cat("=> Keeping old matrix.\n")
-      design <- oldDesign       
-      if (varOld > var) cat("********** BUT: ",var," < ",varOld," *****************\n")
-      var <- varOld
-    }
-  }  
+  if (TRUE) {
+    result <- .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 50000, PACKAGE = "crossover" )
+    design <- result$design
+  } else {
+    #iMatrix <- getInfMatrixOfDesign(design)
+    eOld <- 0
+    varOld <- Inf
+    # precalculations that are needed in every step    
+    for (i in 1:100) {
+      oldDesign <- design    
+      #print(design)
+      while (all(oldDesign==design)) {
+        ij <- ceiling(runif(4)*c(p,s,p,s))    
+        tmp <- design[ij[1],ij[2]]
+        design[ij[1],ij[2]] <- design[ij[3],ij[4]]
+        design[ij[3],ij[4]] <- tmp
+      }
+      #print(design)
+      rcDesign <- createRowColumnDesign(design, model=model)
+      Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
+      #print(Ar)    
+      S2 <- 1 # We set this constant for the moment
+      S1 <- sum(diag(ginv(t(H) %*% Ar %*% H) %*% CC))   
+      #print(ginv(t(H) %*% Ar %*% H) %*% t(C) %*% C)
+      gco <- general.carryover(t(design), model=1)
+      var <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+      #
+      cat(S2/S1, " vs. ", eOld, " ")    
+      if (S2/S1 > eOld) {
+        cat("=> Accepting new matrix.\n")
+        eOld <- S2/S1
+        if (varOld < var) cat("********** BUT: ",var," > ",varOld," *****************\n")
+        varOld <- var
+      } else {
+        cat("=> Keeping old matrix.\n")
+        design <- oldDesign       
+        if (varOld > var) cat("********** BUT: ",var," < ",varOld," *****************\n")
+        var <- varOld
+      }
+    }  
+  }
   return(list(design=design))
 }
 

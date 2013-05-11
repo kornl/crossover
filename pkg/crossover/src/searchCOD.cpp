@@ -11,8 +11,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   bool balanceS = is_true( any( LogicalVector(balanceSS) ) );
   bool balanceP = is_true( any( LogicalVector(balancePS) ) );
   int s = IntegerVector(sS)[0];
-  int p = IntegerVector(sS)[0];
-  int v = IntegerVector(sS)[0];
+  int p = IntegerVector(pS)[0];
+  int v = IntegerVector(vS)[0];
   int n = IntegerVector(nS)[0];
   vec vRep = as<vec>(vRepS);
   //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
@@ -30,15 +30,15 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   NumericVector rows, cols;
   for(int i=0; i<n; i++) {  
     designOld = design;
-    rows = ceil(runif(2)*s); 
-    cols = ceil(runif(2)*p);  
-    while ( design[rows[0],cols[0]] == design[rows[1],cols[1]] ) {
-      rows = ceil(runif(2)*s); 
-      cols = ceil(runif(2)*p);  
+    rows = ceil(runif(2)*p)-1; 
+    cols = ceil(runif(2)*s)-1;  
+    while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) {
+      rows = ceil(runif(2)*p)-1; 
+      cols = ceil(runif(2)*s)-1;  
     }
-    double tmp = design[rows[0],cols[0]];
-    design[rows[0],cols[0]] = design[rows[1],cols[1]];
-    design[rows[1],cols[1]] = tmp;
+    double tmp = design(rows[0],cols[0]);
+    design(rows[0],cols[0]) = design(rows[1],cols[1]);
+    design(rows[1],cols[1]) = tmp;
     rcDesign = createRowColumnDesign(design, v);
     Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
@@ -64,7 +64,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
 arma::mat createRowColumnDesign(arma::mat design, int v) {
   using namespace arma;
   mat rcDesign = design;
-  for (unsigned i=1; i<rcDesign.n_cols; i++) {
+  for (unsigned i=1; i<rcDesign.n_rows; i++) {
     rcDesign.row(i) = design.row(i)*v+design.row(i-1);
   }
   //rowvec zeroRow = rowvec(rcDesign.n_cols);
