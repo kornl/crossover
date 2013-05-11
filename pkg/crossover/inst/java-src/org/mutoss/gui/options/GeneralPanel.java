@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.options;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +20,7 @@ import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.lists.IntegerJComboBox;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.gui.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.dialogs;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -16,6 +16,11 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.mutoss.gui.Configuration;
+import org.mutoss.gui.CrossoverGUI;
+import org.mutoss.gui.MenuBarCrossover;
+import org.mutoss.gui.RControl;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

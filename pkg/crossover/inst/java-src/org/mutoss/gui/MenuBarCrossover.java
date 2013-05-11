@@ -21,6 +21,10 @@ import org.af.commons.logging.widgets.DetailsDialog;
 import org.af.commons.tools.OSTools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.gui.dialogs.AboutDialog;
+import org.mutoss.gui.dialogs.RObjectLoadingDialog;
+import org.mutoss.gui.dialogs.TextFileViewer;
+import org.mutoss.gui.options.OptionsDialog;
 
 public class MenuBarCrossover extends JMenuBar implements ActionListener {
 

@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.dialogs;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
+import org.mutoss.gui.RControl;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

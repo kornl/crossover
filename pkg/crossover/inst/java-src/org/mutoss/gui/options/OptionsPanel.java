@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.options;
 
 import javax.swing.JPanel;
 

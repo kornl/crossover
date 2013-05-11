@@ -10,6 +10,7 @@ import org.af.commons.logging.LoggingSystem;
 import org.af.jhlir.backends.rengine.RCallServicesREngine;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.gui.dialogs.ErrorDialogSGTK;
 import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.JRI.JRIEngine;

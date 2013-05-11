@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.dialogs;
 
 import java.awt.Color;
 

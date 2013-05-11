@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.options;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,9 @@ import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.buttons.OkApplyCancelButtonPane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.gui.Configuration;
+import org.mutoss.gui.CrossoverGUI;
+import org.mutoss.gui.MenuBarCrossover;
 
 /**
  * Dialog for configuring various settings.

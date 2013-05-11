@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.dialogs;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,7 @@ import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.buttons.OKButtonPane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.gui.Configuration;
 
 /**
  * Displays Information about the program, its licenses, used libraries,

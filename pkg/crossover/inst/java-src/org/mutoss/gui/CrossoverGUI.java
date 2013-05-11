@@ -36,6 +36,7 @@ import org.af.commons.widgets.InfiniteProgressPanel;
 import org.af.commons.widgets.InfiniteProgressPanel.AbortListener;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.Configuration;
+import org.mutoss.gui.dialogs.ErrorDialogSGTK;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

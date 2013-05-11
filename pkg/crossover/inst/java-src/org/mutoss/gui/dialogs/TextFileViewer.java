@@ -1,4 +1,4 @@
-package org.mutoss.gui;
+package org.mutoss.gui.dialogs;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -22,6 +22,7 @@ import org.af.commons.io.FileTools;
 import org.af.commons.widgets.RightClickTextMenuListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.gui.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
