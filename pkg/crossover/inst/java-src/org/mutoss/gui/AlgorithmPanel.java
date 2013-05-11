@@ -42,10 +42,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JRadioButton jbBalanceNothing = new JRadioButton("No balancing restrictions");
 	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences (may decrease efficiency)");
 	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods (may decrease efficiency)");
+	CrossoverGUI gui;
 	
-	public AlgorithmPanel(JSpinner spinnerT) {
-		this.treatments = spinnerT;
-		spinnerT.addChangeListener(this);
+	public AlgorithmPanel(CrossoverGUI gui) {
+		this.gui = gui;
+		gui.spinnerT.addChangeListener(this);
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
         String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu";
         
@@ -158,7 +159,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		List<String> labels = new Vector<String>();
         
-		int s = Integer.parseInt(treatments.getModel().getValue().toString());
+		int s = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
         for (int i=1; i<s; i++) {
         	for (int j=1; j<=s; j++) {
         		labels.add("Weight "+i+"-"+j+":");
@@ -202,7 +203,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		List<String> labels = new Vector<String>();
         
-		int s = Integer.parseInt(treatments.getModel().getValue().toString());
+		int s = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
         for (int i=1; i<s; i++) {
         	for (int j=1; j<=s; j++) {
         		labels.add(i+"-"+j);
@@ -236,14 +237,23 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jbCompute) {
 			
+			String command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+					+", "+gui.getParameters()
+					+", model=\""+jCBmodel.getSelectedItem()+"\""
+					//+", eff.factor="
+					//+", v.rep="
+					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
+					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
+					+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
+					+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
+					+", verbose=FALSE)";
+			RControl.getR().eval(command).asRList();
 		}		
 	}
-	
-	public JSpinner treatments;
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		int s = Integer.parseInt(treatments.getModel().getValue().toString());
+		int s = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
 		createWeightsPanel();
 	}
 

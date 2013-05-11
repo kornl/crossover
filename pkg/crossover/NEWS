@@ -1,5 +1,4 @@
-Changes in version 0.1-1 (??-??-2013, Rev. 1???)
+Changes in version 0.1-2 (11-05-2013)
 ================================================
 
-- The output of graph2latex has greatly improved and you nearly get 
-  in TikZ what you can see in the Java GUI. 
+- First version of search algorithm supporting a subset of models. 

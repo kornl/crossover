@@ -241,7 +241,7 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 			}
 		}		
 		if (!f.exists()) {
-			throw new RuntimeException("This is strange. The file \""+s+"\" could not be found.");
+			throw new RuntimeException("This is strange. The file \""+s+"\" could not be found.\nFull path: "+(f.getAbsolutePath()));
 		} else {
 			try {	
 				Method main = Class.forName("java.awt.Desktop").getDeclaredMethod("getDesktop");

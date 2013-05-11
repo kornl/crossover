@@ -140,7 +140,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		designPanel = new DesignSelectionPanel();
 		designInputPanel = new DesignInputPanel();
 		designInputPanel.addActionListener(this);
-		algorithmPanel = new AlgorithmPanel(spinnerT);
+		algorithmPanel = new AlgorithmPanel(this);
 		tabbedPane.addTab("Catalogue", designPanel);
 		tabbedPane.addTab("Algorithm Search", algorithmPanel);
 		tabbedPane.addTab("Input own design", designInputPanel);
@@ -340,6 +340,12 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	public void abort() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getParameters() {
+		int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
+		int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
+		return "p="+p+", v="+t;
 	}
 
 }
