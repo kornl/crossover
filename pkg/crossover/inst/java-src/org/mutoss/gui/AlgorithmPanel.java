@@ -24,6 +24,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.af.jhlir.call.RList;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -36,7 +37,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JComboBox<String> jCBmodel;
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
-	JTextArea jta;
+	HTMLPaneWithButtons jta;
 	JLabel label = new JLabel();
 	JPanel ntPanel = null;
 	JPanel weightsPanel = null;
@@ -52,6 +53,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
 		gui.spinnerT.addChangeListener(this);
+		gui.spinnerP.addChangeListener(this);
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
         String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu";
         
@@ -68,9 +70,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
         row+=2;
         
-		jta = new JTextArea("");
+		jta = new HTMLPaneWithButtons();
 		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		jta.setLineWrap(false);		
+		//jta.setLineWrap(false);		
 		jta.setMargin(new Insets(4,4,4,4));
 		jta.setEditable(false);		
 		
@@ -111,7 +113,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         row+=2;  
         
     	spinnerS = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1)); 
-    	//spinnerS.addChangeListener(this);
+    	spinnerS.addChangeListener(this);
         
         lsPanel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
         lsPanel.add(spinnerS, cc.xy(4, row));
@@ -304,7 +306,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jbCompute) {			
-			String command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+			String command = ".COresult <- searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
 					+", "+gui.getParameters()
 					+", model=\""+jCBmodel.getSelectedItem()+"\""
 					+", eff.factor="+1
@@ -314,8 +316,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
 					+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
 					+", verbose=FALSE)";
-			//System.out.println(command);
-			RList result = RControl.getR().eval(command).asRList();			
+			System.out.println(command);
+			RControl.getR().eval(command).asRList();
+			RList result = RControl.getR().eval(".COresult").asRList();
+			String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
+			jta.appendHTML(table);
+			jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");
 		} else if (e.getSource() == jCBmodel) {
 			if (jCBmodel.getSelectedIndex()==4) {
 				jtfParam.setEnabled(true);

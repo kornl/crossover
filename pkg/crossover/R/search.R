@@ -252,6 +252,9 @@ searchCrossOverDesignCTest <- function() {
 }
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE, ppp=0.5, placebos=1) {
+  model <- which(models==model)
+  if (length(model)==0) error("Unknown model.")
+  if (!(model %in% 1:8)) error("Model must be number between 1 and 8.")
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
@@ -312,6 +315,28 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
       }
     }  
   }
-  return(list(design=design))
+  varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
+  return(list(design=design, varTrtPair=varTrtPair))
 }
 
+getTrtPair <- function(design, model=1) {
+  gco <- general.carryover(t(design), model=model)
+  return(triu(gco$Var.trt.pair))
+}
+
+getValues <- function(design, model=1, C, v=max(design)) {
+  if (missing(C)) {
+    Csub <- contrMat(n=rep(1, v), type="Tukey")
+    class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+    C <- cbind(Csub,matrix(0,dim(Csub)[1],v)) 
+    CC <- t(C) %*% C
+  }
+  rcDesign <- createRowColumnDesign(design, model=model)
+  Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
+  H <- linkMatrix(model, v)
+  return(diag(ginv(t(H) %*% Ar %*% H) %*% CC))  
+}
+
+dput2 <- function(x) {
+  paste(capture.output(dput(x)), collapse = " ")
+}
