@@ -24,6 +24,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.af.jhlir.call.RList;
+
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -31,20 +33,21 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
-	JComboBox jCBmodel;
+	JComboBox<String> jCBmodel;
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
 	JTextArea jta;
 	JLabel label = new JLabel();
 	JPanel ntPanel = null;
 	JPanel weightsPanel = null;
+	JPanel effPanel = null;
 	List<JTextField> weightsV = new Vector<JTextField>();
 	List<JTextField> nV = new Vector<JTextField>();
 	CellConstraints cc = new CellConstraints();
 	JRadioButton jbBalanceNothing = new JRadioButton("No balancing restrictions");
 	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences (may decrease efficiency)");
 	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods (may decrease efficiency)");
-	CrossoverGUI gui;
+	CrossoverGUI gui;	
 	
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
@@ -92,7 +95,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		int row = 2;
     	
-		jCBmodel = new JComboBox(CrossoverGUI.models);
+		jCBmodel = new JComboBox<String>(CrossoverGUI.models);
 		jCBmodel.addActionListener(this);
 		
 		lsPanel.add(new JLabel("Model"), cc.xy(2, row));
@@ -139,7 +142,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         row+=2;        
 		
         lsPanel.add(jbCompute, cc.xyw(2, row, 3));
-
+        jbCompute.addActionListener(this);
         
         return lsPanel;
 	}
@@ -191,6 +194,51 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		lsPanel.repaint();
 	}
 	
+	private void createEffPanel() {		
+		if (effPanel!=null) {
+			lsPanel.remove(effPanel);
+		}
+
+		effPanel = new JPanel();
+		GridBagConstraints cbcWeights = new GridBagConstraints();
+		cbcWeights.fill = GridBagConstraints.BOTH;	
+		cbcWeights.gridx=0; cbcWeights.gridy=0;
+		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
+		cbcWeights.ipadx=5; cbcWeights.ipady=5;
+		cbcWeights.weightx=1; cbcWeights.weighty=1;
+		effPanel.setBorder(BorderFactory.createTitledBorder("Efficiency factors"));
+
+		effPanel.setLayout(new GridBagLayout());
+		/*} else {
+			weightsPanel.removeAll();			
+		}*/
+		
+		List<String> labels = new Vector<String>();
+        
+		int s = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
+		for (int i=1; i<s; i++) {
+        	for (int j=1; j<=s; j++) {
+        		labels.add(i+"-"+j);
+        	}        	
+        }  
+
+		weightsV.clear();
+		for (int i=0;i<labels.size();i++) {        		
+			weightsV.add(new JTextField("1.0", 6));
+			effPanel.add(new JLabel(labels.get(i)), cbcWeights);
+			cbcWeights.gridx++;
+			effPanel.add(weightsV.get(i), cbcWeights);	
+			if ((i+1)%3!=0) {
+				cbcWeights.gridx++;
+			} else {
+				cbcWeights.gridx=0;cbcWeights.gridy++;
+			}
+		}		
+		lsPanel.add(effPanel, cc.xyw(2, rowTNP, 3));
+		lsPanel.revalidate();
+		lsPanel.repaint();
+	}
+	
 	private void createTreatmentNumberPanel() {
 		if (ntPanel!=null) {
 			lsPanel.remove(ntPanel);
@@ -237,6 +285,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		lsPanel.repaint();
 	}
 	
+	private String getVRep() {
+		String vrep = "c(";
+		for (int i=0; i<nV.size(); i++) {   
+			vrep += nV.get(i).getText();
+			if (i!=nV.size()-1) vrep += ",";
+		}
+		return vrep+")";
+	}
+	
 	public void addActionListener(ActionListener al) {
 		ok.addActionListener(al);
 	}
@@ -250,14 +307,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			String command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
 					+", "+gui.getParameters()
 					+", model=\""+jCBmodel.getSelectedItem()+"\""
-					//+", eff.factor="
-					//+", v.rep="
+					+", eff.factor="+1
+					+", v.rep="+getVRep()
 					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
 					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
 					+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
 					+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
 					+", verbose=FALSE)";
-			RControl.getR().eval(command).asRList();
+			//System.out.println(command);
+			RList result = RControl.getR().eval(command).asRList();			
 		} else if (e.getSource() == jCBmodel) {
 			if (jCBmodel.getSelectedIndex()==4) {
 				jtfParam.setEnabled(true);

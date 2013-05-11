@@ -285,7 +285,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
       design[ij[3],ij[4]] <- tmp
     }
     #print(design)
-    rcDesign <- createRowColumnDesign(design)
+    rcDesign <- createRowColumnDesign(design, model=model)
     Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
     #print(Ar)    
     S2 <- 1 # We set this constant for the moment
@@ -307,6 +307,6 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
       var <- varOld
     }
   }  
-  return(design)
+  return(list(design=design))
 }
 
