@@ -70,14 +70,14 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		//setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/graph/images/rjavaicon64.png"))).getImage());
 		
 		// This Errorhandling should be uncommented for testing versions that should report errors:
-		 if (!LoggingSystem.alreadyInitiated()) {
+		if (!LoggingSystem.alreadyInitiated()) {
 			LoggingSystem.init(
-					"/org/mutoss/gui/commons-logging.properties",
+					"/org/mutoss/gui/commons-logging-verbose.properties",
 					true,
 					false,
 					new ApplicationLog());
 			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
-		}
+		} 
 		
 		RControl.getRControl(true);
 		
