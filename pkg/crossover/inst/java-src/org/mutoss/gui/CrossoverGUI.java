@@ -124,18 +124,9 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	DesignSelectionPanel designPanel;
 	DesignInputPanel designInputPanel;
 	AlgorithmPanel algorithmPanel;
+	JTabbedPane tabbedPane;
 	
 	private void makeContent() {
-		JTabbedPane tabbedPane = new JTabbedPane();
-
-		designPanel = new DesignSelectionPanel();
-		designInputPanel = new DesignInputPanel();
-		designInputPanel.addActionListener(this);
-		algorithmPanel = new AlgorithmPanel();
-		tabbedPane.addTab("Catalogue", designPanel);
-		tabbedPane.addTab("Algorithm Search", algorithmPanel);
-		tabbedPane.addTab("Input own design", designInputPanel);
-		
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx=0; c.gridy=0; c.gridwidth = 1; c.gridheight = 1; c.ipadx=5; c.ipady=5; c.weightx=1; c.weighty=0;
@@ -143,6 +134,18 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		getContentPane().setLayout(new GridBagLayout());		
 		
 		getContentPane().add(getInterface(), c);
+		
+		tabbedPane = new JTabbedPane();
+		
+		designPanel = new DesignSelectionPanel();
+		designInputPanel = new DesignInputPanel();
+		designInputPanel.addActionListener(this);
+		algorithmPanel = new AlgorithmPanel(spinnerT);
+		tabbedPane.addTab("Catalogue", designPanel);
+		tabbedPane.addTab("Algorithm Search", algorithmPanel);
+		tabbedPane.addTab("Input own design", designInputPanel);
+		
+
 		c.gridy++;		 
 		c.weighty=1;
 		getContentPane().add(tabbedPane, c);	
@@ -206,7 +209,6 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	}
 	
 	/**
-	 * This function builds the OC.bin/OC.ct function call.
 	 * @param e
 	 */
 	private void callOCFunction(ActionEvent e) {
@@ -270,6 +272,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 
 	public void stateChanged(ChangeEvent e) {
+		if (tabbedPane.getSelectedIndex()!=0) return;
 		glassPane.start();
 		//startTesting();		
 		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
@@ -324,8 +327,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RControl.getR().eval(".setenv <- if (exists(\"Sys.setenv\")) Sys.setenv else Sys.putenv");
-		RControl.getR().eval(".setenv(\"JAVAGD_CLASS_NAME\"=\"org/mutoss/gui/JavaGD\")");
+		RControl.getR().eval("Sys.setenv(\"JAVAGD_CLASS_NAME\"=\"org/mutoss/gui/JavaGD\")");
 		new CrossoverGUI();
 	}
 

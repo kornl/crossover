@@ -40,10 +40,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	List<JTextField> weightsV = new Vector<JTextField>();	
 	CellConstraints cc = new CellConstraints();
 	JRadioButton jbBalanceNothing = new JRadioButton("No balancing restrictions");
-	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences");
-	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods");
+	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences (may decrease efficiency)");
+	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods (may decrease efficiency)");
 	
-	public AlgorithmPanel() {
+	public AlgorithmPanel(JSpinner spinnerT) {
+		this.treatments = spinnerT;
+		spinnerT.addChangeListener(this);
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
         String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu";
         
@@ -75,11 +77,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JSpinner spinnerS;
 	JPanel lsPanel;
+	JLabel pLabel = new JLabel("Further model parameters:");
+	JTextField jtfParam = new JTextField("1");
 	
 	public JPanel getLeftSidePanel() {
 		lsPanel = new JPanel();
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         lsPanel.setLayout(new FormLayout(cols, rows));
 		
@@ -92,27 +96,41 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
         row+=2;
         
-    	spinnerS = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1)); 
-    	spinnerS.addChangeListener(this);
-        
-        lsPanel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
-        lsPanel.add(spinnerS, cc.xy(4, row));
+		lsPanel.add(pLabel, cc.xy(2, row));
+		lsPanel.add(jtfParam, cc.xy(4, row));
+		pLabel.setEnabled(false);
+		jtfParam.setEnabled(false);
 		
-        row+=2;        
-		
-        lsPanel.add(jbCompute, cc.xyw(2, row, 3));
-        
-        row+=2;  
-        
-        rowTNP = row;        
-        createWeightsPanel();
-        
         row+=2;
         
         ButtonGroup group = new ButtonGroup();
         group.add(jbBalanceNothing);
         group.add(jbBalanceSequences);
         group.add(jbBalancePeriods);
+        jbBalanceNothing.setSelected(true);
+        
+        lsPanel.add(jbBalanceNothing, cc.xyw(2, row, 3));
+        row+=2;
+        lsPanel.add(jbBalanceSequences, cc.xyw(2, row, 3));
+        row+=2;
+        lsPanel.add(jbBalancePeriods, cc.xyw(2, row, 3));        
+        row+=2;
+        
+    	spinnerS = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1)); 
+    	//spinnerS.addChangeListener(this);
+        
+        lsPanel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
+        lsPanel.add(spinnerS, cc.xy(4, row));
+        
+        row+=2;  
+        
+        rowTNP = row;        
+        createWeightsPanel();
+        
+        row+=2;        
+		
+        lsPanel.add(jbCompute, cc.xyw(2, row, 3));
+
         
         return lsPanel;
 	}
@@ -140,7 +158,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		List<String> labels = new Vector<String>();
         
-		int s = Integer.parseInt(spinnerS.getModel().getValue().toString());
+		int s = Integer.parseInt(treatments.getModel().getValue().toString());
         for (int i=1; i<s; i++) {
         	for (int j=1; j<=s; j++) {
         		labels.add("Weight "+i+"-"+j+":");
@@ -158,7 +176,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				cbcWeights.gridx=0;cbcWeights.gridy++;
 			}
 		}		
-		lsPanel.add(weightsPanel, cc.xyw(2, 8, 3)); //TODO This 4 should perhaps not be hardcoded...
+		lsPanel.add(weightsPanel, cc.xyw(2, rowTNP, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
 	}
@@ -184,7 +202,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		List<String> labels = new Vector<String>();
         
-		int s = Integer.parseInt(spinnerS.getModel().getValue().toString());
+		int s = Integer.parseInt(treatments.getModel().getValue().toString());
         for (int i=1; i<s; i++) {
         	for (int j=1; j<=s; j++) {
         		labels.add(i+"-"+j);
@@ -220,10 +238,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			
 		}		
 	}
+	
+	public JSpinner treatments;
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		int s = Integer.parseInt(spinnerS.getModel().getValue().toString());
+		int s = Integer.parseInt(treatments.getModel().getValue().toString());
 		createWeightsPanel();
 	}
 
