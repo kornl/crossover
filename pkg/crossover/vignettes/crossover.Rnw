@@ -189,7 +189,7 @@ Depending on the numbers of treatments, periods and range of sequence you specif
 
 \section{Models}
 
-\subsection{Standard additive model}
+\subsection{Standard additive model}\index{model!standard additive}
 
 \[Y_{ijk}=\mu+\pi_j+\tau_{d[i,j]}+\lambda_{d[i,j-1]}+s_{ik}+e_{ijk}\]
 
@@ -239,7 +239,7 @@ X
 
 @
 
-\subsection{Second-order carry-over effects}
+\subsection{Second-order carry-over effects}\index{model!with second-order carry-over effects}\index{second-order carry-over effects}
 
 In the model with second-order carry-over effects we do have another vector $\lambda_2$ of carry-over effects:
 
@@ -268,7 +268,9 @@ X
 @
 
 
-\subsection{Full set of interactions}
+\subsection{Full set of interactions}\index{model!with full set of interactions}
+
+This model has further interaction parameters $\gamma_{ij}$. Personally I think some of the overspecified parameters should be dropped, for example $\gamma_{ii}$ - but I'll take a look at this later.
 
 \[E(Y)=\mu + X \left( \begin{smallmatrix}
 \tau\\ \lambda\\ \gamma
@@ -283,7 +285,7 @@ H
 
 @
 
-\subsection{Self-adjacency model}
+\subsection{Self-adjacency model}\index{model!self-adjacency model}\index{self-adjacency model}
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda
@@ -298,7 +300,7 @@ H
 
 @
 
-\subsection{Placebo model}
+\subsection{Placebo model}\index{model!placebo model}\index{model!placebo model}
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda
@@ -322,7 +324,7 @@ X
 
 @
 
-\subsection{No carry-over into self model}
+\subsection{No carry-over into self model}\index{model!no carry-over into self}
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda
@@ -337,7 +339,7 @@ H
 
 @
 
-\subsection{Treatment decay model}
+\subsection{Treatment decay model}\index{model!treatment decay}
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda
@@ -352,11 +354,11 @@ H
 
 @
 
-\subsection{Proportionality model}
+\subsection{Proportionality model}\index{model!proportionality model}
 
-For the proportionality model we have no separate carry-over effects, but assume for period $i>1$ an additive proportion $p$ of the effect $\tau_{d(i-1,j)}$ from the previous treatment $d(i-1,j)$.
+For the proportionality model we have no separate carry-over effects, but assume for period $i>1$ an additive proportion $p$ of the effect $\tau_{d(i-1,j)}$ from the previous treatment $d(i-1,j)$. This model is non-linear in $p$, therefore we assume $p$ is known.
 
-\[E(Y)=\mu + f_p(\tau) +Z\bigl( \begin{smallmatrix}
+\[E(Y)=\mu + X_p\tau +Z\bigl( \begin{smallmatrix}
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
@@ -434,11 +436,10 @@ This section is work in progress.
 \addcontentsline{toc}{section}{Index}
 \printindex
 
-\newpage
-
-\listofalgorithms
-\listoffigures
-\listoftables
+%\newpage
+%\listofalgorithms
+%\listoffigures
+%\listoftables
 
 \newpage
 
