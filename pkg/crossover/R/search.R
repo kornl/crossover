@@ -1,10 +1,11 @@
 # ppp=proportionality parameter
 linkMatrix <- function(model, v, ppp=0.5, placebos=1) {
+  model <- getModelNr(model)
   if(missing(v)) stop("Please specify number of treatments")
   mI <- diag(v)
   m1 <- matrix(1,v,1)
   m0 <- matrix(0, v, v)
-  if(model=="Standard additive model" || model==1) {
+  if(model=="Standard additive model" || model==1) { #TODO Convert the string comparisons to comments.
     return(rbind(cbind(mI, m0), 
                  cbind(kronecker(m1,mI),kronecker(mI,m1))))
   }
@@ -91,7 +92,23 @@ models <- c("Standard additive model",
             "Second-order carry-over effects")
 #"No carry-over effects")
 
+getModelNr <- function(model) {
+  if (is.numeric(model)) {
+    if (model %in% 1:8) {
+      return(model)
+    } else {
+      stop("Model must be number between 1 and 8.")
+    }
+  }
+  model <- which(models==model)
+  if (length(model)==0) stop("Unknown model.")
+  #if (!(model %in% 1:8)) stop("Model must be number between 1 and 8.")
+  return(model)
+}
+
 createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, ppp=0.5, placebos=1) {
+  model <- getModelNr(model)
+  return(.Call( "createRCD", design, v, model, PACKAGE = "crossover" ))
   M <- diag(3)
   if (!is.numeric(X) || max(X)!=v) { #TODO Check where I need these checks really and where they are still missing.
     X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
@@ -252,9 +269,7 @@ searchCrossOverDesignCTest <- function() {
 }
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE, ppp=0.5, placebos=1) {
-  model <- which(models==model)
-  if (length(model)==0) stop("Unknown model.")
-  if (!(model %in% 1:8)) stop("Model must be number between 1 and 8.")
+  model <- getModelNr(model)
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p

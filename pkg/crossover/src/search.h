@@ -19,7 +19,9 @@
 
 RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS);
 
-arma::mat createRowColumnDesign(arma::mat design, int v);
+RcppExport SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS);
+
+arma::mat createRowColumnDesign(arma::mat design, int v, int model);
 
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v);
 
