@@ -30,53 +30,60 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int v = IntegerVector(vS)[0];
   int n = IntegerVector(nS)[0];
   int model = IntegerVector(modelS)[0];
-  vec vRep = as<vec>(vRepS);
+  //vec vRep = as<vec>(vRepS); //Not used yet
   //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
-  mat design = as<mat>(designS);
   mat linkM = as<mat>(linkMS);
   mat tCC = as<mat>(tCCS); // t(C) %*% C
-  
+  //mat design = as<mat>(designS);
+
   // TODO Read random number generators and C!
   GetRNGstate();
   
   if (verbose) Rprintf("Starting search algorithm!\n");
-  
-  IntegerVector ret = Rcpp::RcppArmadillo::sample(IntegerVector(sS), 3, false);
-
-  NumericVector thenum = sample(3,Named("size",1));  
-  
+  Rcpp::List mlist(designS);
+  int n2 = mlist.size();
+  List effList = List(n2); // Here we will store NumericVectors that show the search progress.
+  mat design;
   mat designOld, rcDesign, Ar;  
-  double eOld = 0;
-  double s1, s2;
+  double s1, s2, eOld;
   NumericVector rows, cols;
-  for(int i=0; i<n; i++) {  
-    designOld = design;
-    rows = ceil(runif(2)*p)-1; 
-    cols = ceil(runif(2)*s)-1;  
-    while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) {
+  
+  for(int j=0; j<n2; j++) {
+    NumericVector eff = NumericVector(n);
+    design = as<mat>(mlist[j]);  
+    eOld = 0;     
+    for(int i=0; i<n; i++) {  
+      designOld = design;
       rows = ceil(runif(2)*p)-1; 
       cols = ceil(runif(2)*s)-1;  
-    }
-    double tmp = design(rows[0],cols[0]);
-    design(rows[0],cols[0]) = design(rows[1],cols[1]);
-    design(rows[1],cols[1]) = tmp;
-    rcDesign = createRowColumnDesign(design, v, model);
-    Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+      while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) {
+        rows = ceil(runif(2)*p)-1; 
+        cols = ceil(runif(2)*s)-1;  
+      }
+      double tmp = design(rows[0],cols[0]);
+      design(rows[0],cols[0]) = design(rows[1],cols[1]);
+      design(rows[1],cols[1]) = tmp;
+      //TODO long jumps
+      rcDesign = createRowColumnDesign(design, v, model);
+      Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
-    s2 = 1; // We set this constant for the moment
-    s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
-    
-    //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
-    if (s2/s1 > eOld) {
-      if (verbose) Rprintf("=> Accepting new matrix.\n");
-      eOld = s2/s1; 
-    } else {
-      if (verbose) Rprintf("=> Keeping old matrix.\n");
-      design = designOld;    
+      s2 = 1; // We set this constant for the moment
+      s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
+      
+      //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
+      eff[i] = s2/s1;
+      if (s2/s1 > eOld) {
+        if (verbose) Rprintf("=> Accepting new matrix.\n");
+        eOld = s2/s1;         
+      } else {
+        if (verbose) Rprintf("=> Keeping old matrix.\n");
+        design = designOld;    
+      }
     }
+    effList[j] = eff;
   }
   PutRNGstate();
-  return List::create(Named("design")=design, Named("eff")=s2/s1);  
+  return List::create(Named("design")=design, Named("eff")=effList);  
   END_RCPP
 }
 
@@ -112,8 +119,17 @@ arma::mat createRowColumnDesign(arma::mat design, int v, int model) {
 }
 
 arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS, bool balanceP) {
-  
-  
+  /*if (balance.s) {
+    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
+  } else if (balance.p) {
+    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
+  } else {
+    design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  }*/ 
+  IntegerVector ret = Rcpp::RcppArmadillo::sample(vRep, 3, false);
+  /*Constructors:
+  mat(vec)
+  mat(rowvec)*/
 }
 
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
@@ -138,3 +154,6 @@ arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
   mat A = diagmat(r) - (1/s)* NP * trans(NP) - (1/p)* NS * trans(NS) + (1/(p*s))* r * trans(r);
   return A; 
 }
+
+    
+    

@@ -433,6 +433,18 @@ The GUI seen in Figure \ref{GUI} is shown and
 \section{Search strategy}\label{sec:search}
 Monte-Carlo search for first candidates, followed by parallel hill climbing search, extended by long jumps. (Blind movement, probabilistic movement?)
 
+In the following graphic we see 100.000 design evaluations (that take less than 7 seconds on my computer), consisting out of 20 hill climbing search \emph{runs} from 20 different designs as starting point which were selected by a Monte-Carlo search. We can see that 6 out of the 20 search runs were not able to achieve the efficieny the other 14 achieved. With search run 15 again not as good as the rest, we see that there were at least three local maxima the hill climbing search found (and partially got stuck):
+
+<<SearchStrategy, echo=TRUE, eval=TRUE>>=
+
+set.seed(42)
+x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+crossover:::plotSearch(x)
+
+@
+
+This package is written using the R packages Rcpp and RcppArmadillo (\cite{eddelbuettel2011rcpp} and \cite{rcpparmadillo}).
+
 \begin{appendix} 
 
 \section{Appendix - Row-Column Designs}

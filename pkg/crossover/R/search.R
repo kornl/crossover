@@ -268,7 +268,8 @@ searchCrossOverDesignCTest <- function() {
   .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 50000, PACKAGE = "crossover" )
 }
 
-searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE, ppp=0.5, placebos=1) {
+searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1) {
+  seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   model <- getModelNr(model)
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
@@ -277,21 +278,26 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   # random start design (respecting v.rep)
   if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")
-  if (balance.s) {
-    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
-  } else if (balance.p) {
-    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
-  } else {
-    design <- matrix(sample(rep(1:v, v.rep)), p, s)
-  }  
+  designL <- list()
+  for (i in 1:20) {
+    if (balance.s) {
+      design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
+    } else if (balance.p) {
+      design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
+    } else {
+      design <- matrix(sample(rep(1:v, v.rep)), p, s)
+    }  
+    designL[[i]] <- design
+  }
   Csub <- contrMat(n=rep(1, v), type="Tukey")
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))  
   CC <- t(C) %*% C
   H <- linkMatrix(model, v)
   if (TRUE) {
-    result <- .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 50000, PACKAGE = "crossover" )
+    result <- .Call( "searchCOD", s, p, v, designL, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 5000, PACKAGE = "crossover" )
     design <- result$design
+    eff <- result$eff
   } else {
     #iMatrix <- getInfMatrixOfDesign(design)
     eOld <- 0
@@ -331,7 +337,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     }  
   }
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
-  return(list(design=design, varTrtPair=varTrtPair))
+  return(list(design=design, varTrtPair=varTrtPair, eff=eff))
 }
 
 getTrtPair <- function(design, model=1) {
@@ -354,4 +360,12 @@ getValues <- function(design, model=1, C, v=max(design)) {
 
 dput2 <- function(x) {
   paste(capture.output(dput(x)), collapse = " ")
+}
+
+plotSearch <- function(x) {  
+  eff <- unlist(x$eff)
+  run <- as.factor(rep(1:length(x$eff), each=length(x$eff[[1]])))
+  n <- 1:(length(x$eff[[1]])*length(x$eff))
+  d <- data.frame(eff=eff, run=run, n=n)
+  ggplot(d, aes(x=n, y=eff, colour=run)) + geom_point()
 }
