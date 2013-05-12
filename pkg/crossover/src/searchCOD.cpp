@@ -1,4 +1,10 @@
-#include "search.h"
+#include "searchCOD.h"
+
+/*
+    CharacterVector x = CharacterVector::create( "foo", "bar" )  ;
+    NumericVector y   = NumericVector::create( 0.0, 1.0 ) ;
+    List z            = List::create( x, y ) ;
+*/
 
 SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS) {
                  

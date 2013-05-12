@@ -156,9 +156,7 @@ Prescott, P. (1994) Construction of sequentially counterbalanced designs formed 
 %Prescott, P. (1999) Construction of sequentially counterbalanced designs formed from two latin squares. Utilitas Mathematica, 55, 135--152.
 %Quenouille, M.H. (1953) The Design and Analysis of Experiments. Griffin, London.
 %Russell, K.R. (1991) The construction of good change-over designs when there are fewer units than treatments. Biometrika, 78, 305-313.
-
 %Lucas, H.L. (1956) Switch-back trials for more than two treatments. Journal of Diary Science, 39, 146--154.
-
 %Williams, E.J. (1949) Experimental designs balanced for the estimation of residual effects of treatments. Australian Journal of Science Res(A), 2, 14900168.
 
 Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{crossover:::buildSummaryTable()}.} Further if possible functions from package crossdes \cite{crossdes} are called to create design for the specified values.
