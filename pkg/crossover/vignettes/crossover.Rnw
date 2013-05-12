@@ -100,7 +100,7 @@ startGUI <- function(...) {invisible(NULL)}
 For a given cross-over design we create a row-column design, calculate the information matrix $A_r$ for this design from
 \[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr'.\]
 
-For details see \cite{j1995cyclic} and .
+For details see \cite{j1995cyclic} and \cite{john2004crossover}.
 
 
 \subsection{Installation}
@@ -184,10 +184,21 @@ Patterson, H.D. and Lucas, H.L. (1962) Change-over designs. North Carolina Agric
 Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{crossover:::buildSummaryTable()}.} Further if possible functions from package crossdes \cite{crossdes} are called to create design for the specified values.
 
 \subsubsection{Algorithm Search}
+
+In figure \ref{Algorithm} 
+
+Model further described in section \ref{sec:models}.
+
+\begin{figure}[ht]
+  \centering    
+  \includegraphics[width=0.7\textwidth]{figures/Algorithm.png}      
+  \caption{\label{Algorithm} Panel for algorthmic search of cross-over designs.}
+\end{figure}
+
 \subsubsection{Input own design}
 
 
-\section{Models}
+\section{Models}\label{sec:models}
 
 \subsection{Standard additive model}\index{model!standard additive}
 
