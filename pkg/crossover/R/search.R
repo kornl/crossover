@@ -66,7 +66,7 @@ linkMatrix <- function(model, v, ppp=0.5, placebos=1) {
   }
   if(model=="Proportionality model" || model==3) {
     M <- matrix(0, sum(1:v)*2, v) 
-    M[1:v,1:v] <- diag(j)
+    M[1:v,1:v] <- diag(v)
     for (j in (v+1):(sum(1:v)*2)) {
       jv <- (j-1)%/%v
       if (jv==j-v*jv) {
@@ -78,7 +78,7 @@ linkMatrix <- function(model, v, ppp=0.5, placebos=1) {
     }
     return(M)
   }
-  error(paste("Sorry model",model,"is not known."))
+  stop(paste("Sorry model \"",model,"\" is not known.", sep=""))
 }
 
 models <- c("Standard additive model",
@@ -91,7 +91,7 @@ models <- c("Standard additive model",
             "Proportionality model")
 #"No carry-over effects")
 
-createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model) {
+createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, ppp=0.5, placebos=1) {
   M <- diag(3)
   if (!is.numeric(X) || max(X)!=v) { #TODO Check where I need these checks really and where they are still missing.
     X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
@@ -168,7 +168,7 @@ getInfMatrixOfDesign <- function(X, v, method) {
   if (missing(method) || method==1) {
    A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
   } else {    
-    Xr <- getRCDesignMatrix(rcDesign, v)
+    Xr <- getRCDesignMatrix(X, v) #TODO Test this - is X here correct?
     # JRW, p 2650, second equation on that page, number 11
     A <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
   }
@@ -253,8 +253,8 @@ searchCrossOverDesignCTest <- function() {
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE, ppp=0.5, placebos=1) {
   model <- which(models==model)
-  if (length(model)==0) error("Unknown model.")
-  if (!(model %in% 1:8)) error("Model must be number between 1 and 8.")
+  if (length(model)==0) stop("Unknown model.")
+  if (!(model %in% 1:8)) stop("Model must be number between 1 and 8.")
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p

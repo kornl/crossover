@@ -17,7 +17,7 @@ test.design.functions <- function () {
   Csub <- contrMat(n=rep(1, v), type="Tukey")
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))
-  H <- linkMatrix(model, v)
+  H <- linkMatrix(model=1, v)
   var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
   
   gco <- general.carryover(t(design), model=1)
@@ -36,6 +36,6 @@ test.strangeDesigns <- function() {
              c("C","D","A","B"),
              c("D","A","B","C"))
   
-  myInv <- ginv(createRowColumnDesign(D))
+  myInv <- ginv(createRowColumnDesign(D, model=1))
   
 }

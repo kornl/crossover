@@ -26,6 +26,7 @@ import javax.swing.event.ChangeListener;
 
 import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.af.jhlir.call.RList;
+import org.jdesktop.swingworker.SwingWorker;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -305,23 +306,34 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == jbCompute) {			
-			String command = ".COresult <- searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
-					+", "+gui.getParameters()
-					+", model=\""+jCBmodel.getSelectedItem()+"\""
-					+", eff.factor="+1
-					+", v.rep="+getVRep()
-					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
-					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
-					+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
-					+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
-					+", verbose=FALSE)";
-			System.out.println(command);
-			RControl.getR().eval(command).asRList();
-			RList result = RControl.getR().eval(".COresult").asRList();
-			String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
-			jta.appendHTML(table);
-			jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");
+		if (e.getSource() == jbCompute) {
+			gui.glassPane.start();
+			//startTesting();		
+			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+				@Override
+				protected Void doInBackground() throws Exception {
+					String command = ".COresult <- searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+							+", "+gui.getParameters()
+							+", model=\""+jCBmodel.getSelectedItem()+"\""
+							+", eff.factor="+1
+							+", v.rep="+getVRep()
+							+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
+							+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
+							+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
+							+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
+							+", verbose=FALSE)";
+					System.out.println(command);
+					RControl.getR().eval(command).asRList();
+					RList result = RControl.getR().eval(".COresult").asRList();
+					String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
+					jta.clear();
+					jta.appendHTML(table);
+					jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");
+					gui.glassPane.stop();				
+					return null;
+				}
+			};
+			worker.execute();
 		} else if (e.getSource() == jCBmodel) {
 			if (jCBmodel.getSelectedIndex()==4) {
 				jtfParam.setEnabled(true);

@@ -272,7 +272,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 
 	public void stateChanged(ChangeEvent e) {
-		if (tabbedPane.getSelectedIndex()!=0) return;
+		if (tabbedPane.getSelectedIndex()!=0) return; //TODO If Tab 0 gets Focus calculate!
 		glassPane.start();
 		//startTesting();		
 		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {

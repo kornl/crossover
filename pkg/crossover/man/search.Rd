@@ -8,7 +8,8 @@
 	Search for a Cross-Over Design
 }
 \usage{
-	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE)
+	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor, 
+    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE, ppp = 0.5, placebos = 1)
 }
 \arguments{
   \item{s}{ Number of sequences. }
@@ -27,6 +28,8 @@
   \item{balance.s}{ Boolean specifying whether to allocate the treatments as equally as possible to each sequence (can result in loss of efficiency). }  
   \item{balance.p}{ Boolean specifying whether to allocate the treatments as equally as possible to each period (can result in loss of efficiency). }  
   \item{verbose}{ Boolean specifying whether verbose output should be printed. }  
+  \item{ppp}{ Proportionality parameter for the proportionality model. }  
+  \item{placebos}{ Number of placebo treatments in the placebo model. }  
 }
 \details{
 	See the vignette of this package for further details.

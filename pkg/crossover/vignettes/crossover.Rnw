@@ -69,11 +69,11 @@
 
 \author{Kornelius Rohmeyer}
 
-\maketitle
+%\maketitle
 
-\newpage
+%\newpage
 
-\tableofcontents
+%\tableofcontents
 
 <<OptionsAndLibraries, include=FALSE, message=FALSE>>=
 if (exists("opts_chunk")) {
@@ -100,7 +100,7 @@ startGUI <- function(...) {invisible(NULL)}
 For a given cross-over design we create a row-column design, calculate the information matrix $A_r$ for this design from
 \[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr'.\]
 
-See \cite{j1995cyclic} and .
+For details see \cite{j1995cyclic} and .
 
 
 \subsection{Installation}
@@ -108,8 +108,8 @@ See \cite{j1995cyclic} and .
 %If you don't already have R on your system, you can download a bundled
 %version of R and crossover from \url{http://www.algorithm-forge.com/gMCP/bundle/}.
 
-Open R and type \texttt{install.packages("crossover")}, 
-select an arbitrary mirror and crossover will be downloaded and installed.
+%Open R and type \texttt{install.packages("crossover")}, 
+%select an arbitrary mirror and crossover will be downloaded and installed.
 
 Once it is installed, whenever you start R you can load the crossover
 package by entering \texttt{library(crossover)} into the R Console. The
@@ -126,7 +126,15 @@ graphical user interface is started with the command
 %\url{http://cran.r-project.org/web/packages/gMCP/INSTALL} or please write us
 %an email at
 %\href{mailto:help@small-projects.de}{\texttt{help@small-projects.de}}.
-%We are eager to help and to learn about existing problems. 
+%We are eager to help and to learn about existing problems.
+
+\subsection{GUI Overview}
+\subsubsection{Catalogue}
+The catalogue contains 241 designs from the literature, collected and compiled by Professor Byron Jones. Depending on your selection of 
+\cite{crossdes}.
+\subsubsection{Algorithm Search}
+\subsubsection{Input own design}
+
 
 \section{Models}
 
@@ -190,7 +198,7 @@ X
 
 <<SecondOrder, echo=TRUE>>=
 # Link matrix:
-H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H <- crossover:::linkMatrix(model="Second-order carry-over effects", v)
 H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
 rcDesign <- crossover:::createRowColumnDesign(design, model=8)
@@ -199,7 +207,7 @@ rcDesign
 #Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
 Xr
 # Design Matrix of Cross-Over Design:
-X <- Xr %*% H
+#X <- Xr %*% H
 X
 
 @
@@ -213,6 +221,12 @@ X
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
+<<FullInteractions, echo=TRUE>>=
+
+H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H
+
+@
 
 \subsection{Self-adjacency model}
 
@@ -221,6 +235,13 @@ X
 \end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
 \pi\\ s
 \end{smallmatrix} \bigr)\]
+
+<<SelfAdjacency, echo=TRUE>>=
+
+H <- crossover:::linkMatrix(model="Self-adjacency model", v)
+H
+
+@
 
 \subsection{Placebo model}
 
@@ -254,6 +275,13 @@ X
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
+<<NoIntoSelf, echo=TRUE>>=
+
+H <- crossover:::linkMatrix(model="No carry-over into self model", v)
+H
+
+@
+
 \subsection{Treatment decay model}
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
@@ -262,6 +290,13 @@ X
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
+<<TreatmentDecay, echo=TRUE>>=
+
+H <- crossover:::linkMatrix(model="Treatment decay model", v)
+H
+
+@
+
 \subsection{Proportionality model}
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
@@ -269,6 +304,13 @@ X
 \end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
 \pi\\ s
 \end{smallmatrix} \bigr)\]
+
+<<Proportionality, echo=TRUE>>=
+
+H <- crossover:::linkMatrix(model="Proportionality model", v)
+H
+
+@
 
 \subsection{Example and diving in}
 
@@ -358,6 +400,12 @@ $\Pot(X)$ & power set of set $X$, i.e.\ the set of all subsets of $X$\\
 $v$& number of treatments\\
 $p$& number of periods\\
 $s$& number of sequences\\
+$\mu$& intercept\\
+$\pi_j$& period effect for period $j$\\
+$\tau_{d[i,j]}$& direct treatment effect for treatment $d[i,j]$ in period $j$ of sequence $i$\\
+$\lambda_{d[i,j-1]}$& first-order carry-over effect (0 for $j-1$=0)\\
+$s_{ik}$& $k$th subject effect on sequence $i$\\
+$e_{ijk}$& random error with zero mean and variance $\sigma^2$\\
 %\end{tabularx}\\
 %\begin{tabularx}{\textwidth}{lX}
 \multicolumn{2}{l}{\textbf{Functions}}\\
