@@ -1,15 +1,24 @@
 #include "searchCOD.h"
 
+using namespace arma;
+using namespace Rcpp;
+
 /*
     CharacterVector x = CharacterVector::create( "foo", "bar" )  ;
     NumericVector y   = NumericVector::create( 0.0, 1.0 ) ;
     List z            = List::create( x, y ) ;
+  //Environment base("package:base");
+  //Function sample = base["sample"];
 */
 
+/*IntegerVector csample_integer( IntegerVector x, int size, bool replace, 
+  		       NumericVector prob = NumericVector::create()) {
+    RNGScope scope;
+    IntegerVector ret = Rcpp::RcppArmadillo::sample(x, size, replace, prob);
+    return ret;
+} */
+
 SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS) {
-                 
-  using namespace arma; //TODO Where should I place this?
-  using namespace Rcpp;
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -31,6 +40,11 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   GetRNGstate();
   
   if (verbose) Rprintf("Starting search algorithm!\n");
+  
+  IntegerVector ret = Rcpp::RcppArmadillo::sample(IntegerVector(sS), 3, false);
+
+  NumericVector thenum = sample(3,Named("size",1));  
+  
   mat designOld, rcDesign, Ar;  
   double eOld = 0;
   double s1, s2;
@@ -67,8 +81,6 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
 }
 
 SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS) {
-  using namespace arma;
-  using namespace Rcpp;
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
   int model = IntegerVector(modelS)[0];
@@ -78,7 +90,6 @@ SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS) {
 }
 
 arma::mat createRowColumnDesign(arma::mat design, int v, int model) {
-  using namespace arma;
   if (model==8) { // "Second-order carry-over effects"
     mat rcDesign = design;
     for (unsigned i=1; i<rcDesign.n_rows; i++) {
@@ -100,8 +111,12 @@ arma::mat createRowColumnDesign(arma::mat design, int v, int model) {
   return NULL;
 }
 
+arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS, bool balanceP) {
+  
+  
+}
+
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
-  using namespace arma;
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;
   vec r = zeros<vec>(v);  

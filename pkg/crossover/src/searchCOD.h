@@ -2,6 +2,7 @@
 #define _crossover_SEARCH_H
 
 #include <RcppArmadillo.h>
+#include <RcppArmadilloExtensions/sample.h>
 #include <R.h>
 #include <Rmath.h>
 
