@@ -82,13 +82,13 @@ linkMatrix <- function(model, v, ppp=0.5, placebos=1) {
 }
 
 models <- c("Standard additive model",
-            "Second-order carry-over effects",
-            "Full set of interactions",
             "Self-adjacency model",
+            "Proportionality model",
             "Placebo model",
             "No carry-over into self model",
             "Treatment decay model",
-            "Proportionality model")
+            "Full set of interactions",
+            "Second-order carry-over effects")
 #"No carry-over effects")
 
 createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, ppp=0.5, placebos=1) {

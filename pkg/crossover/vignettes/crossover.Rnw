@@ -241,11 +241,15 @@ X
 
 \subsection{Second-order carry-over effects}
 
-\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
-\tau\\ \lambda
-\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+In the model with second-order carry-over effects we do have another vector $\lambda_2$ of carry-over effects:
+
+\[E(Y)=\mu + X \left( \begin{smallmatrix}
+\tau\\ \lambda_1\\ \lambda_2
+\end{smallmatrix} \right)+Z\bigl( \begin{smallmatrix}
 \pi\\ s
 \end{smallmatrix} \bigr)\]
+
+Therefore the link matrix has $3*v$ columns. % and we calculate the row-column design
 
 <<SecondOrder, echo=TRUE>>=
 # Link matrix:
@@ -255,7 +259,7 @@ H
 rcDesign <- crossover:::createRowColumnDesign(design, model=8)
 rcDesign
 # Design Matrix of Row-Column Design:
-#Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
+Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
 Xr
 # Design Matrix of Cross-Over Design:
 #X <- Xr %*% H
@@ -350,9 +354,9 @@ H
 
 \subsection{Proportionality model}
 
-\[E(Y)=\mu + X \bigl( \begin{smallmatrix}
-\tau\\ \lambda
-\end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
+For the proportionality model we have no separate carry-over effects, but assume for period $i>1$ an additive proportion $p$ of the effect $\tau_{d(i-1,j)}$ from the previous treatment $d(i-1,j)$.
+
+\[E(Y)=\mu + f_p(\tau) +Z\bigl( \begin{smallmatrix}
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
@@ -405,6 +409,9 @@ The GUI seen in Figure \ref{GUI} is shown and
   
   abs(var1-var2)
 @
+
+\section{Search strategy}
+Monte-Carlo search for first candidates, followed by parallel hill climbing search, extended by long jumps. (Blind movement, probabilistic movement?)
 
 \begin{appendix} 
 

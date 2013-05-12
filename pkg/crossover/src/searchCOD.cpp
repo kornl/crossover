@@ -1,6 +1,6 @@
 #include "search.h"
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS) {
+SEXP searchCOD(SEXP modelS, SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS) {
                  
   using namespace arma; //TODO Where should I place this?
   using namespace Rcpp;
@@ -14,6 +14,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int p = IntegerVector(pS)[0];
   int v = IntegerVector(vS)[0];
   int n = IntegerVector(nS)[0];
+  int model = IntegerVector(modelS)[0];
   vec vRep = as<vec>(vRepS);
   //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
   mat design = as<mat>(designS);
@@ -39,7 +40,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
     double tmp = design(rows[0],cols[0]);
     design(rows[0],cols[0]) = design(rows[1],cols[1]);
     design(rows[1],cols[1]) = tmp;
-    rcDesign = createRowColumnDesign(design, v);
+    rcDesign = createRowColumnDesign(design, v, model);
     Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
     s2 = 1; // We set this constant for the moment
@@ -61,16 +62,31 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   END_RCPP
 }
 
-arma::mat createRowColumnDesign(arma::mat design, int v) {
+arma::mat createRowColumnDesign(arma::mat design, int v, int model) {
   using namespace arma;
-  mat rcDesign = design;
-  for (unsigned i=1; i<rcDesign.n_rows; i++) {
-    rcDesign.row(i) = design.row(i)*v+design.row(i-1);
+  if (model==1) { // "Standard additive model"
+    mat rcDesign = design;
+    for (unsigned i=1; i<rcDesign.n_rows; i++) {
+      rcDesign.row(i) = design.row(i)*v+design.row(i-1);
+    }
+    return rcDesign;
+  } else if (model==2) { // "Self-adjacency model"
+    
+  } else if (model==3) { // "Proportionality model"
+    
+  } else if (model==4) { // "Placebo model"
+    
+  } else if (model==5) { // "No carry-over into self model" 
+    
+  } else if (model==6) { // "Treatment decay model"
+    
+  } else if (model==7) { // "Full set of interactions"
+    
+  } else if (model==8) { // "Second-order carry-over effects"
+    
   }
-  //rowvec zeroRow = rowvec(rcDesign.n_cols);
-  //rcDesign.insert_rows(0, zeroRow);
-  //for (= rcDesign <- X + v*rbind(0, X[-dim(X)[1],])
-  return rcDesign;
+  throw std::range_error("Model not found. Has to be between 1 and 8.");
+  return NULL;
 }
 
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
