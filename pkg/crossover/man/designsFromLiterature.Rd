@@ -253,7 +253,54 @@
   }
 }
 \source{  
-  ...
+  Anderson, I. and Preece, D.A. (2002) Locally balanced change-over designs. Utilitas Mathematica, To appear.
+
+Anderson, I. (2002) Personal communication.
+
+Archdeacon, D.S., Dinitz J.H., Stinson, D.R. and Tillson, T.W. (1980)
+Some new row-complete latin squares, Journal of Combinatorial Theory, Series A, 29, 395-398.
+
+Source: Atkinson, G.F. (1966) Designs for sequences of treatments with carry-over effects. Biometrics, 22, 292--309.
+
+Balaam, L.N. (1968) A two-period design with \eqn{t^2}{t^2} experimental units. Biometrics, 24, 61--73.
+
+Bate, S. and Jones, B. (2002) The construction of universally optimal uniform cross-over designs. GlaxoSmithKline Biomedical Data Sciences Technical Report 2002-06.
+
+Berenblut, I.I. (1964) Change-over designs with complete balance for residual effects. Biometrics, 23, 578--580.
+
+Blaisdell, E.A. and Raghavarao, D. (1980) Partially balanced change-over designs based on m-associate class PBIB designs. Journal of the Royal Statistical Society, B, 42, 334--338.
+
+Davis, A.W. and Hall, W.B. (1969) Cyclic change-over designs. Biometrika, 56, 283--293.
+
+Federer, W.T. and Atkinson, G.F. (1964) Tied-double-change-over designs. Biometrics, 20, 168--181.
+
+Fletcher, D.J. (1987) A new class of change-over designs for factorial experiments. Biometrika, 74, 649--654.
+
+Iqbal, I. and Jones, B. (1994) Efficient repeated measurements designs with equal and unequal period sizes. Journal of Statistical Planning and Inference, 42, 79-88.
+
+Factorial cross-over designs in clinical trials, Lewis, S.M., Fletcher, D.J. and Matthews, J.N.S. In Optimal Design and Analysis of Experiments, Editors, Dodge, Y., Fedorov, V.V. and Wynn, H.P. (1988), 133--140, Elsevier Science Publishers B.V. (North-Holland).
+
+Cochran, W.G., Autrey, K.M. and Cannon, C.Y. (1941) A double change-over design for dairy cattle feeding experiments. Journal of Dairy Science, 24, 937--951
+
+Patterson, H.D. and Lucas, H.L. (1962) Change-over designs. North Carolina Agricultural Experiment Station. Tech. Bull. No. 147.
+
+Patterson, H.D. and Lucas, H.L. (1962) Change-over designs. North Carolina Agricultural Experiment Station. Tech. Bull. No. 147.
+
+Residual effects designs for comparing treatments with a control. PhD dissertation, Temple University, Phildelphia, PA, 1984.
+
+Prescott, P. (1994) Construction of sequentially counterbalanced designs formed from two or more Latin Squares. Proceedings of the 11th Symposium on Computational Statistics held in Vienna, Austria. Editors Dutter, R. and Grossmann, W.,  Physica-Verlag: Heidelberg, 435-440.
+
+Prescott, P. (1999) Construction of sequentially counterbalanced designs formed from two latin squares. Utilitas Mathematica, 55, 135--152.
+
+Quenouille, M.H. (1953) The Design and Analysis of Experiments. Griffin, London.
+
+Russell, K.R. (1991) The construction of good change-over designs when there are fewer units than treatments. Biometrika, 78, 305-313.
+
+Lucas, H.L. (1956) Switch-back trials for more than two treatments. Journal of Diary Science, 39, 146--154.
+
+Williams, E.J. (1949) Experimental designs balanced for the estimation of residual effects of treatments. Australian Journal of Science Res(A), 2, 14900168.
+
+Patterson, H.D. and Lucas, H.L. (1962) Change-over designs. North Carolina Agricultural Experiment Station. Tech. Bull. No. 147.
 }
 \references{
   ...
