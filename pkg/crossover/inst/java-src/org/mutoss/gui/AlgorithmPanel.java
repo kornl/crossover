@@ -35,7 +35,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
-	JComboBox<String> jCBmodel;
+	JComboBox jCBmodel;
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
 	HTMLPaneWithButtons jta;
@@ -98,7 +98,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		int row = 2;
     	
-		jCBmodel = new JComboBox<String>(CrossoverGUI.models);
+		jCBmodel = new JComboBox(CrossoverGUI.models);
 		jCBmodel.addActionListener(this);
 		
 		lsPanel.add(new JLabel("Model"), cc.xy(2, row));
@@ -351,7 +351,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		}
 	}
 
-	@Override
 	public void stateChanged(ChangeEvent e) {
 		createWeightsPanel();
 		createTreatmentNumberPanel();

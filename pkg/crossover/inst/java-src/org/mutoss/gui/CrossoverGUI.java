@@ -336,7 +336,6 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		
 	}
 
-	@Override
 	public void abort() {
 		// TODO Auto-generated method stub
 		
