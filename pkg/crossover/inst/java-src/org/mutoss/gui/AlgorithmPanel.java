@@ -50,6 +50,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences (may decrease efficiency)");
 	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods (may decrease efficiency)");
 	CrossoverGUI gui;	
+	//JTabbedPane jTabAlgo = new jTabAlgo;
 	
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
@@ -328,7 +329,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
 					jta.clear();
 					jta.appendHTML(table);
-					jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");
+					jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");					
+					//RControl.getR().eval("dev.off()");
+					//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
+					//gd.getPanel();					
 					gui.glassPane.stop();				
 					return null;
 				}
@@ -348,6 +352,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				pLabel.setEnabled(false);
 				pLabel.setText("Further model parameters:");
 			}
+		} else { //TODO Button: "export to R" and "show search algorithm performance"
+			//RControl.getR().eval("JavaGD(\"Search algorithm performance\"");
+			//RControl.getR().eval("png(filename=\"/home/kornel/plot.png\")");
+			//RControl.getR().eval("plotSearch(.COresult)");
 		}
 	}
 
