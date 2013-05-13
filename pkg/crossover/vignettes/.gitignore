@@ -12,3 +12,5 @@ crossover.pdf
 crossover.tex
 *.toc
 figure
+*.aux
+*.blg
