@@ -157,7 +157,7 @@ The catalogue, collected and compiled by Professor Byron Jones, contains 241 des
 %Lucas, H.L. (1956) Switch-back trials for more than two treatments. Journal of Diary Science, 39, 146--154.
 %Williams, E.J. (1949) Experimental designs balanced for the estimation of residual effects of treatments. Australian Journal of Science Res(A), 2, 14900168.
 
-Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{crossover:::buildSummaryTable()}.} Further if possible functions from package crossdes \cite{crossdes} are called to create design for the specified values.
+Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{buildSummaryTable()}.} Further if possible functions from package crossdes \cite{crossdes} are called to create design for the specified values.
 
 \subsubsection{Algorithm Search}
 
@@ -439,7 +439,8 @@ In the following graphic we see 100.000 design evaluations (that take less than 
 
 set.seed(42)
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
-crossover:::plotSearch(x)
+searchPlot(x)
+searchPlot(x, type=2)
 
 @
 

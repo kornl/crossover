@@ -9,3 +9,6 @@ export(general.carryover)
 
 export(searchCrossOverDesign)
 export(general.carryover)
+
+export(searchPlot)
+export(buildSummaryTable)
