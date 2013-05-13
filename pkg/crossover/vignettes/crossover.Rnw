@@ -256,10 +256,10 @@ X
 
 \subsection{Self-adjacency model}\index{model!self-adjacency model}\index{self-adjacency model}
 
-
+In the \emph{self-adjacency model} $\lambda_i$ is replaced by $\phi_i$ in case of carry-over into itself. The case $\phi=0$ represents the \emph{no carry-over into self model}.
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
-\tau\\ \lambda
+\tau\\ \lambda\\ \phi
 \end{smallmatrix} \bigr)+Z\bigl( \begin{smallmatrix}
 \pi\\ s
 \end{smallmatrix} \bigr)\]
@@ -431,10 +431,10 @@ For details (what is $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite
   v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
   
-  rcDesign <- crossover:::createRowColumnDesign(design, model=1)
+  rcDesign <- createRowColumnDesign(design, model=1)
   # JRW, p 2650, first equation on that page, whithout number
-  Ar <- crossover:::getInfMatrixOfDesign(rcDesign, v+v*v)
-  Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v*v)
+  Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
+  Xr <- getRCDesignMatrix(rcDesign, v+v*v)
   # JRW, p 2650, second equation on that page, number 11
   Ar2 <- t(Xr) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% Xr
   max(abs(Ar-Ar2))
@@ -446,15 +446,47 @@ In the following code chunk we will compare the results from our approach in the
 <<TestWithGeneral.carryover, echo=TRUE, eval=TRUE>>=
   Csub <- contrMat(n=rep(1, v), type="Tukey")
   class(Csub) <- "matrix"
-  C <- as.matrix(bdiag(Csub,Csub))
-  H <- crossover:::linkMatrix(model=1, v)
-  var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
+  C2 <- as.matrix(bdiag(Csub,Csub))
+  C3 <- as.matrix(bdiag(Csub,Csub,Csub))
+  C5 <- as.matrix(bdiag(Csub,matrix(0,12,12)))
+
+  rcDesign <- createRowColumnDesign(design, model=8)
+  # JRW, p 2650, first equation on that page, whithout number
+  Ar3 <- getInfMatrixOfDesign(rcDesign, v+v^2+v^3)
+
+  for (model in c(1,2,3,4,5,6,7,8)) {
+    if (model %in% c(2,8)) {
+      C <- C3
+      if (model==8) {
+        Ar <- Ar3
+      } else {
+        Ar <- Ar2
+      }
+    } else if (model==3) {
+      C <- Csub
+    } else if (model==7) {
+      C <- C5
+    } else {
+      C <- C2
+      Ar <- Ar2
+    }
+    H <- linkMatrix(model=model, v)
+    var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
   
-  gco <- general.carryover(t(design), model=1)
-  var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+    gco <- general.carryover(t(design), model=model)
+    if (model %in% c(2,8)) {      
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)]) + sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)])
+    } else if (model %in% c(3,7)) {
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)])
+    } else {
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+    }
   
-  abs(var1-var2)
+    cat(models[model],"difference: ",abs(var1-var2),"\n")
+  }
 @
+
+
 
 \begin{appendix} 
 
