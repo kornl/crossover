@@ -24,3 +24,10 @@
 \keyword{ misc }
 \keyword{ graphs }
 
+\examples{
+
+\dontrun{
+crossoverGUI()
+}
+
+}

@@ -36,6 +36,8 @@ test.strangeDesigns <- function() {
              c("C","D","A","B"),
              c("D","A","B","C"))
   
+  D <- matrix(as.numeric(as.factor(D)), dim(D)[1])  
+  
   myInv <- ginv(createRowColumnDesign(D, model=1))
   
 }

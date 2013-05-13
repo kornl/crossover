@@ -9,7 +9,7 @@
 }
 \usage{
 	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor, 
-    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=TRUE, ppp = 0.5, placebos = 1)
+    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp = 0.5, placebos = 1)
 }
 \arguments{
   \item{s}{ Number of sequences. }
@@ -41,8 +41,11 @@
 	Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
 \references{
-John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver: an algorithm for the construction of efficient cross‐over designs. Statistics in medicine, 23(17), 2645-2658.
+John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver: an algorithm for the construction of efficient cross-over designs. Statistics in medicine, 23(17), 2645-2658.
 }
 \keyword{ misc }
 \keyword{ graphs }
 
+\examples{
+x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+}
