@@ -17,7 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.mutoss.gui.Configuration;
+import org.mutoss.config.Configuration;
 import org.mutoss.gui.CrossoverGUI;
 import org.mutoss.gui.MenuBarCrossover;
 import org.mutoss.gui.RControl;

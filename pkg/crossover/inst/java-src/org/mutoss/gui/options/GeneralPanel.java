@@ -20,7 +20,7 @@ import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.lists.IntegerJComboBox;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mutoss.gui.Configuration;
+import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

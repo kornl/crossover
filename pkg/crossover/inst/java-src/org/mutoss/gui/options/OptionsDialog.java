@@ -12,7 +12,7 @@ import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.buttons.OkApplyCancelButtonPane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mutoss.gui.Configuration;
+import org.mutoss.config.Configuration;
 import org.mutoss.gui.CrossoverGUI;
 import org.mutoss.gui.MenuBarCrossover;
 

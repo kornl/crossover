@@ -1,8 +1,10 @@
 package org.mutoss.config;
 
 import java.io.File;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Random;
+import java.util.Vector;
 
 public class GeneralConfig extends SpecificConfig {
 
@@ -16,78 +18,6 @@ public class GeneralConfig extends SpecificConfig {
 
     public final static String DISABLE = "disable";
 
-    private String getHash() {
-        return getProperty("hash", Configuration.NOTFOUND);
-    }
-
-    public void setPassPhrase(String s) {
-    	setProperty("pass.phrase", s);
-    }
-
-    public String getPassPhrase() {
-    	return getProperty("pass.phrase", "");
-    }
-
-    public boolean isPasswordProtected() {
-    	return !(getHash().equals(Configuration.NOTFOUND) || getHash().equals(""));
-    }
-
-
-    /**
-     * Calculates the md5 hash for a String.
-     * @param s
-     * @return md5 hash for String s or null if an error occured.
-     * @throws NoSuchAlgorithmException
-     */
-    public static String getMD5(String s) throws NoSuchAlgorithmException {
-    	MessageDigest md5;
-    	md5 = MessageDigest.getInstance("MD5");
-    	md5.reset();
-    	md5.update(s.getBytes());
-    	byte[] result = md5.digest();
-    	StringBuffer hexString = new StringBuffer();
-    	for (int i=0; i<result.length; i++) {
-    		hexString.append(Integer.toHexString(0xFF & result[i]));
-    	}
-    	return hexString.toString();
-    }
-
-    /**
-     * Checks whether a given String is a valid password.
-     * Therefore the hash value is calculated and we look whether we can find it in the known valid hash value list,
-     * returned by getHash().
-     * @param s Password String
-     * @return is this String a valid password?
-     * @throws NoSuchAlgorithmException
-     */
-	public boolean isValidPassword(String s) throws NoSuchAlgorithmException {
-		String h = getMD5(s);
-		s = getHash();
-		logger.info("Hashvalue: "+h);
-    	logger.info("Passphrases: ");
-    	while (s.indexOf(";") != -1) {
-    		String p = s.substring(0, s.indexOf(";"));
-    		logger.info(p);
-    		if (p.equals(h)) {
-    			return true;
-    		}
-    		s = s.substring(s.indexOf(";")+1, s.length());
-    	}
-    	logger.info(s);
-    	if (s.equals(h)) {
-			return true;
-		}
-    	return false;
-	}
-
-    public void setCheckForUpdates(boolean check) {
-    	setProperty("check.for.updates", ""+check);
-    }
-
-    public String getCheckForUpdates() {
-    	return getProperty("check.for.updates", ""+true);
-    }
-
     public void setTempDir(String tempDir) {
         setProperty("tempdir", tempDir);
     }
@@ -99,14 +29,6 @@ public class GeneralConfig extends SpecificConfig {
         }
         return tmpDir;
     }
-    
-    public File getProjectPDFsPath() {
-        return new File(getProperty("pdf.output", System.getProperty("user.dir")));
-    }
-
-    public void setProjectPDFsPath(String path) {
-    	setProperty("pdf.output", path);
-    }
 
     public void setPDFViewerPath(String pdfViewerPath) {
         setProperty("acrobat.path", pdfViewerPath);
@@ -114,14 +36,6 @@ public class GeneralConfig extends SpecificConfig {
 
     public String getPDFViewerPath() {
         return getProperty("acrobat.path", "");
-    }
-
-    public String getDesktopPath() {
-        return getProperty("desktop.path", "");
-    }
-
-    public void setDesktopPath(String desktopPath) {
-        setProperty("desktop.path", desktopPath);
     }
 
     public void setPDFViewerOptions(String pdfViewerOptions) {
@@ -140,41 +54,63 @@ public class GeneralConfig extends SpecificConfig {
         return getIntProperty("font.size", "12");
     }
 
-    /**
-     * Sets for one Class a key to some String value.
-     * @param c Class
-     * @param key Key
-     * @param value Value
-     */
-    public void setClassProperty(Class c, String key, String value) {
-    	String cn = c.getName().substring(c.getName().lastIndexOf('.'));
-    	setProperty(cn+"."+key, value);
-    }
-
-    /**
-     * Returns for one Class the associated value to a key.
-     * @param c Class
-     * @param key Key
-     */
-    public String getClassProperty(Class c, String key) {
-    	String cn = c.getName().substring(c.getName().lastIndexOf('.'));
-    	return getProperty(cn+"."+key, Configuration.NOTFOUND);
-    }
-
-	public void setLanguage(String string) {
-		setProperty("language", string);		
-	}
-
-    public String getLanguage() {
-        return getProperty("language", null);
-    }
-
     public void setGridSize(int grid) {
-		setProperty("grid", ""+grid);		
+		setProperty("grid", ""+Math.max(grid, 1));		
 	}
     
     public int getGridSize() {
-		return Integer.parseInt(getProperty("grid", "10"));		
+    	int grid = Integer.parseInt(getProperty("grid", "50"));
+		return Math.max(1, grid);		
+	}
+
+    public void setDigits(int digit) {
+		setProperty("Digits", ""+digit);		
+		setFormat();
+	}
+    
+    public int getDigits() {
+		return Integer.parseInt(getProperty("Digits", "3"));		
+	}
+    
+    DecimalFormat format = null;
+    
+	public DecimalFormat getDecFormat() {
+		if (format==null) {
+			setFormat();
+		} 
+		return format;
+	}
+    
+    private void setFormat() {
+    	String s = "#.";
+		for (int i=0; i < getDigits(); i++) {
+			s = s + "#";
+		}
+		format = new DecimalFormat(s);		
+	}
+
+	public void setLineWidth(int lw) {
+		setProperty("linewidth", ""+lw);		
+	}
+    
+    public int getLineWidth() {
+		return Integer.parseInt(getProperty("linewidth", "2"));		
+	}
+    
+    public void setEps(double eps) {
+		setProperty("epsilon", ""+eps);		
+	}
+    
+    public double getEpsilon() {
+		return Double.parseDouble(getProperty("epsilon", "0.0001"));		
+	}
+    
+	public boolean showFractions() {		
+		return Boolean.parseBoolean(getProperty("showFractions", "true"));
+	}
+	
+	public void setShowFractions(boolean showFractions) {		
+		setProperty("showFractions", ""+showFractions);
 	}
     
 	public boolean getColoredImages() {		
@@ -196,13 +132,53 @@ public class GeneralConfig extends SpecificConfig {
 	public void setShowRejected(boolean showRejected) {		
 		setProperty("showRejected", ""+showRejected);
 	}
+
+	public boolean useEpsApprox() {
+		return Boolean.parseBoolean(getProperty("useEpsApprox", "true"));
+	}
+	
+	public void setUseEpsApprox(boolean useEpsApprox) {
+		setProperty("useEpsApprox", ""+useEpsApprox);
+	}
+	
+	public boolean useJLaTeXMath() {
+		return Boolean.parseBoolean(getProperty("useJLaTeXMath", "true"));
+	}
+	
+	public void setUseJLaTeXMath(boolean useJLaTeXMath) {
+		setProperty("useJLaTeXMath", ""+useJLaTeXMath);
+	}
+	
+	public boolean checkOnline() {
+		return Boolean.parseBoolean(getProperty("checkOnline", "true"));
+	}
+	
+	public void setCheckOnline(boolean checkOnline) {
+		setProperty("checkOnline", ""+checkOnline);
+	}
+	
+	public boolean tellAboutCheckOnline() {
+		return Boolean.parseBoolean(getProperty("tellAboutCheckOnline", "false"));
+	}
+	
+	public void setTellAboutCheckOnline(boolean checkOnline) {
+		setProperty("tellAboutCheckOnline", ""+checkOnline);
+	}
+	
+	public boolean reminderNewVersion() {
+		return Boolean.parseBoolean(getProperty("reminderNewVersion", "true"));
+	}
+	
+	public void setReminderNewVersion(boolean reminderNewVersion) {
+		setProperty("reminderNewVersion", ""+reminderNewVersion);
+	}
 	
 	public void setVersionNumber(String version) {
-		setProperty("packageVersion", version);
+		setProperty("gMCPversion", version);
 	}
 
 	public String getVersionNumber() {
-		return getProperty("packageVersion", "unknown");
+		return getProperty("gMCPversion", "<= 0.6.0");
 	}
 	
 	public void setRVersionNumber(String version) {
@@ -212,5 +188,167 @@ public class GeneralConfig extends SpecificConfig {
 	public String getRVersionNumber() {
 		return getProperty("Rversion", "unknown");
 	}
+
+	public void setRandomID() {
+		setProperty("randomID", ""+Math.abs((new Random()).nextInt()));
+	}
+
+	public String getRandomID() {
+		if (getProperty("randomID", "NOT_SET_YET").equals("NOT_SET_YET")) {
+			setRandomID();
+		}
+		return getProperty("randomID");
+	}
 	
+	public List<String> getLatestGraphs() {
+		Vector<String> graphs = new Vector<String>(); 
+		for (int i=0; i<4; i++) {
+			String graph = getProperty("saved_graph_"+i, "NOT_SAVED_YET");
+			if (graph.startsWith("R Object") || new File(graph).exists()) {
+				graphs.add(graph);
+			}
+		}
+		return graphs;
+	}
+	
+	public void addGraph(String graph) {
+		int i=1;
+		for (; i<4; i++) {
+			if (graph.equals(getProperty("saved_graph_"+(i-1), "NOT_SAVED_YET"))) break; 
+		}
+		for (i--; i>0; i--) {
+			String g = getProperty("saved_graph_"+(i-1), "NOT_SAVED_YET");
+			setProperty("saved_graph_"+i, g);			
+		}
+		setProperty("saved_graph_"+0, graph);		
+	}
+
+	public int getNumberOfStarts() {
+		return Integer.parseInt(getProperty("NumberOfStarts", "0"));
+	}
+
+	public void setNumberOfStarts(int i) {
+		setProperty("NumberOfStarts", ""+i);
+	}
+
+	public String getTimesSymbol() {
+		/* "", "*", "\\cdot", "\\times" */
+		return getProperty("getTimesSymbol", "");
+	}
+	
+	public void setTimesSymbol(String s) {
+		/* "", "*", "\\cdot", "\\times" */
+		setProperty("getTimesSymbol", s);
+	}
+
+	public double getAccuracy() {
+		return Double.parseDouble(getProperty("fractionAccuracy", "0.000001"));		
+	}
+
+	public void setExperimental(boolean b) {
+		setProperty("experimentalFeatures", ""+b);
+	}
+	public boolean experimentalFeatures() {
+		return Boolean.parseBoolean(getProperty("experimentalFeatures", "true"));
+	}
+
+	public void setVerbose(boolean b) {
+		setProperty("verbose", ""+b);
+	}
+	
+	public boolean verbose() {
+		return Boolean.parseBoolean(getProperty("verbose", "true"));
+	}
+	
+	public void setVariable(String variable, double value) {
+		setProperty("Variable_"+variable, ""+value);		
+	}
+    
+    public double getVariable(String variable) {
+		return Double.parseDouble(getProperty("Variable_"+variable, "0.5"));		
+	}
+
+	public boolean exportTransparent() {
+		return Boolean.parseBoolean(getProperty("exportTransparent", "true"));
+	}
+
+	public void setExportTransparent(boolean b) {
+		setProperty("exportTransparent", ""+b);
+	}
+
+	public boolean getUnAnchor() {
+		return Boolean.parseBoolean(getProperty("unAnchor", "true"));
+	}
+	
+	public void setUnAnchor(boolean b) {
+		setProperty("unAnchor", ""+b);
+	}
+
+	public boolean simplify() {
+		return Boolean.parseBoolean(getProperty("simplify", "false"));
+	}
+
+	/**
+	 * Not used in the moment. (Number of Digits to assure)
+	 * @return
+	 */
+	public int getDigits2() {
+		return Integer.parseInt(getProperty("digits2", "6"));		
+	}
+
+	public void setSimplify(boolean b) {
+		setProperty("simplify", ""+b);		
+	}
+
+	public void setDigits2(int digits2) {
+		setProperty("digits2", ""+digits2);
+	}
+
+	public Integer getNumberOfSimulations() {
+		return Integer.parseInt(getProperty("numberOfSimulations", "10000"));
+	}
+
+	public String getTypeOfRandom() {
+		return getProperty("typeOfRandom", "quasirandom");
+	}
+	
+	public void setNumberOfSimulations(int nr) {
+		setProperty("numberOfSimulations", ""+nr);
+	}
+	
+	public void setTypeOfRandom(String type) {
+		setProperty("typeOfRandom", ""+type);
+	}
+
+	public boolean focusEqualsEdit() {
+		return Boolean.parseBoolean(getProperty("focusEqualsEdit", "true"));
+	}
+	
+	public void setFocusEqualsEdit(boolean b) {
+		setProperty("focusEqualsEdit", ""+b);		
+	}
+
+	public boolean askWhenGraphIsNotSaved() {
+		return Boolean.parseBoolean(getProperty("askWhenGraphIsNotSaved", "false"));
+	}
+
+	public boolean markEpsilon() {
+		return Boolean.parseBoolean(getProperty("markEpsilon", "true"));
+	}
+	
+	public void setMarkEpsilon(boolean b) {
+		setProperty("markEpsilon", ""+b);		
+	}
+
+	public String getParametricTest() {
+		return getProperty("parametricTest", "Bretz2011");
+	}
+	
+	public void setParametricTest(String test) {
+		setProperty("parametricTest", test);
+	}
+
+	public Double getExportZoom() {		
+		return getProperty("Exportzoom", "null")=="null"?null:Double.parseDouble(getProperty("Exportzoom", "null"));		
+	}
 }

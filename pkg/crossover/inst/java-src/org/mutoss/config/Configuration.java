@@ -1,8 +1,6 @@
 package org.mutoss.config;
 
 
-import java.net.URL;
-import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -17,8 +15,7 @@ public class Configuration {
 	protected static Log logger = LogFactory.getLog(Configuration.class);
     protected Preferences prefs;
     protected static Configuration instance = null;
-    private String projectName = "nvm";
-    private final String keyPrefix;
+    private final String keyPrefix = "gMCP.";
     public final static String NOTFOUND = "___NOT_FOUND___";
 
     /**
@@ -26,10 +23,7 @@ public class Configuration {
      * If you want to access a Configuration object, please use the static method getInstance().
      */
     protected Configuration() {
-        prefs = Preferences.userRoot();
-        loadPropertiesAllVersions();
-        keyPrefix = projectName + ".";
-        loadStaticProperties();
+        prefs = Preferences.userRoot();        
     }
 
     /**
@@ -42,47 +36,6 @@ public class Configuration {
             instance = new Configuration();
         
         return instance;
-    }
-
-
-    private void loadStaticProperties() {
-        //setProperties(loadStaticProperties("/shared_properties.xml"));
-        //setProperties(loadStaticProperties("/properties_all_versions.xml"));
-        //setProperties(loadStaticProperties("/properties_this_version.xml"));
-    }
-
-    private void loadPropertiesAllVersions() {
-        //Properties props = loadStaticProperties("/properties_all_versions.xml");
-        //projectName = props.getProperty("project.name");
-    }
-
-    private Properties loadStaticProperties(String file) {
-        Properties props = null;
-        try {
-            URL url = Configuration.class.getResource(file);
-            props = new Properties();
-            props.loadFromXML(url.openConnection().getInputStream());
-        //TODO make this proper or think and really be sure that this is ok                        
-        } catch (Exception e) {
-        	logger.warn("Could not load props file: " + file, e);
-        }
-        if (props == null) {
-        	logger.warn("Could not load props file: " + file+ "! Load returned null");
-        }
-        return props;
-    }
-
-    public String getProperty(String prop, String def) {
-        return prefs.get(keyPrefix + prop, def);
-    }
-
-    protected String getProperty(String prop) {
-        String s = getProperty(prop, NOTFOUND);
-        if (s.equals(NOTFOUND)) {
-            throw new RuntimeException("Property required but not set: " + prop);
-        } else {
-            return s;
-        }
     }
     
     /**
@@ -110,6 +63,19 @@ public class Configuration {
     	return getProperty(keyPrefix + cn+"."+key, def);
     }
 
+    public String getProperty(String prop, String def) {
+        return prefs.get(keyPrefix + prop, def);
+    }
+
+    protected String getProperty(String prop) {
+        String s = getProperty(prop, NOTFOUND);
+        if (s.equals(NOTFOUND)) {
+            throw new RuntimeException("Property required but not set: " + prop);
+        } else {
+            return s;
+        }
+    }
+
     /**
      * Sets a string value for a property key string.
      * This value is stored via Preferences.userRoot().put(key, val).
@@ -119,26 +85,13 @@ public class Configuration {
     public void setProperty(String key, String val) {
         prefs.put(keyPrefix + key, val);
     }
-    
-
-    private void setProperties(Properties p) {
-        for (Object k : p.keySet()) {
-            setProperty(k.toString(), p.get(k).toString());
-        }
-    }
-    
-    /**
-     * Returns the name of the project (e.g. toxicology, doserespones, bioassay, etc.).
-     * This is stored in props.getProperty("project.name") and 
-     * used as name for several directories, prefixes, etc. 
-     * @return name of the project
-     */
-    public String getProjectName() {
-        return projectName;
-    }
 
 	public GeneralConfig getGeneralConfig() {
         return new GeneralConfig(this);
+    }
+
+    public JavaConfig getJavaConfig() {
+        return new JavaConfig(this);
     }
 
     /**
@@ -147,63 +100,34 @@ public class Configuration {
      * @throws BackingStoreException
      */
     public String getConfigurationForDebugPurposes() {
-        String s = "";
-
-            s += keyPrefix + "\n";
-            try {
-				for (String key : prefs.keys()) {
-				    if (key.startsWith(keyPrefix)) {
-				        String val = prefs.get(key, "__NOT FOUND__");
-				        key = key.substring(keyPrefix.length());
-				        s += key + " : " + val + "\n";
-				    }
+    	String s = "";
+    	s += keyPrefix + "\n";
+    	try {
+    		for (String key : prefs.keys()) {
+    			if (key.startsWith(keyPrefix)) {
+    				String val = prefs.get(key, "__NOT FOUND__");
+    				key = key.substring(keyPrefix.length());
+    				s += key + " : " + val + "\n";
+    			}
+    		}
+    	} catch (BackingStoreException e) {
+    		// We really don't want to throw an error here...
+    		logger.error("Error printing configuration:\n"+e.getMessage(), e);
+    	}
+    	return s;
+    }
+    
+    public void clearConfiguration() {
+    	try {
+			for (String key : prefs.keys()) {
+				if (key.startsWith(keyPrefix) && !key.equals("gMCP.NumberOfStarts")) {				
+			    	prefs.remove(key);
 				}
-			} catch (BackingStoreException e) {
-				// We really don't want to throw an error here... so we just print the stack
-				e.printStackTrace();
 			}
-
-            return s;
-    }
-    
-    public static String getValue(String key, String def) {
-    	return getInstance().getProperty(key, def);
-    }
-    
-    public static int getValue(String key, int def) {
-    	return Integer.parseInt(getInstance().getProperty(key, ""+def));
-    }
-    
-    public static double getValue(String key, double def) {
-    	return Double.parseDouble(getInstance().getProperty(key, ""+def));
-    }
-    
-    public static boolean getValue(String key, boolean def) {
-    	return Boolean.parseBoolean(getInstance().getProperty(key, ""+def));
-    }
-    
-    public static void setValue(String key, String val) {
-    	getInstance().setProperty(key, val);
-    }
-
-    public static void setValue(String key, int val) {
-    	getInstance().setProperty(key, ""+val);
-    }
-
-    public static void setValue(String key, double val) {
-    	getInstance().setProperty(key, ""+val);
-    }
-    
-    public static void setValue(String key, boolean val) {
-    	getInstance().setProperty(key, ""+val);
-    }
-
-	public void flush() {
-		try {
-			prefs.flush();
 		} catch (BackingStoreException e) {
-			// Not that important. Let's do nothing.
-		}		
-	}
+			// We really don't want to throw an error here...
+    		logger.error("Error clearing configuration:\n"+e.getMessage(), e);
+		}
+    }
 
 }

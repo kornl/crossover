@@ -14,7 +14,7 @@ import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.buttons.OKButtonPane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mutoss.gui.Configuration;
+import org.mutoss.config.Configuration;
 
 /**
  * Displays Information about the program, its licenses, used libraries,
