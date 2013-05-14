@@ -50,14 +50,16 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences (may decrease efficiency)");
 	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods (may decrease efficiency)");
 	CrossoverGUI gui;	
+	JButton exportR = new JButton("Export to R");
+	JButton showAlgoPerformance = new JButton("Show course of algorithm");
 	//JTabbedPane jTabAlgo = new jTabAlgo;
 	
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
 		gui.spinnerT.addChangeListener(this);
 		gui.spinnerP.addChangeListener(this);
-		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
-        String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu";
+		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow";
+        String rows = "5dlu, fill:pref:grow, 5dlu, pref, 5dlu";
         
         FormLayout layout = new FormLayout(cols, rows);
         layout.setColumnGroups(new int[][]{ {2, 4} });
@@ -67,21 +69,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		int row = 2;
     	
-    	add(new JLabel(""), cc.xy(2, row));
-        add(new JLabel("Created design:"), cc.xy(4, row));
-		
-        row+=2;
-        
-		jta = new HTMLPaneWithButtons();
+    	jta = new HTMLPaneWithButtons();
 		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		//jta.setLineWrap(false);		
 		jta.setMargin(new Insets(4,4,4,4));
 		jta.setEditable(false);		
 		
 		add(new JScrollPane(getLeftSidePanel()), cc.xy(2, row));
-		add(new JScrollPane(jta), cc.xy(4, row));
+		add((getRightSidePanel()), cc.xy(4, row));
 		
-		row+=2;	
 		
 	}
 	
@@ -89,6 +85,31 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JPanel lsPanel;
 	JLabel pLabel = new JLabel("Further model parameters:");
 	JTextField jtfParam = new JTextField("1");
+	
+
+	public JPanel getRightSidePanel() {
+		JPanel panel = new JPanel();
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;	
+		c.gridx=0; c.gridy=0;
+		c.gridwidth = 1; c.gridheight = 1;
+		c.ipadx=5; c.ipady=5; c.gridwidth=2;
+		c.weightx=1; c.weighty=0;	
+
+		panel.setLayout(new GridBagLayout());
+		panel.add(new JLabel("Created Design"), c);
+		c.gridy++;c.weighty=1;
+		panel.add(new JScrollPane(jta), c);
+		c.gridy++;c.weighty=0; c.gridwidth=1;
+		panel.add(exportR, c);
+		exportR.setEnabled(false);
+		c.gridx++;
+		panel.add(showAlgoPerformance, c);
+		showAlgoPerformance.setEnabled(false);
+		
+		return panel;
+	}
+    
 	
 	public JPanel getLeftSidePanel() {
 		lsPanel = new JPanel();
@@ -313,27 +334,35 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 				@Override
 				protected Void doInBackground() throws Exception {
-					String command = ".COresult <- searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
-							+", "+gui.getParameters()
-							+", model=\""+jCBmodel.getSelectedItem()+"\""
-							+", eff.factor="+1
-							+", v.rep="+getVRep()
-							+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
-							+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
-							+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
-							+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
-							+", verbose=FALSE)";
-					System.out.println(command);
-					RControl.getR().eval(command).asRList();
-					RList result = RControl.getR().eval(".COresult").asRList();
-					String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
-					jta.clear();
-					jta.appendHTML(table);
-					jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");					
-					//RControl.getR().eval("dev.off()");
-					//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
-					//gd.getPanel();					
-					gui.glassPane.stop();				
+					try {
+						String command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+								+", "+gui.getParameters()
+								+", model=\""+jCBmodel.getSelectedItem()+"\""
+								+", eff.factor="+1
+								+", v.rep="+getVRep()
+								+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
+								+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
+								+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
+								+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
+								+", verbose=FALSE)";
+						//System.out.println(command);
+						RControl.getR().eval(".COresult <- "+command);
+						RList result = RControl.getR().eval(".COresult").asRList();
+						String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
+						jta.clear();
+						jta.appendHTML(table);
+						jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");		
+						jta.appendParagraph("Random seed: TODO");
+						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
+						jta.setCaretPosition(0);
+						//RControl.getR().eval("dev.off()");
+						//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
+						//gd.getPanel();
+					} catch (Exception e) {
+						e.printStackTrace();						
+					} finally {
+						gui.glassPane.stop();
+					}
 					return null;
 				}
 			};
@@ -352,10 +381,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				pLabel.setEnabled(false);
 				pLabel.setText("Further model parameters:");
 			}
-		} else { //TODO Button: "export to R" and "show search algorithm performance"
+		} else if (e.getSource()==showAlgoPerformance) { //TODO Button: "export to R" and "show search algorithm performance"
+			
 			//RControl.getR().eval("JavaGD(\"Search algorithm performance\"");
 			//RControl.getR().eval("png(filename=\"/home/kornel/plot.png\")");
 			//RControl.getR().eval("plotSearch(.COresult)");
+		} else if (e.getSource()==exportR) {
+			
 		}
 	}
 

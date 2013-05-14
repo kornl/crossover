@@ -448,41 +448,46 @@ In the following code chunk we will compare the results from our approach in the
   class(Csub) <- "matrix"
   C2 <- as.matrix(bdiag(Csub,Csub))
   C3 <- as.matrix(bdiag(Csub,Csub,Csub))
-  C5 <- as.matrix(bdiag(Csub,matrix(0,12,12)))
+  C5 <- as.matrix(bdiag(Csub,matrix(0,dim(Csub)[1],4*v)))
 
   rcDesign <- createRowColumnDesign(design, model=8)
   # JRW, p 2650, first equation on that page, whithout number
   Ar3 <- getInfMatrixOfDesign(rcDesign, v+v^2+v^3)
 
   for (model in c(1,2,3,4,5,6,7,8)) {
+    cat(models[model],":\n")
     if (model %in% c(2,8)) {
-      C <- C3
+      #C <- C3
+      C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[2], 2*v)))
       if (model==8) {
         Ar <- Ar3
       } else {
         Ar <- Ar2
       }
     } else if (model==3) {
-      C <- Csub
+      C <- Csub      
     } else if (model==7) {
       C <- C5
     } else {
-      C <- C2
+      #C <- C2
+      C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[2], v)))
       Ar <- Ar2
     }
     H <- linkMatrix(model=model, v)
     var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
+    cat(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)),"\n")
   
     gco <- general.carryover(t(design), model=model)
+    print(gco$Var.trt.pair)
     if (model %in% c(2,8)) {      
-      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)]) + sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)])
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) #+ sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)]) + sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)])
     } else if (model %in% c(3,7)) {
       var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)])
     } else {
-      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) #+ sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
     }
   
-    cat(models[model],"difference: ",abs(var1-var2),"\n")
+    cat("Difference: ",abs(var1-var2),"\n\n")
   }
 @
 

@@ -111,7 +111,7 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, p
 }
 
 
-searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1, long.jumps=0) {
+searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1, long.jumps=0, contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   model <- getModelNr(model)
   if (missing(v.rep)) {
@@ -131,9 +131,27 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     }  
     designL[[i]] <- design
   }
-  Csub <- contrMat(n=rep(1, v), type="Tukey")
-  class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
-  C <- as.matrix(bdiag(Csub,Csub))  
+  if (missing(contrast)) {
+    Csub <- contrMat(n=rep(1, v), type="Tukey")
+    class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+    if (model %in% c(2,8)) {
+      C <- as.matrix(cdiag(Csub, matrix(0, v, dim(Csub)[2]*2))  
+      if (model==8) {
+        Ar <- Ar3
+      } else {
+        Ar <- Ar2
+      }
+    } else if (model==3) {
+      C <- Csub
+    } else if (model==7) {
+      C <- C5
+    } else {
+      C <- C2
+      Ar <- Ar2
+    }    
+  } else {
+    C <- contrast
+  }
   CC <- t(C) %*% C
   H <- linkMatrix(model, v)
   
