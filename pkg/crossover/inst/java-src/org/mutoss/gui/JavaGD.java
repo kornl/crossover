@@ -17,7 +17,7 @@ public class JavaGD extends GDInterface implements WindowListener {
    
     public void gdOpen(double w, double h) {
         if (f!=null) gdClose();
-        f = new JFrame("QTD (Quantitative Trial Design) Plot");
+        f = new JFrame("Crossover Plot");
         f.addWindowListener(this);      
         c = new JGDBufferedPanel(w, h);
         f.getContentPane().add((Component) c);
@@ -42,9 +42,8 @@ public class JavaGD extends GDInterface implements WindowListener {
     }
 
     public static void main(String[] args) {
-        Rengine engine = new Rengine(new String[] {"--vanilla"}, true, null);      
-        engine.eval(".setenv <- if (exists(\"Sys.setenv\")) Sys.setenv else Sys.putenv");
-        engine.eval(".setenv(\"JAVAGD_CLASS_NAME\"=\"org.mutoss.gui.JavaGD\")");
+        Rengine engine = new Rengine(new String[] {"--vanilla"}, true, null);
+        engine.eval("Sys.setenv(\"JAVAGD_CLASS_NAME\"=\"org.mutoss.gui.JavaGD\")");
         engine.eval("library(JavaGD)");
         engine.eval("JavaGD()");
         engine.eval("plot(rnorm(100))");       

@@ -392,8 +392,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			RControl.getR().eval("print(searchPlot(.COresult))");
 			//RControl.getR().eval("dev.off()");
 		} else if (e.getSource()==exportR) {
-			VariableNameDialog vd = new VariableNameDialog(gui, "design");
-			String designName = vd.getName();
+			VariableNameDialog vd = new VariableNameDialog(gui, "design");			
 			RControl.getR().eval(vd.getName()+" <- .COresult$design");
 		}
 	}
