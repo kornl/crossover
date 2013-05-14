@@ -58,6 +58,6 @@ public class VariableNameDialog extends JDialog implements ActionListener {
 	}	
 	
 	public String getName() {
-		return jt.getText();
+		return RControl.getR().eval("make.names(\""+jt.getText()+"\")").asRChar().getData()[0];
 	}
 }

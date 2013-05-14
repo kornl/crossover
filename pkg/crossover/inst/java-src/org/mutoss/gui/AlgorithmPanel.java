@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -103,9 +104,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		c.gridy++;c.weighty=0; c.gridwidth=1;
 		panel.add(exportR, c);
 		exportR.setEnabled(false);
+		exportR.addActionListener(this);
 		c.gridx++;
 		panel.add(showAlgoPerformance, c);
 		showAlgoPerformance.setEnabled(false);
+		showAlgoPerformance.addActionListener(this);
 		
 		return panel;
 	}
@@ -347,6 +350,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 								+", verbose=FALSE)";
 						//System.out.println(command);
 						RControl.getR().eval(".COresult <- "+command);
+						exportR.setEnabled(true);						
+						showAlgoPerformance.setEnabled(true);
 						RList result = RControl.getR().eval(".COresult").asRList();
 						String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
 						jta.clear();
@@ -381,15 +386,24 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				pLabel.setEnabled(false);
 				pLabel.setText("Further model parameters:");
 			}
-		} else if (e.getSource()==showAlgoPerformance) { //TODO Button: "export to R" and "show search algorithm performance"
-			
-			//RControl.getR().eval("JavaGD(\"Search algorithm performance\"");
-			//RControl.getR().eval("png(filename=\"/home/kornel/plot.png\")");
-			//RControl.getR().eval("plotSearch(.COresult)");
+		} else if (e.getSource()==showAlgoPerformance) {			
+			RControl.getR().eval("JavaGD(\"Search algorithm performance\")");
+			//RControl.getR().eval("png(filename=\""+getTmpFile()+"\")");
+			RControl.getR().eval("print(searchPlot(.COresult))");
+			//RControl.getR().eval("dev.off()");
 		} else if (e.getSource()==exportR) {
-			
+			VariableNameDialog vd = new VariableNameDialog(gui, "design");
+			String designName = vd.getName();
+			RControl.getR().eval(vd.getName()+" <- .COresult$design");
 		}
 	}
+
+	private String getTmpFile() {
+		String file = System.getProperty("java.io.tmpdir")+"/searchplot"+(new Date()).getTime()+".png";
+		System.out.println(file);
+		return file;
+	}
+
 
 	public void stateChanged(ChangeEvent e) {
 		createWeightsPanel();

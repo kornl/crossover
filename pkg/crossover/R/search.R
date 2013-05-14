@@ -135,19 +135,19 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
     if (model %in% c(2,8)) {
-      C <- as.matrix(cdiag(Csub, matrix(0, v, dim(Csub)[2]*2))  
+      C <- as.matrix(cdiag(Csub, matrix(0, dim(Csub)[1], v*2)))
       if (model==8) {
-        Ar <- Ar3
+        #Ar <- Ar3
       } else {
-        Ar <- Ar2
+        #Ar <- Ar2
       }
     } else if (model==3) {
       C <- Csub
     } else if (model==7) {
-      C <- C5
+      C <- as.matrix(bdiag(Csub,matrix(0,dim(Csub)[1],4*v)))
     } else {
-      C <- C2
-      Ar <- Ar2
+      C <- as.matrix(cbind(Csub, matrix(0,dim(Csub)[1], v)))
+      #Ar <- Ar2
     }    
   } else {
     C <- contrast
