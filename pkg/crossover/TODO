@@ -27,3 +27,15 @@ design.efficiency(design)$av.eff.trt.pair.adj == 6.907292
 Random Number Seed
 
 Correlation?
+
+Show more information in catalogue
+
+Die speziellen Designs finden sich immer zusammengefasst in Paketen bzgl. der Autoren
+
+- Calculations for the model with the full set of interactions are still most certainly wrong.
+- The search results from package crossdes shown in the catalogue as "CrossDes Search Result for a D-optimal BIBD" don't make much sense. Most likely this is my mistake and other designs from package crossdes that are shown in the catalogue are fine.
+- The y-axis in the search algorithm plots is labeled "eff". This is perhaps misleading since it corresponds not to the efficiency but shows the inverse of the sum of the weighted average pairwise variances for the comparisons specified by the contrast. Since it is not standardized in the moment (yes I'll fix that!) the absolute numbers in this plot are of no great interest. It only gives an idea how many local optima exist and how many separate hill climbing runs one should use and how many steps are appropriate for these. To evaluate the efficiency of the design after the search the other methods should be used.
+- The contrasts specified in the GUI are currently not passed to R but instead only equally weighted all-pair comparisons only for the treatment effects are assumed. (I forgot to uncomment a line before building...) But in R this should work fine!
+- The package gives you not enough credit for your collection of examples and also I included your R-Code for comparison/testing purposes (and also the variances shown in the GUI are currently from general.carryover). 
+
+
