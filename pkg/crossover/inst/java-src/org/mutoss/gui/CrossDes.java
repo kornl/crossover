@@ -13,12 +13,15 @@ public class CrossDes {
 	public static List<Design> getDesigns(int t, int p, int s1, int s2) {
 		List<Design> list = new Vector<Design>();
 		
+		if(true) return list;
+		
 		String title = null;
 		String reference = null;
 		String signature = null;
 		String result = null;
 		if (p<=t) { /* all.combin */
-			RControl.getR().evalVoid(".tmpDesign <- t(allcombs("+t+","+p+"))");
+			String rName = "t(allcombs("+t+","+p+"))";
+			RControl.getR().evalVoid(".tmpDesign <- "+rName);
 			int[] signatureNr =  RControl.getR().eval("crossover:::getSignature(.tmpDesign)").asRInteger().getData();
 			if (s1<=signatureNr[1] && signatureNr[1]<=s2) {
 				title = "Carryover balanced generalized Youden design (uniform on the columns)";
@@ -27,7 +30,7 @@ public class CrossDes {
 				"Wakeling, I.N. and MacFie, H.J.H. (1995): Designing consumer trials balanced for first and higher orders of carry-over effect when only a subset of k samples from t may be tested. Food Quality and Preference 6, 299-308.";
 				result = RControl.getR().eval("paste(capture.output(dput(.tmpDesign)), collapse=\"\")").asRChar().getData()[0];				
 				signature = RControl.getR().eval("crossover:::getSignatureStr(.tmpDesign)").asRChar().getData()[0];
-				Design design = new Design(title, reference, signature, t, signatureNr[1], p, result);
+				Design design = new Design(title, null, reference, signature, t, signatureNr[1], p, result);
 				list.add(design);
 			}
 		}		
@@ -49,7 +52,7 @@ public class CrossDes {
 							"Wakeling, I.N. and MacFie, H.J.H. (1995): Designing consumer trials balanced for first and higher orders of carry-over effect when only a subset of k samples from t may be tested. Food Quality and Preference 6, 299-308.";
 					result = RControl.getR().eval("paste(capture.output(dput(.tmpDesign)), collapse=\"\")").asRChar().getData()[0];				
 					signature = RControl.getR().eval("crossover:::getSignatureStr(.tmpDesign)").asRChar().getData()[0];
-					Design design = new Design(title, reference, signature, t, signatureNr[1], p, result);
+					Design design = new Design(title, null, reference, signature, t, signatureNr[1], p, result);
 					list.add(design);
 				} catch (RErrorException e) {
 					// There is no balmin design. So nothing to do.
@@ -64,7 +67,7 @@ public class CrossDes {
 							"Patterson, H.D. (1951): Change-over trials. Journal of the Royal Statistical Society B 13, 256-271.";
 					result = RControl.getR().eval("paste(capture.output(dput(.tmpDesign)), collapse=\"\")").asRChar().getData()[0];				
 					signature = RControl.getR().eval("crossover:::getSignatureStr(.tmpDesign)").asRChar().getData()[0];
-					Design design = new Design(title, reference, signature, t, s, p, result);
+					Design design = new Design(title, null, reference, signature, t, s, p, result);
 					list.add(design);
 				} catch (RErrorException e) {
 					/* Sometimes the search algorithm stops with an error.

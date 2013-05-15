@@ -92,7 +92,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		
 		setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/rjavaicon64.png"))).getImage());
 		
-		RControl.getR().evalVoid(".st <- crossover:::buildSummaryTable()");
+		RControl.getR().evalVoid(".st <- buildSummaryTable()");
 		RControl.getR().evalVoid("crossover:::loadAllDatasets()"); 
 
 		glassPane = new InfiniteProgressPanel(this, "Calculating");
@@ -297,7 +297,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 					int[] pList = RControl.getR().eval(".df$p").asRInteger().getData();
 					for (int i=0; i<n; i++) {
 						String result = RControl.getR().eval("paste(capture.output(dput("+dataset[i]+")), collapse=\"\")").asRChar().getData()[0];
-						Design design = new Design(title[i], reference[i], signature[i], tList[i], s[i], pList[i], result);
+						Design design = new Design(title[i], dataset[i], reference[i], signature[i], tList[i], s[i], pList[i], result);
 						list.add(design);
 					}			
 				}

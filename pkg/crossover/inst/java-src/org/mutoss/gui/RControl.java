@@ -44,7 +44,6 @@ public class RControl {
 					System.getProperty("eclipse") != null || debug,
 					new ApplicationLog());
 			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
-
 		}
 		Rengine rengine = Rengine.getMainEngine();
 		if (rengine == null) {
@@ -58,15 +57,9 @@ public class RControl {
 		}
 		try {
 			rcs = new RCallServicesREngine(new JRIEngine(rengine));
-			if (System.getProperty("eclipse") != null) {
-				//rcs.eval(".setenv <- if (exists(\"Sys.setenv\")) Sys.setenv else Sys.putenv");
-				//rcs.eval(".setenv(\"JAVAGD_CLASS_NAME\"=\"org/mutoss/gui/JavaGD\")");
-				//rcs.eval("require(JavaGD)");					
+			if (System.getProperty("eclipse") != null) {	
 				rcs.eval("require(crossover)");
 				rcs.eval("require(JavaGD)");
-				//rcs.eval("graph <- createGraphFromBretzEtAl()");
-				//rcs.eval("graph <- createBonferroniHolmGraph(5)");
-				//rcs.eval("graph <- createGraphForImprovedParallelGatekeeping()");
 			}
 		} catch (REngineException e) {
 			ErrorHandler.getInstance().makeErrDialog("Error creating RCallServicesREngine!", e);
