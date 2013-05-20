@@ -12,7 +12,12 @@ This package provides a mask
 
 Maintainer: Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
-\references{John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver: an algorithm for the construction of efficient cross-over designs. Statistics in medicine, 23(17), 2645-2658.}
+\references{
+Jones, B., & Kenward, M. G. (2003). Design and analysis of cross-over trials (Vol. 98). Chapman & Hall.
+
+John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver: an algorithm for the construction of efficient cross-over designs. Statistics in medicine, 23(17), 2645-2658.
+
+}
 \keyword{ package }
 \keyword{ graphs }
 \keyword{ htest }
