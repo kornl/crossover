@@ -111,8 +111,10 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, p
 }
 
 
-searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1, long.jumps=0, contrast) {
+searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), n=c(5000, 20), jumps=c(5, 50), contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
+  if (length(n)==1) n <- c(n, 20)
+  if (length(jumps)==1) jumps <- c(jumps, 50)
   model <- getModelNr(model)
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
@@ -121,7 +123,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")
   designL <- list() # In this list we save 20 random start designs.
-  for (i in 1:20) {
+  for (i in 1:n[2]) {
     if (balance.s) {
       design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
     } else if (balance.p) {
@@ -135,7 +137,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
     if (model %in% c(2,8)) {
-      C <- as.matrix(cdiag(Csub, matrix(0, dim(Csub)[1], v*2)))
+      C <- as.matrix(bdiag(Csub, matrix(0, dim(Csub)[1], v*2)))
       if (model==8) {
         #Ar <- Ar3
       } else {
@@ -153,14 +155,15 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     C <- contrast
   }
   CC <- t(C) %*% C
-  H <- linkMatrix(model, v)
+  H <- do.call( linkMatrix, c(list(model=model, v=v), model.param) )
+  #H <- linkMatrix(model, v)
   
-  result <- .Call( "searchCOD", s, p, v, designL, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 5000, PACKAGE = "crossover" )
+  result <- .Call( "searchCOD", s, p, v, designL, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, PACKAGE = "crossover" )
   design <- result$design
   eff <- result$eff
   
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
-  return(list(design=design, varTrtPair=varTrtPair, eff=eff))
+  return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=list(n=n, jumps=jumps)))
 }
 
 getTrtPair <- function(design, model=1) {
@@ -185,15 +188,19 @@ dput2 <- function(x) {
   paste(capture.output(dput(x)), collapse = " ")
 }
 
-searchPlot <- function(x, type=1) {    
+searchPlot <- function(x, type=1, show.jumps=FALSE) {    
   eff <- unlist(x$eff)
   run <- as.factor(rep(1:length(x$eff), each=length(x$eff[[1]])))
   n <- 1:(length(x$eff[[1]])*length(x$eff))
   n2 <- rep(1:length(x$eff[[1]]), times=length(x$eff))
   d <- data.frame(eff=eff, run=run, n=n, n2=n2)
+  n <- x$search$n
+  jumps <- x$search$jumps
   if (type==1) {
-    ggplot(d, aes(x=n, y=eff, colour=run)) + geom_point()
+    plot <- ggplot(d, aes(x=n, y=eff, colour=run)) + geom_point()
+    if (show.jumps) plot <- plot + geom_vline(xintercept = 1:((n[1]*n[2])/jumps[2])*jumps[2], colour=grey)
   } else {
-    ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + geom_abline(intercept = max(d$eff), slope = 0) + facet_wrap( ~ run)
+    plot <-ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + geom_abline(intercept = max(d$eff), slope = 0) + facet_wrap( ~ run)
   }
+  return(plot)
 }

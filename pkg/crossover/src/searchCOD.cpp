@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -28,7 +28,12 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int s = IntegerVector(sS)[0];
   int p = IntegerVector(pS)[0];
   int v = IntegerVector(vS)[0];
-  int n = IntegerVector(nS)[0];
+  IntegerVector n = IntegerVector(nS);
+  int n1 = n[0];
+  //int n2 = n[1]; This will perhaps be passed to this function. But it is safer to get this value from mlist.size().
+  IntegerVector jump = IntegerVector(jumpS);
+  int j1 = jump[0];
+  int j2 = jump[1];
   int model = IntegerVector(modelS)[0];
   //vec vRep = as<vec>(vRepS); //Not used yet
   //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
@@ -44,26 +49,37 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int n2 = mlist.size();
   List effList = List(n2); // Here we will store NumericVectors that show the search progress.
   mat design;
-  mat designOld, rcDesign, Ar;  
-  double s1, s2, eOld;
+  mat bestDesign;
+  int effBest = 0;
+  mat designOld, designBeforeJump, rcDesign, Ar;  
+  double s1, s2, eOld, eBeforeJump;
   NumericVector rows, cols;
   
   for(int j=0; j<n2; j++) {
-    NumericVector eff = NumericVector(n);
+    NumericVector eff = NumericVector(n1);
     design = as<mat>(mlist[j]);  
     eOld = 0;     
-    for(int i=0; i<n; i++) {  
-      designOld = design;
-      rows = ceil(runif(2)*p)-1; 
-      cols = ceil(runif(2)*s)-1;  
-      while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) {
+    for(int i=0; i<n1; i++) {  
+      designOld = design;      
+      // Now we exchange r times two elements:
+      int r = 1;
+      if (i%j2==0) {
+        r = j1;
+        designBeforeJump = design; // If after j2/4 steps no better design is found after the jump, we wil return to the design before the jump
+        eBeforeJump = eOld;
+      }
+      for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
         rows = ceil(runif(2)*p)-1; 
         cols = ceil(runif(2)*s)-1;  
+        while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) {
+          rows = ceil(runif(2)*p)-1; 
+          cols = ceil(runif(2)*s)-1;  
+        }
+        double tmp = design(rows[0],cols[0]);
+        design(rows[0],cols[0]) = design(rows[1],cols[1]);
+        design(rows[1],cols[1]) = tmp;
       }
-      double tmp = design(rows[0],cols[0]);
-      design(rows[0],cols[0]) = design(rows[1],cols[1]);
-      design(rows[1],cols[1]) = tmp;
-      //TODO long jumps
+      
       rcDesign = createRowColumnDesign(design, v, model);
       Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
@@ -72,18 +88,27 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       
       //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
       eff[i] = s2/s1;
-      if (s2/s1 > eOld) {
-        if (verbose) Rprintf("=> Accepting new matrix.\n");
+      if (s2/s1 > eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/4 steps.
+        //if (verbose) Rprintf("=> Accepting new matrix.\n");
         eOld = s2/s1;         
       } else {
-        if (verbose) Rprintf("=> Keeping old matrix.\n");
+        //if (verbose) Rprintf("=> Keeping old matrix.\n");
         design = designOld;    
       }
+      if ((i%j2==j2/2) && (eBeforeJump>eOld)) { // If after j2/4 steps no better design is found after the jump, we wil return to the design before the jump:
+        design = designBeforeJump;
+        eOld = eBeforeJump;
+      }
+      
+    }
+    if (eOld > effBest) {
+      effBest = eOld;
+      bestDesign = design;
     }
     effList[j] = eff;
   }
   PutRNGstate();
-  return List::create(Named("design")=design, Named("eff")=effList);  
+  return List::create(Named("design")=bestDesign, Named("eff")=effList);  
   END_RCPP
 }
 

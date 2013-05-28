@@ -2,13 +2,13 @@
 \alias{crossover-package}
 \docType{package}
 \title{
-A graphical mask
+This package provides more than two hundred cross-over design from literature, a search algorithm to find efficient cross-over designs for various models and a graphical user interface to find/generate appropriate designs.
 }
 \description{
-This package provides a mask
+This package provides more than two hundred cross-over design from literature, a search algorithm to find efficient cross-over designs for various models and a graphical user interface to find/generate appropriate designs.
 }
 \author{
-%Kornelius Rohmeyer 
+%Kornelius Rohmeyer, Byron Jones
 
 Maintainer: Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
@@ -19,7 +19,6 @@ John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver: an algorithm for 
 
 }
 \keyword{ package }
-\keyword{ graphs }
 \keyword{ htest }
 %\seealso{
 %\code{\link[mutoss:Mutoss]{Mutoss}}

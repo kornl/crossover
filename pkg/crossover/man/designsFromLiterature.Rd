@@ -260,7 +260,7 @@ Anderson, I. (2002) Personal communication.
 Archdeacon, D.S., Dinitz J.H., Stinson, D.R. and Tillson, T.W. (1980)
 Some new row-complete latin squares, Journal of Combinatorial Theory, Series A, 29, 395-398.
 
-Source: Atkinson, G.F. (1966) Designs for sequences of treatments with carry-over effects. Biometrics, 22, 292--309.
+Atkinson, G.F. (1966) Designs for sequences of treatments with carry-over effects. Biometrics, 22, 292--309.
 
 Balaam, L.N. (1968) A two-period design with \eqn{t^2}{t^2} experimental units. Biometrics, 24, 61--73.
 

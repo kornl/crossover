@@ -156,5 +156,5 @@ searchCrossOverDesignR <- function(s, p, v, model="Standard additive model", eff
     }
   }    
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
-  return(list(design=design, varTrtPair=varTrtPair, eff=eff))
+  return(list(design=design, varTrtPair=varTrtPair))
 }

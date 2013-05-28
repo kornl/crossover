@@ -22,7 +22,6 @@
 }
 
 \keyword{ misc }
-\keyword{ graphs }
 
 \examples{
 

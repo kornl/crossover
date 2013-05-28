@@ -9,7 +9,7 @@
 }
 \usage{
 	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor, 
-    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp = 0.5, placebos = 1)
+    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), n=c(5000, 20), jumps=c(5, 50), contrast)
 }
 \arguments{
   \item{s}{ Number of sequences. }
@@ -28,8 +28,10 @@
   \item{balance.s}{ Boolean specifying whether to allocate the treatments as equally as possible to each sequence (can result in loss of efficiency). }  
   \item{balance.p}{ Boolean specifying whether to allocate the treatments as equally as possible to each period (can result in loss of efficiency). }  
   \item{verbose}{ Boolean specifying whether verbose output should be printed. }  
-  \item{ppp}{ Proportionality parameter for the proportionality model. }  
-  \item{placebos}{ Number of placebo treatments in the placebo model. }  
+  \item{model.param}{ List of additional model specific parameters. In the moment these are the \code{ppp}, the proportionality parameter for the proportionality model, and \code{placebos}, the number of placebo treatments in the placebo model. }  
+  \item{n}{ \code{n=c(n1,n2)} with \var{n1} the number of hill climbing steps per trial and \var{n2} the number of searches from random start matrices. }
+  \item{jumps}{ To reduze the possibility of the hill-climbing algorithm to get stuck in local extrema long jumps of distance \var{d} can be performed all \var{n} steps. This can be specified as \code{long.jumps=c(d,n)}. If \var{long.jumps} has only length 1 the default for \var{n} is 50.}
+  \item{contrast}{ Contrast matrix to be optimised. TODO: Example and better explanation for contrast. }
 }
 \details{
 	See the vignette of this package for further details.
@@ -44,7 +46,6 @@
 John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver: an algorithm for the construction of efficient cross-over designs. Statistics in medicine, 23(17), 2645-2658.
 }
 \keyword{ misc }
-\keyword{ graphs }
 
 \examples{
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
