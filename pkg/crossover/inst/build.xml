@@ -42,7 +42,7 @@
 	<target name="compile">
 			<mkdir dir="${output.dir}"/>	
 			<javac srcdir="${content.root}/java-src" destdir="${output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}"
-	                memorymaximumsize="${compiler.max.memory}" fork="true">
+	                memorymaximumsize="${compiler.max.memory}" fork="true" includeantruntime="false"> <!--  bootclasspath="/usr/lib/jvm/java-1.5.0-gcj-4.6/jre/lib/rt.jar">  -->
 				<compilerarg line="${compiler.args}"/>
 				<classpath refid="complete.classpath"/>
 				<src refid="sourcepath"/>				
