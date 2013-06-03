@@ -14,7 +14,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -28,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.af.jhlir.call.RList;
 import org.jdesktop.swingworker.SwingWorker;
+import org.mutoss.gui.dialogs.TextFileViewer;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -337,8 +340,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 				@Override
 				protected Void doInBackground() throws Exception {
+					String command = "";
 					try {
-						String command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+						command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
 								+", "+gui.getParameters()
 								+", model=\""+jCBmodel.getSelectedItem()+"\""
 								+", eff.factor="+1
@@ -364,6 +368,18 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
 						//gd.getPanel();
 					} catch (Exception e) {
+						String message = e.getMessage();
+						System.out.println("\""+message+"\"");
+						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please try the command for yourself)\n\n";
+						JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
+						JDialog d = new JDialog(gui, "R Error", true);
+						d.add(
+								new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+
+										command, true)
+								);
+						d.pack();
+						d.setSize(800, 600);
+						d.setVisible(true);
 						e.printStackTrace();						
 					} finally {
 						gui.glassPane.stop();
