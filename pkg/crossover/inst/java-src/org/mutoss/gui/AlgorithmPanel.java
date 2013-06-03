@@ -325,6 +325,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		return vrep+")";
 	}
 	
+	private String getContrast() {
+		return "";
+	}
+	
 	public void addActionListener(ActionListener al) {
 		ok.addActionListener(al);
 	}

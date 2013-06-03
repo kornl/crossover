@@ -30,7 +30,7 @@
 
 \examples{
 
-x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 searchPlot(x)
 searchPlot(x, type=2)
 
