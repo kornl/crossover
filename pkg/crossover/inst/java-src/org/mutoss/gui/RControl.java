@@ -34,7 +34,7 @@ public class RControl {
 	}
 
 	protected static RCallServicesREngine rcs = null;
-	public static DebugTextConsole console = null;
+	protected static DebugTextConsole console = null;
 
 	protected RControl(boolean debug) {
 		if (!LoggingSystem.alreadyInitiated()) {
@@ -53,6 +53,8 @@ public class RControl {
 				rengine = new Rengine(new String[] {"--vanilla"}, true, console);
 			} else {
 				rengine = new Rengine();
+				//console = new DebugTextConsole();
+				//rengine.addMainLoopCallbacks(console);
 			}
 		}
 		try {
@@ -60,6 +62,11 @@ public class RControl {
 			if (System.getProperty("eclipse") != null) {	
 				rcs.eval("require(crossover)");
 				rcs.eval("require(JavaGD)");
+				rcs.eval("warnings()"); /* Otherwise the first error will also show: 
+					In addition: Warning message:
+					In .jinit(parameters = "-Xrs") :
+					Cannot set VM parameters, because VM is running already.*/
+ 
 			}
 		} catch (REngineException e) {
 			ErrorHandler.getInstance().makeErrDialog("Error creating RCallServicesREngine!", e);

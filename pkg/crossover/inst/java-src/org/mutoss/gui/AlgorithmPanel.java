@@ -338,9 +338,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			gui.glassPane.start();
 			//startTesting();		
 			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+				RList result;
+				String table;
+				String command = "";
+				
 				@Override
-				protected Void doInBackground() throws Exception {
-					String command = "";
+				protected Void doInBackground() throws Exception {					
 					try {
 						command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
 								+", "+gui.getParameters()
@@ -356,21 +359,16 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						RControl.getR().eval(".COresult <- "+command);
 						exportR.setEnabled(true);						
 						showAlgoPerformance.setEnabled(true);
-						RList result = RControl.getR().eval(".COresult").asRList();
-						String table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
-						jta.clear();
-						jta.appendHTML(table);
-						jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");		
-						jta.appendParagraph("Random seed: TODO");
-						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
-						jta.setCaretPosition(0);
+						result = RControl.getR().eval(".COresult").asRList();
+						table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
+						updateGUI();
 						//RControl.getR().eval("dev.off()");
 						//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
 						//gd.getPanel();
 					} catch (Exception e) {
 						String message = e.getMessage();
-						System.out.println("\""+message+"\"");
-						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please try the command for yourself)\n\n";
+						//System.out.println("\""+message+"\"");
+						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
 						JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
 						JDialog d = new JDialog(gui, "R Error", true);
 						d.add(
@@ -386,6 +384,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					}
 					return null;
 				}
+				
+				 public synchronized void updateGUI() {
+						jta.clear();
+						jta.appendHTML(table);
+						jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");		
+						jta.appendParagraph("Random seed: TODO");
+						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
+						jta.setCaretPosition(0);
+				 }
 			};
 			worker.execute();
 		} else if (e.getSource() == jCBmodel) {

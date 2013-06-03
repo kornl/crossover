@@ -104,7 +104,8 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 		extraMenu.add(makeMenuItem("Log", "showLog", KeyEvent.VK_L));
 		extraMenu.add(makeMenuItem("Report error", "reportError", KeyEvent.VK_R));
 		//extraMenu.add(makeMenuItem("Submit your own graph to gMCP archive", "submitGraph"));
-		if (System.getProperty("eclipse") != null) {		
+		if (System.getProperty("eclipse") != null) 
+		{		
 			extraMenu.add(makeMenuItem("Debug console", "debugConsole", KeyEvent.VK_D));
 		}
 		extraMenu.setMnemonic(KeyEvent.VK_E);

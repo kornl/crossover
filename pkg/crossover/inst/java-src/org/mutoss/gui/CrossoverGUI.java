@@ -260,7 +260,11 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		if (RControl.getR().eval("exists(\".isBundle\")").asRLogical().getData()[0]) {
 			RControl.getR().eval("q(save=\"no\")");
 		} else {
-			System.exit(0);
+			if (System.getProperty("eclipse") != null) {
+				System.exit(0);
+			} else {
+				dispose();
+			}
 		}
 	}
 	public void windowActivated(WindowEvent e) {}
