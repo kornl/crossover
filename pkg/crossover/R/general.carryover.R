@@ -1,12 +1,9 @@
-#TODO general.carryover: no visible binding for global variable ‘par.val’
-#TODO general.carryover: no visible binding for global variable ‘sigw’
-#TODO general.carryover: no visible binding for global variable ‘sigs’
 
 ################################################################################################
 ##           FUNCTION                                                     ######################
 ################################################################################################
 
-general.carryover<-function(design,model,t0=1,rho=0.5,sim=0,parm.val=0){
+general.carryover<-function(design,model,t0=1,rho=0.5){
 	
 	## set the design parameters
 	n.subj<-length(design[,1])
@@ -115,7 +112,8 @@ general.carryover<-function(design,model,t0=1,rho=0.5,sim=0,parm.val=0){
 			for(j in 1:n.trt){
 				Var.trt.pair[i,j]<-Var.trt[i,i]+Var.trt[j,j]-2*Var.trt[i,j]
 				Var.trt.pair[j,i]<-Var.trt.pair[i,j]
-			}}
+			}
+		}
 		## carry-overs
 		Var.car<-XtX.inv[(1+n.subj+n.per+n.trt+1):(1+n.subj+n.per+n.trt+n.trt),(1+n.subj+n.per+n.trt+1):(1+n.subj+n.per+n.trt+n.trt)]
 		Var.car.pair<-matrix(0,n.trt,n.trt)
@@ -123,32 +121,9 @@ general.carryover<-function(design,model,t0=1,rho=0.5,sim=0,parm.val=0){
 			for(j in 1:n.trt){
 				Var.car.pair[i,j]<-Var.car[i,i]+Var.car[j,j]-2*Var.car[i,j]
 				Var.car.pair[j,i]<-Var.car.pair[i,j]
-			}}
-		## are simulated data required for this model
-		if(sim==0){
-			return(list(Var.trt.pair=Var.trt.pair,Var.car.pair=Var.car.pair,model=model))
-		}
-		if(sim!=0){
-			## simulated data required
-			## generate X matrix for sequence groups
-			Xmat.grp<-matrix(0,n.dat,n.seq)
-			for(i in 1:n.dat){
-				Xmat.grp[i,group.id[i]]<-1
 			}
-			## model with mean, subjects, periods, treatments
-			Xmat<-cbind(Xmat.mean,Xmat.grp,Xmat.per,Xmat.trt,Xmat.car)
-			expected.val<-Xmat%*%par.val[3:length(par.val)]
-			## generate a sample of within-subject random errors
-			epserr<-rnorm(n.dat, 0, 1) * sigw
-			## simulate subject effects, 
-			suberr<-rnorm(n.subj, 0, 1) * sigs
-			suberr<-rep(suberr,c(rep(n.per,n.subj)))
-			## generate responses
-			resp<-expected.val+suberr+epserr
-			data.cross<-data.frame(cbind(subject,group.id,per,trt,car,resp))
-			return(list(Var.trt.pair=Var.trt.pair,Var.car.pair=Var.car.pair,model=model,
-							expected.val=expected.val,data.cross=data.cross))
 		}
+		return(list(Var.trt.pair=Var.trt.pair,Var.car.pair=Var.car.pair,model=model))
 	}
 	
 	## MODEL 2 - TREATMENTS + SELF ADJACENT CARRY-OVERS [ TWO TYPES OF CARRY-OVER ]

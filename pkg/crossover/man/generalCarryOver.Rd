@@ -21,8 +21,7 @@
             "Treatment decay model" (2),
             "Proportionality model" (1) ... }
   \item{t0}{ ... }
-  \item{rho}{ ... }
-  \item{sim}{ ... }
+  \item{rho}{ The proportionality parameter for the proportionality model.}
   \item{parm.val}{ ... }  
 }
 \details{
