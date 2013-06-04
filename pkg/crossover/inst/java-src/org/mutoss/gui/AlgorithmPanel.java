@@ -225,51 +225,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		lsPanel.repaint();
 	}
 	
-	private void createEffPanel() {		
-		if (effPanel!=null) {
-			lsPanel.remove(effPanel);
-		}
-
-		effPanel = new JPanel();
-		GridBagConstraints cbcWeights = new GridBagConstraints();
-		cbcWeights.fill = GridBagConstraints.BOTH;	
-		cbcWeights.gridx=0; cbcWeights.gridy=0;
-		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
-		cbcWeights.ipadx=5; cbcWeights.ipady=5;
-		cbcWeights.weightx=1; cbcWeights.weighty=1;
-		effPanel.setBorder(BorderFactory.createTitledBorder("Efficiency factors"));
-
-		effPanel.setLayout(new GridBagLayout());
-		/*} else {
-			weightsPanel.removeAll();			
-		}*/
-		
-		List<String> labels = new Vector<String>();
-        
-		int s = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
-		for (int i=1; i<s; i++) {
-        	for (int j=1; j<=s; j++) {
-        		labels.add(i+"-"+j);
-        	}        	
-        }  
-
-		weightsV.clear();
-		for (int i=0;i<labels.size();i++) {        		
-			weightsV.add(new JTextField("1.0", 6));
-			effPanel.add(new JLabel(labels.get(i)), cbcWeights);
-			cbcWeights.gridx++;
-			effPanel.add(weightsV.get(i), cbcWeights);	
-			if ((i+1)%3!=0) {
-				cbcWeights.gridx++;
-			} else {
-				cbcWeights.gridx=0;cbcWeights.gridy++;
-			}
-		}		
-		lsPanel.add(effPanel, cc.xyw(2, rowTNP, 3));
-		lsPanel.revalidate();
-		lsPanel.repaint();
-	}
-	
 	private void createTreatmentNumberPanel() {
 		if (ntPanel!=null) {
 			lsPanel.remove(ntPanel);
