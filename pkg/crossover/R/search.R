@@ -112,6 +112,7 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, p
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), n=c(5000, 20), jumps=c(5, 50), contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
+  start.time <- proc.time()
   if (length(n)==1) n <- c(n, 20)
   if (length(jumps)==1) jumps <- c(jumps, 50)
   model <- getModelNr(model)
@@ -141,7 +142,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   eff <- result$eff
   
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
-  return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=list(n=n, jumps=jumps)))
+  return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=list(n=n, jumps=jumps), time=proc.time()-start.time))
 }
 
 randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE) {
