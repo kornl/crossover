@@ -110,7 +110,6 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, p
   return(.Call( "createRCD", X, v, model, PACKAGE = "crossover" ))
 }
 
-
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), n=c(5000, 20), jumps=c(5, 50), contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   if (length(n)==1) n <- c(n, 20)
@@ -136,21 +135,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   if (missing(contrast)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
-    if (model %in% c(2,8)) {
-      C <- as.matrix(bdiag(Csub, matrix(0, dim(Csub)[1], v*2)))
-      if (model==8) {
-        #Ar <- Ar3
-      } else {
-        #Ar <- Ar2
-      }
-    } else if (model==3) {
-      C <- Csub
-    } else if (model==7) {
-      C <- as.matrix(bdiag(Csub,matrix(0,dim(Csub)[1],4*v)))
-    } else {
-      C <- as.matrix(cbind(Csub, matrix(0,dim(Csub)[1], v)))
-      #Ar <- Ar2
-    }    
+    C <- appendZeroColumns(Csub, model, v)
   } else {
     C <- contrast
   }
@@ -164,6 +149,19 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
   return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=list(n=n, jumps=jumps)))
+}
+
+appendZeroColumns <- function(Csub, model, v) {
+  if (model %in% c(2,8)) {
+    C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[1], 2*v)))
+  } else if (model==3) {
+    C <- Csub
+  } else if (model==7) {
+    C <- as.matrix(cbind(Csub,matrix(0,dim(Csub)[1], 4*v)))
+  } else {
+    C <- as.matrix(cbind(Csub, matrix(0,dim(Csub)[1], v)))
+  }  
+  return(C)
 }
 
 getTrtPair <- function(design, model=1) {

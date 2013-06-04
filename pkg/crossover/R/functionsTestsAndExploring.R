@@ -1,3 +1,57 @@
+compareApproaches <- function(design) {
+  v <- max(design)
+  print(design)
+  Csub <- contrMat(n=rep(1, v), type="Tukey")
+  class(Csub) <- "matrix"
+  C2 <- as.matrix(bdiag(Csub,Csub))
+  C3 <- as.matrix(bdiag(Csub,Csub,Csub))
+  C5 <- as.matrix(bdiag(Csub,matrix(0,dim(Csub)[1],4*v)))  
+  
+  # JRW, p 2650, first equation on that page, whithout number
+  rcDesign <- createRowColumnDesign(design, model=1)
+  Ar2 <- getInfMatrixOfDesign(rcDesign, v+v^2)
+  rcDesign <- createRowColumnDesign(design, model=8)
+  Ar3 <- getInfMatrixOfDesign(rcDesign, v+v^2+v^3)
+  
+  for (model in c(1,2,3,4,5,6,7,8)) {
+    cat(models[model],":\n")
+    if (model %in% c(2,8)) {      
+      #C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[2], 2*v)))      
+      C <- C3
+    } else if (model==3) {
+      C <- Csub      
+    } else if (model==7) {
+      C <- C5
+    } else {      
+      #C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[2], v)))   
+      C <- C2
+    }
+    if (model==8) {
+      Ar <- Ar3
+    } else {
+      Ar <- Ar2
+    }
+    H <- linkMatrix(model=model, v)
+    var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
+    cat(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)),"\n")
+    
+    gco <- general.carryover(t(design), model=model)
+    print(gco$Var.trt.pair)
+    if (model %in% c(2,8)) {      
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)]) + sum(gco$Var.car.pair.2[lower.tri(gco$Var.car.pair.2)])
+      print(gco$Var.car.pair.1) 
+      print(gco$Var.car.pair.2)
+    } else if (model %in% c(3,7)) {
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)])
+    } else {
+      var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
+      print(gco$Var.car.pair)
+    }
+    
+    cat("Difference: ",abs(var1-var2),"\n\n")
+  }
+}
+
 getInfMatrixOfDesign <- function(X, v, method) {
   #if (!is.numeric(X) || max(X)!=v) {
   #  X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
