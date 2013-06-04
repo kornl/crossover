@@ -18,17 +18,6 @@ using namespace Rcpp;
     return ret;
 } */
 
-/*
-searchCOD.cpp: In function 'SEXPREC* searchCOD(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)':
-searchCOD.cpp:26:8: warning: unused variable 'balanceS' [-Wunused-variable]
-searchCOD.cpp:27:8: warning: unused variable 'balanceP' [-Wunused-variable]
-searchCOD.cpp: In function 'arma::mat getRandomMatrix(int, int, int, Rcpp::IntegerVector, bool, bool)':
-searchCOD.cpp:158:1: warning: no return statement in function returning non-void [-Wreturn-type]
-searchCOD.cpp: In function 'SEXPREC* searchCOD(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)':
-searchCOD.cpp:98:7: warning: 'eBeforeJump' may be used uninitialized in this function [-Wuninitialized]
-searchCOD.cpp:104:5: warning: 'eOld' may be used uninitialized in this function [-Wuninitialized]
-*/
-
 SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
@@ -63,7 +52,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   mat bestDesign;
   int effBest = 0;
   mat designOld, designBeforeJump, rcDesign, Ar;  
-  double s1, s2, eOld, eBeforeJump;
+  double s1, s2, eOld = 0, eBeforeJump = 0;
   NumericVector rows, cols;
   
   for(int j=0; j<n2; j++) {
@@ -82,7 +71,9 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
         rows = ceil(runif(2)*p)-1; 
         cols = ceil(runif(2)*s)-1;  
-        while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) {
+        if (balanceS) {cols[1] = cols[0];}
+        if (balanceP) {rows[1] = rows[0];}
+        while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) { //TODO: In rare cases (if the random starting matrix is bad) this could cause a infinite loop!
           rows = ceil(runif(2)*p)-1; 
           cols = ceil(runif(2)*s)-1;  
         }
