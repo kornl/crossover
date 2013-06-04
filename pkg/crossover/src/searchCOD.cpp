@@ -71,11 +71,11 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
         rows = ceil(runif(2)*p)-1; 
         cols = ceil(runif(2)*s)-1;  
-        if (balanceS) {cols[1] = cols[0];}
-        if (balanceP) {rows[1] = rows[0];}
-        while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) { //TODO: In rare cases (if the random starting matrix is bad) this could cause a infinite loop!
+        if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
+        while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) { //TODO: Only really stupid user input can cause an infinite loop - check?
           rows = ceil(runif(2)*p)-1; 
           cols = ceil(runif(2)*s)-1;  
+          if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
         }
         double tmp = design(rows[0],cols[0]);
         design(rows[0],cols[0]) = design(rows[1],cols[1]);

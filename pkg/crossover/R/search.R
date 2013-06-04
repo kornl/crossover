@@ -122,15 +122,8 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")
   designL <- list() # In this list we save 20 random start designs.
-  for (i in 1:n[2]) {
-    if (balance.s) {
-      design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
-    } else if (balance.p) {
-      design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
-    } else {
-      design <- matrix(sample(rep(1:v, v.rep)), p, s)
-    }  
-    designL[[i]] <- design
+  for (i in 1:n[2]) {    
+    designL[[i]] <- randomDesign(s, p, v,  v.rep, balance.s, balance.p)
   }
   if (missing(contrast)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
@@ -149,6 +142,20 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
   return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=list(n=n, jumps=jumps)))
+}
+
+randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE) {
+  if (missing(v.rep)) {
+    v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
+  }
+  if (balance.s) {
+    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
+  } else if (balance.p) {
+    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
+  } else {
+    design <- matrix(sample(rep(1:v, v.rep)), p, s)
+  }  
+  return(design)
 }
 
 appendZeroColumns <- function(Csub, model, v) {

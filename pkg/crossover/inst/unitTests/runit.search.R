@@ -2,6 +2,34 @@ test.search <- function () {
   for (model in 1:8) {
     result <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1, n=c(100,5))
   }
+  for (model in 1:8) {
+    v <- 4
+    result <- searchCrossOverDesign(s=9, p=5, v=v, model=4, eff.factor=1, n=c(100,5), balance.p=TRUE)
+    for (i in 1:v) {
+      v.count <- apply(result$design, 1, function(x) {sum(x==i)})
+      checkTrue(max(v.count)-min(v.count)<1.5)
+    } 
+    result <- searchCrossOverDesign(s=9, p=5, v=v, model=4, eff.factor=1, n=c(100,5), balance.s=TRUE)
+    for (i in 1:v) {
+      v.count <- apply(result$design, 2, function(x) {sum(x==i)})
+      checkTrue(max(v.count)-min(v.count)<1.5)
+    } 
+  }  
+}
+
+test.random.matrix.generation <- function() {
+  for (j in 1:10) {
+    design <- randomDesign(s=9, p=5, v=4,  balance.s=TRUE) 
+    for (i in 1:v) {
+      v.count <- apply(design, 2, function(x) {sum(x==i)})
+      checkTrue(max(v.count)-min(v.count)<1.5)
+    } 
+    design <- randomDesign(s=9, p=5, v=4,  balance.p=TRUE)
+    for (i in 1:v) {
+      v.count <- apply(design, 1, function(x) {sum(x==i)})
+      checkTrue(max(v.count)-min(v.count)<1.5)
+    } 
+  }
 }
 
 test.strangeDesignInputs <- function() {
