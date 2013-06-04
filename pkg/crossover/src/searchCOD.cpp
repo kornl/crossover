@@ -18,6 +18,17 @@ using namespace Rcpp;
     return ret;
 } */
 
+/*
+searchCOD.cpp: In function 'SEXPREC* searchCOD(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)':
+searchCOD.cpp:26:8: warning: unused variable 'balanceS' [-Wunused-variable]
+searchCOD.cpp:27:8: warning: unused variable 'balanceP' [-Wunused-variable]
+searchCOD.cpp: In function 'arma::mat getRandomMatrix(int, int, int, Rcpp::IntegerVector, bool, bool)':
+searchCOD.cpp:158:1: warning: no return statement in function returning non-void [-Wreturn-type]
+searchCOD.cpp: In function 'SEXPREC* searchCOD(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)':
+searchCOD.cpp:98:7: warning: 'eBeforeJump' may be used uninitialized in this function [-Wuninitialized]
+searchCOD.cpp:104:5: warning: 'eOld' may be used uninitialized in this function [-Wuninitialized]
+*/
+
 SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
