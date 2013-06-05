@@ -4,7 +4,9 @@
 ################################################################################################
 
 general.carryover<-function(design,model,t0=1,rho=0.5){
-	
+  model <- getModelNr(model)
+  design <- t(design)
+  
 	## set the design parameters
 	n.subj<-length(design[,1])
 	n.per<-length(design[1,])

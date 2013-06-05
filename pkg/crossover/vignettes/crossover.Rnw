@@ -452,20 +452,12 @@ In the following code chunk we will compare the results from our approach in the
   The efficiency is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\]
 \end{Def}
   
-<<TestWithGeneral.carryover, echo=TRUE, eval=TRUE>>=
+<<TestWithGeneral.carryover, echo=FALSE, eval=FALSE>>=
   compareApproaches
   compareApproaches(design)
-@
-
-  
-<<TestWithGeneral.carryover2, echo=TRUE, eval=TRUE>>=
   data(atkinson)
   design <- atkinson3t
   compareApproaches(design)
-@
-
-  
-<<TestWithGeneral.carryover3, echo=TRUE, eval=TRUE>>=
   p <- 8
   s <- 10
   v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
@@ -487,6 +479,10 @@ This section is work in progress.
 %\begin{Theorem}[Closed testing principle]\index{closed testing principle}
 % \cite{marcus1976closed}
 %\end{Theorem}
+
+\section{Appendix - Matrix Algebra}
+
+\subsection{Generalized inverse}
 
 \end{appendix}
 

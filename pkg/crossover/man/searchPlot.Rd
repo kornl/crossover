@@ -16,7 +16,7 @@
   \item{show.jumps}{ If \code{TRUE} vertical lines will show where the specified jumps occured. }
 }
 \details{
-	
+	See the vignette for a few examples and a discussion what can be derived from this plots.
 }
 \value{
 	Returns the design as an integer matrix.

@@ -8,21 +8,21 @@
 	Search for a Cross-Over Design
 }
 \usage{
-	general.carryover(design, model, t0=1, rho=0.5, sim=0, parm.val=0)
+	general.carryover(design, model, t0=1, rho=0.5)
 }
 \arguments{
   \item{design}{ Cross-over design. }
-  \item{model}{ Model - one of the following: "Standard additive model" (2),
-            "Second-order carry-over effects" (3),
-            "Full set of interactions" (3),
-            "Self-adjacency model" (3),
-            "Placebo model" (2),
-            "No carry-over into self model" (2),
-            "Treatment decay model" (2),
-            "Proportionality model" (1) ... }
-  \item{t0}{ ... }
-  \item{rho}{ The proportionality parameter for the proportionality model.}
-  \item{parm.val}{ ... }  
+  \item{model}{ Model - one of the following numbers or Strings:
+            1 = "Standard additive model",
+            2 = "Self-adjacency model",
+            3 = "Proportionality model",
+            4 = "Placebo model",
+            5 = "No carry-over into self model",
+            6 = "Treatment decay model",
+            7 = "Full set of interactions",
+            8 = "Second-order carry-over effects" }
+  \item{t0}{ The number of placebo treatments in the placebo model. }
+  \item{rho}{ The proportionality parameter for the proportionality model. }
 }
 \details{
 	See the vignette of this package for further details.

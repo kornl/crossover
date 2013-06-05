@@ -1,4 +1,4 @@
-compareApproaches <- function(design) {
+compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.diff=FALSE) {
   v <- max(design)
   print(design)
   Csub <- contrMat(n=rep(1, v), type="Tukey")
@@ -13,7 +13,7 @@ compareApproaches <- function(design) {
   rcDesign <- createRowColumnDesign(design, model=8)
   Ar3 <- getInfMatrixOfDesign(rcDesign, v+v^2+v^3)
   
-  for (model in c(1,2,3,4,5,6,7,8)) {
+  for (model in models2check) {
     cat(models[model],":\n")
     if (model %in% c(2,8)) {      
       #C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[2], 2*v)))      
@@ -35,7 +35,7 @@ compareApproaches <- function(design) {
     var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
     cat(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)),"\n")
     
-    gco <- general.carryover(t(design), model=model)
+    gco <- general.carryover(design, model=model)
     print(gco$Var.trt.pair)
     if (model %in% c(2,8)) {      
       var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair.1[lower.tri(gco$Var.car.pair.1)]) + sum(gco$Var.car.pair.2[lower.tri(gco$Var.car.pair.2)])
@@ -48,7 +48,12 @@ compareApproaches <- function(design) {
       print(gco$Var.car.pair)
     }
     
-    cat("Difference: ",abs(var1-var2),"\n\n")
+    diff.string <- paste("Difference: abs(",var1, " - ", var2, ") = ", abs(var1-var2), sep="")
+    if (stop.on.diff && abs(var1-var2)>0.00001) {
+      stop(diff.string)
+    } else {
+      cat(diff.string,"\n\n")
+    }
   }
 }
 

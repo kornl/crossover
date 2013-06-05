@@ -18,8 +18,9 @@ test.search <- function () {
 }
 
 test.random.matrix.generation <- function() {
+  v <- 4
   for (j in 1:10) {
-    design <- randomDesign(s=9, p=5, v=4,  balance.s=TRUE) 
+    design <- randomDesign(s=9, p=5, v=v,  balance.s=TRUE) 
     for (i in 1:v) {
       v.count <- apply(design, 2, function(x) {sum(x==i)})
       checkTrue(max(v.count)-min(v.count)<1.5)
