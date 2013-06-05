@@ -492,7 +492,10 @@ This section is work in progress.
  \item $(AA^+)^T=AA^+$ and
  \item $(A^+A)^T=A^+A$.
  \end{enumerate}
+<<<<<<< HEAD
  The Moore–Penrose pseudoinverse exists for every real matrix and is unique.
+=======
+>>>>>>> e0e468b3eb7e4c4c27b5afd7922e649f90773b29
 \end{Def}
 
 \begin{Theorem}
