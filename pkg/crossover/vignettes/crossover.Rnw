@@ -484,6 +484,28 @@ This section is work in progress.
 
 \subsection{Generalized inverse}
 
+\begin{Def}[Moore–Penrose pseudoinverse]\index{Moore–Penrose pseudoinverse}
+ For $A\in\R^{m\times n}$ a matrix $A^+$ is called Moore–Penrose pseudoinverse iff
+ \begin{enumerate}
+ \item $AA^+A=A$,
+ \item $A^+AA^+=A^+$,
+ \item $(AA^+)^T=AA^+$ and
+ \item $(A^+A)^T=A^+A$.
+ \end{enumerate}
+ The Moore–Penrose pseudoinverse exists for every real matrix and is unique.
+\end{Def}
+
+\begin{Theorem}
+  Let $Ax=b$ a linear equation system in $n$ variables and $A^+$ the Moore–Penrose pseudoinverse
+  of $A$. Solutions exist if and only if $AA^+b=b$ and are given in this case by
+  \[\{A^+b+(I-A^+A)y\;|\; y\in\R^n\}.\]
+  \begin{Proof}
+  If  $AA^+b=b$ we have for every $A^+b+(I-A^+A)y$ with $y\in\R^n$:
+  \[A(A^+b+(I-A^+A)y)=b+Ay-AA^+Ay=b+Ay-Ay=b\]
+  ...
+  \end{Proof}
+\end{Theorem}
+
 \end{appendix}
 
 \nocite{*}
@@ -526,6 +548,8 @@ $e_{ijk}$& random error with zero mean and variance $\sigma^2$\\
 %\begin{tabularx}{\textwidth}{lX}
 \multicolumn{2}{l}{\textbf{Functions}}\\
 $X'$ & transpose of matrix $X$\\
+$X^+$ & Moore–Penrose pseudoinverse of $X$\\
+%$X^*$ & conjugate transpose of $X$\\
 $\skp{\cdot,\cdot}$ & standard direct product $\skp{x,y}=\sum_{j=1}^nx_j\cdot y_j$ for $x,y\in\R^n$\\
 $\id_X$ & identity on $X$, i.e.\ $\id_X:\;X\rightarrow X,\;x\mapsto x$\\
 %\\
