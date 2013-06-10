@@ -8,8 +8,9 @@
 	Search for a Cross-Over Design
 }
 \usage{
-	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor, 
-    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), n=c(5000, 20), jumps=c(5, 50), contrast)
+	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor=1, 
+    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), 
+    n=c(5000, 20), jumps=c(5, 50), start.designs, contrast)
 }
 \arguments{
   \item{s}{ Number of sequences. }
@@ -31,6 +32,7 @@
   \item{model.param}{ List of additional model specific parameters. In the moment these are \code{ppp}, the proportionality parameter for the proportionality model, and \code{placebos}, the number of placebo treatments in the placebo model. }  
   \item{n}{ \code{n=c(n1,n2)} with \var{n1} the number of hill climbing steps per trial and \var{n2} the number of searches from random start matrices. }
   \item{jumps}{ To reduze the possibility of the hill-climbing algorithm to get stuck in local extrema long jumps of distance \var{d} can be performed all \var{n} steps. This can be specified as \code{long.jumps=c(d,n)}. If \var{long.jumps} has only length 1 the default for \var{n} is 50.}
+  \item{start.designs}{ List of start designs. If missing or to few start designs are specified (with regard to parameter \var{n} which specifies a number of 20 start designs as default) the start designs are generated randomly with the sample function.}
   \item{contrast}{ Contrast matrix to be optimised. TODO: Example and better explanation for contrast. }
 }
 \details{

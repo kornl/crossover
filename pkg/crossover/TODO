@@ -39,3 +39,4 @@ Die speziellen Designs finden sich immer zusammengefasst in Paketen bzgl. der Au
 - The package gives you not enough credit for your collection of examples and also I included your R-Code for comparison/testing purposes (and also the variances shown in the GUI are currently from general.carryover). 
 - Specify starting design
 - Use designs from catalogue as starting designs.
+- Warning if treatment effects are not estimable from design

@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -56,6 +57,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	CrossoverGUI gui;	
 	JButton exportR = new JButton("Export to R");
 	JButton showAlgoPerformance = new JButton("Show course of algorithm");
+	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
 	//JTabbedPane jTabAlgo = new jTabAlgo;
 	
 	public AlgorithmPanel(CrossoverGUI gui) {

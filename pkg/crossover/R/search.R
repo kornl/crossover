@@ -110,10 +110,14 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, p
   return(.Call( "createRCD", X, v, model, PACKAGE = "crossover" ))
 }
 
-searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), n=c(5000, 20), jumps=c(5, 50), contrast) {
+searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
+                                  v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), 
+                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
-  if (length(n)==1) n <- c(n, 20)
+  if (length(n)==1) {
+    if (missing(start.designs)) { n <- c(n, 20) } else { n <- c(n, length(start.designs)) }
+  }
   if (length(jumps)==1) jumps <- c(jumps, 50)
   model <- getModelNr(model)
   if (missing(v.rep)) {
@@ -121,11 +125,14 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
     stop("The sum of argument v.rep must equal s times p.")
   }
-  if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")
-  designL <- list() # In this list we save 20 random start designs.
-  for (i in 1:n[2]) {    
-    designL[[i]] <- randomDesign(s, p, v,  v.rep, balance.s, balance.p)
+  if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")  
+  if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
+  i <- length(start.designs) + 1
+  while (i <= n[2]) {    
+    start.designs[[i]] <- randomDesign(s, p, v,  v.rep, balance.s, balance.p)
+    i <- i + 1
   }
+  if (length(start.designs)!=n[2]) { warning(paste("Too many start designs specified. Only the first ", n[2], " will be used.", sep="")) }
   if (missing(contrast)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
@@ -137,7 +144,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   H <- do.call( linkMatrix, c(list(model=model, v=v), model.param) )
   #H <- linkMatrix(model, v)
   
-  result <- .Call( "searchCOD", s, p, v, designL, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, PACKAGE = "crossover" )
+  result <- .Call( "searchCOD", s, p, v, start.designs, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, PACKAGE = "crossover" )
   design <- result$design
   eff <- result$eff
   

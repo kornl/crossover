@@ -44,6 +44,7 @@
 \newcommand{\NN}{\ensuremath{\mathbb{N}_0}\xspace}
 \newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
 \newcommand{\sF}{\ensuremath{\mathcal{F}}\xspace}
+\newcommand{\sN}{\ensuremath{\mathcal{N}}\xspace}
 \newcommand{\Pot}{\ensuremath{\mathfrak{Pot}}\xspace}
 \newcommand{\kronecker}{\raisebox{1pt}{\ensuremath{\:\otimes\:}}}
 
@@ -492,10 +493,7 @@ This section is work in progress.
  \item $(AA^+)^T=AA^+$ and
  \item $(A^+A)^T=A^+A$.
  \end{enumerate}
-<<<<<<< HEAD
  The Moore–Penrose pseudoinverse exists for every real matrix and is unique.
-=======
->>>>>>> e0e468b3eb7e4c4c27b5afd7922e649f90773b29
 \end{Def}
 
 \begin{Theorem}
@@ -507,6 +505,15 @@ This section is work in progress.
   \[A(A^+b+(I-A^+A)y)=b+Ay-AA^+Ay=b+Ay-Ay=b\]
   ...
   \end{Proof}
+\end{Theorem}
+
+\begin{Theorem}
+  Let $y=X\beta+\epsilon$ be a linear model with $\epsilon\sim\sN(0,\sigma^2I)$. 
+  Then $t^T\beta$ is estimable iff $t^T(X^TX)^+X^TX=t^T$.  
+  %\begin{Proof}
+  %"$\Rightarrow$": %If $t^T\beta$ is estimable if a $z$ exists with $X^TXz=t$.
+  %\[X^TX(X^TX)^+t=t\]
+  %\end{Proof}
 \end{Theorem}
 
 \end{appendix}
@@ -556,7 +563,8 @@ $X^+$ & Moore–Penrose pseudoinverse of $X$\\
 $\skp{\cdot,\cdot}$ & standard direct product $\skp{x,y}=\sum_{j=1}^nx_j\cdot y_j$ for $x,y\in\R^n$\\
 $\id_X$ & identity on $X$, i.e.\ $\id_X:\;X\rightarrow X,\;x\mapsto x$\\
 %\\
-%\multicolumn{2}{l}{\textbf{Andere Symbole}}\\
+\multicolumn{2}{l}{\textbf{Andere Symbole}}\\
+$\sN(\mu,\sigma^2)$ & Normal distribution with mean $\mu$ and variance $\sigma^2$.\\
 \end{tabularx}
 %\onecolumn
 
