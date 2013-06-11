@@ -154,7 +154,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   if (model!=8) {
     r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2))
   } else {
-    r <- rep(1, v+v^2+v^3) #TODO Look at the full interaction model
+    r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2), rep((p-2)*s/v^3, v^3))
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
   eff <- lapply(result$eff, function(x) {S2*x})
