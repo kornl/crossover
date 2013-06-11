@@ -127,7 +127,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")  
   if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
-  if (start.designs %in% c("catalog","catalogue")) { 
+  if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
     st <- buildSummaryTable()
     loadAllDatasets() # TODO Is this clever?
     start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get)
