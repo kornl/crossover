@@ -31,7 +31,8 @@
   \item{verbose}{ Boolean specifying whether verbose output should be printed. }  
   \item{model.param}{ List of additional model specific parameters. In the moment these are \code{ppp}, the proportionality parameter for the proportionality model, and \code{placebos}, the number of placebo treatments in the placebo model. }  
   \item{n}{ \code{n=c(n1,n2)} with \var{n1} the number of hill climbing steps per trial and \var{n2} the number of searches from random start matrices. }
-  \item{jumps}{ To reduze the possibility of the hill-climbing algorithm to get stuck in local extrema long jumps of distance \var{d} can be performed all \var{n} steps. This can be specified as \code{long.jumps=c(d,n)}. If \var{long.jumps} has only length 1 the default for \var{n} is 50.}
+  \item{jumps}{ To reduze the possibility of the hill-climbing algorithm to get stuck in local extrema long jumps of distance \var{d} can be performed all \var{k} steps. This can be specified as \code{long.jumps=c(d,k)}. If \var{long.jumps} has only length 1 the default for \var{k} is 50.
+  If after \var{k/2} hill-climbing steps the old design criterion is not enhanced (or at least reached), the algorithm returns to the design from before the jump. }
   \item{start.designs}{ List of start designs. If missing or to few start designs are specified (with regard to parameter \var{n} which specifies a number of 20 start designs as default) the start designs are generated randomly with the sample function. Alternatively \code{start.designs="catalog"} can be used to take start designs from the catalog to which random designs are added till \var{n2} start designs are at hand.}
   \item{contrast}{ Contrast matrix to be optimised. TODO: Example and better explanation for contrast. }
 }

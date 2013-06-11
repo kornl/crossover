@@ -5,7 +5,7 @@
 	Plots information about the search algorithm and its process.
 }
 \description{
-	Search for a Cross-Over Design
+	Plots information about the search algorithm and its process.
 }
 \usage{
 	searchPlot(x, type=1, show.jumps = FALSE)
@@ -16,10 +16,11 @@
   \item{show.jumps}{ If \code{TRUE} vertical lines will show where the specified jumps occured. }
 }
 \details{
-	See the vignette for a few examples and a discussion what can be derived from this plots.
+  The x-axis corresponds to the consecutive simulation runs and the y-axis to the design criterion \var{E} that depending on the model is either a weighted average of efficiency factors or standardized pairwise variances and described in detail in the vignette of this package.
+	Also see the vignette for a few examples and a discussion what can be derived from this plots.
 }
 \value{
-	Returns the design as an integer matrix.
+	Returns a ggplot object of the plot.
 }
 \author{
 	Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
@@ -32,6 +33,9 @@
 
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 searchPlot(x)
+
+x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, n=c(500,10), jumps=c(10, 100))
+searchPlot(x, show.jumps=TRUE)
 searchPlot(x, type=2)
 
 }

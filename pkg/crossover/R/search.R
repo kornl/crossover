@@ -151,7 +151,13 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   
   result <- .Call( "searchCOD", s, p, v, start.designs, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, PACKAGE = "crossover" )
   design <- result$design
-  eff <- result$eff
+  if (model!=8) {
+    r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2))
+  } else {
+    r <- rep(1, v+v^2+v^3) #TODO Look at the full interaction model
+  }
+  S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
+  eff <- lapply(result$eff, function(x) {S2*x})
   
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
   return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=list(n=n, jumps=jumps), time=proc.time()-start.time))
@@ -220,5 +226,6 @@ searchPlot <- function(x, type=1, show.jumps=FALSE) {
   } else {
     plot <-ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + geom_abline(intercept = max(d$eff), slope = 0) + facet_wrap( ~ run)
   }
+  plot <- plot + xlab("Simulation run") + ylab("E")
   return(plot)
 }
