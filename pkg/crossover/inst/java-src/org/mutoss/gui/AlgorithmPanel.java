@@ -49,6 +49,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JPanel weightsPanel = null;
 	JPanel effPanel = null;
 	List<JTextField> weightsV = new Vector<JTextField>();
+	List<JTextField> effV = new Vector<JTextField>();
 	List<JTextField> nV = new Vector<JTextField>();
 	CellConstraints cc = new CellConstraints();
 	JRadioButton jbBalanceNothing = new JRadioButton("No balancing restrictions");
@@ -122,7 +123,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public JPanel getLeftSidePanel() {
 		lsPanel = new JPanel();
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         lsPanel.setLayout(new FormLayout(cols, rows));
 		
@@ -169,18 +170,28 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         lsPanel.add(jbBalancePeriods, cc.xyw(2, row, 3));        
         row+=2;
         
+        rowEff = row;        
+        createEffPanel();
+        
+        row+=2;      
+        
         rowTNP = row;        
         createWeightsPanel();
         
         row+=2;        
-		
+        
+        useCatalogueDesigns.setSelected(true);
+        lsPanel.add(useCatalogueDesigns, cc.xyw(2, row, 3));
+        		
+        row+=2;        
+        
         lsPanel.add(jbCompute, cc.xyw(2, row, 3));
         jbCompute.addActionListener(this);
         
         return lsPanel;
 	}
 	
-	int rowTNP, rowN;
+	int rowTNP, rowN, rowEff;
 	
 	private void createWeightsPanel() {		
 		if (weightsPanel!=null) {
@@ -223,6 +234,49 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			}
 		}		
 		lsPanel.add(weightsPanel, cc.xyw(2, rowTNP, 3));
+		lsPanel.revalidate();
+		lsPanel.repaint();
+	}
+	
+	private void createEffPanel() {		
+		if (effPanel!=null) {
+			lsPanel.remove(effPanel);
+		}
+
+		effPanel = new JPanel();
+		GridBagConstraints effWeights = new GridBagConstraints();
+		effWeights.fill = GridBagConstraints.BOTH;	
+		effWeights.gridx=0; effWeights.gridy=0;
+		effWeights.gridwidth = 1; effWeights.gridheight = 1;
+		effWeights.ipadx=5; effWeights.ipady=5;
+		effWeights.weightx=1; effWeights.weighty=1;
+		effPanel.setBorder(BorderFactory.createTitledBorder("Efficiency factors:"));
+
+		effPanel.setLayout(new GridBagLayout());
+		/*} else {
+			effPanel.removeAll();			
+		}*/
+		
+		List<String> labels = new Vector<String>();
+        
+		int s = jCBmodel.getSelectedIndex();
+		for (String p : CrossoverGUI.parameters[s]) {        	
+        	labels.add(p);        	
+        }  
+
+		effV.clear();
+		for (int i=0;i<labels.size();i++) {        		
+			effV.add(new JTextField("1.0", 6));
+			effPanel.add(new JLabel(labels.get(i)), effWeights);
+			effWeights.gridx++;
+			effPanel.add(effV.get(i), effWeights);	
+			if ((i+1)%3!=0) {
+				effWeights.gridx++;
+			} else {
+				effWeights.gridx=0;effWeights.gridy++;
+			}
+		}		
+		lsPanel.add(effPanel, cc.xyw(2, rowEff, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
 	}
@@ -313,8 +367,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 								+", v.rep="+getVRep()
 								+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
 								+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
-								+(jCBmodel.getSelectedIndex()==4?", placebos="+jtfParam.getText():"")
-								+(jCBmodel.getSelectedIndex()==7?", ppp="+jtfParam.getText():"")
+								+(jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+jtfParam.getText()+")":"")
+								+(jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+jtfParam.getText()+")":"")
+								+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
 								+", verbose=FALSE)";
 						//System.out.println(command);
 						RControl.getR().eval(".COresult <- "+command);
@@ -357,6 +412,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			};
 			worker.execute();
 		} else if (e.getSource() == jCBmodel) {
+			createEffPanel();
 			if (jCBmodel.getSelectedIndex()==4) {
 				jtfParam.setEnabled(true);
 				pLabel.setEnabled(true);
