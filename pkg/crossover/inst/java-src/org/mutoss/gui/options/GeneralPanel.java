@@ -33,9 +33,7 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
 
     private IntegerJComboBox cbFontSize;
     private JComboBox cbLookAndFeel;
-    private JTextField jtfGrid;
     private JTextField jtfNumberOfDigits;
-    private JTextField jtfLineWidth;
     
     private Configuration conf;
     private OptionsDialog odialog;
@@ -64,26 +62,11 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
         cbFontSize.setSelectedObject(conf.getGeneralConfig().getFontSize());
         cbFontSize.setToolTipText("<html>" +
         		"Font size of the text in the GUI widgets.</html>");
-        jtfGrid = new JTextField(30);
-        jtfGrid.setText(""+conf.getGeneralConfig().getGridSize());
-        jtfGrid.setToolTipText("<html>" +
-        		"For easier placement of nodes a grid can be used that aligns the<br>" +
-        		"nodes to its intersections. You can specify a positive integer<br>" +
-        		"that sets the grid size, i.e. the width in pixels between two<br>" +
-        		"proximate parallel lines. If you set the grid size to 1 this would<br>" +
-        		"allow unrestricted placement and therefore disables the grid.</html>");
         jtfNumberOfDigits = new JTextField(30);
         jtfNumberOfDigits.setText(""+conf.getGeneralConfig().getDigits());
         jtfNumberOfDigits.setToolTipText("<html>" +
         		"Number of digits to be shown at various places.<br>" +
-        		"In this version not every part of the GUI will use<br>" +
-        		"this value, but this will improve in further versions.</html>");
-        jtfLineWidth = new JTextField(30);
-        jtfLineWidth.setText(""+conf.getGeneralConfig().getLineWidth());
-        jtfLineWidth.setToolTipText("<html>" +
-        		"Especially if you want to use exported PNG graphics in other<br>" +
-        		"documents, you may want to adjust the line width of edges<br>" +
-        		"and nodes, when borders look to thin or thick.</html>");
+        		"Not every part of the GUI will use this value.</html>");
         
         Vector<String> looknfeel = new Vector<String>();
         looknfeel.add("System");
@@ -162,20 +145,12 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
         p1.setLayout(layout);
         CellConstraints cc = new CellConstraints();
 
-        int row = 1;
-        
-        p1.add(new JLabel("Grid:"),     cc.xy(1, row));
-        p1.add(jtfGrid, cc.xy(3, row));        
+        int row = 1;     
         
         row += 2;
         
         p1.add(new JLabel("Number of digits:"),     cc.xy(1, row));
-        p1.add(jtfNumberOfDigits, cc.xy(3, row));        
-        
-        row += 2;
-        
-        p1.add(new JLabel("Line width:"),     cc.xy(1, row));
-        p1.add(jtfLineWidth, cc.xy(3, row));        
+        p1.add(jtfNumberOfDigits, cc.xy(3, row));              
         
         row += 2;
         
@@ -189,7 +164,7 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
         
         row += 2;
         
-        p1.add(colorImages, cc.xyw(1, row, 3));
+        /*p1.add(colorImages, cc.xyw(1, row, 3));
         
         row += 2;        
         
@@ -207,7 +182,7 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
         
         p1.add(markEpsilon, cc.xyw(1, row, 3));    
         
-        row += 2;
+        row += 2;*/
         
         add(p1);
     }
@@ -236,19 +211,6 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
     }
 
     public void setProperties() throws SetLookAndFeelException {
-
-        try {
-        	int grid = Integer.parseInt(jtfGrid.getText());
-        	conf.getGeneralConfig().setGridSize(grid);
-        } catch (NumberFormatException e) {
-        	JOptionPane.showMessageDialog(this, "\""+jtfGrid.getText()+"\" is not a valid integer for grid size.", "Invalid input", JOptionPane.ERROR_MESSAGE);
-        }
-        try {
-        	int lw = Integer.parseInt(jtfLineWidth.getText());
-        	conf.getGeneralConfig().setLineWidth(lw);
-        } catch (NumberFormatException e) {
-        	JOptionPane.showMessageDialog(this, "\""+jtfLineWidth.getText()+"\" is not a valid integer for line width.", "Invalid input", JOptionPane.ERROR_MESSAGE);
-        }
         try {
         	int digits = Integer.parseInt(jtfNumberOfDigits.getText());
         	conf.getGeneralConfig().setDigits(digits);
