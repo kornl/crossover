@@ -52,10 +52,9 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
 
 	// TODO bad method, refactor, images are transferred every single time, etc
     private String makeTable2FormatButton(String imageName, String label, ActionListener al) {
-        FileTransfer ft = new FileTransfer();
         String imageCode = "";
         try {
-            String path = ft.copyFileToLocalDir("/af/statguitoolkit/images", imageName, new File(System.getProperty("java.io.tmpdir"))).getAbsolutePath();
+            String path = FileTransfer.copyFileToLocalDir("/af/statguitoolkit/images", imageName, new File(System.getProperty("java.io.tmpdir"))).getAbsolutePath();
             path = path.replace("\\", "\\\\");
             imageCode = "<img src=\"file:///" + path + "\" >";
         } catch (IOException e) {
