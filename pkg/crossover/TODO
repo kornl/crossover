@@ -38,3 +38,7 @@ Die speziellen Designs finden sich immer zusammengefasst in Paketen bzgl. der Au
 - The package gives you not enough credit for your collection of examples and also I included your R-Code for comparison/testing purposes (and also the variances shown in the GUI are currently from general.carryover). 
 - Warning if treatment effects are not estimable from design
 - More output in catalog - Integers in algorithm design
+
+- Efficiency in output window from algorithm
+- Try to find designs from page 203, Jones and Kenward
+- Tukey / Dunnett / Factorial (page 195 Jones&Kenward) contrasts
