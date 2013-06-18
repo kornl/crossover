@@ -51,7 +51,7 @@ getTable <- function(design) {
 }
 
 getEff <- function(design) {
-	l <- design.efficiency(t(design))
+	l <- design.efficiency(design)
 	return(c(l$av.eff.trt.pair, l$av.eff.trt.pair.adj))
 }
 

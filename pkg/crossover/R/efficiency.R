@@ -8,6 +8,7 @@
 
 
 design.efficiency<-function(design){
+  design <- t(design)
 	## function to read in a cross-over design and create the design matrix X,
 	## the variance-covariance matrix of the parameter estimates (X'X)^{-1},
 	## the variance of each pairwise comparison and
