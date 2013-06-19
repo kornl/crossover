@@ -41,4 +41,5 @@ evaluation <- function() {
     A1
     t(H)%*%A1%*%H
   }
+  general.carryover(design1, model=model)
 }

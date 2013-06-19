@@ -205,7 +205,7 @@ arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
   //NP.print("NP:");
   //NS.print("NS:");
   //r.print("r:");
-  mat A = diagmat(r) - (1/s)* NP * trans(NP) - (1/p)* NS * trans(NS) + (1/(p*s))* r * trans(r);
+  mat A = diagmat(r) - (1.0/s)* NP * trans(NP) - (1.0/p)* NS * trans(NS) + (1.0/(p*s))* r * trans(r);
   return A; 
 }
 
