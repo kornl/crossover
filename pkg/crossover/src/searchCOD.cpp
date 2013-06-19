@@ -44,14 +44,18 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   // TODO Read random number generators and C!
   GetRNGstate();
   
-  if (verbose) Rprintf("Starting search algorithm!\n");
+  if (verbose) {
+    Rprintf("Starting search algorithm!\n");
+    tCC.print(Rcout, "t(C)*C:");
+    linkM.print(Rcout, "Link Matrix:");
+  }
   Rcpp::List mlist(designS);
   int n2 = mlist.size();
   List effList = List(n2); // Here we will store NumericVectors that show the search progress.
   mat design;
   mat bestDesign;
   int effBest = 0;
-  mat designOld, designBeforeJump, rcDesign, Ar;  
+  mat designOld, designBeforeJump, rcDesign, rcDesign2, Ar;  
   double s1, s2, eOld = 0, eBeforeJump = 0;
   NumericVector rows, cols;
   
@@ -83,21 +87,25 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       }
       
       rcDesign = createRowColumnDesign(design, v, model);
-      Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+      if (verbose) {
+        Rprintf("Rank of rcDesign is: %d\n", rank(trans(rcDesign) * rcDesign)); 
+      } 
+      rcDesign2 = createRowColumnDesign2(rcDesign, v+v*v);
+      Ar = getInfMatrixOfDesign(rcDesign2, v+v*v);
     
       s2 = 1; // We set this constant for the moment
       s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
       
       //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
       eff[i] = s2/s1;
-      if (s2/s1 > eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/4 steps.
+      if (s2/s1 > eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.
         //if (verbose) Rprintf("=> Accepting new matrix.\n");
         eOld = s2/s1;         
       } else {
         //if (verbose) Rprintf("=> Keeping old matrix.\n");
         design = designOld;    
       }
-      if ((i%j2==j2/2) && (eBeforeJump>eOld)) { // If after j2/4 steps no better design is found after the jump, we wil return to the design before the jump:
+      if ((i%j2==j2/2) && (eBeforeJump>eOld)) { // If after j2/2 steps no better design is found after the jump, we wil return to the design before the jump:
         design = designBeforeJump;
         eOld = eBeforeJump;
       }
@@ -120,6 +128,15 @@ SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS) {
   int model = IntegerVector(modelS)[0];
   mat design = as<mat>(designS);  
   return wrap(createRowColumnDesign(design, v, model));
+  END_RCPP
+}
+
+SEXP getInfMatrix(SEXP designS, SEXP vS, SEXP modelS) {
+  BEGIN_RCPP
+  int v = IntegerVector(vS)[0];
+  int model = IntegerVector(modelS)[0];
+  mat design = as<mat>(designS);  
+  return wrap(getInfMatrixOfDesign(createRowColumnDesign(design, v, model), v+v*v));
   END_RCPP
 }
 
@@ -157,6 +174,16 @@ arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS
   /*Constructors:
   mat(vec)
   mat(rowvec)*/
+}
+
+arma::mat createRowColumnDesign2(arma::mat rcDesign, int v) {
+  mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
+  for (int j=0; j<rcDesign.n_cols; j++) {
+    for (int i=0; i<rcDesign.n_rows; i++) {
+      X((i - 1) * rcDesign.n_cols + j, rcDesign(i, j)) = 1;
+    }
+  }
+  return(X);
 }
 
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {

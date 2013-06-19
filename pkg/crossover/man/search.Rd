@@ -56,6 +56,6 @@ x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 result <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1, jumps=c(10000,200), n=c(1000,5))
 searchPlot(result)
 
-x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, contrast=)
+#x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, contrast=)
 
 }

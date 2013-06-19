@@ -42,3 +42,4 @@ Die speziellen Designs finden sich immer zusammengefasst in Paketen bzgl. der Au
 - Efficiency in output window from algorithm
 - Try to find designs from page 203, Jones and Kenward
 - Tukey / Dunnett / Factorial (page 195 Jones&Kenward) contrasts
+- Own catalogue (or even more than 1 - loaded at start-up) perhaps saved as Rd-file?
