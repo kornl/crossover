@@ -90,8 +90,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       if (verbose) {
         Rprintf("Rank of rcDesign is: %d\n", rank(trans(rcDesign) * rcDesign)); 
       } 
-      rcDesign2 = createRowColumnDesign2(rcDesign, v+v*v);
-      Ar = getInfMatrixOfDesign(rcDesign2, v+v*v);
+      //rcDesign2 = createRowColumnDesign2(rcDesign, v+v*v);
+      Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
       s2 = 1; // We set this constant for the moment
       s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
@@ -131,12 +131,11 @@ SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS) {
   END_RCPP
 }
 
-SEXP getInfMatrix(SEXP designS, SEXP vS, SEXP modelS) {
+SEXP getInfMatrix(SEXP designS, SEXP vS) {
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
-  int model = IntegerVector(modelS)[0];
   mat design = as<mat>(designS);  
-  return wrap(getInfMatrixOfDesign(createRowColumnDesign(design, v, model), v+v*v));
+  return wrap(getInfMatrixOfDesign(design, v));
   END_RCPP
 }
 
@@ -186,6 +185,7 @@ arma::mat createRowColumnDesign2(arma::mat rcDesign, int v) {
   return(X);
 }
 
+//TODO This function is most likely broken:
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;

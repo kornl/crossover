@@ -217,3 +217,15 @@ searchCrossOverDesignR <- function(s, p, v, model="Standard additive model", eff
   varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
   return(list(design=design, varTrtPair=varTrtPair))
 }
+
+
+#TODO Recheck a second time that number of placebos or other things are NOT needed for this.
+createRowColumnDesignR <- function(X, v=length(unique(as.character(X))), model) {
+  model <- getModelNr(model)
+  if(model=="Second-order carry-over effects" || model==8) {
+    return( X + v*rbind(0, X[-dim(X)[1],]) + v*v*rbind(0, 0, X[c(-(dim(X)[1]-1),-dim(X)[1]),]) )
+  } else {
+    return( X + v*rbind(0, X[-dim(X)[1],]) )
+  }
+}
+

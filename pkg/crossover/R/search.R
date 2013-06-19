@@ -105,7 +105,7 @@ getModelNr <- function(model) {
   return(model)
 }
 
-createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model, ppp=0.5, placebos=1) {
+createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model) {
   model <- getModelNr(model)
   return(.Call( "createRCD", X, v, model, PACKAGE = "crossover" ))
 }
