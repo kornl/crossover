@@ -20,7 +20,9 @@ setMethod("initialize", "crossoverDesign",
 			.Object@v <- v
       .Object@s <- dim(design)[1]
 			.Object@p <- dim(design)[2]
-      .Object@model <- ifelse(missing(model), c(), model)
+      if (!missing(model)) {
+        .Object@model <- model
+      }
 			.Object@description <- description
 			.Object@attr <- attr
 			.Object@misc <- misc      

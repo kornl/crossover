@@ -424,9 +424,9 @@ models <- c("Standard additive model",
 
 for (model in models) {
   for (i in 1:10) {
-    result <- searchCrossOverDesign(s=s, p=p, v=v, model="Standard additive model")
+    #result <- searchCrossOverDesign(s=s, p=p, v=v, model="Standard additive model")
     #print(result)
-    result
+    #result
   }
 }
 

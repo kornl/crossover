@@ -54,7 +54,7 @@ John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver: an algorithm for 
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 
 result <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1, jumps=c(10000,200), n=c(1000,5))
-searchPlot(result)
+plot(result)
 
 #x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, contrast=)
 

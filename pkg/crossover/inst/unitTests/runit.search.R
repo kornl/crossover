@@ -6,18 +6,19 @@ test.search <- function () {
     v <- 4
     result <- searchCrossOverDesign(s=9, p=5, v=v, model=4, eff.factor=1, n=c(100,5), balance.p=TRUE)
     for (i in 1:v) {
-      v.count <- apply(result$design, 1, function(x) {sum(x==i)})
+      v.count <- apply(result@design, 1, function(x) {sum(x==i)})
       checkTrue(max(v.count)-min(v.count)<1.5)
     } 
     result <- searchCrossOverDesign(s=9, p=5, v=v, model=4, eff.factor=1, n=c(100,5), balance.s=TRUE)
     for (i in 1:v) {
-      v.count <- apply(result$design, 2, function(x) {sum(x==i)})
+      v.count <- apply(result@design, 2, function(x) {sum(x==i)})
       checkTrue(max(v.count)-min(v.count)<1.5)
     } 
   }  
 }
 
 test.random.matrix.generation <- function() {
+  v <- 4
   for (j in 1:10) {
     design <- randomDesign(s=9, p=5, v=4,  balance.s=TRUE) 
     for (i in 1:v) {
