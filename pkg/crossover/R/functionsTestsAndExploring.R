@@ -153,7 +153,7 @@ searchCrossOverDesignCTest <- function() {
 }
 
 searchCrossOverDesignR <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1) {
-  seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
+  # seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   model <- getModelNr(model)
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
