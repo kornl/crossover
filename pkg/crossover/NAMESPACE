@@ -1,5 +1,7 @@
 useDynLib(crossover)
 
+importFrom(graphics, "plot")
+
 import(rJava)
 importFrom(CommonJavaJars, loadJars)
 
@@ -12,3 +14,5 @@ export(general.carryover)
 
 export(searchPlot)
 export(buildSummaryTable)
+
+exportMethods(plot, print, show)

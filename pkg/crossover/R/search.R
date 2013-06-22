@@ -158,9 +158,12 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
   eff <- lapply(result$eff, function(x) {S2*x})
-  
-  varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
-  return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=list(n=n, jumps=jumps), time=proc.time()-start.time))
+  time <- proc.time()-start.time
+  class(time) <- NULL
+  #varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
+  #return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=, time=))
+  return(new("crossoverSearchResult", design=new("crossoverDesign", design, v=v, model=model, description="Found by search algorithm"), startDesigns=start.designs, eff=eff,                   
+             search=list(n=n, jumps=jumps), model=model, time=time, misc=list()))
 }
 
 randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE) {
@@ -210,22 +213,4 @@ getValues <- function(design, model=1, C, v=max(design)) {
 
 dput2 <- function(x) {
   paste(capture.output(dput(x)), collapse = " ")
-}
-
-searchPlot <- function(x, type=1, show.jumps=FALSE) {    
-  eff <- unlist(x$eff)
-  run <- as.factor(rep(1:length(x$eff), each=length(x$eff[[1]])))
-  n <- 1:(length(x$eff[[1]])*length(x$eff))
-  n2 <- rep(1:length(x$eff[[1]]), times=length(x$eff))
-  d <- data.frame(eff=eff, run=run, n=n, n2=n2)
-  n <- x$search$n
-  jumps <- x$search$jumps
-  if (type==1) {
-    plot <- ggplot(d, aes(x=n, y=eff, colour=run)) + geom_point()
-    if (show.jumps) plot <- plot + geom_vline(xintercept = 1:((n[1]*n[2])/jumps[2])*jumps[2], colour=grey)
-  } else {
-    plot <-ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + geom_abline(intercept = max(d$eff), slope = 0) + facet_wrap( ~ run)
-  }
-  plot <- plot + xlab("Simulation run") + ylab("E")
-  return(plot)
 }

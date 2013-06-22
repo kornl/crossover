@@ -408,7 +408,33 @@ searchPlot(x, type=2)
 % Lorem ipsum
 %\end{Example}
 
-Let's compare the results from the search algorithm with results from the literature.
+Let's compare the results from the search algorithm with results from the literature. First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
+
+<<eval1, echo=TRUE, eval=TRUE>>=
+s <- 6; p <- 4; v <- 2
+
+searchCrossOverDesign(s=s, p=p, v=v, model="Standard additive model")
+
+  design1 <- t(rbind(c(1,1,2,2),
+                     c(2,2,1,1),
+                     c(1,1,2,2),
+                     c(2,2,1,1),
+                     c(1,2,2,1),
+                     c(2,1,1,2)))
+  design2 <- t(rbind(c(1,1,2,1),
+                     c(2,2,1,2),
+                     c(1,1,2,1),
+                     c(2,2,1,2),
+                     c(1,2,2,1),
+                     c(2,1,1,2)))
+  design3 <- t(rbind(c(1,1,2,2),
+                     c(2,2,1,1),
+                     c(1,1,2,2),
+                     c(2,2,1,1),
+                     c(1,1,2,2),
+                     c(2,2,1,1)))
+
+@
 
 <<eval1, echo=TRUE, eval=TRUE>>=
  # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
