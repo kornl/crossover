@@ -65,9 +65,9 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
     NumericVector eff = NumericVector(n1);
     design = as<mat>(mlist[j]);      
     eOld = 0; eBeforeJump = 0;
+    bestDesignOfRun = design;
     for(int i=0; i<n1; i++) {  
-      designOld = design;  
-      bestDesignOfRun = design;
+      designOld = design;        
       // Now we exchange r times two elements:
       int r = 1;
       if (i%j2==0) {
@@ -120,11 +120,11 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
         design = designBeforeJump;
         eOld = eBeforeJump;
       }
-    }
-    if (eOld > effBest) {
-      effBest = eOld;
-      bestDesign = bestDesignOfRun;
-    }
+      if (eOld > effBest) {
+        effBest = eOld;
+        bestDesign = bestDesignOfRun;
+      }
+    }    
     effList[j] = eff;
   }  
   if (verbose) {
