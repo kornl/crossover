@@ -53,18 +53,22 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int n2 = mlist.size();
   List effList = List(n2); // Here we will store NumericVectors that show the search progress.
   mat design;
-  mat bestDesign;
+  mat bestDesign, bestDesignOfRun;
   int effBest = 0;
   mat designOld, designBeforeJump, rcDesign, rcDesign2, Ar;  
   double s1, s2, eOld = 0, eBeforeJump = 0;
   NumericVector rows, cols;
   
-  for(int j=0; j<n2; j++) {
+  for(int j=0; j<n2; j++) {    
     NumericVector eff = NumericVector(n1);
-    design = as<mat>(mlist[j]);  
-    eOld = 0;     
+    design = as<mat>(mlist[j]);      
+    eOld = 0;  
+    // TODO The following two lines should be removed once this is checked in the R code:
+    rcDesign = createRowColumnDesign(design, v, model);
+    if (rank(trans(rcDesign) * rcDesign) < linkM.n_cols) continue;
     for(int i=0; i<n1; i++) {  
-      designOld = design;      
+      designOld = design;  
+      bestDesignOfRun = design;
       // Now we exchange r times two elements:
       int r = 1;
       if (i%j2==0) {
@@ -86,34 +90,38 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
         design(rows[1],cols[1]) = tmp;
       }
       
-      rcDesign = createRowColumnDesign(design, v, model);
-      if (verbose) {
-        Rprintf("Rank of rcDesign is: %d\n", rank(trans(rcDesign) * rcDesign)); 
-      } 
-      //rcDesign2 = createRowColumnDesign2(rcDesign, v+v*v);
-      Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
-    
-      s2 = 1; // We set this constant for the moment
-      s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
-      
-      //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
-      eff[i] = s2/s1;
-      if (s2/s1 > eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.
-        //if (verbose) Rprintf("=> Accepting new matrix.\n");
-        eOld = s2/s1;         
+      rcDesign = createRowColumnDesign(design, v, model);      
+      if (rank(trans(rcDesign) * rcDesign) < linkM.n_cols) { //TODO Write down theory to check whether this is really the best condition (hopefully sufficient+necessary)
+        if (verbose) {
+          Rprintf("Rank of rcDesign is: %d (needs to bee %d).\n", rank(trans(rcDesign) * rcDesign), linkM.n_cols); 
+        }
+        eff[i] = NA_REAL;
       } else {
-        //if (verbose) Rprintf("=> Keeping old matrix.\n");
-        design = designOld;    
+        //rcDesign2 = createRowColumnDesign2(rcDesign, v+v*v);
+        Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+    
+        s2 = 1; // We set this constant for the moment and correct it in the calling R code.
+        s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
+      
+        //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
+        eff[i] = s2/s1;
+        if (s2/s1 > eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.
+          //if (verbose) Rprintf("=> Accepting new matrix.\n");
+          eOld = s2/s1;       
+          bestDesignOfRun = design;
+        } else {
+          //if (verbose) Rprintf("=> Keeping old matrix.\n");
+          design = designOld;    
+        }
       }
       if ((i%j2==j2/2) && (eBeforeJump>eOld)) { // If after j2/2 steps no better design is found after the jump, we wil return to the design before the jump:
         design = designBeforeJump;
         eOld = eBeforeJump;
       }
-      
     }
     if (eOld > effBest) {
       effBest = eOld;
-      bestDesign = design;
+      bestDesign = bestDesignOfRun;
     }
     effList[j] = eff;
   }

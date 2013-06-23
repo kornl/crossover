@@ -96,9 +96,9 @@ startGUI <- function(...) {invisible(NULL)}
 
 \section{Introduction}
 
-This package provides more than two hundred cross-over design from literature, a search algorithm to find efficient cross-over designs for various models and a graphical user interface to find/generate appropriate designs.
+This package provides more than two hundred cross-over design from literature, a search algorithm to find efficient cross-over designs for various models and a graphical user interface (GUI) to find/generate appropriate designs.
 
-The computationally intensive parts of the packe, i.e.\ the search algorithm, is written using the R packages Rcpp and RcppArmadillo (\cite{eddelbuettel2011rcpp} and \cite{rcpparmadillo}).
+The computationally intensive parts of the package, i.e.\ the search algorithm, is written using the R packages Rcpp and RcppArmadillo (\cite{eddelbuettel2011rcpp} and \cite{rcpparmadillo}). The GUI is written in Java and uses package rJava (\cite{rJava}).
 
 \subsection{Installation}
 
@@ -154,7 +154,7 @@ The catalogue, collected and compiled by Professor Byron Jones, contains 241 des
 %Lucas, H.L. (1956) Switch-back trials for more than two treatments. Journal of Diary Science, 39, 146--154.
 %Williams, E.J. (1949) Experimental designs balanced for the estimation of residual effects of treatments. Australian Journal of Science Res(A), 2, 14900168.
 
-Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{buildSummaryTable()}.} Further if possible functions from package crossdes \cite{crossdes} are called to create design for the specified values.
+Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{buildSummaryTable()}.} Further if possible functions from package crossdes (\cite{crossdes}) are called to create design for the specified values.
 
 \subsubsection{Algorithm Search}
 
