@@ -18,8 +18,8 @@ setMethod("initialize", "crossoverDesign",
         v <- length(levels(as.factor(design)))
       }
 			.Object@v <- v
-      .Object@s <- dim(design)[1]
-			.Object@p <- dim(design)[2]
+      .Object@s <- dim(design)[2]
+			.Object@p <- dim(design)[1]
       if (!missing(model)) {
         .Object@model <- model
       }

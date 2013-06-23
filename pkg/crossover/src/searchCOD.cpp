@@ -22,7 +22,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
-  bool verbose = is_true( any( LogicalVector(verboseS) ) );
+  //bool verbose = is_true( any( LogicalVector(verboseS) ) );
+  int verbose = IntegerVector(verboseS)[0];
   bool balanceS = is_true( any( LogicalVector(balanceSS) ) );
   bool balanceP = is_true( any( LogicalVector(balancePS) ) );
   int s = IntegerVector(sS)[0];
@@ -45,7 +46,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   GetRNGstate();
   
   if (verbose) {
-    Rprintf("Starting search algorithm!\n");
+    Rprintf("Starting search algorithm (s=%d, p=%d, v=%d)!\n", s, p, v);
     tCC.print(Rcout, "t(C)*C:");
     linkM.print(Rcout, "Link Matrix:");
   }
@@ -92,10 +93,11 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       
       rcDesign = createRowColumnDesign(design, v, model);      
       if (rank(trans(rcDesign) * rcDesign) < linkM.n_cols) { //TODO Write down theory to check whether this is really the best condition (hopefully sufficient+necessary)
-        if (verbose) {
+        if (verbose>3) {
           Rprintf("Rank of rcDesign is: %d (needs to bee %d).\n", rank(trans(rcDesign) * rcDesign), linkM.n_cols); 
         }
         eff[i] = NA_REAL;
+        //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
       } else {        
         Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
@@ -104,10 +106,16 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       
         //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
         eff[i] = s2/s1;
-        if (s2/s1 > eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.
+        if (s2/s1 >= eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.
           //if (verbose) Rprintf("=> Accepting new matrix.\n");
           eOld = s2/s1;       
-          bestDesignOfRun = design;
+          if (eOld>eBeforeJump) {
+            bestDesignOfRun = design;
+            if (verbose>2) {
+              bestDesignOfRun.print(Rcout, "Best design of run:");
+              Rprintf("Eff of design is: %f.\n", eOld);
+            }          
+          }
         } else {
           //if (verbose) Rprintf("=> Keeping old matrix.\n");
           design = designOld;    
@@ -123,7 +131,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
       bestDesign = bestDesignOfRun;
     }
     effList[j] = eff;
-  }
+  }  
   PutRNGstate();
   return List::create(Named("design")=bestDesign, Named("eff")=effList);  
   END_RCPP
