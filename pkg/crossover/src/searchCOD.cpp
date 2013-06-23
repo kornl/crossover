@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -36,6 +36,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   int j1 = jump[0];
   int j2 = jump[1];
   int model = IntegerVector(modelS)[0];
+  double s2 = NumericVector(s2S)[0];
   //vec vRep = as<vec>(vRepS); //Not used yet
   //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
   mat linkM = as<mat>(linkMS);
@@ -57,16 +58,13 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   mat bestDesign, bestDesignOfRun;
   int effBest = 0;
   mat designOld, designBeforeJump, rcDesign, Ar;  
-  double s1, s2, eOld = 0, eBeforeJump = 0;
+  double s1, eOld = 0, eBeforeJump = 0;
   NumericVector rows, cols;
   
   for(int j=0; j<n2; j++) {    
     NumericVector eff = NumericVector(n1);
     design = as<mat>(mlist[j]);      
-    eOld = 0;  
-    // TODO The following two lines should be removed once this is checked in the R code:
-    rcDesign = createRowColumnDesign(design, v, model);
-    if (rank(trans(rcDesign) * rcDesign) < linkM.n_cols) continue;
+    eOld = 0; eBeforeJump = 0;
     for(int i=0; i<n1; i++) {  
       designOld = design;  
       bestDesignOfRun = design;
@@ -81,14 +79,14 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
         rows = ceil(runif(2)*p)-1; 
         cols = ceil(runif(2)*s)-1;  
         if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
-        while ( design(rows[0],cols[0]) == design(rows[1],cols[1]) ) { //TODO: Only really stupid user input can cause an infinite loop - nevertheless check for it?
+        while ( design(rows[0], cols[0]) == design(rows[1],cols[1]) ) { //TODO: Only really stupid user input can cause an infinite loop - nevertheless check for it?
           rows = ceil(runif(2)*p)-1; 
           cols = ceil(runif(2)*s)-1;  
           if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
         }
         double tmp = design(rows[0],cols[0]);
-        design(rows[0],cols[0]) = design(rows[1],cols[1]);
-        design(rows[1],cols[1]) = tmp;
+        design(rows[0], cols[0]) = design(rows[1], cols[1]);
+        design(rows[1], cols[1]) = tmp;
       }
       
       rcDesign = createRowColumnDesign(design, v, model);      
@@ -100,16 +98,13 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
         //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
       } else {        
         Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
-    
-        s2 = 1; // We set this constant for the moment and correct it in the calling R code.
         s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
-      
         //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
         eff[i] = s2/s1;
         if (s2/s1 >= eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.
           //if (verbose) Rprintf("=> Accepting new matrix.\n");
           eOld = s2/s1;       
-          if (eOld>eBeforeJump) {
+          if (i%j2>j2/2 || eOld>eBeforeJump) {
             bestDesignOfRun = design;
             if (verbose>2) {
               bestDesignOfRun.print(Rcout, "Best design of run:");
@@ -132,6 +127,14 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
     }
     effList[j] = eff;
   }  
+  if (verbose) {
+    bestDesignOfRun.print(Rcout, "Best design overall:");
+    rcDesign = createRowColumnDesign(bestDesignOfRun, v, model);      
+    Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+    s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
+    Rprintf("Eff of design is: %f=%f.\n", effBest, s2/s1);
+    
+  }
   PutRNGstate();
   return List::create(Named("design")=bestDesign, Named("eff")=effList);  
   END_RCPP

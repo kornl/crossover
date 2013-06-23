@@ -150,20 +150,21 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   CC <- t(C) %*% C
 
-  result <- .Call( "searchCOD", s, p, v, start.designs, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, PACKAGE = "crossover" )
-  design <- result$design
   if (model!=8) {
     r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2))
   } else {
     r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2), rep((p-2)*s/v^3, v^3))
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
-  eff <- lapply(result$eff, function(x) {S2*x})
+  
+  result <- .Call( "searchCOD", s, p, v, start.designs, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, S2, PACKAGE = "crossover" )
+  design <- result$design
+  
   time <- proc.time()-start.time
   class(time) <- NULL
   #varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
   #return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=, time=))
-  return(new("crossoverSearchResult", design=new("crossoverDesign", design, v=v, model=model, description="Found by search algorithm"), startDesigns=start.designs, eff=eff,                   
+  return(new("crossoverSearchResult", design=new("crossoverDesign", design, v=v, model=model, description="Found by search algorithm"), startDesigns=start.designs, eff=result$eff,                   
              search=list(n=n, jumps=jumps), model=model, time=time, misc=list()))
 }
 
