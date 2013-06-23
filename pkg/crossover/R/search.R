@@ -120,6 +120,9 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   if (length(jumps)==1) jumps <- c(jumps, 50)
   model <- getModelNr(model)
+  
+  H <- do.call( linkMatrix, c(list(model=model, v=v), model.param) )
+  
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
@@ -134,7 +137,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   i <- length(start.designs) + 1
   while (i <= n[2]) {    
-    start.designs[[i]] <- randomDesign(s, p, v,  v.rep, balance.s, balance.p)
+    start.designs[[i]] <- randomDesign(s, p, v,  v.rep, balance.s, balance.p, model, dim(H)[2])
     i <- i + 1
   }
   if (length(start.designs)!=n[2]) { warning(paste("Too many start designs specified. Only the first ", n[2], " will be used.", sep="")) }
@@ -146,9 +149,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     C <- contrast
   }
   CC <- t(C) %*% C
-  H <- do.call( linkMatrix, c(list(model=model, v=v), model.param) )
-  #H <- linkMatrix(model, v)
-  
+
   result <- .Call( "searchCOD", s, p, v, start.designs, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, PACKAGE = "crossover" )
   design <- result$design
   if (model!=8) {
@@ -166,17 +167,22 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
              search=list(n=n, jumps=jumps), model=model, time=time, misc=list()))
 }
 
-randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE) {
+randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, model, min.rank) {
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   }
-  if (balance.s) {
-    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
-  } else if (balance.p) {
-    design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
-  } else {
-    design <- matrix(sample(rep(1:v, v.rep)), p, s)
-  }  
+  design <- matrix(1, p, s)
+  X <- createRowColumnDesign(design, model=model)
+  while (rankMatrix(t(X) %*% X)<min.rank) {   
+    if (balance.s) {
+      design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
+    } else if (balance.p) {
+      design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
+    } else {
+      design <- matrix(sample(rep(1:v, v.rep)), p, s)
+    }    
+    X <- createRowColumnDesign(design, model=model)
+  }
   return(design)
 }
 

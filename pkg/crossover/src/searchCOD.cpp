@@ -55,7 +55,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   mat design;
   mat bestDesign, bestDesignOfRun;
   int effBest = 0;
-  mat designOld, designBeforeJump, rcDesign, rcDesign2, Ar;  
+  mat designOld, designBeforeJump, rcDesign, Ar;  
   double s1, s2, eOld = 0, eBeforeJump = 0;
   NumericVector rows, cols;
   
@@ -96,8 +96,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
           Rprintf("Rank of rcDesign is: %d (needs to bee %d).\n", rank(trans(rcDesign) * rcDesign), linkM.n_cols); 
         }
         eff[i] = NA_REAL;
-      } else {
-        //rcDesign2 = createRowColumnDesign2(rcDesign, v+v*v);
+      } else {        
         Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
     
         s2 = 1; // We set this constant for the moment and correct it in the calling R code.
