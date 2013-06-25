@@ -57,7 +57,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   mat design;
   mat bestDesign, bestDesignOfRun;
   int effBest = 0;
-  mat designOld, designBeforeJump, rcDesign, Ar;  
+  mat designOld, designBeforeJump, rcDesign, Ar, A, B;  
   double s1, eOld = 0, eBeforeJump = 0;
   NumericVector rows, cols;
   
@@ -89,16 +89,20 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
         design(rows[1], cols[1]) = tmp;
       }
       
-      rcDesign = createRowColumnDesign(design, v, model);      
-      if (rank(trans(rcDesign) * rcDesign) < linkM.n_cols) { //TODO Write down theory to check whether this is really the best condition (hopefully sufficient+necessary)
+      rcDesign = createRowColumnDesign(design, v, model);  
+      Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+      B = A = trans(linkM) * Ar * linkM;
+      B.resize(v, v);
+      if (rank(B) < v) { //TODO Write down theory to check whether this is really the best condition (hopefully sufficient+necessary)
         if (verbose>3) {
-          Rprintf("Rank of rcDesign is: %d (needs to bee %d).\n", rank(trans(rcDesign) * rcDesign), linkM.n_cols); 
+          //Rprintf("Rank of rcDesign is: %d (needs to bee %d).\n", rank(trans(rcDesign) * rcDesign), linkM.n_cols); 
+          A.print(Rcout, "A:");
+          B.print(Rcout, "B:");
         }
         eff[i] = NA_REAL;
         //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
       } else {        
-        Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
-        s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
+        s1 = trace(pinv(A) * tCC) ;
         //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
         eff[i] = s2/s1;
         if (s2/s1 >= eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.

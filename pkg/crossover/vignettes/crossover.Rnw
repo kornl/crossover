@@ -419,6 +419,10 @@ design1 <- t(rbind(c(1,1,2,2),
                    c(2,2,1,1),
                    c(1,2,2,1),
                    c(2,1,1,2)))
+
+
+
+
 design2 <- t(rbind(c(1,1,2,1),
                    c(2,2,1,2),
                    c(1,1,2,1),
@@ -560,6 +564,8 @@ This section is work in progress.
 %\end{Theorem}
 
 \section{Appendix - Matrix Algebra}
+
+\subsection{Fisher information}\index{Fisher information}\index{information matrix}
 
 \subsection{Generalized inverse}
 

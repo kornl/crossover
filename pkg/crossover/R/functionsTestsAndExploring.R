@@ -1,3 +1,8 @@
+printInfo <- function(design, v) {
+  s <- dim(design)[2]
+  p <- dim(design)[1]
+}
+
 compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.diff=FALSE) {
   v <- max(design)
   print(design)
