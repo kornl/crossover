@@ -59,6 +59,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JButton exportR = new JButton("Export to R");
 	JButton showAlgoPerformance = new JButton("Show course of algorithm");
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
+	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
+	JLabel jlMixed;
+	JTextField jtWithinSubjectRho;
 	//JTabbedPane jTabAlgo = new jTabAlgo;
 	
 	public AlgorithmPanel(CrossoverGUI gui) {
@@ -123,7 +126,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public JPanel getLeftSidePanel() {
 		lsPanel = new JPanel();
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         lsPanel.setLayout(new FormLayout(cols, rows));
 		
@@ -135,6 +138,21 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		lsPanel.add(new JLabel("Model"), cc.xy(2, row));
 		lsPanel.add(jCBmodel, cc.xy(4, row));
 		
+        row+=2;
+        
+        lsPanel.add(jCBMixed, cc.xy(4, row));
+        jCBMixed.setSelectedIndex(0);
+        jCBMixed.addActionListener(this);
+        
+        row+=2;
+        
+        jlMixed = new JLabel("Within-subject correlation coefficient");
+        jlMixed.setEnabled(false);
+        jtWithinSubjectRho = new JTextField("0.5");
+        jtWithinSubjectRho.setEnabled(false);
+		lsPanel.add(jlMixed, cc.xy(2, row));
+		lsPanel.add(jtWithinSubjectRho, cc.xy(4, row));
+        
         row+=2;
         
 		lsPanel.add(pLabel, cc.xy(2, row));
@@ -434,6 +452,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		} else if (e.getSource()==exportR) {
 			VariableNameDialog vd = new VariableNameDialog(gui, "design");			
 			RControl.getR().eval(vd.getName()+" <- .COresult$design");
+		} else if (e.getSource()==jCBMixed) {
+			boolean mixed = jCBMixed.getSelectedIndex()==1;
+			jlMixed.setEnabled(mixed);	        
+	        jtWithinSubjectRho.setEnabled(mixed);			
 		}
 	}
 
