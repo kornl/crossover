@@ -112,7 +112,7 @@ createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model) {
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
-                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast) {
+                                  n=c(1000, 10), jumps=c(5, 50), start.designs, contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
@@ -157,7 +157,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
   
-  result <- .Call( "searchCOD", s, p, v, start.designs, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, S2, PACKAGE = "crossover" )
+  result <- .Call( "searchCOD", s, p, v, start.designs, H, C, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, S2, PACKAGE = "crossover" )
   design <- result$design
   
   time <- proc.time()-start.time

@@ -394,7 +394,7 @@ In the following graphic we see 100.000 design evaluations (that take less than 
 set.seed(42)
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 plot(x)
-plot(x, type=2)
+plot(x, 0, type=2)
 
 @
 
@@ -420,8 +420,22 @@ design1 <- t(rbind(c(1,1,2,2),
                    c(1,2,2,1),
                    c(2,1,1,2)))
 
+attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
 
 
+rcDesign <- createRowColumnDesign(design1, model=1)
+Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
+Xr <- getRCDesignMatrix(rcDesign, v+v*v)
+H <- linkMatrix(1,v)
+X <- Xr %*% H
+A <- t(H) %*% Ar %*% H
+rankMatrix(X)
+C <- rbind(diag(v), matrix(0, v, v))
+XX <- t(X) %*% X
+all.equal(t(C) %*% ginv(XX) %*% XX, t(C)) # Criterion to test whether - see Theorem \ref{thr:estimable}
+
+A
+rankMatrix(A)
 
 design2 <- t(rbind(c(1,1,2,1),
                    c(2,2,1,2),
@@ -591,7 +605,7 @@ This section is work in progress.
   \end{Proof}
 \end{Theorem}
 
-\begin{Theorem}
+\begin{Theorem}\label{thr:estimable}
   Let $y=X\beta+\epsilon$ be a linear model with $\epsilon\sim\sN(0,\sigma^2I)$. 
   Then $t^T\beta$ is estimable iff $t^T(X^TX)^+X^TX=t^T$.  
   %\begin{Proof}

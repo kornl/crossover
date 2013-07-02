@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -40,7 +40,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   //vec vRep = as<vec>(vRepS); //Not used yet
   //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
   mat linkM = as<mat>(linkMS);
-  mat tCC = as<mat>(tCCS); // t(C) %*% C
+  mat C = as<mat>(CS); // Contrasts
+  mat tCC = trans(C) * C; // t(C) %*% C
   //mat design = as<mat>(designS);
 
   // TODO Read random number generators and C!
@@ -57,8 +58,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
   mat design;
   mat bestDesign, bestDesignOfRun;
   int effBest = 0;
-  mat designOld, designBeforeJump, rcDesign, Ar, A, B;  
-  double s1, eOld = 0, eBeforeJump = 0;
+  mat designOld, designBeforeJump, rcDesign, Ar, A, Xr, X, XX, XXXX;  
+  double s1, eOld = 0, eBeforeJump = 0, estCriterion;
   NumericVector rows, cols;
   
   for(int j=0; j<n2; j++) {    
@@ -68,7 +69,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
     bestDesignOfRun = design;
     for(int i=0; i<n1; i++) {  
       designOld = design;        
-      // Now we exchange r times two elements:
+      // Now we exchange r times two elements: TODO Move exchange part behind the evaluation part (otherwise a really great start design might got lost).
       int r = 1;
       if (i%j2==0) {
         r = j1;
@@ -89,19 +90,27 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP tCCS, 
         design(rows[1], cols[1]) = tmp;
       }
       
-      rcDesign = createRowColumnDesign(design, v, model);  
-      Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
-      B = A = trans(linkM) * Ar * linkM;
-      B.resize(v, v);
-      if (rank(B) < v) { //TODO Write down theory to check whether this is really the best condition (hopefully sufficient+necessary)
-        if (verbose>3) {
-          //Rprintf("Rank of rcDesign is: %d (needs to bee %d).\n", rank(trans(rcDesign) * rcDesign), linkM.n_cols); 
-          A.print(Rcout, "A:");
-          B.print(Rcout, "B:");
+      rcDesign = createRowColumnDesign(design, v, model);        
+      Xr = createRowColumnDesign2(rcDesign, v+v*v);
+      X = Xr * linkM;
+      XX = trans(X) * X;
+      XXXX = pinv(XX) * XX;
+      X = abs(C * XXXX - C);
+      estCriterion = X.max(); // Criterion to test whether contrasts are estimable - see Theorem \ref{thr:estimable} of vignette.
+      if (estCriterion > 0.0001) { //TODO Write down theory to check whether this is really the best condition (hopefully sufficient+necessary)
+        if (verbose>2) {
+          Rprintf("Estimability criterion is: %f.\n", estCriterion); 
+          /*
+          rcDesign.print(Rcout, "rcDesign:");
+          X.print(Rcout, "X:");
+          C.print(Rcout, "C:");      
+          */
         }
         eff[i] = NA_REAL;
         //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
-      } else {        
+      } else {    
+        Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+        A = trans(linkM) * Ar * linkM;
         s1 = trace(pinv(A) * tCC) ;
         //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
         eff[i] = s2/s1;
@@ -197,17 +206,30 @@ arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS
   mat(rowvec)*/
 }
 
+// C equivalent to getRCDesignMatrix
+// v=v+v*v for all models but full interaction, where v=v+v*v+v*v*v
 arma::mat createRowColumnDesign2(arma::mat rcDesign, int v) {
   mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
   for (int j=0; j<rcDesign.n_cols; j++) {
     for (int i=0; i<rcDesign.n_rows; i++) {
-      X((i - 1) * rcDesign.n_cols + j, rcDesign(i, j)) = 1;
+      X(i * rcDesign.n_cols + j, rcDesign(i, j)-1) = 1;
     }
   }
   return(X);
 }
+/*
+getRCDesignMatrix <- function(rcDesign, v) {
+  X <- matrix(0, prod(dim(rcDesign)), v)
+  for (j in 1:(dim(rcDesign)[2])) {
+    for (i in 1:(dim(rcDesign)[1])) {
+      X[(i-1)*(dim(rcDesign)[2])+j,rcDesign[i,j]] <- 1
+    }
+  }
+  return(X)
+}
+*/
 
-//TODO This function is most likely broken:
+// v=v+v*v for all models but full interaction, where v=v+v*v+v*v*v
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;

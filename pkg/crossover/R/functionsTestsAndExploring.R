@@ -1,6 +1,10 @@
 printInfo <- function(design, v) {
   s <- dim(design)[2]
   p <- dim(design)[1]
+  
+  Xr <- getRCDesignMatrix(X, v) #TODO Test this - is X here correct?
+  # JRW, p 2650, second equation on that page, number 11
+  A <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
 }
 
 compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.diff=FALSE) {
@@ -93,6 +97,7 @@ getTDesign <- function(D) {
   return(X)
 }
 
+# v=v+v*v for all models but full interaction, where v=v+v*v+v*v*v
 getRCDesignMatrix <- function(rcDesign, v) {
   X <- matrix(0, prod(dim(rcDesign)), v)
   for (j in 1:(dim(rcDesign)[2])) {
