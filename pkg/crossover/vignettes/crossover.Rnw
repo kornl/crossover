@@ -423,7 +423,7 @@ design1 <- t(rbind(c(1,1,2,2),
 attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
 
 
-rcDesign <- createRowColumnDesign(design1, model=1)
+rcDesign <- createRowColumnDesign(design1, v, model=1)
 Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
 Xr <- getRCDesignMatrix(rcDesign, v+v*v)
 H <- linkMatrix(1,v)

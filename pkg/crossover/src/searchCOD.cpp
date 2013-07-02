@@ -12,7 +12,7 @@ using namespace Rcpp;
 */
 
 /*IntegerVector csample_integer( IntegerVector x, int size, bool replace, 
-  		       NumericVector prob = NumericVector::create()) {
+    	       NumericVector prob = NumericVector::create()) {
     RNGScope scope;
     IntegerVector ret = Rcpp::RcppArmadillo::sample(x, size, replace, prob);
     return ret;
@@ -57,24 +57,27 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   List effList = List(n2); // Here we will store NumericVectors that show the search progress.
   mat design;
   mat bestDesign, bestDesignOfRun;
-  int effBest = 0;
-  mat designOld, designBeforeJump, rcDesign, Ar, A, Xr, X, XX, XXXX;  
-  double s1, eOld = 0, eBeforeJump = 0, estCriterion;
+  int effBest = 0, r;
+  mat designOld, rcDesign, Ar, A, Xr, X, XX, XXXX;  // designBeforeJump, 
+  double s1, eOld = 0, estCriterion; // eBeforeJump = 0,
   NumericVector rows, cols;
   
-  for(int j=0; j<n2; j++) {    
+  for(int j=0; j<n2; j++) {  
     NumericVector eff = NumericVector(n1);
     design = as<mat>(mlist[j]);      
-    eOld = 0; eBeforeJump = 0;
+    eOld = s2/getS1(createRowColumnDesign(design, v, model), v, model, linkM, tCC);
     bestDesignOfRun = design;
+    
+    if (verbose) {
+      Rprintf("**** Start design %d ****\n", j);   
+      design.print(Rcout, "Start design:");
+    }
     for(int i=0; i<n1; i++) {  
       designOld = design;        
       // Now we exchange r times two elements: TODO Move exchange part behind the evaluation part (otherwise a really great start design might got lost).
-      int r = 1;
+      r = 1;
       if (i%j2==0) {
-        r = j1;
-        designBeforeJump = design; // If after j2/4 steps no better design is found after the jump, we wil return to the design before the jump
-        eBeforeJump = eOld;
+        r = j1;        
       }
       for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
         rows = ceil(runif(2)*p)-1; 
@@ -90,56 +93,44 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
         design(rows[1], cols[1]) = tmp;
       }
       
-      rcDesign = createRowColumnDesign(design, v, model);        
-      Xr = createRowColumnDesign2(rcDesign, v+v*v);
-      X = Xr * linkM;
-      XX = trans(X) * X;
-      XXXX = pinv(XX) * XX;
-      X = abs(C * XXXX - C);
-      estCriterion = X.max(); // Criterion to test whether contrasts are estimable - see Theorem \ref{thr:estimable} of vignette.
-      if (estCriterion > 0.0001) { //TODO Write down theory to check whether this is really the best condition (hopefully sufficient+necessary)
+      mat rcDesign = createRowColumnDesign(design, v, model);
+      s1 = getS1(rcDesign, v, model, linkM, tCC);      
+      
+      if (s2/s1 >= eOld) {
         if (verbose>2) {
-          Rprintf("Estimability criterion is: %f.\n", estCriterion); 
-          /*
-          rcDesign.print(Rcout, "rcDesign:");
-          X.print(Rcout, "X:");
-          C.print(Rcout, "C:");      
-          */
+          Rprintf("Yeah, s2/s1=%f is greater or equal to eOld=%f.\n", s2/s1, eOld);
         }
-        eff[i] = NA_REAL;
-        //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
-      } else {    
-        Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
-        A = trans(linkM) * Ar * linkM;
-        s1 = trace(pinv(A) * tCC) ;
-        //if (verbose) Rprintf(S2/S1, " vs. ", eOld, " ");
-        eff[i] = s2/s1;
-        if (s2/s1 >= eOld || i%j2==0) { // After a jump we always accept the new matrix for now and test again after j2/2 steps.
-          //if (verbose) Rprintf("=> Accepting new matrix.\n");
-          eOld = s2/s1;       
-          if (i%j2>j2/2 || eOld>eBeforeJump) {
-            bestDesignOfRun = design;
-            if (verbose>2) {
-              bestDesignOfRun.print(Rcout, "Best design of run:");
-              Rprintf("Eff of design is: %f.\n", eOld);
-            }          
+        Xr = createRowColumnDesign2(rcDesign, v+v*v);
+        X = Xr * linkM;
+        XX = trans(X) * X;
+        XXXX = pinv(XX) * XX;
+        X = abs(C * XXXX - C);
+        estCriterion = X.max(); // Criterion to test whether contrasts are estimable - see Theorem \ref{thr:estimable} of vignette.
+        if (estCriterion > 0.0001) {
+          if (verbose>2) {
+            Rprintf("But unfortunately estimability criterion is: %f.\n", estCriterion); 
           }
-        } else {
-          //if (verbose) Rprintf("=> Keeping old matrix.\n");
-          design = designOld;    
+          eff[i] = NA_REAL;
+          //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
+        } else { // We have found a great design!
+          eOld = s2/s1;   
+          eff[i] = s2/s1;
+          bestDesignOfRun = design;
+          if (verbose>2) {
+            bestDesignOfRun.print(Rcout, "Best design of run:");
+            Rprintf("Eff of design is: %f.\n", eOld);
+          }          
+          if (eOld > effBest) {
+            effBest = eOld;
+            bestDesign = bestDesignOfRun;
+          }
         }
-      }
-      if ((i%j2==j2/2) && (eBeforeJump>eOld)) { // If after j2/2 steps no better design is found after the jump, we wil return to the design before the jump:
-        design = designBeforeJump;
-        eOld = eBeforeJump;
-      }
-      if (eOld > effBest) {
-        effBest = eOld;
-        bestDesign = bestDesignOfRun;
-      }
-    }    
+      } else {        
+        design = designOld;
+      } 
+    } /* End hill climbing */
     effList[j] = eff;
-  }  
+  } /* End for loop start designs */
   if (verbose) {
     bestDesignOfRun.print(Rcout, "Best design overall:");
     rcDesign = createRowColumnDesign(bestDesignOfRun, v, model);      
@@ -190,6 +181,13 @@ arma::mat createRowColumnDesign(arma::mat design, int v, int model) {
   }
   throw std::range_error("Model not found. Has to be between 1 and 8.");
   return NULL;
+}
+
+double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {  
+  mat Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+  mat A = trans(linkM) * Ar * linkM;
+  double s1 = trace(pinv(A) * tCC);
+  return s1;
 }
 
 arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS, bool balanceP) {
@@ -252,6 +250,4 @@ arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
   mat A = diagmat(r) - (1.0/s)* NP * trans(NP) - (1.0/p)* NS * trans(NS) + (1.0/(p*s))* r * trans(r);
   return A; 
 }
-
-    
     

@@ -105,14 +105,14 @@ getModelNr <- function(model) {
   return(model)
 }
 
-createRowColumnDesign <- function(X, v=length(unique(as.character(X))), model) {
+createRowColumnDesign <- function(X, v, model) {
   model <- getModelNr(model)
   return(.Call( "createRCD", X, v, model, PACKAGE = "crossover" ))
 }
 
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
-                                  n=c(1000, 10), jumps=c(5, 50), start.designs, contrast) {
+                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
@@ -129,6 +129,13 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     stop("The sum of argument v.rep must equal s times p.")
   }
   if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")  
+  if (missing(contrast)) {
+    Csub <- contrMat(n=rep(1, v), type="Tukey")
+    class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+    C <- appendZeroColumns(Csub, model, v)
+  } else {
+    C <- contrast
+  }
   if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
     st <- buildSummaryTable()
@@ -137,17 +144,11 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   i <- length(start.designs) + 1
   while (i <= n[2]) {    
-    start.designs[[i]] <- randomDesign(s, p, v,  v.rep, balance.s, balance.p, model, dim(H)[2])
+    start.designs[[i]] <- randomDesign(s, p, v,  v.rep, balance.s=balance.s, balance.p=balance.p, model=model, C=C)
     i <- i + 1
   }
   if (length(start.designs)!=n[2]) { warning(paste("Too many start designs specified. Only the first ", n[2], " will be used.", sep="")) }
-  if (missing(contrast)) {
-    Csub <- contrMat(n=rep(1, v), type="Tukey")
-    class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
-    C <- appendZeroColumns(Csub, model, v)
-  } else {
-    C <- contrast
-  }
+
   CC <- t(C) %*% C
 
   if (model!=8) {
@@ -168,23 +169,33 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
              search=list(n=n, jumps=jumps), model=model, time=time, misc=list()))
 }
 
-randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, model, min.rank) {
+randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, model, C) {
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   }
   design <- matrix(1, p, s)
-  X <- createRowColumnDesign(design, model=model)
-  while (rankMatrix(t(X) %*% X)<min.rank) {   
+  i <- 0
+  while (!estimable(design, v, model, C)) {   
+    i <- i + 1
+    if (i>1000) stop("Could not find design that allows estimation of contrasts after 1000 tries.")
     if (balance.s) {
       design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
     } else if (balance.p) {
       design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:p,s)), sample)), p, s, byrow=TRUE)
     } else {
       design <- matrix(sample(rep(1:v, v.rep)), p, s)
-    }    
-    X <- createRowColumnDesign(design, model=model)
+    }
   }
   return(design)
+}
+
+estimable <- function(design, v, model, C) {
+  rcDesign <- createRowColumnDesign(design, v=v, model=model)
+  Xr <- getRCDesignMatrix(rcDesign, v+v*v)
+  H <- linkMatrix(model, v)
+  X <- Xr %*% H
+  XX <- t(X) %*% X
+  return(isTRUE(all.equal(C %*% ginv(XX) %*% XX, C, check.attributes=FALSE, check.names=FALSE))) # Criterion to test whether - see Theorem \ref{thr:estimable} of vignette.
 }
 
 appendZeroColumns <- function(Csub, model, v) {

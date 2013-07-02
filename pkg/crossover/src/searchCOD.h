@@ -27,5 +27,6 @@ RcppExport SEXP getInfMatrix(SEXP designS, SEXP vS);
 arma::mat createRowColumnDesign(arma::mat design, int v, int model);
 arma::mat createRowColumnDesign2(arma::mat rcDesign, int v);
 arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v);
+double getS1(arma::mat rcDesign, int v, int model, arma::mat linkM, arma::mat tCC);
 
 #endif
