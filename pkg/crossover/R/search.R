@@ -190,6 +190,11 @@ randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, mode
 }
 
 estimable <- function(design, v, model, C) {
+  if(missing(C)) {
+    Csub <- contrMat(n=rep(1, v), type="Tukey")
+    class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+    C <- appendZeroColumns(Csub, model, v)
+  }
   rcDesign <- createRowColumnDesign(design, v=v, model=model)
   Xr <- getRCDesignMatrix(rcDesign, v+v*v)
   H <- linkMatrix(model, v)
