@@ -96,7 +96,7 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
             } else {
               plot <-ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + geom_abline(intercept = max(d$eff), slope = 0) + facet_wrap( ~ run)
             }
-            #plot + geom_line(aes(x=n, y=eff, group=run, colour="#000000"))
+            plot <- plot + geom_line(aes(x=n, y=eff, group=run, colour=run))
             plot <- plot + xlab("Simulation run") + ylab("E")
             return(plot)
           }
