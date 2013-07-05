@@ -77,7 +77,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       // Now we exchange r times two elements: TODO Move exchange part behind the evaluation part (otherwise a really great start design might got lost).
       r = 1;
       if (i%j2==0) {
-        r = j1;        
+        r = j1; //TODO Add random +- value. Jumps of always the same jump may be not optimal.       
       }
       for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
         rows = ceil(runif(2)*p)-1; 
@@ -125,7 +125,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
             bestDesign = bestDesignOfRun;
           }
         }
-      } else {        
+      } else {       
+        eff[i] = NA_REAL;
         design = designOld;
       } 
     } /* End hill climbing */
