@@ -30,22 +30,6 @@ public class GeneralConfig extends SpecificConfig {
         return tmpDir;
     }
 
-    public void setPDFViewerPath(String pdfViewerPath) {
-        setProperty("acrobat.path", pdfViewerPath);
-    }
-
-    public String getPDFViewerPath() {
-        return getProperty("acrobat.path", "");
-    }
-
-    public void setPDFViewerOptions(String pdfViewerOptions) {
-        setProperty("pdfviewer.options", pdfViewerOptions);
-    }
-
-    public String getPDFViewerOptions() {
-        return getProperty("pdfviewer.options", "");
-    }
-
     public void setFontSize(int i) {
         setIntProperty("font.size", i);
     }
@@ -89,64 +73,8 @@ public class GeneralConfig extends SpecificConfig {
 		format = new DecimalFormat(s);		
 	}
 
-	public void setLineWidth(int lw) {
-		setProperty("linewidth", ""+lw);		
-	}
-    
-    public int getLineWidth() {
-		return Integer.parseInt(getProperty("linewidth", "2"));		
-	}
-    
-    public void setEps(double eps) {
-		setProperty("epsilon", ""+eps);		
-	}
-    
-    public double getEpsilon() {
-		return Double.parseDouble(getProperty("epsilon", "0.0001"));		
-	}
-    
-	public boolean showFractions() {		
-		return Boolean.parseBoolean(getProperty("showFractions", "true"));
-	}
-	
-	public void setShowFractions(boolean showFractions) {		
-		setProperty("showFractions", ""+showFractions);
-	}
-    
-	public boolean getColoredImages() {		
-		return Boolean.parseBoolean(getProperty("coloredImages", "true"));
-	}
-	
-	public void setColoredImages(boolean colored) {		
-		setProperty("coloredImages", ""+colored);
-	}
-
 	public int getDigitsInTables() {
 		return Integer.parseInt(getProperty("digits.in.tables", "6"));	
-	}
-
-	public boolean showRejected() {
-		return Boolean.parseBoolean(getProperty("showRejected", "true"));
-	}
-	
-	public void setShowRejected(boolean showRejected) {		
-		setProperty("showRejected", ""+showRejected);
-	}
-
-	public boolean useEpsApprox() {
-		return Boolean.parseBoolean(getProperty("useEpsApprox", "true"));
-	}
-	
-	public void setUseEpsApprox(boolean useEpsApprox) {
-		setProperty("useEpsApprox", ""+useEpsApprox);
-	}
-	
-	public boolean useJLaTeXMath() {
-		return Boolean.parseBoolean(getProperty("useJLaTeXMath", "true"));
-	}
-	
-	public void setUseJLaTeXMath(boolean useJLaTeXMath) {
-		setProperty("useJLaTeXMath", ""+useJLaTeXMath);
 	}
 	
 	public boolean checkOnline() {
@@ -248,6 +176,7 @@ public class GeneralConfig extends SpecificConfig {
 	public void setExperimental(boolean b) {
 		setProperty("experimentalFeatures", ""+b);
 	}
+	
 	public boolean experimentalFeatures() {
 		return Boolean.parseBoolean(getProperty("experimentalFeatures", "true"));
 	}
@@ -274,14 +203,6 @@ public class GeneralConfig extends SpecificConfig {
 
 	public void setExportTransparent(boolean b) {
 		setProperty("exportTransparent", ""+b);
-	}
-
-	public boolean getUnAnchor() {
-		return Boolean.parseBoolean(getProperty("unAnchor", "true"));
-	}
-	
-	public void setUnAnchor(boolean b) {
-		setProperty("unAnchor", ""+b);
 	}
 
 	public boolean simplify() {
@@ -332,23 +253,4 @@ public class GeneralConfig extends SpecificConfig {
 		return Boolean.parseBoolean(getProperty("askWhenGraphIsNotSaved", "false"));
 	}
 
-	public boolean markEpsilon() {
-		return Boolean.parseBoolean(getProperty("markEpsilon", "true"));
-	}
-	
-	public void setMarkEpsilon(boolean b) {
-		setProperty("markEpsilon", ""+b);		
-	}
-
-	public String getParametricTest() {
-		return getProperty("parametricTest", "Bretz2011");
-	}
-	
-	public void setParametricTest(String test) {
-		setProperty("parametricTest", test);
-	}
-
-	public Double getExportZoom() {		
-		return getProperty("Exportzoom", "null")=="null"?null:Double.parseDouble(getProperty("Exportzoom", "null"));		
-	}
 }

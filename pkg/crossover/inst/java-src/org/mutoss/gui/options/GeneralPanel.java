@@ -38,10 +38,6 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
     private Configuration conf;
     private OptionsDialog odialog;
     private JCheckBox colorImages;
-    private JCheckBox showRejected;
-    private JCheckBox showFractions;
-    private JCheckBox useJLaTeXMath;
-    private JCheckBox markEpsilon;
 
 	JFrame parent;
 
@@ -83,57 +79,12 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
             if (getLooknFeel().equals(currentLookNFeel)) break;
             logger.debug("Not " + getLooknFeel());
         }
-        cbLookAndFeel.setToolTipText("<html>" +
-        		"The way the widgets of a GUI look and how the behave is<br>" +
-        		"called \"look and feel\" in Java. Depending on your operating<br>" +
-        		"system and classpath several Look'n'Feel implementations may<br>" +
-        		"be available (e.g. Metal (Java default), Windows, Mac OS,<br>" +
-        		"Motif and/or System/GTK).<br>" +
-        		"If you are used to a particular Look'n'Feel, you can select<br>" +
-        		"it here. But if you have problems with the graphical interface,<br>" +
-        		"please try to use the default Metal theme to check whether it<br>" +
-        		"could be a problem with the selected Look'n'Feel.</html>");
+        cbLookAndFeel.setToolTipText("<html></html>");
         
         colorImages = new JCheckBox("Colored image files and pdf reports");
-        colorImages.setSelected(conf.getGeneralConfig().getColoredImages());
-        colorImages.setToolTipText("<html>" +
-        		"Colors are used to highlight different conditions in the graph<br>" +
-        		"like hypotheses that could be rejected. While these colors are<br>" +
-        		"helpful in the GUI, you perhaps prefer black and white PNG image<br>" +
-        		"files and PDF reports.</html>");
+        //colorImages.setSelected(conf.getGeneralConfig().getColoredImages());
+        colorImages.setToolTipText("<html></html>");
         
-        showFractions = new JCheckBox("Show fractions instead of decimal numbers");
-        showFractions.setSelected(conf.getGeneralConfig().showFractions());
-        showFractions.setToolTipText("<html>" +
-        		"Floating point numbers are used for all calculations and<br>" +
-        		"values like $1/3$ would be normally shown as $0.3333333$.<br>" +
-        		"When this option is active the method fractions from package<br>" +
-        		"MASS is used to display fractions whenever the floating point<br>" +
-        		"numbers are close to a fraction that looks right.</html>");
-        
-        showRejected = new JCheckBox("Show rejected nodes in GUI");
-        showRejected.setSelected(conf.getGeneralConfig().showRejected());
-        showRejected.setToolTipText("<html>" +
-        		"When using the GUI to for stepwise rejection of hypotheses,<br>" +
-        		"this options determines whether rejected nodes should<br>" +
-        		"\"disappear\" or whether they remain on the screen and are<br>" +
-        		"only marked as rejected.</html>");
-        
-        useJLaTeXMath = new JCheckBox("Use JLaTeXMath");
-        useJLaTeXMath.setSelected(conf.getGeneralConfig().useJLaTeXMath());
-        useJLaTeXMath.setToolTipText("<html>" +
-        		"There are not many reasons not to use the free Java library<br>" +
-        		"JLaTeXMath to render numbers, symbols and formulas in the<br>" +
-        		"GUI. The option is mainly provided in case that errors occur<br>" +
-        		"displaying the numbers and formulas.</html>");
-        
-        markEpsilon = new JCheckBox("Show epsilon edges as dashed lines.");
-        markEpsilon.setSelected(conf.getGeneralConfig().markEpsilon());
-        markEpsilon.setToolTipText("<html>" +
-        		"You can set whether epsilon edges should<br>" +
-        		"been shown as dashed or solid lines." +
-        		"</html>");
-
     }
 
     private void doTheLayout() {
@@ -218,11 +169,7 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
         	JOptionPane.showMessageDialog(this, "\""+jtfNumberOfDigits.getText()+"\" is not a valid integer for the number of digits.", "Invalid input", JOptionPane.ERROR_MESSAGE);
         }
         
-       	conf.getGeneralConfig().setColoredImages(colorImages.isSelected());
-       	conf.getGeneralConfig().setShowRejected(showRejected.isSelected());
-       	conf.getGeneralConfig().setShowFractions(showFractions.isSelected());
-       	conf.getGeneralConfig().setUseJLaTeXMath(useJLaTeXMath.isSelected());
-       	conf.getGeneralConfig().setMarkEpsilon(markEpsilon.isSelected());
+       	//TODO conf.getGeneralConfig().setColoredImages(colorImages.isSelected());
 
        	try {
        		String currentLF = conf.getJavaConfig().getLooknFeel(); // UIManager.getLookAndFeel();

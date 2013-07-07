@@ -1,3 +1,4 @@
+Move common config code to afcommons. 
 
 Warn if the choosen combination of t, s and p does not 
 allow to estimate all parameters due to insufficient degrees of freedom.
