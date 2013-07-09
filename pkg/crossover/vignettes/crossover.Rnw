@@ -8,6 +8,7 @@
 %\usepackage{tikz}
 %\usetikzlibrary{decorations,arrows,shapes}
 \usepackage[margin=0.9in]{geometry}
+%\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{listings}
@@ -16,7 +17,6 @@
 \usepackage{makeidx}\makeindex
 \usepackage{algorithmic} 
 \usepackage{algorithm}
-%\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{amsmath,amsthm,amsfonts,amssymb}
 \setlength{\parindent}{0mm}
 \setlength{\parskip}{1mm}
@@ -129,31 +129,6 @@ graphical user interface as shown in figure \ref{GUI} is started with the comman
 \subsubsection{Catalogue}
 The catalogue, collected and compiled by Professor Byron Jones, contains 241 designs from the following literature: \cite{anderson2002locally}, \cite{archdeacon1980some}, \cite{atkinson1966designs}, \cite{balaam1968two}, \cite{berenblut1964change}, \cite{blaisdell1980partially}, \cite{davis1969cyclic}, \cite{federer1964tied}, \cite{fletcher1987new}, \cite{iqbal1994efficient}, \cite{lewis1988factorial}, \cite{cochran1941double}, \cite{patterson1962change}, \cite{pigeon1985residual}, \cite{prescott1999construction}, \cite{quenouille1953design}, \cite{russell1991construction}, \cite{lucas1956switchback}, \cite{williams1949experimental}, \cite{prescott1994}, \cite{bate2002}
 
-%Anderson, I. and Preece, D.A. (2002) Locally balanced change-over designs. Utilitas Mathematica, 33-59. %TODO replace this "to appear" at other places too!
-%Anderson, I. (2002) Personal communication.
-%Archdeacon, D.S., Dinitz J.H., Stinson, D.R. and Tillson, T.W. (1980)
-%Some new row-complete latin squares, Journal of Combinatorial Theory, Series A, 29, 395-398.
-%Source: Atkinson, G.F. (1966) Designs for sequences of treatments with carry-over effects. Biometrics, 22, 292--309.
-%Balaam, L.N. (1968) A two-period design with $t^2$ experimental units. Biometrics, 24, 61--73.
-%Bate, S. and Jones, B. (2002) The construction of universally optimal uniform cross-over designs. GlaxoSmithKline Biomedical Data Sciences Technical Report 2002-06.
-%Berenblut, I.I. (1964) Change-over designs with complete balance for residual effects. Biometrics, 23, 578--580.
-%Blaisdell, E.A. and Raghavarao, D. (1980) Partially balanced change-over designs based on m-associate class PBIB designs. Journal of the Royal Statistical Society, B, 42, 334--338.
-%Davis, A.W. and Hall, W.B. (1969) Cyclic change-over designs. Biometrika, 56, 283--293.
-%Federer, W.T. and Atkinson, G.F. (1964) Tied-double-change-over designs. Biometrics, 20, 168--181.
-%Fletcher, D.J. (1987) A new class of change-over designs for factorial experiments. Biometrika, 74, 649--654.
-%Iqbal, I. and Jones, B. (1994) Efficient repeated measurements designs with equal and unequal period sizes. Journal of Statistical Planning and Inference, 42, 79-88.
-%Factorial cross-over designs in clinical trials, Lewis, S.M., Fletcher, D.J. and Matthews, J.N.S. In Optimal Design and Analysis of Experiments, Editors, Dodge, Y., Fedorov, V.V. and Wynn, H.P. (1988), 133--140, Elsevier Science Publishers B.V. (North-Holland).
-%Cochran, W.G., Autrey, K.M. and Cannon, C.Y. (1941) A double change-over design for dairy cattle feeding experiments. Journal of Dairy Science, 24, 937--951
-%Patterson, H.D. and Lucas, H.L. (1962) Change-over designs. North Carolina Agricultural Experiment Station. Tech. Bull. No. 147.
-%Patterson, H.D. and Lucas, H.L. (1962) Change-over designs. North Carolina Agricultural Experiment Station. Tech. Bull. No. 147.
-%Residual effects designs for comparing treatments with a control. PhD dissertation, Temple University, Phildelphia, PA, 1984.
-%Prescott, P. (1994) Construction of sequentially counterbalanced designs formed from two or more Latin Squares. Proceedings of the 11th Symposium on Computational Statistics held in Vienna, Austria. Editors Dutter, R. and Grossmann, W.,  Physica-Verlag: Heidelberg, 435-440.
-%Prescott, P. (1999) Construction of sequentially counterbalanced designs formed from two latin squares. Utilitas Mathematica, 55, 135--152.
-%Quenouille, M.H. (1953) The Design and Analysis of Experiments. Griffin, London.
-%Russell, K.R. (1991) The construction of good change-over designs when there are fewer units than treatments. Biometrika, 78, 305-313.
-%Lucas, H.L. (1956) Switch-back trials for more than two treatments. Journal of Diary Science, 39, 146--154.
-%Williams, E.J. (1949) Experimental designs balanced for the estimation of residual effects of treatments. Australian Journal of Science Res(A), 2, 14900168.
-
 Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{buildSummaryTable()}.} Further if possible functions from package crossdes (\cite{crossdes}) are called to create design for the specified values.
 
 \subsubsection{Algorithm Search}
@@ -162,7 +137,7 @@ In figure \ref{Algorithm} the preliminary graphical interface for the search alg
 \begin{itemize}
   \item The drop-down menu for \emph{model} let you specify which model you are interested. These models are described in detail in section \ref{sec:models}.
   \item In case of the placebo or proportionality model you can specify \emph{further model parameters} (namely the number of placebos and the proportionality parameter, respectively).
-  \item %While the number of treatments and periods is taken 
+  \item 
     Specify the exact \emph{number of sequences}. (The number of treatments and periods is already specified in the top panel of the GUI.)
   \item Specify \emph{how often each treatment should be assigned}. The GUI default is to assign the treatments as evenly as possible, but depending on further information (is there a control group that should have greater weight or are there treatments more important than the others?) other assignments should be used.
   \item You can specify that the design should be constructed in a way that \emph{in each sequence/period a treatment occur as evenly as possible}. This restriction will normally decrease the efficiency of the algorithm.
@@ -404,11 +379,10 @@ plot(x, 0, type=2)
 
 \subsection{Evaluation of Algorithm Performance}
 
-%\begin{Example}
-% Lorem ipsum
-%\end{Example}
+Let's compare the results from the search algorithm with results from the literature. 
 
-Let's compare the results from the search algorithm with results from the literature. First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
+\begin{Example}
+First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
 
 <<eval1, echo=TRUE, eval=TRUE, cache=TRUE>>=
 s <- 6; p <- 4; v <- 2
@@ -510,6 +484,8 @@ searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
 
 @
 
+\end{Example}
+
 <<attachNameSpace, echo=TRUE, eval=TRUE>>=
  # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
  attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
@@ -571,15 +547,7 @@ In the following code chunk we will compare the results from our approach in the
 
 \section{Appendix - Row-Column Designs}
 
-%\begin{Def}[Familywise Error Rate]\index{familywise error rate}
-%  Let $H_J:=\bigcap_{j\in J} H_j$. The multiple test procedure $\phi$
-%\end{Def}
-
 This section is work in progress.
-
-%\begin{Theorem}[Closed testing principle]\index{closed testing principle}
-% \cite{marcus1976closed}
-%\end{Theorem}
 
 \section{Appendix - Matrix Algebra}
 
@@ -661,11 +629,9 @@ $e_{ijk}$& random error with zero mean and variance $\sigma^2$\\
 \multicolumn{2}{l}{\textbf{Functions}}\\
 $X'$ & transpose of matrix $X$\\
 $X^+$ & Moore–Penrose pseudoinverse of $X$\\
-%$X^*$ & conjugate transpose of $X$\\
 $\skp{\cdot,\cdot}$ & standard direct product $\skp{x,y}=\sum_{j=1}^nx_j\cdot y_j$ for $x,y\in\R^n$\\
 $\id_X$ & identity on $X$, i.e.\ $\id_X:\;X\rightarrow X,\;x\mapsto x$\\
-%\\
-\multicolumn{2}{l}{\textbf{Andere Symbole}}\\
+\multicolumn{2}{l}{\textbf{Other Symbols}}\\
 $\sN(\mu,\sigma^2)$ & Normal distribution with mean $\mu$ and variance $\sigma^2$.\\
 \end{tabularx}
 %\onecolumn
