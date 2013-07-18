@@ -4,6 +4,9 @@ importFrom(graphics, "plot")
 
 import(rJava)
 importFrom(CommonJavaJars, loadJars)
+importFrom(multcomp, contrMat)
+importFrom(MASS, ginv)
+importFrom(ggplot2, ggplot)
 
 export(crossoverGUI)
 export(design.efficiency)

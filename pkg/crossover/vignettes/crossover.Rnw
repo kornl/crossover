@@ -89,7 +89,9 @@ options(width=128)
 options(digits=4)
 startGUI <- function(...) {invisible(NULL)}
 #options(prompt="> ", continue="+ ")
-
+library(MASS)
+library(multcomp)
+library(ggplot2)
 @
 
 \newpage
@@ -199,7 +201,7 @@ v <- 3 # number of treatments
 H <- crossover:::linkMatrix(model="Standard additive model", v)
 H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::createRowColumnDesign(design, model=1)
+rcDesign <- crossover:::createRowColumnDesign(design, v=v, model=1)
 rcDesign
 # Design Matrix of Row-Column Design:
 Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v*v)
@@ -347,7 +349,7 @@ Therefore the link matrix has $3*v$ columns. % and we calculate the row-column d
 H <- crossover:::linkMatrix(model="Second-order carry-over effects", v)
 H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::createRowColumnDesign(design, model=8)
+rcDesign <- crossover:::createRowColumnDesign(design, v=v, model=8)
 rcDesign
 # Design Matrix of Row-Column Design:
 Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)

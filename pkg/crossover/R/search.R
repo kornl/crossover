@@ -221,14 +221,14 @@ getTrtPair <- function(design, model=1) {
   return(triu(gco$Var.trt.pair))
 }
 
-getValues <- function(design, model=1, C, v=max(design)) {
+getValues <- function(design, model=1, C, v) {
   if (missing(C)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
     C <- cbind(Csub,matrix(0,dim(Csub)[1],v)) 
     CC <- t(C) %*% C
   }
-  rcDesign <- createRowColumnDesign(design, model=model)
+  rcDesign <- createRowColumnDesign(design, v, model=model)
   Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
   H <- linkMatrix(model, v)
   return(diag(ginv(t(H) %*% Ar %*% H) %*% CC))  
