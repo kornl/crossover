@@ -95,6 +95,7 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
               plot <- plot + geom_line(aes(x=n2, y=eff, group=run, colour=run))
             }            
             plot <- plot + xlab("Simulation run") + ylab("E")
+            plot <- plot + theme(axis.text.x = element_text(angle = 90))
             return(plot)
           }
 )
