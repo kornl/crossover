@@ -77,11 +77,7 @@ setMethod("show", "crossoverSearchResult",
 		})
 
 setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
-          function(x, y, ...) { #function(x, type=1, show.jumps=FALSE) {
-            type<-list(...)[["type"]]
-            if (is.null(type)) type <- 1
-            show.jumps <- list(...)[["show.jumps"]]
-            if (is.null(show.jumps)) show.jumps<-FALSE
+          function(x, y, type=1, show.jumps=FALSE, ...) { #function(x, ) {
             eff <- unlist(x@eff)
             run <- as.factor(rep(1:length(x@eff), each=length(x@eff[[1]])))
             n <- 1:(length(x@eff[[1]])*length(x@eff))
@@ -92,11 +88,12 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
             jumps <- x@search$jumps
             if (type==1) {
               plot <- ggplot(d, aes(x=n, y=eff, colour=run)) + geom_point()
+              plot <- plot + geom_line(aes(x=n, y=eff, group=run, colour=run))
               if (show.jumps) plot <- plot + geom_vline(xintercept = 1:((n[1]*n[2])/jumps[2])*jumps[2], colour=grey)
             } else {
               plot <-ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + geom_abline(intercept = max(d$eff), slope = 0) + facet_wrap( ~ run)
-            }
-            plot <- plot + geom_line(aes(x=n, y=eff, group=run, colour=run))
+              plot <- plot + geom_line(aes(x=n2, y=eff, group=run, colour=run))
+            }            
             plot <- plot + xlab("Simulation run") + ylab("E")
             return(plot)
           }
