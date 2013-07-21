@@ -9,7 +9,7 @@
 }
 \usage{
 	searchCrossOverDesign(s, p, v, model="Standard additive model", eff.factor=1, 
-    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, model.param=list(), 
+    v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
     n=c(5000, 20), jumps=c(5, 50), start.designs, contrast)
 }
 \arguments{
@@ -28,7 +28,7 @@
   \item{v.rep}{ Integer vector specifying how often each treatment should be assigned (sum must equal s*p).}
   \item{balance.s}{ Boolean specifying whether to allocate the treatments as equally as possible to each sequence (can result in loss of efficiency). }  
   \item{balance.p}{ Boolean specifying whether to allocate the treatments as equally as possible to each period (can result in loss of efficiency). }  
-  \item{verbose}{ Boolean specifying whether verbose output should be printed. }  
+  \item{verbose}{ Level of verbosity, a number between 0 and 10. The default \code{verbose=0} does not print any output, while \code{verbose=10} prints any available notes. }  
   \item{model.param}{ List of additional model specific parameters. In the moment these are \code{ppp}, the proportionality parameter for the proportionality model, and \code{placebos}, the number of placebo treatments in the placebo model. }  
   \item{n}{ \code{n=c(n1,n2)} with \var{n1} the number of hill climbing steps per trial and \var{n2} the number of searches from random start matrices. }
   \item{jumps}{ To reduze the possibility of the hill-climbing algorithm to get stuck in local extrema long jumps of distance \var{d} can be performed all \var{k} steps. This can be specified as \code{long.jumps=c(d,k)}. If \var{long.jumps} has only length 1 the default for \var{k} is 50.
