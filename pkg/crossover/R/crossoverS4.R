@@ -88,12 +88,13 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
             jumps <- x@search$jumps
             if (type==1) {
               plot <- ggplot(d, aes(x=n, y=eff, colour=run)) + geom_point()
-              plot <- plot + geom_line(aes(x=n, y=eff, group=run, colour=run))
-              if (show.jumps) plot <- plot + geom_vline(xintercept = 1:((n[1]*n[2])/jumps[2])*jumps[2], colour=grey)
+              plot <- plot + geom_line(aes(x=n, y=eff, group=run, colour=run))              
+              if (show.jumps) plot <- plot + geom_vline(xintercept = 1:((n[1]*n[2])/jumps[2])*jumps[2], colour=grey)              
             } else {
-              plot <-ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + geom_abline(intercept = max(d$eff), slope = 0) + facet_wrap( ~ run)
+              plot <-ggplot(d, aes(x=n2, y=eff)) + geom_point(colour="#444499", size=1) + facet_wrap( ~ run)
               plot <- plot + geom_line(aes(x=n2, y=eff, group=run, colour=run))
             }            
+            plot <- plot + geom_abline(intercept = max(d$eff), slope = 0, colour="#525252")
             plot <- plot + xlab("Simulation run") + ylab("E")
             plot <- plot + theme(axis.text.x = element_text(angle = 90))
             return(plot)
