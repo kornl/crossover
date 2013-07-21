@@ -92,19 +92,48 @@ models <- c("Standard additive model",
             "Second-order carry-over effects")
 #"No carry-over effects")
 
-getModelNr <- function(model) {
-  if (is.numeric(model)) {
-    if (model %in% 1:8) {
-      return(model)
-    } else {
-      stop("Model must be number between 1 and 8.")
+#' Get the number or character string specifying the model
+#' 
+#' Get the number or character string specifying the model
+#'
+#' @param model Number or character string specifying the model
+#' @param type Eiher \code{"numeric"} or \code{"character"}. If numeric the number of the model will be returned.
+#' Otherwise the character string description of the model.
+#' @return Either number or character string specifying the model.
+#' @examples
+#' getModelNr("Self-adjacency model")==getModelNr(2)
+#' "Self-adjacency model"==getModelNr(2, type="character")
+#' getModelNr("Self-adjacency model")==2
+getModelNr <- function(model, type="numeric") {
+    if (type!="numeric") {
+        if (type=="character") {
+            model <- models[getModelNr(model)]
+            return(model)
+        } else {
+            stop("Parameter type must be either \"numeric\" or \"character\".")
+        }
     }
-  }
-  model <- which(models==model)
-  if (length(model)==0) stop("Unknown model.")
-  return(model)
+    if (is.numeric(model)) {
+        if (model %in% 1:8) {
+            return(model)
+        } else {
+            stop("Model must be number between 1 and 8.")
+        }
+    }
+    modelNr <- which(models==model)
+    if (length(modelNr)==0) stop(paste("Unknown model \"", model ,"\".", sep=""))
+    return(modelNr)
 }
 
+#' Create a row column design 
+#'
+#' @param X cross-over design
+#' @param v number of treatments
+#' @param model String or number describing the model. See \code{\link{getModelNr}}.
+#' @return A row-column design (as matrix - but not the design matrix).
+#' @seealso \code{\link{createRowColumnDesign2}} gives the row-column design matrix.
+#' @examples
+#' # TODO
 createRowColumnDesign <- function(X, v, model) {
   model <- getModelNr(model)
   return(.Call( "createRCD", X, v, model, PACKAGE = "crossover" ))

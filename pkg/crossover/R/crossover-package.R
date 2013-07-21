@@ -1,46 +1,3 @@
-
-
-#' Class crossoverDesign
-#' 
-#' A S4 class for crossover designs: crossoverDesign
-#' 
-#' 
-#' @name crossoverDesign-class
-#' @aliases crossoverDesign-class crossoverDesign show,crossoverDesign-method
-#' print,crossoverDesign-method
-#' @docType class
-#' @section Slots: \describe{ \item{list("design")}{ Matrix }\item{:}{ Matrix }
-#' \item{list("s")}{ Number of sequences. }\item{:}{ Number of sequences. }
-#' \item{list("p")}{ Number of periods. }\item{:}{ Number of periods. }
-#' \item{list("v")}{ Number of treatments. }\item{:}{ Number of treatments. }
-#' \item{list("model")}{ A numeric specifying the model the design was searched
-#' for or -1 if unknown. }\item{:}{ A numeric specifying the model the design
-#' was searched for or -1 if unknown. } \item{list("description")}{ Optional
-#' description of design or reference. }\item{:}{ Optional description of
-#' design or reference. } \item{list("attr")}{ List with attributes. }\item{:}{
-#' List with attributes. } \item{list("misc")}{ List with miscellaneous stuff -
-#' not used yet. }\item{:}{ List with miscellaneous stuff - not used yet. } }
-#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
-#' @keywords graphs
-#' @examples
-#' 
-#' 
-#' design <- t(rbind(c(1,1,2,2),
-#'                   c(2,2,1,1),
-#'                   c(1,1,2,2),
-#'                   c(2,2,1,1),
-#'                   c(1,2,2,1),
-#'                   c(2,1,1,2)))
-#'                    
-#' new("crossoverDesign", design)
-#' 
-#' 
-NULL
-
-
-
-
-
 #' This package provides more than two hundred cross-over design from
 #' literature, a search algorithm to find efficient cross-over designs for
 #' various models and a graphical user interface to find/generate appropriate
@@ -65,48 +22,6 @@ NULL
 #' medicine, 23(17), 2645-2658.
 #' @keywords package htest
 NULL
-
-
-
-
-
-#' Class crossoverSearchResult
-#' 
-#' A S4 class for the search result for crossover designs:
-#' crossoverSearchResult
-#' 
-#' 
-#' @name crossoverSearchResult-class
-#' @aliases crossoverSearchResult-class crossoverSearchResult
-#' show,crossoverSearchResult-method print,crossoverSearchResult-method
-#' @docType class
-#' @section Slots: \describe{ \item{list("design")}{An object of class
-#' \code{crossoverDesign} describing the best design that was
-#' found.}\item{:}{An object of class \code{crossoverDesign} describing the
-#' best design that was found.} \item{list("startDesigns")}{A list of start
-#' designs to search from.}\item{:}{A list of start designs to search from.}
-#' \item{list("model")}{A numeric specifying the model the design was searched
-#' for or -1 if unknown.}\item{:}{A numeric specifying the model the design was
-#' searched for or -1 if unknown.} \item{list("eff")}{List, Progress of the
-#' algorithm. TODO: Explain further.}\item{:}{List, Progress of the algorithm.
-#' TODO: Explain further.} \item{list("search")}{List, TODO}\item{:}{List,
-#' TODO} \item{list("time")}{Named numeric with the time in seconds the
-#' algorithm was searching.}\item{:}{Named numeric with the time in seconds the
-#' algorithm was searching.} \item{list("misc")}{List - in the moment not
-#' used.}\item{:}{List - in the moment not used.} }
-#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
-#' @examples
-#' 
-#' 
-#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
-#' print(x)
-#' 
-#' 
-NULL
-
-
-
-
 
 #' Selected Cross-Over designs from literature
 #' 
@@ -313,44 +228,3 @@ NULL
 #' data(anderson)
 #' 
 NULL
-
-
-
-
-
-#' Plots information about the search algorithm and its process.
-#' 
-#' Plots information about the search algorithm and its process.
-#' 
-#' The x-axis corresponds to the consecutive simulation runs and the y-axis to
-#' the design criterion \var{E} that depending on the model is either a
-#' weighted average of efficiency factors or standardized pairwise variances
-#' and described in detail in the vignette of this package.  Also see the
-#' vignette for a few examples and a discussion what can be derived from this
-#' plots.
-#' @name plot
-#' @aliases plot,crossoverSearchResult,missing-method plot
-#' @param x Result from searchCrossOverDesign.
-#' @param y Missing.
-#' @param ...  Further arguments: \itemize{ \item type Type of plot. Number 1 is
-#' more colorful, but number 2 perhaps a bit easier to understand.
-#' \item show.jumps If \code{TRUE} vertical lines will show where the specified
-#' jumps occured.  }
-#' @return Returns a ggplot object of the plot.
-#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
-#' @keywords misc graphs
-#' @examples
-#' 
-#' 
-#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
-#' plot(x)
-#' 
-#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, n=c(500,10), jumps=c(10, 100))
-#' plot(x, show.jumps=TRUE)
-#' plot(x, type=2)
-#' 
-#' 
-NULL
-
-
-
