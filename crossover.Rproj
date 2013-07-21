@@ -16,3 +16,4 @@ BuildType: Package
 PackagePath: pkg/crossover
 PackageInstallArgs: --no-multiarch
 PackageCheckArgs: --as-cran
+PackageRoxygenize: rd
