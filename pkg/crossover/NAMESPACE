@@ -6,6 +6,8 @@ import(rJava)
 importFrom(CommonJavaJars, loadJars)
 importFrom(multcomp, contrMat)
 importFrom(MASS, ginv)
+importFrom(Matrix, bdiag)
+importFrom(Matrix, triu)
 importFrom(ggplot2, ggplot)
 
 export(crossoverGUI)
