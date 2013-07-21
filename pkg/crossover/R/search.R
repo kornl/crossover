@@ -101,9 +101,9 @@ models <- c("Standard additive model",
 #' Otherwise the character string description of the model.
 #' @return Either number or character string specifying the model.
 #' @examples
-#' getModelNr("Self-adjacency model")==getModelNr(2)
-#' "Self-adjacency model"==getModelNr(2, type="character")
-#' getModelNr("Self-adjacency model")==2
+#' crossover:::getModelNr("Self-adjacency model")==crossover:::getModelNr(2)
+#' "Self-adjacency model"==crossover:::getModelNr(2, type="character")
+#' crossover:::getModelNr("Self-adjacency model")==2
 getModelNr <- function(model, type="numeric") {
     if (type!="numeric") {
         if (type=="character") {
