@@ -151,10 +151,10 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
 
   CC <- t(C) %*% C
 
-  if (model!=8) {
-    r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2))
+  if (model==8) { # Second-order carry-over effects
+      r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2), rep((p-2)*s/v^3, v^3))
   } else {
-    r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2), rep((p-2)*s/v^3, v^3))
+      r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2))
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
   
