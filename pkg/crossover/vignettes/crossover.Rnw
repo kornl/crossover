@@ -588,6 +588,31 @@ This section is work in progress.
   %\end{Proof}
 \end{Theorem}
 
+\section{Appendix - Internals}
+
+\subsection{Naming conventions}
+Most functions exist as R and C/C++ variant, with the following naming conventions:
+
+We have functions in R and on the C/C++ level with the same name (in our folowing example \texttt{createRCDesign}) that should be used in R and C/C++ respectively. The R function \texttt{createRCDesign} calls the C function \texttt{createRCDesign2R} which handles the conversion from and to the R structures the SEXP are pointing to. Apart from that we often provide an R function with a suffix \texttt{\_R}, i.e.\ in our example \texttt{createRCDesign\_R}, which is a pure R function and reimplements the same functionality for testing purposes.
+
+\lstset{language=C++}
+\begin{lstlisting}
+SEXP createRCDesign2R(SEXP designS, SEXP vS, SEXP modelS) {...}
+arma::mat createRCDesign(arma::mat design, int v, int model) {...}
+\end{lstlisting}
+
+\lstset{language=R}
+\begin{lstlisting}
+createRCDesign <- function(X, v, model) {
+  return(.Call("createRCDesign2R", X, v, model, PACKAGE = "crossover"))
+}
+createRCDesign_R <- function(X, v, model) {
+  # Same functionality written in R
+}
+\end{lstlisting}
+
+A variable $v$ means \emph{always} the original number of treatments. A variable $vv$ stands for the maximum number of different settings\footnote{For the no carry-over into self or placebo model there are actually less settings.}, either $v+v^2$ or for the second-order carry-over effects $v+v^2+v^3$.
+
 \end{appendix}
 
 \nocite{*}
