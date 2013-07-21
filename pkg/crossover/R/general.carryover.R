@@ -1,8 +1,33 @@
-
 ################################################################################################
 ##           FUNCTION                                                     ######################
 ################################################################################################
 
+
+
+#' Search for a Cross-Over Design
+#' 
+#' Search for a Cross-Over Design
+#' 
+#' See the vignette of this package for further details.
+#' 
+#' @param design Cross-over design.
+#' @param model Model - one of the following numbers or Strings: 1 = "Standard
+#' additive model", 2 = "Self-adjacency model", 3 = "Proportionality model", 4
+#' = "Placebo model", 5 = "No carry-over into self model", 6 = "Treatment decay
+#' model", 7 = "Full set of interactions", 8 = "Second-order carry-over
+#' effects"
+#' @param t0 The number of placebo treatments in the placebo model.
+#' @param rho The proportionality parameter for the proportionality model.
+#' @return TODO ...
+#' @author Byron Jones
+#' @references Jones, B., & Kenward, M. G. (2003). Design and analysis of
+#' cross-over trials (Vol. 98). Chapman & Hall.
+#' @keywords misc
+#' @examples
+#' 
+#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+#' 
+#' @export general.carryover
 general.carryover<-function(design,model,t0=1,rho=0.5){  
   if (class(design)=="crossoverSearchResult") design <- design@design
   if (class(design)=="crossoverDesign") {

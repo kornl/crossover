@@ -1,3 +1,18 @@
+#' Build Summary Table For All Examples From Literature
+#' 
+#' Build Summary Table For All Examples From Literature
+#' 
+#' See also the documentation for the data files.
+#' 
+#' @return TODO
+#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
+#' @references See the documentation for the data files.
+#' @keywords misc
+#' @examples
+#' 
+#'   buildSummaryTable()
+#' 
+#' @export buildSummaryTable
 buildSummaryTable <- function() {	
 	summaryTable <- data.frame(dataset=character(0), title=character(0), reference=character(0), signature=character(0), t=numeric(0), p=numeric(0), s=numeric(0))
 	path <- system.file("data", package="crossover")
