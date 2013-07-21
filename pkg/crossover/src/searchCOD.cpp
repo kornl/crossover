@@ -154,6 +154,15 @@ SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS) {
   END_RCPP
 }
 
+SEXP createRCD2(SEXP designS, SEXP vS, SEXP modelS) {
+  BEGIN_RCPP
+  int v = IntegerVector(vS)[0];
+  int model = IntegerVector(modelS)[0];
+  mat design = as<mat>(designS);  
+  return wrap(createRowColumnDesign2(design, v));
+  END_RCPP
+}
+
 SEXP getInfMatrix(SEXP designS, SEXP vS) {
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
