@@ -131,7 +131,7 @@ getModelNr <- function(model, type="numeric") {
 #' @param v number of treatments
 #' @param model String or number describing the model. See \code{\link{getModelNr}}.
 #' @return A row-column design (as matrix - but not the design matrix).
-#' @seealso \code{\link{createRowColumnDesign2}} gives the row-column design matrix.
+#' @seealso \code{\link{rcdMatrix}} gives the row-column design matrix.
 #' @examples
 #' # TODO
 rcd <- function(X, v, model) {
