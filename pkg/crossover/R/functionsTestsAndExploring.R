@@ -2,7 +2,7 @@ printInfo <- function(design, v) {
   s <- dim(design)[2]
   p <- dim(design)[1]
   
-  Xr <- getRCDesignMatrix(X, v) #TODO Test this - is X here correct?
+  Xr <- rcdMatrix(X, v) #TODO Test this - is X here correct?
   # JRW, p 2650, second equation on that page, number 11
   A <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
 }
@@ -66,19 +66,17 @@ compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.d
   }
 }
 
-infMatrix_R <- function(X, v, method) {
-  #if (!is.numeric(X) || max(X)!=v) {
-  #  X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
-  #}
-  r <-sapply(1:v, function(x) {sum(X==x)})
+infMatrix_R <- function(X, v, model, method) {
+  if (model==8) { vv <- v+v*v+v*v*v } else { vv <- v+v*v } 
+  r <-sapply(1:vv, function(x) {sum(X==x)})
   p <- dim(X)[1]
   s <- dim(X)[2]
-  NP <- getNp(X, v) # t times p label row incidence matrix
-  NS <- getNs(X, v) # t times s label column incidence matrix
+  NP <- getNp(X, vv) # t times p label row incidence matrix
+  NS <- getNs(X, vv) # t times s label column incidence matrix
   if (missing(method) || method==1) {
     A <- diag(r) - (1/s)* NP %*% t(NP) - (1/p)* NS %*% t(NS) + (1/(p*s))* r %*% t(r)
   } else {    
-    Xr <- getRCDesignMatrix(X, v) #TODO Test this - is X here correct?
+    Xr <- rcdMatrix_R(X, v, model) #TODO Test this - is X here correct?
     # JRW, p 2650, second equation on that page, number 11
     A <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
   }
@@ -97,9 +95,9 @@ getTDesign <- function(D) {
   return(X)
 }
 
-# v=v+v*v for all models but full interaction, where v=v+v*v+v*v*v
-rcdMatrix_R <- function(rcDesign, v) {
-  X <- matrix(0, prod(dim(rcDesign)), v)
+rcdMatrix_R <- function(rcDesign, v, model) {
+  if (model==8) { vv <- v+v*v+v*v*v } else { vv <- v+v*v } 
+  X <- matrix(0, prod(dim(rcDesign)), vv)
   for (j in 1:(dim(rcDesign)[2])) {
     for (i in 1:(dim(rcDesign)[1])) {
       X[(i-1)*(dim(rcDesign)[2])+j,rcDesign[i,j]] <- 1
@@ -202,8 +200,8 @@ searchCrossOverDesign_R <- function(s, p, v, model="Standard additive model", ef
       design[ij[3],ij[4]] <- tmp
     }
     #print(design)
-    rcDesign <- createRowColumnDesign(design, model=model)
-    Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
+    rcDesign <- rcd_R(design, model=model)
+    Ar <- infMatrix_R(rcDesign, v+v*v)
     #print(Ar)    
     S2 <- 1 # We set this constant for the moment
     S1 <- sum(diag(ginv(t(H) %*% Ar %*% H) %*% CC))   
