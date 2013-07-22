@@ -17,6 +17,14 @@ evaluation <- function() {
                      c(2,2,1,1),
                      c(1,1,2,2),
                      c(2,2,1,1)))
+  
+  general.carryover(design1, model=1)
+  general.carryover(design2, model=1)
+  general.carryover(design3, model=1)
+  design.efficiency(design1)
+  design.efficiency(design2)
+  design.efficiency(design3)
+  
   model <- 1
   v <- 2
   H <- crossover:::linkMatrix(model=1, v=2)
