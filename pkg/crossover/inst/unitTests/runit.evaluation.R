@@ -1,4 +1,4 @@
-evaluation <- function() {
+test.evaluation <- function() {
   design1 <- t(rbind(c(1,1,2,2),
                      c(2,2,1,1),
                      c(1,1,2,2),
@@ -28,9 +28,9 @@ evaluation <- function() {
   model <- 1
   v <- 2
   H <- crossover:::linkMatrix(model=1, v=2)
-  for (design in c(design1, design2, design3)) {
-    rcD1 <- crossover:::rcd_R(design, model=model) # R-Code
-    rcD2 <- crossover:::rcd(design, model=model) # C-Code
+  for (design in list(design1, design2, design3)) {
+    rcD1 <- crossover:::rcd_R(design, v, model=model) # R-Code
+    rcD2 <- crossover:::rcd(design, v, model=model) # C-Code
     all(rcD1==rcD2)
     X1 <- rcD1
     #X1 <- crossover:::getRCDesignMatrix(rcD1, v*v+v) # R-Code
