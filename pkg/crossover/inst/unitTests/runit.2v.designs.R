@@ -72,6 +72,8 @@ test.2v.designs <- function() {
         print(plot(result))
         
         print(general.carryover(designs[[i]], model=i))  
+        
+        checkResult(result, designs[[i]], model=i)
     }
     
     estimable(design3, v, model=3)
@@ -79,4 +81,14 @@ test.2v.designs <- function() {
     searchCrossOverDesign(s=s, p=p, v=v, model=3)
     searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
     
+}
+
+checkResult <- function (result, refDesign, model) {
+    allDesigns <- result@misc$designs
+    for (i in 1:length(allDesigns)) {
+        designs <- allDesigns[[i]]
+        for (design in designs) {
+            crit <- sum(general.carryover(design, model=model)$Var.trt.pair)/2
+        }
+    }
 }
