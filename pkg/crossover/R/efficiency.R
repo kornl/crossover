@@ -22,11 +22,17 @@
 #' @keywords misc
 #' @examples
 #' 
-#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 #' design.efficiency(x)
 #' 
 #' @export design.efficiency
 design.efficiency <- function(design) {
+    if (class(design)=="crossoverSearchResult") design <- design@design
+    if (class(design)=="crossoverDesign") {
+        model <- design@model
+        design <- design@design
+    }
+    model <- getModelNr(model)
     design <- t(design)
 	
 	## input
