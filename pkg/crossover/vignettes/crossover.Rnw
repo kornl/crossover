@@ -201,10 +201,10 @@ v <- 3 # number of treatments
 H <- crossover:::linkMatrix(model="Standard additive model", v)
 H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::createRowColumnDesign(design, v=v, model=1)
+rcDesign <- crossover:::rcd(design, v=v, model=1)
 rcDesign
 # Design Matrix of Row-Column Design:
-Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v*v)
+Xr <- crossover:::rcdMatrix(rcDesign, v, model=1)
 Xr
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -349,10 +349,10 @@ Therefore the link matrix has $3*v$ columns. % and we calculate the row-column d
 H <- crossover:::linkMatrix(model="Second-order carry-over effects", v)
 H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::createRowColumnDesign(design, v=v, model=8)
+rcDesign <- crossover:::rcd(design, v=v, model=8)
 rcDesign
 # Design Matrix of Row-Column Design:
-Xr <- crossover:::getRCDesignMatrix(rcDesign, v+v^2+v^3)
+Xr <- crossover:::rcdMatrix(rcDesign, v, model=8)
 Xr
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -399,9 +399,9 @@ design1 <- t(rbind(c(1,1,2,2),
 attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
 
 
-rcDesign <- createRowColumnDesign(design1, v, model=1)
-Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
-Xr <- getRCDesignMatrix(rcDesign, v+v*v)
+rcDesign <- rcd(design1, v, model=1)
+Ar <- infMatrix(rcDesign, v, model=1)
+Xr <- rcdMatrix(rcDesign, v, model=1)
 H <- linkMatrix(1,v)
 X <- Xr %*% H
 A <- t(H) %*% Ar %*% H
@@ -506,14 +506,15 @@ For details (what is $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite
   s <- 3
   p <- 4
   v <- 3
+  model <- 1
   
   v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
   
-  rcDesign <- createRowColumnDesign(design, v, model=1)
+  rcDesign <- rcd(design, v, model)
   # JRW, p 2650, first equation on that page, whithout number
-  Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
-  Xr <- getRCDesignMatrix(rcDesign, v+v*v)
+  Ar <- infMatrix(rcDesign, v, model)
+  Xr <- rcdMatrix(rcDesign, v, model)
   # JRW, p 2650, second equation on that page, number 11
   Ar2 <- t(Xr) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% Xr
   max(abs(Ar-Ar2))

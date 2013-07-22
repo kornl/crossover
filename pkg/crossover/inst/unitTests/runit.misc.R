@@ -6,10 +6,10 @@ test.design.functions <- function () {
   v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
   design <- matrix(sample(rep(1:v, v.rep)), p, s)
   
-  rcDesign <- createRowColumnDesign(design, model=1)
+  rcDesign <- rcd(design, v, model=1)
   # JRW, p 2650, first equation on that page, whithout number
-  Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
-  Xr <- getRCDesignMatrix(rcDesign, v+v*v)
+  Ar <- infMatrix(rcDesign, v, model=1)
+  Xr <- rcdMatrix(rcDesign, v, model=1)
   # JRW, p 2650, second equation on that page, number 11
   Ar2 <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
   checkTrue(max(abs(Ar-Ar2))<0.00001)
@@ -61,6 +61,6 @@ test.strangeDesignInputs <- function() {
   
   D <- matrix(as.numeric(as.factor(D)), dim(D)[1])  
   
-  myInv <- ginv(createRowColumnDesign(D, model=1))
+  myInv <- ginv(rcd(D, v, model=1))
   
 }

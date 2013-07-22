@@ -4,6 +4,7 @@ if(require("RUnit", quietly=TRUE)) {
 	
 	## --- Setup ---
     library(MASS)
+    library(Matrix)
     library(multcomp)
 	pkg <- "crossover" 
 	if(Sys.getenv("RCMDCHECK") == "FALSE") {

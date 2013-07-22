@@ -20,14 +20,13 @@
 
 RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2);
 
-RcppExport SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS);
-RcppExport SEXP createRCD2(SEXP designS, SEXP vS, SEXP modelS);
+RcppExport SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS);
+RcppExport SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
+RcppExport SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
 
-RcppExport SEXP getInfMatrix(SEXP designS, SEXP vS);
-
-arma::mat createRowColumnDesign(arma::mat design, int v, int model);
-arma::mat createRowColumnDesign2(arma::mat rcDesign, int v);
-arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v);
+arma::mat rcd(arma::mat design, int v, int model);
+arma::mat rcdMatrix(arma::mat rcDesign, int v, int model);
+arma::mat infMatrix(arma::mat rcDesign, int v, int model);
 double getS1(arma::mat rcDesign, int v, int model, arma::mat linkM, arma::mat tCC);
 
 #endif

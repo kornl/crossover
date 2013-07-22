@@ -66,7 +66,7 @@ compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.d
   }
 }
 
-getInfMatrixOfDesign <- function(X, v, method) {
+infMatrix_R <- function(X, v, method) {
   #if (!is.numeric(X) || max(X)!=v) {
   #  X <- matrix(as.numeric(as.factor(X)), dim(X)[1])  
   #}
@@ -98,7 +98,7 @@ getTDesign <- function(D) {
 }
 
 # v=v+v*v for all models but full interaction, where v=v+v*v+v*v*v
-getRCDesignMatrix <- function(rcDesign, v) {
+rcdMatrix_R <- function(rcDesign, v) {
   X <- matrix(0, prod(dim(rcDesign)), v)
   for (j in 1:(dim(rcDesign)[2])) {
     for (i in 1:(dim(rcDesign)[1])) {
@@ -162,7 +162,7 @@ searchCrossOverDesignCTest <- function() {
   .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 50000, PACKAGE = "crossover" )
 }
 
-searchCrossOverDesignR <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1) {
+searchCrossOverDesign_R <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1) {
   # seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   model <- getModelNr(model)
   if (missing(v.rep)) {
@@ -230,7 +230,7 @@ searchCrossOverDesignR <- function(s, p, v, model="Standard additive model", eff
 
 
 #TODO Recheck a second time that number of placebos or other things are NOT needed for this.
-createRowColumnDesignR <- function(X, v=length(unique(as.character(X))), model) {
+rcd_R <- function(X, v=length(unique(as.character(X))), model) {
   model <- getModelNr(model)
   if(model=="Second-order carry-over effects" || model==8) {
     return( X + v*rbind(0, X[-dim(X)[1],]) + v*v*rbind(0, 0, X[c(-(dim(X)[1]-1),-dim(X)[1]),]) )

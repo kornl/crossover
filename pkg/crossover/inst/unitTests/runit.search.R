@@ -20,12 +20,12 @@ test.search <- function () {
 test.random.matrix.generation <- function() {
   v <- 4
   for (j in 1:10) {
-    design <- randomDesign(s=9, p=5, v=4,  balance.s=TRUE) 
+    design <- randomDesign(s=9, p=5, v=4,  balance.s=TRUE, model=1) 
     for (i in 1:v) {
       v.count <- apply(design, 2, function(x) {sum(x==i)})
       checkTrue(max(v.count)-min(v.count)<1.5)
     } 
-    design <- randomDesign(s=9, p=5, v=4,  balance.p=TRUE)
+    design <- randomDesign(s=9, p=5, v=4,  balance.p=TRUE, model=1)
     for (i in 1:v) {
       v.count <- apply(design, 1, function(x) {sum(x==i)})
       checkTrue(max(v.count)-min(v.count)<1.5)
@@ -45,6 +45,6 @@ test.strangeDesignInputs <- function() {
   
   D <- matrix(as.numeric(as.factor(D)), dim(D)[1])  
   
-  myInv <- ginv(createRowColumnDesign(D, model=1))
+  myInv <- ginv(rcd(D, v, model=1))
   
 }

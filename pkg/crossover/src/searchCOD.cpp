@@ -65,7 +65,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   for(int j=0; j<n2; j++) {  
     NumericVector eff = NumericVector(n1);
     design = as<mat>(mlist[j]);      
-    eOld = s2/getS1(createRowColumnDesign(design, v, model), v, model, linkM, tCC);
+    eOld = s2/getS1(rcd(design, v, model), v, model, linkM, tCC);
     bestDesignOfRun = design;
     
     if (verbose) {
@@ -93,14 +93,14 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
         design(rows[1], cols[1]) = tmp;
       }
       
-      mat rcDesign = createRowColumnDesign(design, v, model);
+      mat rcDesign = rcd(design, v, model);
       s1 = getS1(rcDesign, v, model, linkM, tCC);      
       
       if (s2/s1 >= eOld) {
         if (verbose>2) {
           Rprintf("Yeah, s2/s1=%f is greater or equal to eOld=%f.\n", s2/s1, eOld);
         }
-        Xr = createRowColumnDesign2(rcDesign, v+v*v);
+        Xr = rcdMatrix(rcDesign, v, model);
         X = Xr * linkM;
         XX = trans(X) * X;
         XXXX = pinv(XX) * XX;
@@ -134,8 +134,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   } /* End for loop start designs */
   if (verbose) {
     bestDesignOfRun.print(Rcout, "Best design overall:");
-    rcDesign = createRowColumnDesign(bestDesignOfRun, v, model);      
-    Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+    rcDesign = rcd(bestDesignOfRun, v, model);      
+    Ar = infMatrix(rcDesign, v, model);
     s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
     Rprintf("Eff of design is: %f=%f.\n", effBest, s2/s1);
     
@@ -145,33 +145,34 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   END_RCPP
 }
 
-SEXP createRCD(SEXP designS, SEXP vS, SEXP modelS) {
+SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS) {
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
   int model = IntegerVector(modelS)[0];
   mat design = as<mat>(designS);  
-  return wrap(createRowColumnDesign(design, v, model));
+  return wrap(rcd(design, v, model));
   END_RCPP
 }
 
-SEXP createRCD2(SEXP designS, SEXP vS, SEXP modelS) {
+SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
   int model = IntegerVector(modelS)[0];
   mat design = as<mat>(designS);  
-  return wrap(createRowColumnDesign2(design, v));
+  return wrap(rcdMatrix(design, v, model));
   END_RCPP
 }
 
-SEXP getInfMatrix(SEXP designS, SEXP vS) {
+SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
+  int model = IntegerVector(modelS)[0];
   mat design = as<mat>(designS);  
-  return wrap(getInfMatrixOfDesign(design, v));
+  return wrap(infMatrix(design, v, model));
   END_RCPP
 }
 
-arma::mat createRowColumnDesign(arma::mat design, int v, int model) {
+arma::mat rcd(arma::mat design, int v, int model) {
   if (model==8) { // "Second-order carry-over effects"
     mat rcDesign = design;
     for (unsigned i=1; i<rcDesign.n_rows; i++) {
@@ -194,7 +195,7 @@ arma::mat createRowColumnDesign(arma::mat design, int v, int model) {
 }
 
 double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {  
-  mat Ar = getInfMatrixOfDesign(rcDesign, v+v*v);
+  mat Ar = infMatrix(rcDesign, v, model);
   mat A = trans(linkM) * Ar * linkM;
   double s1 = trace(pinv(A) * tCC);
   return s1;
@@ -214,31 +215,19 @@ arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS
   mat(rowvec)*/
 }
 
-// C equivalent to getRCDesignMatrix
-// v=v+v*v for all models but full interaction, where v=v+v*v+v*v*v
-arma::mat createRowColumnDesign2(arma::mat rcDesign, int v) {
-  mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
-  for (int j=0; j<rcDesign.n_cols; j++) {
-    for (int i=0; i<rcDesign.n_rows; i++) {
-      X(i * rcDesign.n_cols + j, rcDesign(i, j)-1) = 1;
+arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
+    if (model==8) { v = v+v*v+v*v*v; } else { v = v+v*v; }
+    mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
+    for (int j=0; j<rcDesign.n_cols; j++) {
+        for (int i=0; i<rcDesign.n_rows; i++) {
+            X(i * rcDesign.n_cols + j, rcDesign(i, j)-1) = 1;
+        }
     }
-  }
-  return(X);
+    return(X);
 }
-/*
-getRCDesignMatrix <- function(rcDesign, v) {
-  X <- matrix(0, prod(dim(rcDesign)), v)
-  for (j in 1:(dim(rcDesign)[2])) {
-    for (i in 1:(dim(rcDesign)[1])) {
-      X[(i-1)*(dim(rcDesign)[2])+j,rcDesign[i,j]] <- 1
-    }
-  }
-  return(X)
-}
-*/
 
-// v=v+v*v for all models but full interaction, where v=v+v*v+v*v*v
-arma::mat getInfMatrixOfDesign(arma::mat rcDesign, int v) {
+arma::mat infMatrix(arma::mat rcDesign, int v, int model) {
+  if (model==8) { v = v+v*v+v*v*v; } else { v = v+v*v; }
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;
   vec r = zeros<vec>(v);  

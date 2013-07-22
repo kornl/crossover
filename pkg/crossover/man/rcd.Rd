@@ -1,8 +1,8 @@
-\name{createRowColumnDesign}
-\alias{createRowColumnDesign}
+\name{rcd}
+\alias{rcd}
 \title{Create a row column design}
 \usage{
-  createRowColumnDesign(X, v, model)
+  rcd(X, v, model)
 }
 \arguments{
   \item{X}{cross-over design}

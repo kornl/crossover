@@ -134,11 +134,20 @@ getModelNr <- function(model, type="numeric") {
 #' @seealso \code{\link{createRowColumnDesign2}} gives the row-column design matrix.
 #' @examples
 #' # TODO
-createRowColumnDesign <- function(X, v, model) {
+rcd <- function(X, v, model) {
   model <- getModelNr(model)
-  return(.Call( "createRCD", X, v, model, PACKAGE = "crossover" ))
+  return(.Call( "rcd2R", X, v, model, PACKAGE = "crossover" ))
 }
 
+rcdMatrix <- function(X, v, model) {
+    model <- getModelNr(model)
+    return(.Call( "rcdMatrix2R", X, v, model, PACKAGE = "crossover" ))
+}
+
+infMatrix <- function(X, v, model) {
+    model <- getModelNr(model)
+    return(.Call( "infMatrix2R", X, v, model, PACKAGE = "crossover" ))
+}
 
 
 #' Search for a Cross-Over Design
@@ -290,8 +299,8 @@ estimable <- function(design, v, model, C) {
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
     C <- appendZeroColumns(Csub, model, v)
   }
-  rcDesign <- createRowColumnDesign(design, v=v, model=model)
-  Xr <- getRCDesignMatrix(rcDesign, v+v*v)
+  rcDesign <- rcd(design, v=v, model=model)
+  Xr <- rcdMatrix(rcDesign, v, model)
   H <- linkMatrix(model, v)
   X <- Xr %*% H
   XX <- t(X) %*% X
@@ -323,8 +332,8 @@ getValues <- function(design, model=1, C, v) {
     C <- cbind(Csub,matrix(0,dim(Csub)[1],v)) 
     CC <- t(C) %*% C
   }
-  rcDesign <- createRowColumnDesign(design, v, model=model)
-  Ar <- getInfMatrixOfDesign(rcDesign, v+v*v)
+  rcDesign <- rcd(design, v, model=model)
+  Ar <- infMatrix(rcDesign, v)
   H <- linkMatrix(model, v)
   return(diag(ginv(t(H) %*% Ar %*% H) %*% CC))  
 }
