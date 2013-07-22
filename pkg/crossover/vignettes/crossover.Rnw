@@ -594,7 +594,7 @@ This section is work in progress.
 \subsection{Naming conventions}
 Most functions exist as R and C/C++ variant, with the following naming conventions:
 
-We have functions in R and on the C/C++ level with the same name (in our folowing example \texttt{createRCDesign}) that should be used in R and C/C++ respectively. The R function \texttt{createRCDesign} calls the C function \texttt{createRCDesign2R} which handles the conversion from and to the R structures the SEXP are pointing to. Apart from that we often provide an R function with a suffix \texttt{\_R}, i.e.\ in our example \texttt{createRCDesign\_R}, which is a pure R function and reimplements the same functionality for testing purposes.
+We have functions in R and on the C/C++ level with the same name (in our folowing example \texttt{rcd}) that should be used in R and C/C++ respectively. The R function \texttt{rcd} calls the C function \texttt{rcd2R} which handles the conversion from and to the R structures the SEXP are pointing to. Apart from that we often provide an R function with a suffix \texttt{\_R}, i.e.\ in our example \texttt{rcd\_R}, which is a pure R function and reimplements the same functionality for testing purposes.
 
 \lstset{language=C++}
 \begin{lstlisting}
