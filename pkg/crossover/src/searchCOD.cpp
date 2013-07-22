@@ -28,7 +28,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   bool balanceP = is_true( any( LogicalVector(balancePS) ) );
   int s = IntegerVector(sS)[0];
   int p = IntegerVector(pS)[0];
-  int v = IntegerVector(vS)[0];
+  int v = IntegerVector(vS)[0];  
   IntegerVector n = IntegerVector(nS);
   int n1 = n[0];
   //int n2 = n[1]; This will perhaps be passed to this function. But it is safer to get this value from mlist.size().
@@ -54,6 +54,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   }
   Rcpp::List mlist(designS);
   int n2 = mlist.size();
+  List designsFound (n2);
   List effList = List(n2); // Here we will store NumericVectors that show the search progress.
   mat design;
   mat bestDesign, bestDesignOfRun;
@@ -63,10 +64,11 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   NumericVector rows, cols;
   
   for(int j=0; j<n2; j++) {  
+    List designsFoundSingleRun (0);
     NumericVector eff = NumericVector(n1);
     design = as<mat>(mlist[j]);      
     eOld = s2/getS1(rcd(design, v, model), v, model, linkM, tCC);
-    bestDesignOfRun = design;
+    bestDesignOfRun = design;    
     
     if (verbose) {
       Rprintf("**** Start design %d ****\n", j);   
@@ -116,6 +118,9 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
           eOld = s2/s1;   
           eff[i] = s2/s1;
           bestDesignOfRun = design;
+          char ci[20];
+          sprintf(ci, "%d", i);
+          designsFoundSingleRun[(std::string("step")+ci).c_str()] = bestDesignOfRun;
           if (verbose>2) {
             bestDesignOfRun.print(Rcout, "Best design of run:");
             Rprintf("Eff of design is: %f.\n", eOld);
@@ -130,6 +135,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
         design = designOld;
       } 
     } /* End hill climbing */
+    designsFound[j] = designsFoundSingleRun;
     effList[j] = eff;
   } /* End for loop start designs */
   if (verbose) {
@@ -141,7 +147,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
     
   }
   PutRNGstate();
-  return List::create(Named("design")=bestDesign, Named("eff")=effList);  
+  return List::create(Named("design")=bestDesign, Named("eff")=effList, Named("designs")=designsFound);  
   END_RCPP
 }
 

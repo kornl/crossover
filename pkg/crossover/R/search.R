@@ -270,7 +270,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   #varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
   #return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=, time=))
   return(new("crossoverSearchResult", design=new("crossoverDesign", design, v=v, model=model, description="Found by search algorithm"), startDesigns=start.designs, eff=result$eff,                   
-             search=list(n=n, jumps=jumps), model=model, time=time, misc=list()))
+             search=list(n=n, jumps=jumps), model=model, time=time, misc=list(designs=result$designs)))
 }
 
 randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, model, C) {
