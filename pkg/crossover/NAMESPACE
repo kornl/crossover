@@ -10,6 +10,7 @@ importFrom(Matrix, bdiag)
 importFrom(Matrix, triu)
 importFrom(ggplot2, ggplot)
 importFrom(crossdes, allcombs, des.MOLS, balmin.RMD, find.BIB, williams, williams.BIB)
+importFrom(xtable, xtable)
 
 export(crossoverGUI)
 export(design.efficiency)
