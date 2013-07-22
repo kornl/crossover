@@ -23,7 +23,7 @@
 # TODO
 }
 \seealso{
-  \code{\link{createRowColumnDesign2}} gives the row-column
-  design matrix.
+  \code{\link{rcdMatrix}} gives the row-column design
+  matrix.
 }
 
