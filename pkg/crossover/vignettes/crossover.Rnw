@@ -131,7 +131,8 @@ graphical user interface as shown in figure \ref{GUI} is started with the comman
 \subsubsection{Catalogue}
 The catalogue, collected and compiled by Professor Byron Jones, contains 241 designs from the following literature: \cite{anderson2002locally}, \cite{archdeacon1980some}, \cite{atkinson1966designs}, \cite{balaam1968two}, \cite{berenblut1964change}, \cite{blaisdell1980partially}, \cite{davis1969cyclic}, \cite{federer1964tied}, \cite{fletcher1987new}, \cite{iqbal1994efficient}, \cite{lewis1988factorial}, \cite{cochran1941double}, \cite{patterson1962change}, \cite{pigeon1985residual}, \cite{prescott1999construction}, \cite{quenouille1953design}, \cite{russell1991construction}, \cite{lucas1956switchback}, \cite{williams1949experimental}, \cite{prescott1994}, \cite{bate2002}
 
-Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{buildSummaryTable()}.} Further if possible functions from package crossdes (\cite{crossdes}) are called to create design for the specified values.
+Depending on the numbers of treatments, periods and range of sequence you specify in the GUI appropriate designs from the catalogue will be shown.\footnote{You can get a table referencing all designs and the respective number of treatments, periods and sequences by calling \texttt{buildSummaryTable()}.}
+Further functions from package crossdes (\cite{crossdes}) are called to create designs for the specified values if possible.
 
 \subsubsection{Algorithm Search}
 
@@ -386,7 +387,7 @@ Let's compare the results from the search algorithm with results from the litera
 \begin{Example}
 First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
 
-<<eval1, echo=TRUE, eval=TRUE, cache=TRUE>>=
+<<eval1, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
 s <- 6; p <- 4; v <- 2
 
 design1 <- t(rbind(c(1,1,2,2),
@@ -488,7 +489,7 @@ searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
 
 \end{Example}
 
-<<attachNameSpace, echo=TRUE, eval=TRUE>>=
+<<attachNameSpace, echo=TRUE, eval=TRUE, results='hide'>>=
  # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
  attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
 
@@ -500,7 +501,7 @@ In the following code fragment we compare the two different approaches:
 
 \[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr' \text{ and }\]
 \[A_r=X_r'(I-P_z)X_r.\]
-For details (what is $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004crossover}.
+For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004crossover}.
 
 <<TestOfDifferentApproaches, echo=TRUE, eval=TRUE>>=
   s <- 3
