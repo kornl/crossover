@@ -17,10 +17,10 @@ compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.d
   C5 <- as.matrix(bdiag(Csub,matrix(0,dim(Csub)[1],4*v)))  
   
   # JRW, p 2650, first equation on that page, whithout number
-  rcDesign <- createRowColumnDesign(design, model=1)
-  Ar2 <- getInfMatrixOfDesign(rcDesign, v+v^2)
-  rcDesign <- createRowColumnDesign(design, model=8)
-  Ar3 <- getInfMatrixOfDesign(rcDesign, v+v^2+v^3)
+  rcDesign <- rcd(design, v, model=1)
+  Ar2 <- infMatrix(rcDesign, v, model=1)
+  rcDesign <- rcd(design, v, model=8)
+  Ar3 <- infMatrix(rcDesign, v, model=8)
   
   for (model in models2check) {
     cat(models[model],":\n")
