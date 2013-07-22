@@ -1,3 +1,19 @@
+checkResult <- function (result, refDesign, model) {
+    allDesigns <- result@misc$designs
+    df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
+    for (i in 1:length(allDesigns)) {
+        designs <- allDesigns[[i]]
+        for (j in 1:length(designs)) {
+            design <- designs[[j]]
+            crit <- sum(general.carryover(design, model=model)$Var.trt.pair)/2
+            df <- rbind(df, data.frame(run=i, step=j, crit=crit))
+        }
+    }
+    plot <- ggplot(df, aes(x=step, y=crit)) + geom_point() + facet_wrap( ~ run)
+    print(plot)
+    return(df)
+}
+
 test.2v.designs <- function() {
     design1 <- t(rbind(c(1,1,2,2),
                        c(2,2,1,1),
@@ -83,12 +99,3 @@ test.2v.designs <- function() {
     
 }
 
-checkResult <- function (result, refDesign, model) {
-    allDesigns <- result@misc$designs
-    for (i in 1:length(allDesigns)) {
-        designs <- allDesigns[[i]]
-        for (design in designs) {
-            crit <- sum(general.carryover(design, model=model)$Var.trt.pair)/2
-        }
-    }
-}

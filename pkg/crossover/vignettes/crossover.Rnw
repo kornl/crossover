@@ -468,6 +468,22 @@ models <- c("Standard additive model",
             "Full set of interactions",
             "Second-order carry-over effects")
 
+checkResult <- function (result, refDesign, model) {
+    allDesigns <- result@misc$designs
+    df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
+    for (i in 1:length(allDesigns)) {
+        designs <- allDesigns[[i]]
+        for (j in 1:length(designs)) {
+            design <- designs[[j]]
+            crit <- sum(general.carryover(design, model=model)$Var.trt.pair)/2
+            df <- rbind(df, data.frame(run=i, step=j, crit=crit))
+        }
+    }
+    plot <- ggplot(df, aes(x=step, y=crit)) + geom_point() + facet_wrap( ~ run)
+    print(plot)
+    return(df)
+}
+
 for (i in c(1,2,3,4,5,6)) {  
   model <- models[i]
   cat("======= ", model, " =======","\n")
@@ -477,6 +493,8 @@ for (i in c(1,2,3,4,5,6)) {
   print(plot(result))
   
   print(general.carryover(designs[[i]], model=i))  
+  checkResult(result, designs[[i]], model=i)
+  
 }
 
 estimable(design3, v, model=3)
