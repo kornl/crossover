@@ -30,9 +30,10 @@ cross-over design}
 }
 \examples{
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+design.efficiency(x)
 }
 \author{
-  Byron Jones
+  Byron Jones, 18/11/2011
 }
 \references{
   Jones, B., & Kenward, M. G. (2003). Design and analysis
