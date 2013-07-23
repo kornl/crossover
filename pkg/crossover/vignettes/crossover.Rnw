@@ -480,8 +480,7 @@ checkResult <- function (result, refDesign, model) {
         }
     }
     plot <- ggplot(df, aes(x=step, y=crit)) + geom_point() + facet_wrap( ~ run)
-    print(plot)
-    return(df)
+    return(list(df=df, plot=plot))
 }
 
 for (i in c(1,2,3,4,5,6)) {  
@@ -490,10 +489,10 @@ for (i in c(1,2,3,4,5,6)) {
   
   result <- searchCrossOverDesign(s=s, p=p, v=v, model=model)
   print(result)
-  print(plot(result))
+  print(plot(result) + ggtitle(models[i]))
   
   print(general.carryover(designs[[i]], model=i))  
-  checkResult(result, designs[[i]], model=i)
+  print(checkResult(result, designs[[i]], model=i)$plot+ ggtitle(models[i]))
   
 }
 
