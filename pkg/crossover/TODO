@@ -1,3 +1,5 @@
+Why are there sometimes non-monotone parts in the proportionality model?
+
 Move common config code to afcommons. 
 
 Warn if the choosen combination of t, s and p does not 
