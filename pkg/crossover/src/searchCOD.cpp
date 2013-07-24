@@ -78,8 +78,9 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       designOld = design;        
       // Now we exchange r times two elements: TODO Move exchange part behind the evaluation part (otherwise a really great start design might got lost).
       r = 1;
-      if (i==0) {r=0;} // Exception: We want the given start design to be the first in the list!
-      if (i%j2==0) {
+      if (i==0) { // Exception: We want the given start design to be the first in the list!
+          r=0;
+      } else if (i%j2==0) {
         r = j1; //TODO Add random +- value. Jumps of always the same jump may be not optimal.       
       }
       for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
