@@ -87,7 +87,7 @@ getTDesign <- function(D) {
 }
 
 rcdMatrix_R <- function(rcDesign, v, model) {
-  if (length(levels(as.factor(X)))<=v) warning("It looks like you called rcdMatrix with a crossover design,\nbut you should provide the row-column design.")
+  if (length(levels(as.factor(rcDesign)))<=v) warning("It looks like you called rcdMatrix with a crossover design,\nbut you should provide the row-column design.")
   if (model==8) { vv <- v+v*v+v*v*v } else { vv <- v+v*v } 
   X <- matrix(0, prod(dim(rcDesign)), vv)
   for (j in 1:(dim(rcDesign)[2])) {
