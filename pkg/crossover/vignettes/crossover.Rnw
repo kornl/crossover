@@ -387,7 +387,7 @@ Let's compare the results from the search algorithm with results from the litera
 \begin{Example}
 First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
 
-<<modelsFromLiterature1, echo=TRUE, eval=TRUE, cache=FALSE, tidy=FALSE>>=
+<<modelsFromLiterature1, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
 s <- 6; p <- 4; v <- 2
 
 design1 <- t(rbind(c(1,1,2,2),
@@ -452,7 +452,7 @@ models <- c("Standard additive model",
 
 @
 
-<<eval1a, echo=TRUE, eval=TRUE, cache=FALSE, tidy=FALSE>>=
+<<eval1a, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
 
 attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
 
@@ -478,7 +478,7 @@ rankMatrix(A)
 detach("namespace:crossover")
 @
 
-<<eval1b, echo=TRUE, eval=TRUE, cache=FALSE, tidy=FALSE>>=
+<<eval1b, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
 checkResult <- function (result, refDesign, model) {
     allDesigns <- result@misc$designs
     df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
@@ -514,7 +514,7 @@ searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
 
 \end{Example}
 
-<<correct, echo=TRUE, eval=TRUE, cache=FALSE>>=
+<<correct, echo=TRUE, eval=TRUE, cache=TRUE>>=
 
 # For the self-adjacency model our algorithm found for example:
 
