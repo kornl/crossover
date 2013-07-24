@@ -289,7 +289,7 @@ randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, mode
   }
   design <- matrix(1, p, s)
   i <- 0
-  while (!estimable_R(design, v, model, C)) {   
+  while (i <- 0 || !estimable_R(design, v, model, C)) {   
     i <- i + 1
     if (i>1000) stop("Could not find design that allows estimation of contrasts after 1000 tries.")
     if (balance.s) {
