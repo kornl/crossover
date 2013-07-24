@@ -1,12 +1,3 @@
-printInfo <- function(design, v) {
-  s <- dim(design)[2]
-  p <- dim(design)[1]
-  
-  Xr <- rcdMatrix(X, v) #TODO Test this - is X here correct?
-  # JRW, p 2650, second equation on that page, number 11
-  A <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
-}
-
 compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.diff=FALSE) {
   v <- max(design)
   print(design)
