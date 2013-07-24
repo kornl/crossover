@@ -29,10 +29,10 @@
 design.efficiency <- function(design) {
     if (class(design)=="crossoverSearchResult") design <- design@design
     if (class(design)=="crossoverDesign") {
-        model <- design@model
+        #model <- design@model
         design <- design@design
     }
-    model <- getModelNr(model)
+    #model <- getModelNr(model)
     design <- t(design)
 	
 	## input
