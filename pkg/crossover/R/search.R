@@ -295,6 +295,7 @@ randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, mode
     if (i>1000) stop("Could not find design that allows estimation of contrasts after 1000 tries.")
     design <- randomDesignWithoutCheck(s, p, v,  v.rep, balance.s, balance.p, model)
   } 
+  return(design)
 }
 
 randomDesignWithoutCheck <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, model) {
