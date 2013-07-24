@@ -14,7 +14,12 @@ checkResult <- function (result, refDesign, model) {
     return(df)
 }
 
-test.2v.designs <- function() {
+test.2v.designs <- function() {    
+    if (!"extended" %in% strsplit(Sys.getenv("CROSSOVER_UNIT_TESTS"),",")[[1]]) {
+        cat("Skipping design tests for v=2.\n")
+        return()
+    }    
+    
     design1 <- t(rbind(c(1,1,2,2),
                        c(2,2,1,1),
                        c(1,1,2,2),
