@@ -103,7 +103,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
         if (verbose>2) {
           Rprintf("Yeah, s2/s1=%f is greater or equal to eOld=%f.\n", s2/s1, eOld);
         }
-        if(estimable(rcDesign, v, model, linkM, C, verbose)) {          
+        if(!estimable(rcDesign, v, model, linkM, C, verbose)) {          
           eff[i] = NA_REAL;
           //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
         } else { // We have found a great design!
@@ -154,7 +154,7 @@ bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, int verbose) {
     if (verbose>2) {
         Rprintf("Unfortunately estimability criterion is: %f.\n", estCriterion); 
     }
-    return(estCriterion > 0.0001);
+    return(estCriterion < 0.0001);
 }
 
 SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP verboseS) {    
