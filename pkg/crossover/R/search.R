@@ -279,7 +279,7 @@ randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, mode
   }
   design <- matrix(1, p, s)
   i <- 0
-  while (!estimable(design, v, model, C)) {   
+  while (!estimable_R(design, v, model, C)) {   
     i <- i + 1
     if (i>1000) stop("Could not find design that allows estimation of contrasts after 1000 tries.")
     if (balance.s) {
@@ -293,7 +293,7 @@ randomDesign <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p=FALSE, mode
   return(design)
 }
 
-estimable <- function(design, v, model, C) {
+estimable_R <- function(design, v, model, C) {
   if(missing(C)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
@@ -305,6 +305,18 @@ estimable <- function(design, v, model, C) {
   X <- Xr %*% H
   XX <- t(X) %*% X
   return(isTRUE(all.equal(C %*% ginv(XX) %*% XX, C, check.attributes=FALSE, check.names=FALSE))) # Criterion to test whether - see Theorem \ref{thr:estimable} of vignette.
+}
+
+estimable <- function(design, v, model, C) {
+    if(missing(C)) {
+        Csub <- contrMat(n=rep(1, v), type="Tukey")
+        class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+        C <- appendZeroColumns(Csub, model, v)
+    }
+    verbose <- 0
+    rcDesign <- rcd(design, v=v, model=model)
+    H <- linkMatrix(model, v)
+    return(.Call( "estimable2R", rcDesign, v, model, linkM, C, verbose, PACKAGE = "crossover" ))    
 }
 
 appendZeroColumns <- function(Csub, model, v) {

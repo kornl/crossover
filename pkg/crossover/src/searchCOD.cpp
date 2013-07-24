@@ -59,15 +59,15 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   mat design;
   mat bestDesign, bestDesignOfRun;
   int effBest = 0, r;
-  mat designOld, rcDesign, Ar, A, Xr, X, XX, XXXX;  // designBeforeJump, 
-  double s1, eOld = 0, estCriterion; // eBeforeJump = 0,
+  mat designOld, rcDesign, Ar, A;  // designBeforeJump, 
+  double s1, eOld = 0; // eBeforeJump = 0,
   NumericVector rows, cols;
   
   for(int j=0; j<n2; j++) {  
     List designsFoundSingleRun (0);
     NumericVector eff = NumericVector(n1);
     design = as<mat>(mlist[j]);      
-    eOld = s2/getS1(rcd(design, v, model), v, model, linkM, tCC);
+    eOld = 0;
     bestDesignOfRun = design;    
     
     if (verbose) {
@@ -78,6 +78,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       designOld = design;        
       // Now we exchange r times two elements: TODO Move exchange part behind the evaluation part (otherwise a really great start design might got lost).
       r = 1;
+      if (i==0) {r=0;} // Exception: We want the given start design to be the first in the list!
       if (i%j2==0) {
         r = j1; //TODO Add random +- value. Jumps of always the same jump may be not optimal.       
       }
@@ -102,16 +103,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
         if (verbose>2) {
           Rprintf("Yeah, s2/s1=%f is greater or equal to eOld=%f.\n", s2/s1, eOld);
         }
-        Xr = rcdMatrix(rcDesign, v, model);
-        X = Xr * linkM;
-        XX = trans(X) * X;
-        XXXX = pinv(XX) * XX;
-        X = abs(C * XXXX - C);
-        estCriterion = X.max(); // Criterion to test whether contrasts are estimable - see Theorem \ref{thr:estimable} of vignette.
-        if (estCriterion > 0.0001) {
-          if (verbose>2) {
-            Rprintf("But unfortunately estimability criterion is: %f.\n", estCriterion); 
-          }
+        if(estimable(rcDesign, v, model, linkM, C, verbose)) {          
           eff[i] = NA_REAL;
           //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
         } else { // We have found a great design!
@@ -149,6 +141,32 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   PutRNGstate();
   return List::create(Named("design")=bestDesign, Named("eff")=effList, Named("designs")=designsFound);  
   END_RCPP
+}
+
+bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, int verbose) {
+    mat Xr, X, XX, XXXX;
+    Xr = rcdMatrix(rcDesign, v, model);
+    X = Xr * linkM;
+    XX = trans(X) * X;
+    XXXX = pinv(XX) * XX;
+    X = abs(C * XXXX - C);
+    int estCriterion = X.max(); // Criterion to test whether contrasts are estimable - see Theorem \ref{thr:estimable} of vignette.
+    if (verbose>2) {
+        Rprintf("Unfortunately estimability criterion is: %f.\n", estCriterion); 
+    }
+    return(estCriterion > 0.0001);
+}
+
+SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP verboseS) {    
+    BEGIN_RCPP
+    mat rcDesign = as<mat>(rcDesignS);    
+    int v = IntegerVector(vS)[0];    
+    int model = IntegerVector(modelS)[0];    
+    mat linkM = as<mat>(linkMS);  
+    mat C = as<mat>(CS);  
+    int verbose = IntegerVector(verboseS)[0];
+    return wrap(estimable(rcDesign, v, model, linkM, C, verbose));
+    END_RCPP
 }
 
 SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS) {

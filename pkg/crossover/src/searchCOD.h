@@ -23,10 +23,12 @@ RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, 
 RcppExport SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
+RcppExport SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP verboseS);
 
 arma::mat rcd(arma::mat design, int v, int model);
 arma::mat rcdMatrix(arma::mat rcDesign, int v, int model);
 arma::mat infMatrix(arma::mat rcDesign, int v, int model);
 double getS1(arma::mat rcDesign, int v, int model, arma::mat linkM, arma::mat tCC);
+bool estimable(arma::mat rcDesign, int v, int model, arma::mat linkM, arma::mat C, int verbose);
 
 #endif
