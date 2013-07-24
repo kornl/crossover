@@ -21,4 +21,4 @@ export(general.carryover)
 
 export(buildSummaryTable)
 
-exportMethods(plot, print, show)
+exportMethods(plot, print, show, getDesign)

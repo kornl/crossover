@@ -369,7 +369,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
 								+", "+gui.getParameters()
 								+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
-								+", eff.factor="+1
+								//+", eff.factor="+1
 								+", v.rep="+getVRep()
 								+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
 								+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
@@ -381,8 +381,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						RControl.getR().eval(".COresult <- "+command);
 						exportR.setEnabled(true);						
 						showAlgoPerformance.setEnabled(true);
-						result = RControl.getR().eval(".COresult").asRList();
-						table = RControl.getR().eval("crossover:::getTable(.COresult$design)").asRChar().getData()[0];
+						//result = RControl.getR().eval(".COresult").asRList();
+						table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
 						updateGUI();
 						//RControl.getR().eval("dev.off()");
 						//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
@@ -410,7 +410,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				 public synchronized void updateGUI() {
 						jta.clear();
 						jta.appendHTML(table);
-						jta.appendParagraph("<pre>"+result.get(1).asRChar().getData()[0]+"</pre>");		
+						String command = "paste(capture.output(print(.COresult)),collapse=\"\\n\")";
+						jta.appendParagraph("<pre>"+RControl.getR().eval(command).asRChar().getData()[0]+"</pre>");		
 						jta.appendParagraph("Random seed: TODO");
 						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
 						jta.setCaretPosition(0);
