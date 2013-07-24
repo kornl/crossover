@@ -29,7 +29,7 @@ cross-over design}
   See the vignette of this package for further details.
 }
 \examples{
-x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 design.efficiency(x)
 }
 \author{
