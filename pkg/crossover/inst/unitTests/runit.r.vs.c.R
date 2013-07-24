@@ -10,8 +10,13 @@ test.r.vs.c <- function () {
       rcDesign_R <- rcd_R(design, v, model=model)
       checkTrue(max(abs(rcDesign-rcDesign_R))<0.00001)
       
-      rcDesignMat <- rcdMatrix(design, v, model=model)
-      rcDesignMat_R <- rcdMatrix_R(design, v, model=model)
+      options(warn=2)
+      checkException(rcdMatrix(design, v, model=model))
+      checkException(rcdMatrix_R(design, v, model=model))
+      options(warn=1)
+      
+      rcDesignMat <- rcdMatrix(rcDesign, v, model=model)
+      rcDesignMat_R <- rcdMatrix_R(rcDesign, v, model=model)
       checkTrue(max(abs(rcDesignMat-rcDesignMat_R))<0.00001)
       
       Ar <- infMatrix(rcDesign, v, model=model)
