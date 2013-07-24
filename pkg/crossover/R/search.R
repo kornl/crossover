@@ -139,7 +139,17 @@ rcd <- function(X, v, model) {
   return(.Call( "rcd2R", X, v, model, PACKAGE = "crossover" ))
 }
 
+#' Create the design matrix for a given row column design 
+#'
+#' @param X row-column design
+#' @param v number of treatments
+#' @param model String or number describing the model. See \code{\link{getModelNr}}.
+#' @return The design matrix for a row-column design.
+#' @seealso \code{\link{rcd}} gives the row-column design to a given crossover design.
+#' @examples
+#' # TODO
 rcdMatrix <- function(X, v, model) {
+    if (length(levels(as.factor(X)))<=v) warning("It looks like you called rcdMatrix with a crossover design,\nbut you should provide the row-column design.")
     model <- getModelNr(model)
     return(.Call( "rcdMatrix2R", X, v, model, PACKAGE = "crossover" ))
 }
