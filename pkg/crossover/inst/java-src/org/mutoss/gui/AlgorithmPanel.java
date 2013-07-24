@@ -143,6 +143,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         lsPanel.add(jCBMixed, cc.xy(4, row));
         jCBMixed.setSelectedIndex(0);
         jCBMixed.addActionListener(this);
+        jCBMixed.setEnabled(false);
         
         row+=2;
         
