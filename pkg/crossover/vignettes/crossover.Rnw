@@ -507,15 +507,33 @@ for (i in c(1,2,3,4,5,6)) {
   
 }
 
-estimable(design3, v, model=3)
-
 searchCrossOverDesign(s=s, p=p, v=v, model=3)
 searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
-
 
 @
 
 \end{Example}
+
+<<correct, echo=TRUE, eval=TRUE, cache=FALSE>>=
+
+# For the self-adjacency model our algorithm found for example:
+
+d <- structure(c(2, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 2, 
+2, 1, 1, 2, 1, 1, 2), .Dim = c(4L, 6L))
+
+d
+
+# Which seems to compare well in regard to Var.trt.pair (and not only there) to the reference design from literature:
+
+general.carryover(d, model=2)
+general.carryover(design2, model=2)
+
+rcDesign <- crossover:::rcd(d, v=v, model=2)
+rcDesign
+crossover:::rcdMatrix(rcDesign, v=v, model=2) %*% crossover:::linkMatrix(model="Self-adjacency model", v)
+
+
+@
 
 <<attachNameSpace, echo=TRUE, eval=TRUE, results='hide'>>=
  # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
