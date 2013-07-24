@@ -40,9 +40,9 @@
 			}
 		}
 	}
-	packageStartupMessage("************************************************************",
+	packageStartupMessage("************************************************************\n",
                           "* THIS PACKAGE IS AN ALPHA VERSION!                        *\n",
                           "* It may give you good designs or it may make mistakes.    *\n",
                           "* Please check for every design whether it fits your needs.*\n",
-	                      "************************************************************",)
+	                      "************************************************************")
 }  
