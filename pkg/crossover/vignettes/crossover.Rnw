@@ -387,7 +387,7 @@ Let's compare the results from the search algorithm with results from the litera
 \begin{Example}
 First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
 
-<<eval1, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
+<<modelsFromLiterature1, echo=TRUE, eval=TRUE, cache=FALSE, tidy=FALSE>>=
 s <- 6; p <- 4; v <- 2
 
 design1 <- t(rbind(c(1,1,2,2),
@@ -396,24 +396,6 @@ design1 <- t(rbind(c(1,1,2,2),
                    c(2,2,1,1),
                    c(1,2,2,1),
                    c(2,1,1,2)))
-
-attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
-
-
-rcDesign <- rcd(design1, v, model=1)
-Ar <- infMatrix(rcDesign, v, model=1)
-Xr <- rcdMatrix(rcDesign, v, model=1)
-H <- linkMatrix(1,v)
-X <- Xr %*% H
-A <- t(H) %*% Ar %*% H
-rankMatrix(X)
-C <- rbind(diag(v), matrix(0, v, v))
-XX <- t(X) %*% X
-all.equal(t(C) %*% ginv(XX) %*% XX, t(C)) # Criterion to test whether - see Theorem \ref{thr:estimable}
-
-A
-rankMatrix(A)
-
 design2 <- t(rbind(c(1,1,2,1),
                    c(2,2,1,2),
                    c(1,1,2,1),
@@ -468,6 +450,35 @@ models <- c("Standard additive model",
             "Full set of interactions",
             "Second-order carry-over effects")
 
+@
+
+<<eval1a, echo=TRUE, eval=TRUE, cache=FALSE, tidy=FALSE>>=
+
+attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
+
+for (i in c(1,2,3,4,5,6)) {  
+    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i), "/", estimable_R(designs[[i]], v=v, model=i) "\n", sep=""))
+}
+
+rcDesign <- rcd(design1, v, model=1)
+Ar <- infMatrix(rcDesign, v, model=1)
+Xr <- rcdMatrix(rcDesign, v, model=1)
+H <- linkMatrix(1,v)
+X <- Xr %*% H
+A <- t(H) %*% Ar %*% H
+rankMatrix(X)
+C <- rbind(diag(v), matrix(0, v, v))
+XX <- t(X) %*% X
+all.equal(t(C) %*% ginv(XX) %*% XX, t(C)) # Criterion to test whether - see Theorem \ref{thr:estimable}
+
+A
+rankMatrix(A)
+
+detach("namespace:crossover")
+@
+
+<<eval1b, echo=TRUE, eval=TRUE, cache=FALSE, tidy=FALSE>>=
 checkResult <- function (result, refDesign, model) {
     allDesigns <- result@misc$designs
     df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
@@ -487,7 +498,7 @@ for (i in c(1,2,3,4,5,6)) {
   model <- models[i]
   cat("======= ", model, " =======","\n")
   
-  result <- searchCrossOverDesign(s=s, p=p, v=v, model=model)
+  result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
   print(result)
   print(plot(result) + ggtitle(models[i]))
   
@@ -563,6 +574,7 @@ In the following code chunk we will compare the results from our approach in the
   compareApproaches(design)
 @
 
+\section{Random Effects Model}
 
 \begin{appendix} 
 

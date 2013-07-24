@@ -83,7 +83,7 @@ test.2v.designs <- function() {
         model <- models[i]
         cat("======= ", model, " =======","\n")
         
-        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model)
+        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
         print(result)
         print(plot(result))
         
@@ -98,4 +98,6 @@ test.2v.designs <- function() {
     searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
     
 }
+
+test..designs
 
