@@ -315,7 +315,7 @@ estimable <- function(design, v, model, C) {
     }
     verbose <- 0
     rcDesign <- rcd(design, v=v, model=model)
-    H <- linkMatrix(model, v)
+    linkM <- linkMatrix(model, v)
     return(.Call( "estimable2R", rcDesign, v, model, linkM, C, verbose, PACKAGE = "crossover" ))    
 }
 
