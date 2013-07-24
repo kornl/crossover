@@ -1,0 +1,28 @@
+\name{rcdMatrix}
+\alias{rcdMatrix}
+\title{Create the design matrix for a given row column design}
+\usage{
+  rcdMatrix(X, v, model)
+}
+\arguments{
+  \item{X}{row-column design}
+
+  \item{v}{number of treatments}
+
+  \item{model}{String or number describing the model. See
+  \code{\link{getModelNr}}.}
+}
+\value{
+  The design matrix for a row-column design.
+}
+\description{
+  Create the design matrix for a given row column design
+}
+\examples{
+# TODO
+}
+\seealso{
+  \code{\link{rcd}} gives the row-column design to a given
+  crossover design.
+}
+
