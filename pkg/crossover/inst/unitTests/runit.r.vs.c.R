@@ -24,5 +24,9 @@ test.r.vs.c <- function () {
       Ar_R2 <- infMatrix_R(rcDesign, v, model=model, method=2)  
       checkTrue(max(abs(Ar-Ar_R1))<0.00001)
       checkTrue(max(abs(Ar_R2-Ar_R1))<0.00001)
+      
+      d <- structure(c(2, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 2, 
+                       2, 1, 1, 2, 1, 1, 2), .Dim = c(4L, 6L))
+      checkTrue(estimable_R(d, v=2, model=2)==estimable(d, v=2, model=2))
   }
 }
