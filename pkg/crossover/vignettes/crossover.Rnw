@@ -481,7 +481,7 @@ all.equal(t(C) %*% ginv(XX) %*% XX, t(C)) # Criterion to test whether - see Theo
 A
 rankMatrix(A)
 
-detach("namespace:crossover")
+
 @
 
 <<eval1b, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
@@ -522,6 +522,8 @@ for (i in c(1,2,3,4,5,6)) {
 
 searchCrossOverDesign(s=s, p=p, v=v, model=3)
 searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
+
+detach("namespace:crossover")
 
 @
 
