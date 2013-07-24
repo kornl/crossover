@@ -309,7 +309,7 @@ randomDesignWithoutCheck <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p
     return(design)
 }
 
-estimable_R <- function(design, v, model, C) {
+estimable_R <- function(design, v, model, C, verbose=0) {
   if(missing(C)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
@@ -320,16 +320,20 @@ estimable_R <- function(design, v, model, C) {
   H <- linkMatrix(model, v)
   X <- Xr %*% H
   XX <- t(X) %*% X
+  if (verbose) {            
+      print(rcDesign)
+      print(Xr)
+      print(abs(C %*% ginv(XX) %*% XX-C))
+  }
   return(isTRUE(all.equal(C %*% ginv(XX) %*% XX, C, check.attributes=FALSE, check.names=FALSE))) # Criterion to test whether - see Theorem \ref{thr:estimable} of vignette.
 }
 
-estimable <- function(design, v, model, C) {
+estimable <- function(design, v, model, C, verbose=0) {
     if(missing(C)) {
         Csub <- contrMat(n=rep(1, v), type="Tukey")
         class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
         C <- appendZeroColumns(Csub, model, v)
-    }
-    verbose <- 0
+    }    
     rcDesign <- rcd(design, v=v, model=model)
     linkM <- linkMatrix(model, v)
     return(.Call( "estimable2R", rcDesign, v, model, linkM, C, verbose, PACKAGE = "crossover" ))    

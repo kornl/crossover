@@ -151,9 +151,15 @@ bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, int verbose) {
     XX = trans(X) * X;
     XXXX = pinv(XX) * XX;
     X = abs(C * XXXX - C);
-    int estCriterion = X.max(); // Criterion to test whether contrasts are estimable - see Theorem \ref{thr:estimable} of vignette.
     if (verbose>2) {
-        Rprintf("Unfortunately estimability criterion is: %f.\n", estCriterion); 
+        rcDesign.print(Rcout, "rcDesign:");
+        Xr.print(Rcout, "Xr:");
+        XXXX.print(Rcout, "XXXX:");
+        X.print(Rcout, "X:");
+    }
+    double estCriterion = X.max(); // Criterion to test whether contrasts are estimable - see Theorem \ref{thr:estimable} of vignette.
+    if (verbose>2) {
+        Rprintf("The estimability criterion is: %f.\n", estCriterion); 
     }
     return(estCriterion < 0.0001);
 }
