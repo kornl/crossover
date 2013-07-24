@@ -457,8 +457,14 @@ models <- c("Standard additive model",
 attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
 
 for (i in c(1,2,3,4,5,6)) {  
-    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+    H <- linkMatrix(model=i, v=v)
+    n <- dim(H)[2]
+    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
               estimable(designs[[i]], v=v, model=i), "/", estimable_R(designs[[i]], v=v, model=i), "\n", sep=""))
+    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
+    cat(paste("Are all parameters estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i, C=diag(n)), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)), "\n", sep=""))
 }
 
 rcDesign <- rcd(design1, v, model=1)
@@ -495,16 +501,23 @@ checkResult <- function (result, refDesign, model) {
 }
 
 for (i in c(1,2,3,4,5,6)) {  
-  model <- models[i]
-  cat("======= ", model, " =======","\n")
-  
-  result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
-  print(result)
-  print(plot(result) + ggtitle(models[i]))
-  
-  print(general.carryover(designs[[i]], model=i))  
-  print(checkResult(result, designs[[i]], model=i)$plot+ ggtitle(models[i]))
-  
+    model <- models[i]
+    cat("======= ", model, " =======","\n")
+    H <- linkMatrix(model=i, v=v)
+    n <- dim(H)[2]
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
+    print(result)
+    print(general.carryover(designs[[i]], model=i))  
+    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i), "/", estimable_R(getDesign(result), v=v, model=i), "\n", sep=""))
+    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
+    cat(paste("Are all parameters estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i, C=diag(n)), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)), "\n", sep=""))
+    
+    print(plot(result) + ggtitle(models[i]))  
+    print(checkResult(result, designs[[i]], model=i)$plot+ ggtitle(models[i]))
+    
 }
 
 searchCrossOverDesign(s=s, p=p, v=v, model=3)
@@ -517,20 +530,24 @@ searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
 <<correct, echo=TRUE, eval=TRUE, cache=TRUE>>=
 
 # For the self-adjacency model our algorithm found for example:
-
-d <- structure(c(2, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 2, 
-2, 1, 1, 2, 1, 1, 2), .Dim = c(4L, 6L))
+v <- 2
+d <- structure(c(1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 
+2, 2, 2, 1, 1, 2, 1), .Dim = c(4L, 6L))
 
 d
 
-# Which seems to compare well in regard to Var.trt.pair (and not only there) to the reference design from literature:
+# Which seems to compare well in regard to Var.trt.pair (and Var.car.pair.1 but a little worde in Var.car.pair.2) to the reference design from literature:
 
 general.carryover(d, model=2)
 general.carryover(design2, model=2)
 
 rcDesign <- crossover:::rcd(d, v=v, model=2)
 rcDesign
-crossover:::rcdMatrix(rcDesign, v=v, model=2) %*% crossover:::linkMatrix(model="Self-adjacency model", v)
+X <- crossover:::rcdMatrix(rcDesign, v=v, model=2) %*% crossover:::linkMatrix(model="Self-adjacency model", v)
+crossover:::estimable_R(d, v, model=2, diag(6))
+crossover:::estimable(d, v, model=2, diag(6))
+
+
 
 
 @
