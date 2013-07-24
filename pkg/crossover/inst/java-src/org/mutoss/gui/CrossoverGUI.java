@@ -54,13 +54,13 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 	public static final String[] models = new String[] {
 			"Standard additive model",
-			"Second-order carry-over effects",
-			"Full set of interactions",
 			"Self-adjacency model",
+			"Proportionality model",
 			"Placebo model",
 			"No carry-over into self model",
 			"Treatment decay model",
-			"Proportionality model",
+			"Full set of interactions",
+			"Second-order carry-over effects"
 			//"No carry-over effects"
 	};
 	
@@ -156,7 +156,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		
 		tabbedPane = new JTabbedPane();
 		
-		designPanel = new DesignSelectionPanel();
+		designPanel = new DesignSelectionPanel(this);
 		designInputPanel = new DesignInputPanel();
 		designInputPanel.addActionListener(this);
 		algorithmPanel = new AlgorithmPanel(this);
@@ -254,7 +254,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jCBmodel) {
-			 algorithmPanel.createEffPanel();
+			algorithmPanel.createEffPanel();
 			if (jCBmodel.getSelectedIndex()==4) {
 				jtfParam.setEnabled(true);
 				pLabel.setEnabled(true);
@@ -268,6 +268,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 				pLabel.setEnabled(false);
 				pLabel.setText("Further model parameters:");
 			}
+			designPanel.valueChanged(null);
 		}
 	}
 	

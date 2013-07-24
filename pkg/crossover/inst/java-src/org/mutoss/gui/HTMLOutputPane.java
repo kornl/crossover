@@ -24,8 +24,10 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     protected JScrollPane scrollPane;
     protected RControl rctrl;
     protected DefaultStyledDocument doc;
+    CrossoverGUI gui;
 
-    public HTMLOutputPane() {
+    public HTMLOutputPane(CrossoverGUI gui) {
+    	this.gui = gui;
         makeComponents();
         doTheLayout();
     }
@@ -36,6 +38,13 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     	textArea.appendParagraph("");
     	textArea.appendHTML(design.getHTMLTable());
     	textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference.replaceAll("\\n", "<br>")+"</i>");
+    	textArea.appendParagraph("<pre>"+getGeneralCarryover(design)+"</pre>");	
+	}
+
+	private String getGeneralCarryover(Design design) {
+		String command = "print(general.carryover("+design.rName+", model="+(gui.jCBmodel.getSelectedIndex()+1)+"))";
+		String command2 = "paste(capture.output("+command+"),collapse=\"\\n\")";
+		return RControl.getR().eval(command2).asRChar().getData()[0];
 	}
 
 	public void showError(Throwable e) throws BadLocationException, IOException {    	

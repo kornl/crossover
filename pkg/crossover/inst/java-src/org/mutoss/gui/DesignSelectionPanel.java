@@ -22,7 +22,7 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 	List<Design> designs;
 	
 	
-	public DesignSelectionPanel() {
+	public DesignSelectionPanel(CrossoverGUI gui) {
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
         String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
         
@@ -42,7 +42,7 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
         designTable = new DesignTable();		
 		designTable.getSelectionModel().addListSelectionListener(this);
 		
-		jta = new HTMLOutputPane();
+		jta = new HTMLOutputPane(gui);
 		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		/*jta.setLineWrap(false);		
 		jta.setMargin(new Insets(4,4,4,4));*/
@@ -52,8 +52,8 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		
 	}
 	
-	public DesignSelectionPanel(List<Design> designs) {
-		this();
+	public DesignSelectionPanel(List<Design> designs, CrossoverGUI gui) {
+		this(gui);
 		setDesigns(designs);
 	}
 
