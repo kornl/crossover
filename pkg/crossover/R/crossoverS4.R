@@ -196,9 +196,9 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
           }
 )
 
-setGeneric("getNodes", function(object, ...) standardGeneric("getNodes"))
+setGeneric("getDesign", function(object, ...) standardGeneric("getDesign"))
 
-setMethod("getNodes", c("crossoverSearchResult"),
-		function(object, ...) {			
-			return(rownames(object@m))
-		})
+setMethod("getDesign", c("crossoverSearchResult"),
+          function(object, ...) {			
+              return(object@design@design)
+          })
