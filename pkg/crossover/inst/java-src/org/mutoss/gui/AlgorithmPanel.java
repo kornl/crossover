@@ -1,5 +1,6 @@
 package org.mutoss.gui;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -40,7 +41,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
-	JComboBox jCBmodel;
+
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
 	HTMLPaneWithButtons jta;
@@ -93,9 +94,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JSpinner spinnerS;
 	JPanel lsPanel;
-	JLabel pLabel = new JLabel("Further model parameters:");
-	JTextField jtfParam = new JTextField("1");
-	
 
 	public JPanel getRightSidePanel() {
 		JPanel panel = new JPanel();
@@ -132,14 +130,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		int row = 2;
     	
-		jCBmodel = new JComboBox(CrossoverGUI.models);
-		jCBmodel.addActionListener(this);
-		
-		lsPanel.add(new JLabel("Model"), cc.xy(2, row));
-		lsPanel.add(jCBmodel, cc.xy(4, row));
-		
-        row+=2;
-        
+
         lsPanel.add(jCBMixed, cc.xy(4, row));
         jCBMixed.setSelectedIndex(0);
         jCBMixed.addActionListener(this);
@@ -152,14 +143,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         jtWithinSubjectRho = new JTextField("0.5");
         jtWithinSubjectRho.setEnabled(false);
 		lsPanel.add(jlMixed, cc.xy(2, row));
-		lsPanel.add(jtWithinSubjectRho, cc.xy(4, row));
-        
-        row+=2;
-        
-		lsPanel.add(pLabel, cc.xy(2, row));
-		lsPanel.add(jtfParam, cc.xy(4, row));
-		pLabel.setEnabled(false);
-		jtfParam.setEnabled(false);
+		lsPanel.add(jtWithinSubjectRho, cc.xy(4, row));        
+
 
         row+=2;  
         
@@ -192,7 +177,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         rowEff = row;        
         createEffPanel();
         
-        row+=2;      
+        row+=2;    
         
         rowTNP = row;        
         createWeightsPanel();
@@ -224,8 +209,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
-		weightsPanel.setBorder(BorderFactory.createTitledBorder("Contrast Weights (redesign in future!)"));
-
+		weightsPanel.setBorder(BorderFactory.createTitledBorder("Contrast Weights [will be redesigned and work only under R in the moment]"));
+		weightsPanel.setEnabled(false);
 		weightsPanel.setLayout(new GridBagLayout());
 		/*} else {
 			weightsPanel.removeAll();			
@@ -252,12 +237,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				cbcWeights.gridx=0;cbcWeights.gridy++;
 			}
 		}		
+		for (Component c : weightsPanel.getComponents()) c.setEnabled(false);
 		lsPanel.add(weightsPanel, cc.xyw(2, rowTNP, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
 	}
 	
-	private void createEffPanel() {		
+	public void createEffPanel() {		
 		if (effPanel!=null) {
 			lsPanel.remove(effPanel);
 		}
@@ -269,8 +255,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		effWeights.gridwidth = 1; effWeights.gridheight = 1;
 		effWeights.ipadx=5; effWeights.ipady=5;
 		effWeights.weightx=1; effWeights.weighty=1;
-		effPanel.setBorder(BorderFactory.createTitledBorder("Efficiency factors:"));
-
+		effPanel.setBorder(BorderFactory.createTitledBorder("Efficiency factors [NOT YET IMPLEMENTED - ARE IGNORED]:"));
+		effPanel.setEnabled(false);
 		effPanel.setLayout(new GridBagLayout());
 		/*} else {
 			effPanel.removeAll();			
@@ -278,7 +264,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		List<String> labels = new Vector<String>();
         
-		int s = jCBmodel.getSelectedIndex();
+		int s = gui.jCBmodel.getSelectedIndex();
 		for (String p : CrossoverGUI.parameters[s]) {        	
         	labels.add(p);        	
         }  
@@ -295,6 +281,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				effWeights.gridx=0;effWeights.gridy++;
 			}
 		}		
+		for (Component c : effPanel.getComponents()) c.setEnabled(false);
 		lsPanel.add(effPanel, cc.xyw(2, rowEff, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
@@ -381,13 +368,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					try {
 						command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
 								+", "+gui.getParameters()
-								+", model=\""+jCBmodel.getSelectedItem()+"\""
+								+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
 								+", eff.factor="+1
 								+", v.rep="+getVRep()
 								+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
 								+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
-								+(jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+jtfParam.getText()+")":"")
-								+(jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+jtfParam.getText()+")":"")
+								+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
+								+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
 								+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
 								+", verbose=FALSE)";
 						//System.out.println(command);
@@ -430,21 +417,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				 }
 			};
 			worker.execute();
-		} else if (e.getSource() == jCBmodel) {
-			createEffPanel();
-			if (jCBmodel.getSelectedIndex()==4) {
-				jtfParam.setEnabled(true);
-				pLabel.setEnabled(true);
-				pLabel.setText("Number of placebo treatments:");
-			} else if (jCBmodel.getSelectedIndex()==7) {
-				jtfParam.setEnabled(true);
-				pLabel.setEnabled(true);
-				pLabel.setText("Proportionality parameter:");
-			} else {
-				jtfParam.setEnabled(false);
-				pLabel.setEnabled(false);
-				pLabel.setText("Further model parameters:");
-			}
 		} else if (e.getSource()==showAlgoPerformance) {			
 			RControl.getR().eval("JavaGD(\"Search algorithm performance\")");
 			//RControl.getR().eval("png(filename=\""+getTmpFile()+"\")");

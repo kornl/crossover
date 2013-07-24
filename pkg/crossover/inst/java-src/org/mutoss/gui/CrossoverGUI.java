@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -148,6 +150,10 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		
 		getContentPane().add(getInterface(), c);
 		
+		c.gridx++;
+		
+		getContentPane().add(getModelPanel(), c);
+		
 		tabbedPane = new JTabbedPane();
 		
 		designPanel = new DesignSelectionPanel();
@@ -159,7 +165,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		tabbedPane.addTab("Input own design", designInputPanel);
 		
 
-		c.gridy++;		 
+		c.gridy++; c.gridx=0; c.gridwidth=2;	 
 		c.weighty=1;
 		getContentPane().add(tabbedPane, c);	
 		
@@ -171,7 +177,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	JSpinner spinnerS1;
 	JSpinner spinnerS2;
 	
-	final int maxSp = Integer.MAX_VALUE;
+	final int maxSp = 99;
 	
 	public JPanel getInterface() {
 		JPanel panel = new JPanel();
@@ -214,11 +220,55 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		return panel;
 	}
 	
+	JComboBox jCBmodel;
+	JLabel pLabel = new JLabel("Further model parameters:");
+	JTextField jtfParam = new JTextField("1");
+	
+	public JPanel getModelPanel() {
+		CellConstraints cc = new CellConstraints();
+		JPanel modelPanel = new JPanel();
+		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
+		String rows = "5dlu, pref, 5dlu, pref, 5dlu";
+
+		modelPanel.setLayout(new FormLayout(cols, rows));
+
+		int row = 2;
+
+		jCBmodel = new JComboBox(CrossoverGUI.models);
+		jCBmodel.addActionListener(this);
+
+		modelPanel.add(new JLabel("Model"), cc.xy(2, row));
+		modelPanel.add(jCBmodel, cc.xy(4, row));
+
+		row+=2;		
+        
+		modelPanel.add(pLabel, cc.xy(2, row));
+		modelPanel.add(jtfParam, cc.xy(4, row));
+		pLabel.setEnabled(false);
+		jtfParam.setEnabled(false);
+		return modelPanel;
+	}
+	
 	/**
 	 * This function handles events from buttons, check boxes and combo boxes. 
 	 */
 	public void actionPerformed(ActionEvent e) {
-	
+		if (e.getSource() == jCBmodel) {
+			 algorithmPanel.createEffPanel();
+			if (jCBmodel.getSelectedIndex()==4) {
+				jtfParam.setEnabled(true);
+				pLabel.setEnabled(true);
+				pLabel.setText("Number of placebo treatments:");
+			} else if (jCBmodel.getSelectedIndex()==7) {
+				jtfParam.setEnabled(true);
+				pLabel.setEnabled(true);
+				pLabel.setText("Proportionality parameter:");
+			} else {
+				jtfParam.setEnabled(false);
+				pLabel.setEnabled(false);
+				pLabel.setText("Further model parameters:");
+			}
+		}
 	}
 	
 	/**
