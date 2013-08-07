@@ -232,7 +232,7 @@ double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {
   return s1;
 }
 
-arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS, bool balanceP) {
+//arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS, bool balanceP) {
   /*if (balance.s) {
     design <- matrix(unlist(tapply(rep(1:v, v.rep), as.factor(rep(1:s,p)), sample)), p, s)
   } else if (balance.p) {
@@ -240,11 +240,11 @@ arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS
   } else {
     design <- matrix(sample(rep(1:v, v.rep)), p, s)
   }*/ 
-  IntegerVector ret = Rcpp::RcppArmadillo::sample(vRep, 3, false);
+//  IntegerVector ret = Rcpp::RcppArmadillo::sample(vRep, 3, false);
   /*Constructors:
   mat(vec)
   mat(rowvec)*/
-}
+//}
 
 arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
     if (model==8) { v = v+v*v+v*v*v; } else { v = v+v*v; }

@@ -1,6 +1,6 @@
 useDynLib(crossover)
 
-importFrom(graphics, "plot")
+importFrom(graphics, plot)
 
 import(rJava)
 importFrom(CommonJavaJars, loadJars)
