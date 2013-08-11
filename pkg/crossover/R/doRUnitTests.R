@@ -19,19 +19,13 @@ unitTestsCrossover <- function(extended=FALSE, java=FALSE, interactive=FALSE, ju
 	
 	library(package=pkg, character.only=TRUE)
 	
-	## If desired, load the name space to allow testing of private functions
-	 if (is.element(pkg, loadedNamespaces()))
-	     attach(loadNamespace(pkg), name=paste("namespace", pkg, sep=":"), pos=3)
-	##
-	## or simply call PKG:::myPrivateFunction() in tests
-	
 	## --- Testing ---
 	
 	## Define tests
 	testSuite <- defineTestSuite(name=paste(pkg, "unit testing"), dirs=path)
 	
 	## Run
-	tests <- runTestSuite(testSuite)
+	tests <- with(loadNamespace(pkg), runTestSuite(testSuite))
 	
 	## Default report name
 	pathReport <- file.path(path, "report")
