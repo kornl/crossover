@@ -249,8 +249,8 @@ double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {
 arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
     if (model==8) { v = v+v*v+v*v*v; } else { v = v+v*v; }
     mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
-    for (int j=0; j<rcDesign.n_cols; j++) {
-        for (int i=0; i<rcDesign.n_rows; i++) {
+    for (unsigned j=0; j<rcDesign.n_cols; j++) {
+        for (unsigned i=0; i<rcDesign.n_rows; i++) {
             X(i * rcDesign.n_cols + j, rcDesign(i, j)-1) = 1;
         }
     }
