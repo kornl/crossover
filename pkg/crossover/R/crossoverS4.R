@@ -160,7 +160,6 @@ setMethod("show", "crossoverSearchResult",
 #' jumps occured.  }
 #' @return Returns a ggplot object of the plot.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
-#' @keywords misc graphs
 #' @examples
 #' 
 #' 
@@ -171,6 +170,9 @@ setMethod("show", "crossoverSearchResult",
 #' plot(x, show.jumps=TRUE)
 #' plot(x, type=2)
 #' 
+#' @export
+#' @docType methods
+#' @rdname plot-methods
 setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
           function(x, y, type=1, show.jumps=FALSE, ...) { #function(x, ) {
             eff <- unlist(x@eff)
@@ -198,6 +200,23 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
 
 setGeneric("getDesign", function(object, ...) standardGeneric("getDesign"))
 
+#' Extract Design from a crossoverSearchResult
+#' 
+#' Extract Design from a crossoverSearchResult
+#' 
+#' @name getDesign
+#' @aliases getDesign,crossoverSearchResult-method getDesign
+#' @param object A searchCrossOverDesign object from which the design should be extracted.
+#' @return Returns a numeric matrix representing the crossover design.
+#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
+#' @examples
+#' #' 
+#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
+#' getDesign(x)
+#' 
+#' @export
+#' @docType methods
+#' @rdname getDesign-methods
 setMethod("getDesign", c("crossoverSearchResult"),
           function(object, ...) {			
               return(object@design@design)
