@@ -4,6 +4,7 @@
 	}
 	.jpackage(pkgname)
 	.jpackage("JavaGD")
+	.jpackage("JGR")
 	
 	jars <- c("afcommons",
 			"commons-logging", "forms", 
