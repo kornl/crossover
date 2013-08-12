@@ -129,7 +129,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		
 		setVisible(true);
 		
-		JOptionPane.showMessageDialog(this, "THIS PACKAGE IS AN ALPHA VERSION!\nIt may give you good designs or it may make mistakes.\nPlease check for every design whether it fits your needs.", "ALPHA VERSION", JOptionPane.WARNING_MESSAGE);
+		//JOptionPane.showMessageDialog(this, "THIS PACKAGE IS AN ALPHA VERSION!\nIt may give you good designs or it may make mistakes.\nPlease check for every design whether it fits your needs.", "ALPHA VERSION", JOptionPane.WARNING_MESSAGE);
 	}
 
 	/** Two methods to set and save the default values */
