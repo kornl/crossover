@@ -163,6 +163,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		tabbedPane.addTab("Catalogue", designPanel);
 		tabbedPane.addTab("Algorithm Search", algorithmPanel);
 		tabbedPane.addTab("Input own design", designInputPanel);
+		tabbedPane.addChangeListener(this);
 		
 
 		c.gridy++; c.gridx=0; c.gridwidth=2;	 
@@ -340,16 +341,27 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 
 	public void stateChanged(ChangeEvent e) {
-		if (tabbedPane.getSelectedIndex()!=0) return; //TODO If Tab 0 gets Focus calculate!
+		//if (e.getSource()==tabbedPane)		
+		if (e!=null && (e.getSource()==spinnerS1 || e.getSource()==spinnerS2)) {
+			int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
+			int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
+			int s = Integer.parseInt(algorithmPanel.spinnerS.getModel().getValue().toString());			
+			if (s<s1) {
+				algorithmPanel.spinnerS.getModel().setValue(s1);
+			} else if (s2<s) {
+				algorithmPanel.spinnerS.getModel().setValue(s2);
+			}
+		}
+		if (tabbedPane.getSelectedIndex()!=0) return;
 		glassPane.start();
 		//startTesting();		
 		SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
-				int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
 				int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
 				int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
+				int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
+				int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
 				//if (t==1 || p==1) return;
 				RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
 				//RControl.getR().eval(".df <- .st");
