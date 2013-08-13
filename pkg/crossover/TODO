@@ -1,3 +1,14 @@
+crossover:::loadAllDatasets()
+crossover:::getS1(williams5t, 5, 1)
+x <- searchCrossOverDesign(s=10, v=5, p=5)
+crossover:::getS1(getDesign(x), 5, 1)
+y <- searchCrossOverDesign(s=10, v=5, p=5, start.designs=list(williams5t))
+crossover:::getS1(getDesign(y), 5, 1)
+
+# Started at 14:51
+y <- searchCrossOverDesign(s=10, v=5, p=5, start.designs=list(williams5t), n=c(200,10))
+
+
 Why are there sometimes non-monotone parts in the proportionality model?
 
 Move common config code to afcommons. 

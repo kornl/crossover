@@ -1,3 +1,7 @@
+test.best <- function() {
+    checkTrue(all(getDesign(searchCrossOverDesign(s=10, v=5, p=5, start.designs=list(williams5t), n=c(200,10)))==williams5t))
+}
+
 test.evaluation <- function() {
   design1 <- t(rbind(c(1,1,2,2),
                      c(2,2,1,1),
