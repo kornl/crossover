@@ -333,10 +333,20 @@ estimable <- function(design, v, model, C, verbose=0) {
         Csub <- contrMat(n=rep(1, v), type="Tukey")
         class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
         C <- appendZeroColumns(Csub, model, v)
-    }    
+    }
     rcDesign <- rcd(design, v=v, model=model)
     linkM <- linkMatrix(model, v)
     return(.Call( "estimable2R", rcDesign, v, model, linkM, C, verbose, PACKAGE = "crossover" ))    
+}
+
+getS1 <- function(design, v, model, C, verbose=0) {
+    if(missing(C)) {
+        Csub <- contrMat(n=rep(1, v), type="Tukey")
+        class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+        C <- appendZeroColumns(Csub, model, v)
+    }
+    linkM <- linkMatrix(model, v)
+    return(.Call( "getS12R", design, v, model, linkM, C))
 }
 
 appendZeroColumns <- function(Csub, model, v) {

@@ -58,9 +58,9 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   List effList = List(n2); // Here we will store NumericVectors that show the search progress.
   mat design;
   mat bestDesign, bestDesignOfRun;
-  int effBest = 0, r;
+  int r;
   mat designOld, rcDesign, Ar, A;  // designBeforeJump, 
-  double s1, eOld = 0; // eBeforeJump = 0,
+  double s1, eOld = 0, effBest = 0; // eBeforeJump = 0,
   NumericVector rows, cols;
   
   for(int j=0; j<n2; j++) {  
@@ -119,6 +119,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
             Rprintf("Eff of design is: %f.\n", eOld);
           }          
           if (eOld > effBest) {
+            if (verbose>1) { Rprintf("This is even the best design so far, since %f > %f.\n", eOld, effBest); } 
             effBest = eOld;
             bestDesign = bestDesignOfRun;
           }
@@ -132,12 +133,11 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
     effList[j] = eff;
   } /* End for loop start designs */
   if (verbose) {
-    bestDesignOfRun.print(Rcout, "Best design overall:");
-    rcDesign = rcd(bestDesignOfRun, v, model);      
+    bestDesign.print(Rcout, "Best design overall:");
+    rcDesign = rcd(bestDesign, v, model);      
     Ar = infMatrix(rcDesign, v, model);
     s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
-    Rprintf("Eff of design is: %f=%f.\n", effBest, s2/s1);
-    
+    Rprintf("Eff of design is: %f=%f.\n", effBest, s2/s1);    
   }
   PutRNGstate();
   return List::create(Named("design")=bestDesign, Named("eff")=effList, Named("designs")=designsFound);  
@@ -223,6 +223,19 @@ arma::mat rcd(arma::mat design, int v, int model) {
   }
   throw std::range_error("Model not found. Has to be between 1 and 8.");
   return NULL;
+}
+
+SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS) {
+  BEGIN_RCPP
+  int v = IntegerVector(vS)[0];
+  int model = IntegerVector(modelS)[0];
+  mat design = as<mat>(designS);  
+  mat rcDesign = rcd(design, v, model);
+  mat linkM = as<mat>(linkMS);
+  mat C = as<mat>(CS); // Contrasts
+  mat tCC = trans(C) * C; // t(C) %*% C
+  return wrap(getS1(rcDesign, v, model, linkM, tCC));
+  END_RCPP
 }
 
 double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {  

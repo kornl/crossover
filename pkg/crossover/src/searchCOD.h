@@ -24,6 +24,7 @@ RcppExport SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP verboseS);
+RcppExport SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS);
 
 arma::mat rcd(arma::mat design, int v, int model);
 arma::mat rcdMatrix(arma::mat rcDesign, int v, int model);
