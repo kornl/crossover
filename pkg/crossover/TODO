@@ -14,6 +14,8 @@ proc.time() - ptm
    user  system elapsed 
 332.432   0.624 339.204 
 
+====
+
 Why are there sometimes non-monotone parts in the proportionality model?
 
 Move common config code to afcommons. 

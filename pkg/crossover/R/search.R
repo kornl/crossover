@@ -226,13 +226,14 @@ infMatrix <- function(X, v, model) {
 #' @export searchCrossOverDesign
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
-                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast) {
+                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast, check.estimable=TRUE) { #fast=FALSE) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
     if (missing(start.designs)) { n <- c(n, 20) } else { n <- c(n, length(start.designs)) }
   }
   if (length(jumps)==1) jumps <- c(jumps, 50)
+  if (jumps[2]==0) stop("The second component of 'jumps' must be a positive integer.")
   model <- getModelNr(model)
   
   H <- do.call( linkMatrix, c(list(model=model, v=v), model.param) )
@@ -272,7 +273,17 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
   
-  result <- .Call( "searchCOD", s, p, v, start.designs, H, C, model, eff.factor, v.rep, balance.s, balance.p, verbose, n, jumps, S2, PACKAGE = "crossover" )
+  if (FALSE) { # parameter fast
+    result <- .Call( "searchCODfast", as.integer(s), as.integer(p), as.integer(v), 
+                   start.designs, H, C, model, eff.factor, 
+                   v.rep, balance.s, balance.p, verbose, 
+                   as.integer(n), as.integer(jumps), S2, check.estimable, PACKAGE = "crossover" )
+  } else {
+      result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
+                       start.designs, H, C, model, eff.factor, 
+                       v.rep, balance.s, balance.p, verbose, 
+                       as.integer(n), as.integer(jumps), S2, check.estimable, PACKAGE = "crossover" )
+  }
   design <- result$design
   
   time <- proc.time()-start.time
