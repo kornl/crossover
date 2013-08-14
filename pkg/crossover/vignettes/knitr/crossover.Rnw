@@ -688,6 +688,59 @@ createRCDesign_R <- function(X, v, model) {
 
 A variable $v$ means \emph{always} the original number of treatments. A variable $vv$ stands for the maximum number of different settings\footnote{For the no carry-over into self or placebo model there are actually less settings.}, either $v+v^2$ or for the second-order carry-over effects $v+v^2+v^3$.
 
+\section{Updating the information matrix}
+
+<<update1, echo=TRUE>>=
+
+data(williams)
+designA <- williams3t; v <- 3; s <- 6; p <- 3; model <- 1
+rcDesignA <- crossover:::rcd(designA, v, model=model)
+ArA <- crossover:::infMatrix(rcDesignA, v, model=model)
+
+designB <- designA
+p1 <- 1; s1 <- 1
+designB[p1,s1] <- 2
+
+rcDesignB <- crossover:::rcd(designB, v, model=model)
+ArB <- crossover:::infMatrix(rcDesignB, v, model=model)
+
+n1 <- matrix(0, v, s) # sequences
+n2 <- matrix(0, v, p) # periods
+
+for (i in 1:v) {
+    for (j in 1:s) {
+        n1[i,j] <- sum(designB[,j]==i) # (Or designA?)
+    }
+    for (j in 1:p) {
+        n2[i,j] <- sum(designB[j,]==i) # (Or designA?)
+    }
+}
+
+u1 <- -n1[,s1]
+u2 <- -n2[,p1]
+
+r <- Vectorize(function(x) { sum(x==designB) })(1:v)
+
+t <- rep(0,v)
+t[1] <- (r[1]-1)+s*(u1[1]+1)+p*(u2[1]+1)
+for (i in 2:v) {
+    t[i] <- r[i]+s*u1[i]+p*u2[i]
+}
+t <- t/(p*s)
+
+c <- (p-1)*(s-1)/(p*s)
+a1 <- t[1]-t[2]
+a2 <- c+t[1]+t[2]
+
+g <- sqrt(a1^2+a2^2+2*t[3:v]%*%t[3:v])
+l1 <- a1+g
+l2 <- a1-g
+
+ev <- eigen(ArB-ArA)$values
+ev[abs(ev)>0.001]
+
+@
+
 \end{appendix}
 
 \nocite{*}
