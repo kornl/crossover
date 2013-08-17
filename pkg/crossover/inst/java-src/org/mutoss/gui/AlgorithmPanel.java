@@ -414,7 +414,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				 public synchronized void updateGUI() {
 						jta.clear();
 						jta.appendHTML(table);
-						String command2 = "paste(capture.output(print(.COresult)),collapse=\"\\n\")";
+						String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
 						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
 						jta.appendParagraph("Random seed: TODO");
 						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
