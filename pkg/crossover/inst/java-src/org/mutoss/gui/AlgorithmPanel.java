@@ -58,7 +58,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods (may decrease efficiency)");
 	CrossoverGUI gui;	
 	JButton exportR = new JButton("Export to R");
-	JButton showAlgoPerformance = new JButton("Show course of algorithm");
+	JButton showAlgoPerformance = new JButton("Search algorithm plot");
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
 	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
 	JLabel jlMixed;
@@ -425,11 +425,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		} else if (e.getSource()==showAlgoPerformance) {			
 			RControl.getR().eval("JavaGD(\"Search algorithm performance\")");
 			//RControl.getR().eval("png(filename=\""+getTmpFile()+"\")");
-			RControl.getR().eval("print(searchPlot(.COresult))");
+			RControl.getR().eval("print(plot(.COresult))");
 			//RControl.getR().eval("dev.off()");
 		} else if (e.getSource()==exportR) {
 			VariableNameDialog vd = new VariableNameDialog(gui, "design");			
-			RControl.getR().eval(vd.getName()+" <- .COresult$design");
+			RControl.getR().eval(vd.getName()+" <- getDesign(.COresult)");
 		} else if (e.getSource()==jCBMixed) {
 			boolean mixed = jCBMixed.getSelectedIndex()==1;
 			jlMixed.setEnabled(mixed);	        
