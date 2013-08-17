@@ -97,23 +97,27 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 	public JPanel getRightSidePanel() {
 		JPanel panel = new JPanel();
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;	
-		c.gridx=0; c.gridy=0;
-		c.gridwidth = 1; c.gridheight = 1;
-		c.ipadx=5; c.ipady=5; c.gridwidth=2;
-		c.weightx=1; c.weighty=0;	
-
-		panel.setLayout(new GridBagLayout());
-		panel.add(new JLabel("Created Design"), c);
-		c.gridy++;c.weighty=1;
-		panel.add(new JScrollPane(jta), c);
-		c.gridy++;c.weighty=0; c.gridwidth=1;
-		panel.add(exportR, c);
+		
+		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
+        String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu, pref, 5dlu";
+        
+        panel.setLayout(new FormLayout(cols, rows));
+        CellConstraints cc = new CellConstraints();
+		
+		int row = 2;
+    	
+		panel.add(new JLabel("Created Design"), cc.xy(2, row));
+		
+		row += 2;
+		
+		panel.add(new JScrollPane(jta), cc.xyw(2, row, 3));
+		
+		row += 2;
+		
+		panel.add(exportR, cc.xy(2, row));
 		exportR.setEnabled(false);
-		exportR.addActionListener(this);
-		c.gridx++;
-		panel.add(showAlgoPerformance, c);
+		exportR.addActionListener(this);		
+		panel.add(showAlgoPerformance, cc.xy(4, row));
 		showAlgoPerformance.setEnabled(false);
 		showAlgoPerformance.addActionListener(this);
 		
