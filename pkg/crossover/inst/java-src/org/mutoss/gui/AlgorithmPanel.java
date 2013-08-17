@@ -70,7 +70,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		gui.spinnerT.addChangeListener(this);
 		gui.spinnerP.addChangeListener(this);
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow";
-        String rows = "5dlu, fill:pref:grow, 5dlu, pref, 5dlu";
+        String rows = "5dlu, fill:pref:grow, 5dlu";
         
         FormLayout layout = new FormLayout(cols, rows);
         layout.setColumnGroups(new int[][]{ {2, 4} });
