@@ -99,12 +99,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		JPanel panel = new JPanel();
 		
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu, pref, 5dlu";
+        String rows = "pref, 5dlu, fill:min:grow, 5dlu, pref";
         
         panel.setLayout(new FormLayout(cols, rows));
         CellConstraints cc = new CellConstraints();
 		
-		int row = 2;
+		int row = 1;
     	
 		panel.add(new JLabel("Created Design"), cc.xy(2, row));
 		
