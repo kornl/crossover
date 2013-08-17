@@ -630,10 +630,40 @@ In the following code chunk we will compare the results from our approach in the
 
 See \cite{jones2003design}, 5.3, page 213ff. The model stays the same
 
-\[Y_{ijk}=\mu+\pi_j+\tau_{d[i,j]}+\lambda_{d[i,j-1]}+s_{ik}+e_{ijk}\]
+\[Y_{ijk}=\mu+\pi_j+\tau_{d[i,j]}+\lambda_{d[i,j-1]}+s_{ik}+e_{ijk},\]
 
 but we also assume that the subject effects follow a normal distribution: $s_{ik}\sim\sN(0,\sigma_s^2)$.
 
+<<informationMatrixRandomEffects, echo=TRUE>>=
+s <- 10
+p <- 5
+v <- 2
+model <- 1
+v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
+design <- matrix(sample(rep(1:v, v.rep)), p, s)
+estimable(design, v=v, model=model)
+
+rho <- 0.5
+theta <- (1-(p-2)*rho)/((1-rho)*(1+(p-1)*rho))
+psi <- -rho/(1+(p-2)*rho)
+Ip <- diag(p)
+Jp <- matrix(1, nrow=p, ncol=p)
+Lambda <- (1-rho)*Ip+rho*Jp
+LambdaI <- theta*((1-psi)*Ip+psi*Jp)
+all.equal(-solve(Lambda)/5, LambdaI)
+
+f <- function (rho) {
+    theta <- (1-(p-2)*rho)/((1-rho)*(1+(p-1)*rho))
+    psi <- -rho/(1+(p-2)*rho)
+    Ip <- diag(p)
+    Jp <- matrix(1, nrow=p, ncol=p)
+    Lambda <- (1-rho)*Ip+rho*Jp
+    LambdaI <- theta*((1-psi)*Ip+psi*Jp)
+    return(max(abs(solve(Lambda)-LambdaI)))
+} 
+plot(Vectorize(f), xlim=c(0.01,0.99))
+
+@
 
 <<detachNameSpace, echo=TRUE, eval=TRUE, results='hide'>>=
 detach("namespace:crossover")
