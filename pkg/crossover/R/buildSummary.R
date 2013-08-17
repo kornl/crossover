@@ -60,9 +60,14 @@ loadAllDatasets <- function() {
 }
 
 getTable <- function(design) {
+    design <- design2integer(design)
 	rownames(design) <- paste("p", 1:dim(design)[1], sep="")
 	colnames(design) <- paste("s", 1:dim(design)[2], sep="")
 	return(paste(capture.output(print(xtable(design), type="html")), collapse="\n"))
+}
+
+design2integer <- function(design) {
+    return(matrix(as.integer(design), dim(design)[1]))
 }
 
 getEff <- function(design) {
