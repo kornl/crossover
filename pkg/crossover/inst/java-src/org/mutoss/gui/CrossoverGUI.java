@@ -345,7 +345,14 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		if (e!=null && (e.getSource()==spinnerS1 || e.getSource()==spinnerS2)) {
 			int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
 			int s2 = Integer.parseInt(spinnerS2.getModel().getValue().toString());
-			int s = Integer.parseInt(algorithmPanel.spinnerS.getModel().getValue().toString());			
+			int s = Integer.parseInt(algorithmPanel.spinnerS.getModel().getValue().toString());
+			if (s1>s2) {
+				if (e.getSource()==spinnerS1) {
+					spinnerS2.getModel().setValue(s1);
+				} else {
+					spinnerS1.getModel().setValue(s2);
+				}
+			}
 			if (s<s1) {
 				algorithmPanel.spinnerS.getModel().setValue(s1);
 			} else if (s2<s) {
