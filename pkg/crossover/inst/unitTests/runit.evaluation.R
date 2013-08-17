@@ -1,4 +1,5 @@
 test.best <- function() {
+    data(williams)
     checkTrue(all(getDesign(searchCrossOverDesign(s=10, v=5, p=5, start.designs=list(williams5t), n=c(200,10)))==williams5t))
 }
 

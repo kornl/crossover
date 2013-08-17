@@ -6,7 +6,8 @@
     model = "Standard additive model", eff.factor = 1,
     v.rep, balance.s = FALSE, balance.p = FALSE,
     verbose = 0, model.param = list(), n = c(5000, 20),
-    jumps = c(5, 50), start.designs, contrast)
+    jumps = c(5, 50), start.designs, contrast,
+    check.estimable = TRUE)
 }
 \arguments{
   \item{s}{Number of sequences.}
