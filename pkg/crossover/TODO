@@ -14,6 +14,14 @@ proc.time() - ptm
    user  system elapsed 
 332.432   0.624 339.204 
 
+ptm <- proc.time()
+y <- searchCrossOverDesign(s=10, v=5, p=5, n=c(5000,100))
+proc.time() - ptm
+
+ptm <- proc.time()
+y <- searchCrossOverDesign(s=10, v=5, p=5, n=c(5000,100), check.estimable=FALSE)
+proc.time() - ptm
+
 ====
 
 Why are there sometimes non-monotone parts in the proportionality model?
