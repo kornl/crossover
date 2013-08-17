@@ -29,7 +29,10 @@
 #' 
 #' @export general.carryover
 general.carryover<-function(design,model,t0=1,rho=0.5){  
-  if (class(design)=="crossoverSearchResult") design <- design@design
+  if (class(design)=="crossoverSearchResult") {
+      if(missing(model)) model <- design@model
+      design <- design@design      
+  }
   if (class(design)=="crossoverDesign") {
     model <- design@model
     design <- design@design
