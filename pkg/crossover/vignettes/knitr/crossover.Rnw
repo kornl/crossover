@@ -650,7 +650,7 @@ Ip <- diag(p)
 Jp <- matrix(1, nrow=p, ncol=p)
 Lambda <- (1-rho)*Ip+rho*Jp
 LambdaI <- theta*((1-psi)*Ip+psi*Jp)
-all.equal(-solve(Lambda)/5, LambdaI)
+solve(Lambda) - LambdaI
 
 f <- function (rho) {
     theta <- (1-(p-2)*rho)/((1-rho)*(1+(p-1)*rho))
