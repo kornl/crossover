@@ -42,7 +42,11 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
 	}
 
 	private String getGeneralCarryover(Design design) {
-		String command = "print(general.carryover("+design.rName+", model="+(gui.jCBmodel.getSelectedIndex()+1)+"))";
+		String designS = design.rName;
+		if (designS == null) {
+			designS = design.design;
+		}
+		String command = "print(general.carryover("+designS+", model="+(gui.jCBmodel.getSelectedIndex()+1)+"))";
 		String command2 = "paste(capture.output("+command+"),collapse=\"\\n\")";
 		return RControl.getR().eval(command2).asRChar().getData()[0];
 	}
