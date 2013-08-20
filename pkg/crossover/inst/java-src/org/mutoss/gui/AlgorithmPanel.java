@@ -33,6 +33,7 @@ import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.af.jhlir.call.RList;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.gui.dialogs.TextFileViewer;
+import org.mutoss.gui.infinite.InfiniteRunningDialog;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -216,9 +217,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		weightsPanel.setBorder(BorderFactory.createTitledBorder("Contrast Weights [will be redesigned and work only under R in the moment]"));
 		weightsPanel.setEnabled(false);
 		weightsPanel.setLayout(new GridBagLayout());
-		/*} else {
-			weightsPanel.removeAll();			
-		}*/
 		
 		List<String> labels = new Vector<String>();
         
@@ -262,9 +260,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		effPanel.setBorder(BorderFactory.createTitledBorder("Efficiency factors [NOT YET IMPLEMENTED - ARE IGNORED]:"));
 		effPanel.setEnabled(false);
 		effPanel.setLayout(new GridBagLayout());
-		/*} else {
-			effPanel.removeAll();			
-		}*/
 		
 		List<String> labels = new Vector<String>();
         
@@ -306,9 +301,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		ntPanel.setBorder(BorderFactory.createTitledBorder("Number of treatment assignments"));
 
 		ntPanel.setLayout(new GridBagLayout());
-		/*} else {
-			weightsPanel.removeAll();			
-		}*/
 		
 		List<String> labels = new Vector<String>();
         
@@ -359,6 +351,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	}
 	
 	String command = "";
+	String models = "";
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jbCompute) {
@@ -373,53 +366,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
 					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
 					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
-					+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
-					+", verbose=FALSE)";
+					+", verbose=FALSE"
+					+", n=c(5000, 1)"
+					;
 			
-			//startTesting();		
-			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-				RList result;
-				String table;
-
-				@Override
-				protected Void doInBackground() throws Exception {					
-					RControl.getR().eval(".COresult <- "+command);
-					table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
-					return null;
-				}
-
-				protected final void done() {
-					try {
-						get();
-						exportR.setEnabled(true);						
-						showAlgoPerformance.setEnabled(true);
-						jta.clear();
-						jta.appendHTML(table);
-						String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
-						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
-						jta.appendParagraph("Random seed: TODO");
-						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
-						jta.setCaretPosition(0);
-					} catch (CancellationException e) {
-						// Will be perhaps used in the future.
-					} catch (Throwable e) {
-						String message = e.getMessage();
-						//System.out.println("\""+message+"\"");
-						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
-						JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
-						JDialog d = new JDialog(gui, "R Error", true);
-						d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+
-										command, true) );
-						d.pack();
-						d.setSize(800, 600);
-						d.setVisible(true);
-						e.printStackTrace();
-					} finally {
-						gui.glassPane.stop();
-					}
-				}				
-			};
-			worker.execute();
+			models = (useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"");
+			
+			
+			InfiniteRunningDialog ird = new InfiniteRunningDialog(gui, command, models);
 		} else if (e.getSource()==showAlgoPerformance) {			
 			RControl.getR().eval("JavaGD(\"Search algorithm performance\")");
 			//RControl.getR().eval("png(filename=\""+getTmpFile()+"\")");
@@ -445,6 +399,19 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public void stateChanged(ChangeEvent e) {
 		createWeightsPanel();
 		createTreatmentNumberPanel();
+	}
+
+
+	public void searchResultReady(String table) {
+		exportR.setEnabled(true);						
+		showAlgoPerformance.setEnabled(true);
+		jta.clear();
+		jta.appendHTML(table);
+		String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
+		jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
+		jta.appendParagraph("Random seed: TODO");
+		jta.appendParagraph("R Code: <pre>"+command+"</pre>");
+		jta.setCaretPosition(0);		
 	}
 
 }
