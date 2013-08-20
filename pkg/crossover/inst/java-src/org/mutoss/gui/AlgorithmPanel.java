@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CancellationException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -23,7 +24,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
@@ -366,32 +366,45 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				RList result;
 				String table;
 				String command = "";
-				
+
 				@Override
 				protected Void doInBackground() throws Exception {					
+					command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+							+", "+gui.getParameters()
+							+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
+							//+", eff.factor="+1
+							+", v.rep="+getVRep()
+							+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
+							+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
+							+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
+							+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
+							+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
+							+", verbose=FALSE)";
+					//System.out.println(command);
+					RControl.getR().eval(".COresult <- "+command);
+					//result = RControl.getR().eval(".COresult").asRList();
+					table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
+					//RControl.getR().eval("dev.off()");
+					//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
+					//gd.getPanel();
+					return null;
+				}
+
+				protected final void done() {
 					try {
-						command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
-								+", "+gui.getParameters()
-								+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
-								//+", eff.factor="+1
-								+", v.rep="+getVRep()
-								+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
-								+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
-								+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
-								+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
-								+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
-								+", verbose=FALSE)";
-						//System.out.println(command);
-						RControl.getR().eval(".COresult <- "+command);
+						get();
 						exportR.setEnabled(true);						
 						showAlgoPerformance.setEnabled(true);
-						//result = RControl.getR().eval(".COresult").asRList();
-						table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
-						updateGUI();
-						//RControl.getR().eval("dev.off()");
-						//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
-						//gd.getPanel();
-					} catch (Exception e) {
+						jta.clear();
+						jta.appendHTML(table);
+						String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
+						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
+						jta.appendParagraph("Random seed: TODO");
+						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
+						jta.setCaretPosition(0);
+					} catch (CancellationException e) {
+
+					} catch (Throwable e) {
 						String message = e.getMessage();
 						//System.out.println("\""+message+"\"");
 						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
@@ -404,22 +417,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						d.pack();
 						d.setSize(800, 600);
 						d.setVisible(true);
-						e.printStackTrace();						
+						e.printStackTrace();
 					} finally {
 						gui.glassPane.stop();
 					}
-					return null;
-				}
-				
-				 public synchronized void updateGUI() {
-						jta.clear();
-						jta.appendHTML(table);
-						String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
-						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
-						jta.appendParagraph("Random seed: TODO");
-						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
-						jta.setCaretPosition(0);
-				 }
+				}				
 			};
 			worker.execute();
 		} else if (e.getSource()==showAlgoPerformance) {			
