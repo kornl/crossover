@@ -357,36 +357,34 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public Design getDesign() {
 		return null;
 	}
+	
+	String command = "";
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jbCompute) {
 			gui.glassPane.start();
+			
+			command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+					+", "+gui.getParameters()
+					+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
+					//+", eff.factor="+1
+					+", v.rep="+getVRep()
+					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
+					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
+					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
+					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
+					+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
+					+", verbose=FALSE)";
+			
 			//startTesting();		
 			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 				RList result;
 				String table;
-				String command = "";
 
 				@Override
 				protected Void doInBackground() throws Exception {					
-					command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
-							+", "+gui.getParameters()
-							+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
-							//+", eff.factor="+1
-							+", v.rep="+getVRep()
-							+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
-							+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
-							+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
-							+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
-							+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
-							+", verbose=FALSE)";
-					//System.out.println(command);
 					RControl.getR().eval(".COresult <- "+command);
-					//result = RControl.getR().eval(".COresult").asRList();
 					table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
-					//RControl.getR().eval("dev.off()");
-					//JavaGD gd = JavaGD.devices.get(JavaGD.devices.size()-1);
-					//gd.getPanel();
 					return null;
 				}
 
@@ -403,17 +401,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
 						jta.setCaretPosition(0);
 					} catch (CancellationException e) {
-
+						// Will be perhaps used in the future.
 					} catch (Throwable e) {
 						String message = e.getMessage();
 						//System.out.println("\""+message+"\"");
 						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
 						JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
 						JDialog d = new JDialog(gui, "R Error", true);
-						d.add(
-								new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+
-										command, true)
-								);
+						d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+
+										command, true) );
 						d.pack();
 						d.setSize(800, 600);
 						d.setVisible(true);
