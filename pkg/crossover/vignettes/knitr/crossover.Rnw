@@ -611,6 +611,24 @@ In the following code chunk we will compare the results from our approach in the
   with $X$ the crossover design matrix. The variance of the difference is $\sigma^2 (x_A + x_B - 2*x_{AB})$ where $x_{AB}$ is the element of $X^TX$ specifying the covariance of the two treatment parameter estimates.
   The efficiency is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\]
 \end{Def}
+
+<<checkS2>>=
+
+s <- 6
+p <- 3
+v <- 3
+model <- 1
+H <- linkMatrix(model=model, v=v)
+r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2))
+
+Csub <- contrMat(n=rep(1, v), type="Tukey")
+class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+C <- appendZeroColumns(Csub, model, v)
+CC <- t(C) %*% C
+
+S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
+
+@
   
 <<TestWithGeneral.carryover, echo=FALSE, eval=FALSE>>=
   compareApproaches
