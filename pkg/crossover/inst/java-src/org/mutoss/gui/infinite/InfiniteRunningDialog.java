@@ -55,6 +55,7 @@ public class InfiniteRunningDialog extends JDialog implements ActionListener {
         isw.execute();
         
         pack();
+        this.setLocationRelativeTo(gui);
         setVisible(true);
 	}
 	
