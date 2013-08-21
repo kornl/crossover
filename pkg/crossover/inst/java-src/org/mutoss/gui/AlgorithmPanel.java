@@ -363,7 +363,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		if (e.getSource() == jbCompute) {
 			gui.glassPane.start();
 			
-			command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+			command = "s="+spinnerS.getModel().getValue().toString()
 					+", "+gui.getParameters()
 					+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
 					//+", eff.factor="+1
@@ -373,7 +373,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
 					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
 					+", verbose=FALSE"
-					+", n=c("+jtN1.getText()+", 10)"
+					+", n=c("+jtN1.getText()+", 5)"
 					;
 			models = (useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"");
 			
