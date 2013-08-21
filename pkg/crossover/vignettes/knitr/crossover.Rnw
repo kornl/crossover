@@ -507,7 +507,9 @@ for (i in c(1,2,3,4,5,6)) {
     n <- dim(H)[2]
     result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
     print(result)
-    print(general.carryover(designs[[i]], model=i))  
+    print(general.carryover(designs[[i]], model=i)) 
+    print(design.efficiency(designs[[i]]))
+    print(design.efficiency(designs[[i]]))    
     cat(paste("Are the treatment differences estimable under model ",i,"? ", 
               estimable(getDesign(result), v=v, model=i), "/", estimable_R(getDesign(result), v=v, model=i), "\n", sep=""))
     cat(paste("Are the treatment parameters estimable under model ",i,"? ", 

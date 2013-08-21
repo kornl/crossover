@@ -19,18 +19,19 @@
  */
 
 RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2, SEXP checkES);
-RcppExport SEXP searchCODfast(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2, SEXP checkES);
 
 RcppExport SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
-RcppExport SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP verboseS);
+RcppExport SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP ZS, SEXP verboseS);
 RcppExport SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS);
+RcppExport SEXP getZ2R(SEXP sS, SEXP pS);
 
 arma::mat rcd(arma::mat design, int v, int model);
 arma::mat rcdMatrix(arma::mat rcDesign, int v, int model);
 arma::mat infMatrix(arma::mat rcDesign, int v, int model);
 double getS1(arma::mat rcDesign, int v, int model, arma::mat linkM, arma::mat tCC);
-bool estimable(arma::mat rcDesign, int v, int model, arma::mat linkM, arma::mat C, int verbose);
+bool estimable(arma::mat rcDesign, int v, int model, arma::mat linkM, arma::mat C, arma::mat Z, int verbose);
+arma::mat getZ(int s, int p);
 
 #endif

@@ -80,6 +80,7 @@ setMethod("show", "crossoverDesign",
             cat(paste(object@description, " (s=", object@s, ", p=",  object@p, ", v=",  object@v ,")\n", sep=""))
             print(object@design)
             cat("\n")
+            cat("Av.eff.trt.pair.adj: ", design.efficiency(object@design)$av.eff.trt.pair.adj, "\n")
             if (length(object@model)>0) {
               print(general.carryover(object@design, model=object@model))
             }
