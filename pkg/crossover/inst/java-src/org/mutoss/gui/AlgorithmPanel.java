@@ -41,6 +41,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
+	JTextField jtN1 = new JTextField("5000", 6);
+	JTextField jtN2 = new JTextField("25", 6);
 
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
@@ -128,7 +130,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public JPanel getLeftSidePanel() {
 		lsPanel = new JPanel();
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         lsPanel.setLayout(new FormLayout(cols, rows));
 		
@@ -190,7 +192,17 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         
         useCatalogueDesigns.setSelected(true);
         lsPanel.add(useCatalogueDesigns, cc.xyw(2, row, 3));
-        		
+        
+        row+=2;     
+        
+        lsPanel.add(new JLabel("Number of search runs:"), cc.xy(2, row));
+        lsPanel.add(jtN2, cc.xy(4, row));
+        
+        row+=2;   
+        
+        lsPanel.add(new JLabel("Number of steps per run:"), cc.xy(2, row));
+        lsPanel.add(jtN1, cc.xy(4, row));
+        
         row+=2;        
         
         lsPanel.add(jbCompute, cc.xyw(2, row, 3));
@@ -374,6 +386,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
 					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
 					+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")
+					+", n=c("+jtN1.getText()+","+jtN2.getText()+")"
 					+", verbose=FALSE)";
 			
 			//startTesting();		
