@@ -42,8 +42,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
-	JTextField jtN1 = new JTextField("5000", 6);
-	JTextField jtN2 = new JTextField("25", 6);
+	JTextField jtN1 = new JTextField("5000", 6);	
 
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
@@ -193,11 +192,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         
         useCatalogueDesigns.setSelected(true);
         lsPanel.add(useCatalogueDesigns, cc.xyw(2, row, 3));
-        
-        row+=2;     
-        
-        lsPanel.add(new JLabel("Number of search runs:"), cc.xy(2, row));
-        lsPanel.add(jtN2, cc.xy(4, row));
         
         row+=2;   
         
@@ -379,10 +373,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
 					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
 					+", verbose=FALSE"
-					+", n=c("+jtN1.getText()+","+jtN2.getText()+")"
+					+", n=c("+jtN1.getText()+", 10)"
 					;
 			models = (useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"");
-			
 			
 			InfiniteRunningDialog ird = new InfiniteRunningDialog(gui, command, models);
 		} else if (e.getSource()==showAlgoPerformance) {			

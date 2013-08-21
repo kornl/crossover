@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,7 +25,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     protected JScrollPane scrollPane;
     protected RControl rctrl;
     protected DefaultStyledDocument doc;
-    CrossoverGUI gui;
+    CrossoverGUI gui;    
 
     public HTMLOutputPane(CrossoverGUI gui) {
     	this.gui = gui;
@@ -37,6 +38,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     	textArea.appendParagraph(textArea.makeBold(design.title + " ("+design.getRSignature()+")"));
     	textArea.appendParagraph("");
     	textArea.appendHTML(design.getHTMLTable());
+    	textArea.appendParagraph("Av.eff.trt.pair.adj: "+gui.df.format(design.efficiencyAdj));
     	textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference.replaceAll("\\n", "<br>")+"</i>");
     	textArea.appendParagraph("<pre>"+getGeneralCarryover(design)+"</pre>");	
 	}
