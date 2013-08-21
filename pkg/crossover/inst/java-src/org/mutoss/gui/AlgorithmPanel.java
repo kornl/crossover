@@ -409,7 +409,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						jta.clear();
 						jta.appendHTML(table);
 						String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
-						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
+						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");
+						double[] eff = RControl.getR().eval("crossover:::getEff(.COresult)").asRNumeric().getData();						
+						jta.appendParagraph("Av.eff.trt.pair.adj: "+gui.df.format(eff[1]));				    	
 						jta.appendParagraph("Random seed: TODO");
 						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
 						jta.setCaretPosition(0);

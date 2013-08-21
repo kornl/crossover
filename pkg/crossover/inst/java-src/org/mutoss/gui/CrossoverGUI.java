@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -51,6 +52,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 
 	Configuration conf = Configuration.getInstance();
 	public InfiniteProgressPanel glassPane;
+	
+	public static DecimalFormat df = new DecimalFormat("#.####");
 	
 	public static final String[] models = new String[] {
 			"Standard additive model",
