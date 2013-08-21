@@ -1,3 +1,10 @@
+TextFileViewer is already a JDialog:
+
+d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+
+    									command, true) );
+
+---
+
 library(crossover)
 crossoverGUI()
 
