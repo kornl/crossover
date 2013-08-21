@@ -43,6 +43,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   mat linkM = as<mat>(linkMS);
   mat C = as<mat>(CS); // Contrasts
   mat tCC = trans(C) * C; // t(C) %*% C
+  mat Z = getZ(s,p);
   //mat design = as<mat>(designS);
 
   // TODO Read random number generators and C!
@@ -106,7 +107,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
         if (verbose>2) {
           Rprintf("Yeah, s2/s1=%f is greater or equal to eOld=%f.\n", s2/s1, eOld);
         }
-        if(checkE && !estimable(rcDesign, v, model, linkM, C, verbose)) {          
+        if(checkE && !estimable(rcDesign, v, model, linkM, C, Z, verbose)) {          
           eff[i] = NA_REAL;
           //TODO Check whether it's better to go back or to let algorithm search further (I guess often it's better to go back, but I'm not sure).
         } else { // We have found a great design!
@@ -146,96 +147,15 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   END_RCPP
 }
 
-SEXP searchCODfast(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES) {
-  
-  BEGIN_RCPP
-  
-  bool balanceS = is_true( any( LogicalVector(balanceSS) ) );
-  bool balanceP = is_true( any( LogicalVector(balancePS) ) );
-  bool checkE = is_true( any( LogicalVector(checkES) ) );
-  int s = IntegerVector(sS)[0];
-  int p = IntegerVector(pS)[0];
-  int v = IntegerVector(vS)[0];  
-  IntegerVector n = IntegerVector(nS);
-  int n1 = n[0];
-  
-  IntegerVector jump = IntegerVector(jumpS);
-  int j1 = jump[0];
-  int j2 = jump[1];
-  int model = IntegerVector(modelS)[0];
-  double s2 = NumericVector(s2S)[0];
-  
-  mat linkM = as<mat>(linkMS);
-  mat C = as<mat>(CS); // Contrasts
-  mat tCC = trans(C) * C; // t(C) %*% C
-  
-  GetRNGstate();
-  
-  Rcpp::List mlist(designS);
-  int n2 = mlist.size();
-  
-  mat design;
-  mat bestDesign = as<mat>(mlist[0]);
-  int r;
-  mat designOld, rcDesign, Ar, A;  // designBeforeJump, 
-  double s1, eOld = 0, effBest = 0; // eBeforeJump = 0,
-  NumericVector rows, cols;  
-  
-  for(int j=0; j<n2; j++) {  
-    design = as<mat>(mlist[j]);      
-    eOld = 0;
-    for(int i=0; i<n1; i++) {  
-      designOld = design;      
-      r = 1;
-      if (i==0) {
-          r=0;
-      } else if (i%j2==0) {
-        r = j1;
-      }
-      for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
-        rows = ceil(runif(2)*p)-1; 
-        cols = ceil(runif(2)*s)-1;  
-        if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
-        while ( design(rows[0], cols[0]) == design(rows[1],cols[1]) ) {
-          rows = ceil(runif(2)*p)-1; 
-          cols = ceil(runif(2)*s)-1;  
-          if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
-        }
-        double tmp = design(rows[0],cols[0]);
-        design(rows[0], cols[0]) = design(rows[1], cols[1]);
-        design(rows[1], cols[1]) = tmp;
-      }
-      
-      mat rcDesign = rcd(design, v, model);
-      s1 = getS1(rcDesign, v, model, linkM, tCC);      
-      
-      if (s2/s1 >= eOld) {
-        if(!checkE || estimable(rcDesign, v, model, linkM, C, false)) {
-          eOld = s2/s1;
-          if (eOld > effBest) {
-            effBest = eOld;
-            bestDesign = design;
-          }
-        }
-      } else {               
-        design = designOld;
-      } 
-    } /* End hill climbing */
-  } /* End for loop start designs */
-  
-  PutRNGstate();
-  return List::create(Named("design")=bestDesign);  
-  END_RCPP
-}
-
-
-bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, int verbose) {
-    mat Xr, X, XX, XXXX;
+bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, mat Z, int verbose) {
+    mat Xr, X, XX, XXXX, C2;
     Xr = rcdMatrix(rcDesign, v, model);
     X = Xr * linkM;
+    X = join_rows(X, Z);
     XX = trans(X) * X;
     XXXX = pinv(XX) * XX;
-    X = abs(C * XXXX - C);
+    C2 = join_rows(C, zeros<mat>(C.n_rows, Z.n_cols));
+    X = abs(C2 * XXXX - C2);
     if (verbose>2) {
         rcDesign.print(Rcout, "rcDesign:");
         Xr.print(Rcout, "Xr:");
@@ -249,15 +169,16 @@ bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, int verbose) {
     return(estCriterion < 0.0000001);
 }
 
-SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP verboseS) {    
+SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP ZS, SEXP verboseS) {    
     BEGIN_RCPP
     mat rcDesign = as<mat>(rcDesignS);    
     int v = IntegerVector(vS)[0];    
     int model = IntegerVector(modelS)[0];    
     mat linkM = as<mat>(linkMS);  
     mat C = as<mat>(CS);  
+    mat Z = as<mat>(ZS);  
     int verbose = IntegerVector(verboseS)[0];
-    return wrap(estimable(rcDesign, v, model, linkM, C, verbose));
+    return wrap(estimable(rcDesign, v, model, linkM, C, Z, verbose));
     END_RCPP
 }
 
@@ -286,6 +207,20 @@ SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
   mat design = as<mat>(designS);  
   return wrap(infMatrix(design, v, model));
   END_RCPP
+}
+
+SEXP getZ2R(SEXP sS, SEXP pS) {
+  BEGIN_RCPP
+  int s = IntegerVector(sS)[0];
+  int p = IntegerVector(pS)[0];
+  return wrap(getZ(s, p));
+  END_RCPP
+}
+
+arma::mat getZ(int s, int p) {
+    //eye<mat>(p,p).print(Rcout, "diag(p):");
+    //ones<mat>(1,s).print(Rcout, "matrix(1,1,s):");
+    return join_rows(kron(eye<mat>(p,p),ones<mat>(s,1)),kron(ones<mat>(p,1),eye<mat>(s,s)));
 }
 
 arma::mat rcd(arma::mat design, int v, int model) {

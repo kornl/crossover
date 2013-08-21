@@ -273,17 +273,11 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
   
-  if (FALSE) { # parameter fast
-    result <- .Call( "searchCODfast", as.integer(s), as.integer(p), as.integer(v), 
+  result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
                    start.designs, H, C, model, eff.factor, 
                    v.rep, balance.s, balance.p, verbose, 
                    as.integer(n), as.integer(jumps), S2, check.estimable, PACKAGE = "crossover" )
-  } else {
-      result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
-                       start.designs, H, C, model, eff.factor, 
-                       v.rep, balance.s, balance.p, verbose, 
-                       as.integer(n), as.integer(jumps), S2, check.estimable, PACKAGE = "crossover" )
-  }
+  
   design <- result$design
   
   if (!estimable(design, v=v, model=model, C=C)) {
@@ -350,7 +344,8 @@ estimable <- function(design, v, model, C, verbose=0) {
     }
     rcDesign <- rcd(design, v=v, model=model)
     linkM <- linkMatrix(model, v)
-    return(.Call( "estimable2R", rcDesign, v, model, linkM, C, verbose, PACKAGE = "crossover" ))    
+    Z <- crossover:::getZ(s=dim(design)[2],p=dim(design)[1])
+    return(.Call( "estimable2R", rcDesign, v, model, linkM, C, Z, verbose, PACKAGE = "crossover" ))    
 }
 
 getS1 <- function(design, v, model, C, verbose=0) {

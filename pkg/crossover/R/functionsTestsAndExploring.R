@@ -111,12 +111,16 @@ getNp <- function(D, v) {
 }
 
 # block design matrix
-getZ <- function(s, p) {
+getZ_R <- function(s, p) {
   # Z x (p_1, ..., p_p, s_1, ..., s_s)
   return(cbind(kronecker(diag(p), matrix(1,s,1)),kronecker(matrix(1,p,1),diag(s))))
 }
 
-getPZ <- function(s,p) {
+getZ <- function(s, p) {
+    return(.Call( "getZ2R", s, p, PACKAGE = "crossover" ))    
+}
+
+getPZ <- function(s, p) {
   Z <- getZ(s,p)
   return(Z %*% ginv(t(Z) %*% Z) %*% t(Z))
 }
