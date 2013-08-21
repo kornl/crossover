@@ -18,7 +18,7 @@ public class DesignTableModel extends AbstractTableModel {
 	}
 
 	public int getColumnCount() {
-		return 2;
+		return 3;
 	}
 
 	public String getColumnName(int columnIndex) {
