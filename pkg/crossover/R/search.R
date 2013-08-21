@@ -286,6 +286,9 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   }
   design <- result$design
   
+  if (!estimable(design, v=v, model=model, C=C)) {
+      stop("Something went wrong. Specified contrasts are not estimable with this design.")
+  }  
   time <- proc.time()-start.time
   class(time) <- NULL
   #varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
