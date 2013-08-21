@@ -262,7 +262,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     start.designs[[i]] <- randomDesign(s, p, v,  v.rep, balance.s=balance.s, balance.p=balance.p, model=model, C=C)
     i <- i + 1
   }
-  if (length(start.designs)!=n[2]) { warning(paste("Too many start designs specified. Only the first ", n[2], " will be used.", sep="")) }
+  if (length(start.designs)!=n[2]) { warning(paste("More start designs specified than number of search runs. Search runs are increased to ", length(start.designs), ".", sep="")) }
 
   CC <- t(C) %*% C
 
