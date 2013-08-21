@@ -226,7 +226,7 @@ infMatrix <- function(X, v, model) {
 #' @export searchCrossOverDesign
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
-                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast, check.estimable=TRUE) { #fast=FALSE) {
+                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
@@ -276,7 +276,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
                    start.designs, H, C, model, eff.factor, 
                    v.rep, balance.s, balance.p, verbose, 
-                   as.integer(n), as.integer(jumps), S2, check.estimable, PACKAGE = "crossover" )
+                   as.integer(n), as.integer(jumps), S2, TRUE, PACKAGE = "crossover" )
   
   design <- result$design
   
@@ -327,7 +327,10 @@ estimable_R <- function(design, v, model, C, verbose=0) {
   Xr <- rcdMatrix(rcDesign, v, model)
   H <- linkMatrix(model, v)
   X <- Xr %*% H
+  Z <- getZ(s=dim(design)[2],p=dim(design)[1])
+  X <- cbind(X, Z)  
   XX <- t(X) %*% X
+  C <- cbind(C, matrix(0, dim(C)[1], dim(Z)[2]))
   if (verbose) {            
       print(rcDesign)
       print(Xr)
@@ -344,7 +347,7 @@ estimable <- function(design, v, model, C, verbose=0) {
     }
     rcDesign <- rcd(design, v=v, model=model)
     linkM <- linkMatrix(model, v)
-    Z <- crossover:::getZ(s=dim(design)[2],p=dim(design)[1])
+    Z <- getZ(s=dim(design)[2],p=dim(design)[1])
     return(.Call( "estimable2R", rcDesign, v, model, linkM, C, Z, verbose, PACKAGE = "crossover" ))    
 }
 
