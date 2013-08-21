@@ -4,6 +4,9 @@ d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the f
     									command, true) );
 
 ---
+Analyze the magnitude of possible estimation criterion derivations (due to floating point and real unestimability).
+
+---
 
 library(crossover)
 crossoverGUI()

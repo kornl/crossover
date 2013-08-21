@@ -246,7 +246,7 @@ bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, int verbose) {
     if (verbose>2) {
         Rprintf("The estimability criterion is: %f.\n", estCriterion); 
     }
-    return(estCriterion < 0.0001);
+    return(estCriterion < 0.0000001);
 }
 
 SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP verboseS) {    
