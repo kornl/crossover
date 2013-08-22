@@ -62,7 +62,7 @@ public class RControl {
 			}
 		}
 		try {
-			rcs = new RCallServicesREngine(new JRIEngine(rengine));
+			rcs = new RCallServicesREngineWrapper(new JRIEngine(rengine));
 			if (System.getProperty("eclipse") != null) {	
 				rcs.eval("require(crossover)");
 				rcs.eval("require(JavaGD)");
