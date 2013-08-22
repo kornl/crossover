@@ -3,6 +3,10 @@
 - Default contrasts: Tuckey, Dunnett and weighted combination of both
 - exchange rules, for example: every sequence should start with placebo
 
+- estimable_R does not work for full set of interactions:
+crossover:::infiniteSearch(oldResult=NULL, s=5, p=4, v=4, model="Full set of interactions", v.rep=c(5,5,5,5), balance.s=FALSE, balance.p=FALSE, verbose=FALSE, n=c(5000, 5), start.designs="catalog")
+This problem most likely is in appendZeroColumns(Csub, model, v).
+
 ---
 Check whether C and t(C) are not mixed up somewhere. (I guess not, because it would cause problems due to wrong dimensions.)
 ---
