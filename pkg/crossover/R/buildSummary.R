@@ -55,7 +55,7 @@ getSignature <- function(design) {
 loadAllDatasets <- function() {
 	path <- system.file("data", package="crossover")
 	for (file in dir(path=path)) {		 
-		designs <- load(paste(path, file, sep="/"), envir=globalenv())
+		designs <- load(paste(path, file, sep="/"), envir=crossover:::crossover.env)
 	}
 }
 
