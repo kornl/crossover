@@ -1,4 +1,10 @@
-Check whether C and t(C) are not mixed up somewhere.
+- Customized output - default: Treatment variances, pairwise efficiencies
+- Interaction contrasts???
+- Default contrasts: Tuckey, Dunnett and weighted combination of both
+- exchange rules, for example: every sequence should start with placebo
+
+---
+Check whether C and t(C) are not mixed up somewhere. (I guess not, because it would cause problems due to wrong dimensions.)
 ---
 TextFileViewer is already a JDialog:
 
