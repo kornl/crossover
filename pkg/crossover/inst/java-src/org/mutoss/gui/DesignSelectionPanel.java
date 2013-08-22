@@ -37,7 +37,7 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		this.gui = gui;
 		
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
-        String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu, pref, 2dlu, pref, 2dlu, pref, 2dlu, pref, 5dlu";
         
         FormLayout layout = new FormLayout(cols, rows);
         layout.setColumnGroups(new int[][]{ {2, 4} });
@@ -80,12 +80,14 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
         add(jcbMyDesigns, cc.xy(2, row));
         jcbMyDesigns.setSelected(true);
         jcbMyDesigns.addActionListener(this);
+        jcbMyDesigns.setEnabled(false);
         
         row+=2;
         
         add(jcbSearch, cc.xy(2, row));
         jcbSearch.setSelected(true);
         jcbSearch.addActionListener(this);
+        jcbSearch.setEnabled(false);
         
 	}
 	
