@@ -33,6 +33,10 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
         doTheLayout();
     }
 
+    public void clear() {
+    	textArea.clear();
+    }
+    
     public void showDesign(Design design) {
     	textArea.clear();
     	textArea.appendParagraph(textArea.makeBold(design.title + " ("+design.getRSignature()+")"));

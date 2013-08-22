@@ -37,12 +37,15 @@ public class FillTableWorker extends SwingWorker<Void, Void> {
 				list.add(design);
 			}			
 		}
-		list.addAll(CrossDes.getDesigns(t, p, s1, s2));
+		if (gui.designPanel.jcbCrossdes.isSelected()) {
+			list.addAll(CrossDes.getDesigns(t, p, s1, s2));
+		}		
 		return null;
 	}  
 	
 	protected void done() {
 		gui.designPanel.setDesigns(list);
+		gui.designPanel.jta.clear();
 		gui.glassPane.stop();
 	}
 }
