@@ -7,7 +7,6 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.jdesktop.swingworker.SwingWorker;
-import org.mutoss.gui.AlgorithmPanel;
 import org.mutoss.gui.RControl;
 import org.mutoss.gui.dialogs.TextFileViewer;
 

@@ -11,9 +11,7 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;

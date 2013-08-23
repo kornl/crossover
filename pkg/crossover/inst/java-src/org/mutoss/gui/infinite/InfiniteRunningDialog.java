@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JProgressBar;
 
-import org.mutoss.gui.AlgorithmPanel;
 import org.mutoss.gui.CrossoverGUI;
 
 import com.jgoodies.forms.layout.CellConstraints;

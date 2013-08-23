@@ -10,16 +10,13 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.CancellationException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -30,9 +27,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.af.commons.widgets.HTMLPaneWithButtons;
-import org.af.jhlir.call.RList;
-import org.jdesktop.swingworker.SwingWorker;
-import org.mutoss.gui.dialogs.TextFileViewer;
 import org.mutoss.gui.infinite.InfiniteRunningDialog;
 
 import com.jgoodies.forms.layout.CellConstraints;
