@@ -17,10 +17,10 @@ buildSummaryTable <- function() {
 	summaryTable <- data.frame(dataset=character(0), title=character(0), reference=character(0), signature=character(0), t=numeric(0), p=numeric(0), s=numeric(0))
 	path <- system.file("data", package="crossover")
 	for (file in dir(path=path)) {		 
-		designs <- load(paste(path, file, sep="/"))
+		designs <- load(paste(path, file, sep="/"), envir=crossover:::crossover.env)
 		for (design in designs) {
 			dataset <- design
-			design <- get(design)
+			design <- get(design, envir=crossover:::crossover.env)
 			title <- attr(design, "title")
 			reference <- attr(design, "reference")
 			signature <- attr(design, "signature")
@@ -50,13 +50,6 @@ getSignature <- function(design) {
 	s <- dim(design)[2]
 	t <- length(levels(as.factor(design)))
 	return(c(p,s,t))
-}
-
-loadAllDatasets <- function() {
-	path <- system.file("data", package="crossover")
-	for (file in dir(path=path)) {		 
-		designs <- load(paste(path, file, sep="/"), envir=crossover:::crossover.env)
-	}
 }
 
 getTable <- function(design) {

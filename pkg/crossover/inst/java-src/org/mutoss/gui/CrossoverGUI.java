@@ -108,9 +108,6 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		
 		setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/rjavaicon64.png"))).getImage());
 		
-		RControl.getR().evalVoid(".st <- buildSummaryTable()");
-		RControl.getR().evalVoid("crossover:::loadAllDatasets()"); 
-
 		glassPane = new InfiniteProgressPanel(this, "Calculating");
 	    setGlassPane(glassPane);
 	    glassPane.addAbortListener(this);

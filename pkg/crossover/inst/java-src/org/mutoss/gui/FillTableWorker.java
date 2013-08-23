@@ -20,7 +20,7 @@ public class FillTableWorker extends SwingWorker<Void, Void> {
 		int t = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
 		int p = Integer.parseInt(gui.spinnerP.getModel().getValue().toString());
 		if (gui.designPanel.jcbPackageArchive.isSelected()) {
-			RControl.getR().eval(".df <- .st[.st$s>="+s1+"&.st$s<="+s2+"&.st$t=="+t+"&.st$p=="+p+""+",]");
+			RControl.getR().eval(".df <- .summary_table[.summary_table$s>="+s1+"&.summary_table$s<="+s2+"&.summary_table$t=="+t+"&.summary_table$p=="+p+""+",]");
 			int n = RControl.getR().eval("dim(.df)[1]").asRInteger().getData()[0];		
 			if (n>0) {
 				int[] s = RControl.getR().eval(".df$s").asRInteger().getData();
