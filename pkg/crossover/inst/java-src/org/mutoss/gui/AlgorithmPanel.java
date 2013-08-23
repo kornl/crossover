@@ -177,10 +177,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         rowEff = row;        
         createEffPanel();
         
-        row+=2;    
+        /*row+=2;    
         
         rowTNP = row;        
         createWeightsPanel();
+        */
         
         row+=2;        
         
@@ -240,7 +241,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			}
 		}		
 		for (Component c : weightsPanel.getComponents()) c.setEnabled(false);
-		lsPanel.add(weightsPanel, cc.xyw(2, rowTNP, 3));
+		//lsPanel.add(weightsPanel, cc.xyw(2, rowTNP, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
 	}
