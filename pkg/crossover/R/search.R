@@ -254,7 +254,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
     st <- get(".summary_table", envir=crossover:::crossover.env)
-    start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get)
+    start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get, envir=crossover:::crossover.env)
   }
   i <- length(start.designs) + 1
   while (i <= n[2]) {    
