@@ -68,6 +68,8 @@ public class InfiniteRunningDialog extends JDialog implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		isw.cancel();
+		pp.cancel = true;
+		pp.repaint();
 	}
 	
 	
