@@ -18,3 +18,7 @@ combineResults <- function(x,y) {
                misc=c(x@misc, y@misc)))
     
 }
+
+getMaxEffPerRun <- function(x) {
+    return(unlist(lapply(x@eff, function(x) {max(x[!is.na(x)])})))
+}
