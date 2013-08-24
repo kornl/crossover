@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mutoss.config.Configuration;
+import org.mutoss.gui.CrossoverGUI;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -22,11 +23,12 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
 
     private Configuration conf;
     private OptionsDialog odialog;
-    private JCheckBox colorImages;
+    private JCheckBox showCarryOver;
+    private JCheckBox showAsTable;
 
-	JFrame parent;
+    CrossoverGUI parent;
 
-    public OutputPanel(JFrame parent, OptionsDialog odialog) {
+    public OutputPanel(CrossoverGUI parent, OptionsDialog odialog) {
         this.conf = Configuration.getInstance();
         this.odialog = odialog;
         this.parent = parent;
@@ -38,11 +40,10 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
     /**
      * Instantiation of Swing-Components.
      */
-    private void makeComponents() {
-        
-        colorImages = new JCheckBox("Colored image files and pdf reports");
+    private void makeComponents() {        
+        showCarryOver = new JCheckBox("Colored image files and pdf reports");
         //colorImages.setSelected(conf.getGeneralConfig().getColoredImages());
-        colorImages.setToolTipText("<html></html>");
+        showCarryOver.setToolTipText("<html></html>");
         
     }
 
@@ -59,7 +60,7 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
         
         row += 2;
         
-        p1.add(colorImages, cc.xyw(1, row, 3));
+        p1.add(showCarryOver, cc.xyw(1, row, 3));
         
         /*row += 2;        
         
