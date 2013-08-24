@@ -40,7 +40,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
-	HTMLPaneWithButtons jta;
+	public HTMLPaneWithButtons jta;
 	JLabel label = new JLabel();
 	JPanel ntPanel = null;
 	JPanel weightsPanel = null;
