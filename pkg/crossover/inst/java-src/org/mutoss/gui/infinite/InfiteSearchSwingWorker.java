@@ -60,12 +60,8 @@ public class InfiteSearchSwingWorker extends SwingWorker<SearchProgress, SearchP
 			//System.out.println("\""+message+"\"");
 			if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
 			JOptionPane.showMessageDialog(ird.gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
-			JDialog d = new JDialog(ird.gui, "R Error", true);
-			d.add( new TextFileViewer(ird.gui, "R Objects", "The following R code produced the following error:\n\n" +message+
-							fullcommand, true) );
-			d.pack();
-			d.setSize(800, 600);
-			d.setVisible(true);
+			new TextFileViewer(ird.gui, "R Objects", "The following R code produced the following error:\n\n" +message+
+							fullcommand, true);
 			e.printStackTrace();
         } finally {
         	ird.gui.glassPane.stop();
