@@ -1,5 +1,6 @@
 package org.mutoss.gui.options;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -21,6 +22,7 @@ import org.af.commons.widgets.lists.IntegerJComboBox;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mutoss.config.Configuration;
+import org.mutoss.gui.CrossoverGUI;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -39,9 +41,9 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
     private OptionsDialog odialog;
     private JCheckBox colorImages;
 
-	JFrame parent;
+    CrossoverGUI parent;
 
-    public GeneralPanel(JFrame parent, OptionsDialog odialog) {
+    public GeneralPanel(CrossoverGUI parent, OptionsDialog odialog) {
         this.conf = Configuration.getInstance();
         this.odialog = odialog;
         this.parent = parent;
@@ -197,11 +199,14 @@ public class GeneralPanel extends OptionsPanel implements ActionListener {
        	/* Font size: */ 
         int fontSize = cbFontSize.getSelectedObject();        
        	if (conf.getGeneralConfig().getFontSize()!=fontSize) {
+       		// TODO The JTextPane font sizes are not updated by this code:
+       		//Font font = new Font(Font.SANS_SERIF, 3, fontSize);
+       		//parent.algorithmPanel.jta.setFont(font);
        		conf.getGeneralConfig().setFontSize(fontSize);
             WidgetFactory.setFontSizeGlobal(conf.getGeneralConfig().getFontSize());
             SwingUtilities.updateComponentTreeUI(parent);
             SwingUtilities.updateComponentTreeUI(odialog);
-            odialog.pack();
+            odialog.pack();            
        	}
     }
 
