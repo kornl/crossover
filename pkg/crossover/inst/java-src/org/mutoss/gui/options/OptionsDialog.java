@@ -24,7 +24,7 @@ public class OptionsDialog extends JDialog implements ActionListener {
 
 	private JTabbedPane tabbedPane;
     private GeneralPanel visualPanel;
-//    private NumericPanel numericPanel;
+    private OutputPanel outputPanel;
 //    private MiscPanel miscPanel;
     private OkApplyCancelButtonPane bp;
 
@@ -58,7 +58,7 @@ public class OptionsDialog extends JDialog implements ActionListener {
     private void makeComponents() {
         tabbedPane = new JTabbedPane();
         visualPanel = new GeneralPanel(parent, this);
- //       numericPanel = new NumericPanel(conf);
+        outputPanel = new OutputPanel(parent, this);
 //        miscPanel = new MiscPanel(conf);        
         bp = new OkApplyCancelButtonPane();
     }
@@ -67,8 +67,8 @@ public class OptionsDialog extends JDialog implements ActionListener {
      * Do the layout.
      */
     private void doTheLayout() {
+    	tabbedPane.addTab("Output", outputPanel);
         tabbedPane.addTab("Visual", visualPanel);
-//        tabbedPane.addTab("Numeric", numericPanel);
 //        tabbedPane.addTab("Misc", miscPanel);
         Container cp = getContentPane();
         cp.add(tabbedPane);
@@ -86,7 +86,7 @@ public class OptionsDialog extends JDialog implements ActionListener {
         		(e.getActionCommand().equals(OkApplyCancelButtonPane.APPLY_CMD)) ) {
             try {
             	visualPanel.setProperties();
-            	//numericPanel.setProperties();
+            	outputPanel.setProperties();
             	//miscPanel.setProperties();
                 if  (e.getActionCommand().equals(OkApplyCancelButtonPane.OK_CMD)) {
                 	dispose();

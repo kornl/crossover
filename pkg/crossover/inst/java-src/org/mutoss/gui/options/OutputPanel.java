@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.apache.commons.logging.Log;
@@ -24,7 +26,7 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
     private Configuration conf;
     private OptionsDialog odialog;
     private JCheckBox showCarryOver;
-    private JCheckBox showAsTable;
+    private JComboBox showTable = new JComboBox(new String[] {"HTML Table", "ASCII", "R matrix"});
 
     CrossoverGUI parent;
 
@@ -41,7 +43,7 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
      * Instantiation of Swing-Components.
      */
     private void makeComponents() {        
-        showCarryOver = new JCheckBox("Colored image files and pdf reports");
+        showCarryOver = new JCheckBox("Show variances of pairwise carry-over comparisons.");
         //colorImages.setSelected(conf.getGeneralConfig().getColoredImages());
         showCarryOver.setToolTipText("<html></html>");
         
@@ -58,16 +60,17 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
 
         int row = 1;     
         
+        p1.add(new JLabel("Show design as: "), cc.xy(1, row));        
+        p1.add(showTable, cc.xy(3, row));
+        
         row += 2;
         
         p1.add(showCarryOver, cc.xyw(1, row, 3));
         
-        /*row += 2;        
-        
-        p1.add(showRejected, cc.xyw(1, row, 3));        
-        
         row += 2;        
+            
         
+        /*
         p1.add(useJLaTeXMath, cc.xyw(1, row, 3));        
         
         row += 2;        
