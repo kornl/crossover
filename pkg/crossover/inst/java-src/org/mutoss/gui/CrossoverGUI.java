@@ -24,6 +24,9 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -34,6 +37,7 @@ import org.af.commons.logging.ApplicationLog;
 import org.af.commons.logging.LoggingSystem;
 import org.af.commons.tools.OSTools;
 import org.af.commons.widgets.InfiniteProgressPanel;
+import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.InfiniteProgressPanel.AbortListener;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.Configuration;
@@ -105,6 +109,11 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		}
 		
 		setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/rjavaicon64.png"))).getImage());
+		try {
+			setLooknFeel();
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Font size and Look'n'Feel could not be restored.", "Error restoring Look'n'Feel", JOptionPane.ERROR_MESSAGE);
+		}
 		
 		glassPane = new InfiniteProgressPanel(this, "Calculating");
 	    setGlassPane(glassPane);
@@ -398,6 +407,13 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		int t = Integer.parseInt(spinnerT.getModel().getValue().toString());
 		int p = Integer.parseInt(spinnerP.getModel().getValue().toString());
 		return "p="+p+", v="+t;
+	}
+	
+	private void setLooknFeel() throws ClassNotFoundException, IllegalAccessException,
+	InstantiationException, UnsupportedLookAndFeelException {
+		UIManager.setLookAndFeel(Configuration.getInstance().getJavaConfig().getLooknFeel());
+		WidgetFactory.setFontSizeGlobal(Configuration.getInstance().getGeneralConfig().getFontSize());
+		SwingUtilities.updateComponentTreeUI(this);
 	}
 
 }
