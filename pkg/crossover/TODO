@@ -1,3 +1,6 @@
+Use package parallel
+---
+# Too bad:
 y <- searchCrossOverDesign(s=18, v=9, p=9, start.designs=list(williams9t), n=c(5000,1000))
 ---
 - Customized output - default: Treatment variances, pairwise efficiencies
