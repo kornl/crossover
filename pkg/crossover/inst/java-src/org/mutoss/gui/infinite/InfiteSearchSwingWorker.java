@@ -35,7 +35,7 @@ public class InfiteSearchSwingWorker extends SwingWorker<SearchProgress, SearchP
 	
 	private SearchProgress newSearchProgress(boolean first) {
 		run++;
-		fullcommand = "crossover:::infiniteSearch("+(first?"oldResult=NULL, ":"oldResult=.COresult, ")+ird.getCommand()
+		fullcommand = "crossover:::infiniteSearchStep("+(first?"oldResult=NULL, ":"oldResult=.COresult, ")+ird.getCommand()
 				+(first?ird.models:"")+")";
 		RControl.getR().eval(".COresult <- " + fullcommand);	
 		double[] maxEff = RControl.getR().eval("crossover:::getMaxEffPerRun(.COresult)").asRNumeric().getData();

@@ -1,4 +1,4 @@
-infiniteSearch <- function(oldResult=NULL, ..., start.designs) {
+infiniteSearchStep <- function(oldResult=NULL, ..., start.designs) {
     if (is.null(oldResult)) {
         result <- searchCrossOverDesign(start.designs=start.designs, ...)
         return(result)
@@ -7,15 +7,39 @@ infiniteSearch <- function(oldResult=NULL, ..., start.designs) {
     return(combineResults(oldResult, result))
 }
 
-combineResults <- function(x,y) {    
+infiniteSearch <- function(...) {
+    oldResult <- NULL
+    assign(".search", TRUE, env=crossover:::crossover.env)
+    while(get(".search", env=crossover:::crossover.env)) {
+        result <- tryCatch({        
+            infiniteSearchStep(oldResult=oldResult, ...)
+        }, interrupt = function(interrupt) {            
+            assign(".search", FALSE, env=crossover:::crossover.env)    
+        }, finally = {
+            print("Another loop.")
+        })
+        if (!is.logical(result)) {
+            if (is.null(oldResult)) {
+                oldResult <- result
+            } else {
+                oldResult <- combineResults(oldResult, result)
+            }
+            print(result)
+            gc()
+        }
+    }
+    return(result)
+}
+
+combineResults <- function(x, y, save.history=FALSE) {    
     return(new("crossoverSearchResult", 
                design=y@design, 
-               startDesigns=c(x@startDesigns, y@startDesigns), 
-               eff=c(x@eff, y@eff),                   
+               startDesigns=ifelse(save.history, c(x@startDesigns, y@startDesigns), list()), 
+               eff=ifelse(save.history, c(x@eff, y@eff), list()),
                search=x@search, 
-               model=c(x@model, y@model), 
+               model=x@model, 
                time=c(x@time, y@time), 
-               misc=c(x@misc, y@misc)))
+               misc=ifelse(save.history, c(x@misc, y@misc), list())))
     
 }
 
