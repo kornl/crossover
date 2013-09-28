@@ -2,7 +2,12 @@ useDynLib(crossover)
 
 importFrom(graphics, plot)
 
+import(methods)
+import(Rcpp)
+import(RcppArmadillo)
+import(JavaGD)
 import(rJava)
+import(JGR)
 importFrom(CommonJavaJars, loadJars)
 importFrom(multcomp, contrMat)
 importFrom(MASS, ginv)
