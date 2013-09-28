@@ -1,3 +1,5 @@
+Use ggpots "autoplot"? It's S3...
+---
 Uses too much memory:
 x <- crossover:::infiniteSearch(s=18, p=9, v=9, model="Standard additive model", n=c(5000, 5))
 ---
