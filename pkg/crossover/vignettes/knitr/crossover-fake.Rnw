@@ -1,5 +1,0 @@
-\documentclass[10pt]{article}
-%\VignetteIndexEntry{crossover - A search algorithm and GUI for cross-over designs}
-\begin{document}
-This is a fake Rnw file. Take a look at knitr/crossover.Rnw for the real vignette.
-\end{document}
