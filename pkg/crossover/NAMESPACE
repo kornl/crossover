@@ -1,7 +1,6 @@
 useDynLib(crossover)
 
-importFrom(graphics, plot)
-
+importFrom(stats4, plot)
 import(methods)
 import(Rcpp)
 import(RcppArmadillo)
