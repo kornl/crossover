@@ -1,2 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+vignettes/crossover.aux
+vignettes/crossover.bbl
+vignettes/crossover.blg
+vignettes/crossover.log
+vignettes/crossover.out
+vignettes/crossover.toc
