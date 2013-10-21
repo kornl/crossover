@@ -16,3 +16,5 @@ figure
 *.blg
 cache
 crossover.out
+results.pdf
+results.tex

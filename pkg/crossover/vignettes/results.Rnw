@@ -1,0 +1,240 @@
+\documentclass[a4paper, 10pt]{article}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+ \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+%\usepackage{tikz}
+%\usetikzlibrary{decorations,arrows,shapes}
+\usepackage[margin=0.9in]{geometry}
+%\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xspace}
+\usepackage{tabularx}
+\usepackage{makeidx}\makeindex
+\usepackage{algorithmic} 
+\usepackage{algorithm}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1mm}
+\newcommand{\commentout}[1]{}
+\renewcommand{\theequation}{\thesection.\arabic{\equation}}
+\numberwithin{equation}{section}
+
+\theoremstyle{definition}
+\newtheorem{Def}{Definition}[section]
+\newtheorem{Rem}[Def]{Remark}
+\newtheorem{RemDef}[Def]{Remark und Definition}
+\newtheorem{DefRem}[Def]{Definition und Remark}
+\newtheorem{Example}[Def]{Example}
+\theoremstyle{plain}
+\newtheorem{Theorem}[Def]{Theorem}
+\newtheorem{DefTheorem}[Def]{Definition and Theorem}
+\newtheorem{Corollary}[Def]{Corollary}
+\newtheorem{Lemma}[Def]{Lemma}
+
+\newcommand{\C}{\ensuremath{\mathbb{C}}\xspace}
+\newcommand{\R}{\ensuremath{\mathbb{R}}\xspace}
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}\xspace}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\NN}{\ensuremath{\mathbb{N}_0}\xspace}
+\newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
+\newcommand{\sF}{\ensuremath{\mathcal{F}}\xspace}
+\newcommand{\sN}{\ensuremath{\mathcal{N}}\xspace}
+\newcommand{\Pot}{\ensuremath{\mathfrak{Pot}}\xspace}
+\newcommand{\kronecker}{\raisebox{1pt}{\ensuremath{\:\otimes\:}}}
+
+\DeclareMathOperator{\range}{range}
+
+\newcommand{\skp}[1]{\left\langle#1\right\rangle}
+
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\newcommand{\id}{\text{id}}
+
+\newenvironment{Proof}{\par\noindent\upshape\textit{Proof. }\nopagebreak}{\qed\par}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\begin{document}
+
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{crossover - Comparing results}
+
+<<OptionsAndLibraries, include=FALSE, message=FALSE>>=
+if (exists("opts_chunk")) {
+  opts_chunk$set(concordance=TRUE)
+  opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=95))
+  #opts_chunk$set(size="footnotesize")
+  #opts_chunk$set(size="tiny")
+  opts_chunk$set(size="scriptsize") 
+  opts_chunk$set(cache=TRUE)
+  opts_chunk$set(autodep=TRUE)
+}
+library(crossover, quietly=TRUE)
+options(width=128)
+options(digits=4)
+startGUI <- function(...) {invisible(NULL)}
+#options(prompt="> ", continue="+ ")
+library(MASS)
+library(multcomp)
+library(ggplot2)
+library(Matrix)
+@
+
+\subsection{Evaluation of Algorithm Performance}
+
+Let's compare the results from the search algorithm with results from the literature. 
+
+\begin{Example}
+First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
+
+<<modelsFromLiterature1, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
+s <- 6; p <- 4; v <- 2
+
+design1 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,2,2,1),
+                   c(2,1,1,2)))
+design2 <- t(rbind(c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,2,2,1),
+                   c(2,1,1,2)))
+design3 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1)))
+design4 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1))) # Why is there no design 4 in the book?
+design5 <- t(rbind(c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1)))
+design6 <- t(rbind(c(1,2,1,2),
+                   c(2,1,2,1),
+                   c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,2,1,2),
+                   c(2,1,2,1)))
+design7 <- t(rbind(c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,1,1,2),
+                   c(2,2,2,1),
+                   c(1,2,1,1),
+                   c(2,1,2,2)))
+design8 <- t(rbind(c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,2,1,2),
+                   c(2,1,2,1)))
+
+designs <- list(design1, design2, design3, design4, design5, design6, design7, design8)
+
+models <- c("Standard additive model",
+            "Self-adjacency model",
+            "Proportionality model",
+            "Placebo model",
+            "No carry-over into self model",
+            "Treatment decay model",
+            "Full set of interactions",
+            "Second-order carry-over effects")
+
+attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
+
+for (i in c(1,2,3,4,5,6)) {  
+    H <- linkMatrix(model=i, v=v)
+    n <- dim(H)[2]
+    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i), "/", estimable_R(designs[[i]], v=v, model=i), "\n", sep=""))
+    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
+    cat(paste("Are all parameters estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i, C=diag(n)), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)), "\n", sep=""))
+}
+
+checkResult <- function (result, refDesign, model) {
+    allDesigns <- result@misc$designs
+    df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
+    for (i in 1:length(allDesigns)) {
+        designs <- allDesigns[[i]]
+        for (j in 1:length(designs)) {
+            design <- designs[[j]]
+            crit <- sum(general.carryover(design, model=model)$Var.trt.pair)/2
+            df <- rbind(df, data.frame(run=i, step=j, crit=crit))
+        }
+    }
+    plot <- ggplot(df, aes(x=step, y=crit)) + geom_point() + facet_wrap( ~ run)
+    return(list(df=df, plot=plot))
+}
+
+for (i in c(1,2,3,4,5,6)) {  
+    model <- models[i]
+    cat("======= ", model, " =======","\n")
+    H <- linkMatrix(model=i, v=v)
+    n <- dim(H)[2]
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
+    print(result)
+    print(general.carryover(designs[[i]], model=i)) 
+    print(design.efficiency(designs[[i]]))
+    print(design.efficiency(designs[[i]]))    
+    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i), "/", estimable_R(getDesign(result), v=v, model=i), "\n", sep=""))
+    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
+    cat(paste("Are all parameters estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i, C=diag(n)), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)), "\n", sep=""))
+    
+    print(plot(result) + ggtitle(models[i]))  
+    print(checkResult(result, designs[[i]], model=i)$plot+ ggtitle(models[i]))
+    
+}
+
+searchCrossOverDesign(s=s, p=p, v=v, model=3)
+searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
+
+
+detach("namespace:crossover")
+
+@
+
+\end{Example}
+
+<<correct, echo=TRUE, eval=TRUE, cache=TRUE>>=
+
+# For the self-adjacency model our algorithm found for example:
+v <- 2
+d <- structure(c(1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 
+2, 2, 2, 1, 1, 2, 1), .Dim = c(4L, 6L))
+
+d
+
+# Which seems to compare well in regard to Var.trt.pair (and Var.car.pair.1 but a little worse in Var.car.pair.2) to the reference design from literature:
+
+general.carryover(d, model=2)
+general.carryover(design2, model=2)
+
+rcDesign <- crossover:::rcd(d, v=v, model=2)
+rcDesign
+X <- crossover:::rcdMatrix(rcDesign, v=v, model=2) %*% crossover:::linkMatrix(model="Self-adjacency model", v)
+crossover:::estimable_R(d, v, model=2, diag(6))
+crossover:::estimable(d, v, model=2, diag(6))
+
+@
+
+\end{document}
