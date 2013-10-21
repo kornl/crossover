@@ -26,3 +26,5 @@ export(general.carryover)
 export(buildSummaryTable)
 
 exportMethods(plot, print, show, getDesign)
+
+export(getDesignMatrix)

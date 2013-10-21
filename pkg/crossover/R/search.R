@@ -360,3 +360,10 @@ getValues <- function(design, model=1, C, v) {
 dput2 <- function(x) {
   paste(capture.output(dput(x)), collapse = " ")
 }
+
+getDesignMatrix <- function(design, v) {
+    H <- crossover:::linkMatrix(model="Standard additive model", v)
+    rcDesign <- crossover:::rcd(design, v=v, model=1)
+    Xr <- crossover:::rcdMatrix(rcDesign, v, model=1)
+    return(Xr %*% H)
+}
