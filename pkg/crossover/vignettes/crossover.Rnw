@@ -113,7 +113,7 @@ The computationally intensive parts of the package, i.e.\ the search algorithm, 
 Once it is installed, whenever you start R you can load the crossover
 package by entering \texttt{library(crossover)} into the R Console. The
 graphical user interface as shown in figure \ref{GUI} is started with the command
-\texttt{graphGUI()}.
+\texttt{crossoverGUI()}.
 
 \begin{figure}[ht]
   \centering    
@@ -655,7 +655,7 @@ See \cite{jones2003design}, 5.3, page 213ff. The model stays the same
 but we also assume that the subject effects follow a normal distribution: $s_{ik}\sim\sN(0,\sigma_s^2)$.
 
 <<informationMatrixRandomEffects, echo=TRUE>>=
-s <- 10
+s <- 4
 p <- 5
 v <- 2
 model <- 1
@@ -671,6 +671,11 @@ Jp <- matrix(1, nrow=p, ncol=p)
 Lambda <- (1-rho)*Ip+rho*Jp
 LambdaI <- theta*((1-psi)*Ip+psi*Jp)
 solve(Lambda) - LambdaI
+
+LambdaSI <- bdiag(replicate(s, solve(Lambda), simplify=FALSE))
+
+X <- getDesignMatrix(design, v)
+solve(t(X)%*%LambdaSI%*%X)
 
 f <- function (rho) {
     theta <- (1-(p-2)*rho)/((1-rho)*(1+(p-1)*rho))
