@@ -85,66 +85,9 @@ library(ggplot2)
 library(Matrix)
 @
 
-\subsection{Evaluation of Algorithm Performance}
-
-Let's compare the results from the search algorithm with results from the literature. 
-
-\begin{Example}
-First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
 
 <<modelsFromLiterature1, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
 s <- 6; p <- 4; v <- 2
-
-design1 <- t(rbind(c(1,1,2,2),
-                   c(2,2,1,1),
-                   c(1,1,2,2),
-                   c(2,2,1,1),
-                   c(1,2,2,1),
-                   c(2,1,1,2)))
-design2 <- t(rbind(c(1,1,2,1),
-                   c(2,2,1,2),
-                   c(1,1,2,1),
-                   c(2,2,1,2),
-                   c(1,2,2,1),
-                   c(2,1,1,2)))
-design3 <- t(rbind(c(1,1,2,2),
-                   c(2,2,1,1),
-                   c(1,1,2,2),
-                   c(2,2,1,1),
-                   c(1,1,2,2),
-                   c(2,2,1,1)))
-design4 <- t(rbind(c(1,1,2,2), # TODO Also correct in other version
-                   c(2,2,1,1),
-                   c(1,1,2,2),
-                   c(2,2,1,1),
-                   c(1,2,2,1),
-                   c(2,1,1,2))) # Why is there no design 4 in the book?
-design5 <- t(rbind(c(1,2,2,2),
-                   c(2,1,1,1),
-                   c(1,2,2,2),
-                   c(2,1,1,1),
-                   c(1,1,2,2),
-                   c(2,2,1,1)))
-design6 <- t(rbind(c(1,2,1,2),
-                   c(2,1,2,1),
-                   c(1,1,2,1),
-                   c(2,2,1,2),
-                   c(1,2,1,2),
-                   c(2,1,2,1)))
-design7 <- t(rbind(c(1,1,2,1),
-                   c(2,2,1,2),
-                   c(1,1,1,2),
-                   c(2,2,2,1),
-                   c(1,2,1,1),
-                   c(2,1,2,2)))
-design8 <- t(rbind(c(1,2,2,2),
-                   c(2,1,1,1),
-                   c(1,1,2,2),
-                   c(2,2,1,1),
-                   c(1,2,1,2),
-                   c(2,1,2,1)))
-
-designs <- list(design1, design2, design3, design4, design5, design6, design7, design8)
 
 models <- c("Standard additive model",
             "Self-adjacency model",
@@ -154,19 +97,6 @@ models <- c("Standard additive model",
             "Treatment decay model",
             "Full set of interactions",
             "Second-order carry-over effects")
-
-attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
-
-for (i in c(7:8)) {  
-    H <- linkMatrix(model=i, v=v)
-    n <- dim(H)[2]
-    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
-              estimable(designs[[i]], v=v, model=i), "/", estimable_R(designs[[i]], v=v, model=i), "\n", sep=""))
-    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
-              estimable(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
-    cat(paste("Are all parameters estimable under model ",i,"? ", 
-              estimable(designs[[i]], v=v, model=i, C=diag(n)), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)), "\n", sep=""))
-}
 
 checkResult <- function (result, refDesign, model) {
     allDesigns <- result@misc$designs
@@ -183,33 +113,28 @@ checkResult <- function (result, refDesign, model) {
     return(list(df=df, plot=plot))
 }
 
-for (i in c(1,2,3,4,5,6)) {  
-    model <- models[i]
-    cat("======= ", model, " =======","\n")
-    H <- linkMatrix(model=i, v=v)
-    n <- dim(H)[2]
-    result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
-    print(result)
-    print(general.carryover(designs[[i]], model=i)) 
-    print(design.efficiency(designs[[i]]))
-    print(design.efficiency(designs[[i]]))    
-    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
-              estimable(getDesign(result), v=v, model=i), "/", estimable_R(getDesign(result), v=v, model=i), "\n", sep=""))
-    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
-              estimable(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
-    cat(paste("Are all parameters estimable under model ",i,"? ", 
-              estimable(getDesign(result), v=v, model=i, C=diag(n)), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)), "\n", sep=""))
-    
-    print(plot(result) + ggtitle(models[i]))  
-    print(checkResult(result, designs[[i]], model=i)$plot+ ggtitle(models[i]))
-    
-}
+model <- 7
+result <- searchCrossOverDesign(s=s, p=p, v=v, model=model)
+result
+crossover:::randomDesign(s, p, v, model=model)
+design <- crossover:::randomDesignWithoutCheck(s, p, v,  model=model)
+crossover:::estimable_R(design, v, model=model)
 
-searchCrossOverDesign(s=s, p=p, v=v, model=3)
-searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
+    Csub <- multcomp::contrMat(n=rep(1, v), type="Tukey")
+    class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+	C <- crossover:::appendZeroColumns(Csub, model, v)
+	rcDesign <- crossover:::rcd(design, v=v, model=model)
+	Xr <- crossover:::rcdMatrix(rcDesign, v, model)
+	H <- crossover:::linkMatrix(model, v)
+	X <- Xr %*% H
+	Z <- crossover:::getZ(s=dim(design)[2],p=dim(design)[1])
+	X <- cbind(X, Z)  
+	XX <- t(X) %*% X
+	C2 <- cbind(C, matrix(0, dim(C)[1], dim(Z)[2]))
 
-
-detach("namespace:crossover")
+dim(C2)
+dim(XX)
+C2 %*% MASS::ginv(XX)
 
 @
 
