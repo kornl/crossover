@@ -157,7 +157,7 @@ models <- c("Standard additive model",
 
 attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
 
-for (i in 1:6) {  
+for (i in c(7:8)) {  
     H <- linkMatrix(model=i, v=v)
     n <- dim(H)[2]
     cat(paste("Are the treatment differences estimable under model ",i,"? ", 
