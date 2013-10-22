@@ -331,8 +331,8 @@ appendZeroColumns <- function(Csub, model, v) {
     C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[1], 2*v)))
   } else if (model==3) {
     C <- Csub
-  } else if (model==7) {
-    C <- as.matrix(cbind(Csub,matrix(0,dim(Csub)[1], 4*v)))
+  } else if (model == 7) {
+      C <- as.matrix(cbind(Csub,matrix(0,dim(Csub)[1], v+v*v)))
   } else {
     C <- as.matrix(cbind(Csub, matrix(0,dim(Csub)[1], v)))
   }  
