@@ -154,7 +154,7 @@ for (i in 1:8) {
     model <- models[i]
     cat("======= ", model, " =======","\n")
     for (k in 1:3) {
-        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
+        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model) #, start.designs=list(designs[[i]]))
         print(getDesign(result))
         cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
         gco <- general.carryover(designs[[i]], model=i)
@@ -183,6 +183,44 @@ for (v in 3:9) {
 
 @
 
-In the correlated case.... 
+Two treatments and autocorrelated error:
+
+<<>>=
+
+rho <- 0.3
+V <- diag(p)
+for (i in 1:p) {
+    for (j in 1:p) {
+        V[i,j] <- rho^abs(i-j)
+    }
+}
+sigma <- kronecker(diag(s), V)
+
+
+@
+
+Balanced incomplete block design:
+
+<<>>=
+v <- 6; p <- 4; s <- 24
+
+result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1)
+# Further results were computed only once (since it took ~ 5 minutes) and now loaded: 
+load("pkg/crossover/vignettes/BIBD_6_4_24_5000_1000.RData")
+load("pkg/crossover/vignettes/BIBD_6_4_24_50000_100.RData")
+load("pkg/crossover/vignettes/BIBD_6_4_24_250000_20.RData")
+data(pattersonLucasPBIBD)
+pattersonLucasPBIBD134
+
+# This is strange - design.efficiency(result)$av.eff.trt.pair.adj is higher than for pattersonLucasPBIBD134.
+design.efficiency(pattersonLucasPBIBD134)$av.eff.trt.pair.adj
+design.efficiency(result0)$av.eff.trt.pair.adj
+design.efficiency(result)$av.eff.trt.pair.adj
+design.efficiency(result2)$av.eff.trt.pair.adj
+design.efficiency(result3)$av.eff.trt.pair.adj
+
+#result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1, start.designs=list(pattersonLucasPBIBD134), n=c(2,200))
+
+@
 
 \end{document}
