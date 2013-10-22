@@ -18,3 +18,5 @@ cache
 crossover.out
 results.pdf
 results.tex
+errors.pdf
+errors.tex
