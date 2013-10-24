@@ -1,3 +1,12 @@
+Adding model "0".
+---
+Screenshots: t=6, p=4, s=24 -> Standard settings improve not that much any more.
+
+Apart from that: i) Catalogue Williams t=4 (4,4,2), Williams design with screenshot
+ii) a) Catalogue t=6, p=4, s=12 See PL design
+b) algorithm search screenshot, see above.
+
+---
 Use ggpots "autoplot"? It's S3...
 ---
 Uses too much memory:
