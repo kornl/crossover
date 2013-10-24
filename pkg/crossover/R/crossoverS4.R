@@ -194,7 +194,7 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
             }            
             plot <- plot + geom_abline(intercept = max(d$eff), slope = 0, colour="#525252")
             plot <- plot + xlab("Simulation run") + ylab("E")
-            plot <- plot + theme(axis.text.x = element_text(angle = 90))
+            plot <- plot + theme(axis.text.x = element_text(angle = 90)) + theme(legend.position="none")
             return(plot)
           }
 )
