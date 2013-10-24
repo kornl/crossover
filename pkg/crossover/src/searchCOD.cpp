@@ -101,7 +101,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       }
       
       mat rcDesign = rcd(design, v, model);
-      s1 = getS1(rcDesign, v, model, linkM, tCC);      
+      s1 = getS1(model==3?design:rcDesign, v, model, linkM, tCC);      
       
       if (s2/s1 >= eOld) {
         if (verbose>2) {
@@ -259,6 +259,20 @@ SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS) {
 }
 
 double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {  
+    if (model==3) { // in this case rcDesign is actually design
+        mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
+        for (unsigned j=0; j<rcDesign.n_cols; j++) {
+            for (unsigned i=0; i<rcDesign.n_rows; i++) {
+                X(i * rcDesign.n_cols + j, rcDesign(i, j)-1) = 1;
+                if (i>0) {
+                    X((i-1) * rcDesign.n_cols + j, rcDesign(i, j)-1) += 0.5; // TODO Hardcoded proportion 0.5
+                }
+            }
+        }
+          mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows);
+          X =  join_rows(X, Z);
+       return trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols)));
+    }
   mat Ar = infMatrix(rcDesign, v, model);
   mat A = trans(linkM) * Ar * linkM;
   double s1 = trace(pinv(A) * tCC);
@@ -280,8 +294,9 @@ double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {
 //}
 
 arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
-    if (model==8) { v = v+v*v+v*v*v; } else { v = v+v*v; }
-    mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
+    int vv = v+v*v;
+    if (model==8) { vv = v+v*v+v*v*v; }
+    mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, vv);
     for (unsigned j=0; j<rcDesign.n_cols; j++) {
         for (unsigned i=0; i<rcDesign.n_rows; i++) {
             X(i * rcDesign.n_cols + j, rcDesign(i, j)-1) = 1;
@@ -291,12 +306,16 @@ arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
 }
 
 arma::mat infMatrix(arma::mat rcDesign, int v, int model) {
-  if (model==8) { v = v+v*v+v*v*v; } else { v = v+v*v; }
+    if (model == 3 || model == 8) {
+         return null; // TODO Throw more meaningful error.
+    }
+    int vv = v+v*v;
+  if (model==8) { v = v+v*v+v*v*v; }
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;
-  vec r = zeros<vec>(v);  
-  mat NP = zeros<mat>(v, p);
-  mat NS = zeros<mat>(v, s);
+  vec r = zeros<vec>(vv);  
+  mat NP = zeros<mat>(vv, p);
+  mat NS = zeros<mat>(vv, s);
   int t;
   //rcDesign.print("RCDesign:");
   for (int i=0; i<p; i++) {
