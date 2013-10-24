@@ -62,14 +62,15 @@
   not enhanced (or at least reached), the algorithm returns
   to the design from before the jump.}
 
-  \item{start.designs}{List of start designs. If missing or
-  to few start designs are specified (with regard to
-  parameter \var{n} which specifies a number of 20 start
-  designs as default) the start designs are generated
-  randomly with the sample function. Alternatively
-  \code{start.designs="catalog"} can be used to take start
-  designs from the catalog to which random designs are
-  added till \var{n2} start designs are at hand.}
+  \item{start.designs}{A single design or a list of start
+  designs. If missing or to few start designs are specified
+  (with regard to parameter \var{n} which specifies a
+  number of 20 start designs as default) the start designs
+  are generated randomly with the sample function.
+  Alternatively \code{start.designs="catalog"} can be used
+  to take start designs from the catalog to which random
+  designs are added till \var{n2} start designs are at
+  hand.}
 
   \item{contrast}{Contrast matrix to be optimised. TODO:
   Example and better explanation for contrast.}

@@ -198,7 +198,7 @@ infMatrix <- function(X, v, model) {
 #' \var{long.jumps} has only length 1 the default for \var{k} is 50.  If after
 #' \var{k/2} hill-climbing steps the old design criterion is not enhanced (or
 #' at least reached), the algorithm returns to the design from before the jump.
-#' @param start.designs List of start designs. If missing or to few start
+#' @param start.designs A single design or a list of start designs. If missing or to few start
 #' designs are specified (with regard to parameter \var{n} which specifies a
 #' number of 20 start designs as default) the start designs are generated
 #' randomly with the sample function. Alternatively
@@ -255,6 +255,9 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
     st <- get(".summary_table", envir=crossover:::crossover.env)
     start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get, envir=crossover:::crossover.env)
+  }
+  if (!is.list(start.designs)) {
+      start.designs <- list(start.designs)
   }
   i <- length(start.designs) + 1
   while (i <= n[2]) {    
