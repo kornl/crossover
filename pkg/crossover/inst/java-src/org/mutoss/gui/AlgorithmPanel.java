@@ -56,6 +56,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JButton exportR = new JButton("Export to R");
 	JButton showAlgoPerformance = new JButton("Search algorithm plot");
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
+	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons"} );
 	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
 	JLabel jlMixed;
 	JTextField jtWithinSubjectRho;
@@ -174,14 +175,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         lsPanel.add(jbBalancePeriods, cc.xyw(2, row, 3));        
         row+=2;
         
+        //rowTNP = row;        
+        //createWeightsPanel();
+        lsPanel.add(new JLabel("Contrasts:"), cc.xy(2, row));
+        lsPanel.add(jcbContrasts, cc.xy(4, row));
+
+        row+=2;    
+        
         rowEff = row;        
         createEffPanel();
-        
-        /*row+=2;    
-        
-        rowTNP = row;        
-        createWeightsPanel();
-        */
         
         row+=2;        
         
@@ -258,8 +260,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		effWeights.gridwidth = 1; effWeights.gridheight = 1;
 		effWeights.ipadx=5; effWeights.ipady=5;
 		effWeights.weightx=1; effWeights.weighty=1;
-		effPanel.setBorder(BorderFactory.createTitledBorder("Efficiency factors [NOT YET IMPLEMENTED - ARE IGNORED]:"));
-		effPanel.setEnabled(false);
+		effPanel.setBorder(BorderFactory.createTitledBorder("Weights:"));
+		//effPanel.setEnabled(false);
 		effPanel.setLayout(new GridBagLayout());
 		
 		List<String> labels = new Vector<String>();
