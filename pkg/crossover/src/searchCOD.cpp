@@ -271,7 +271,7 @@ double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {
         }
           mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows);
           X =  join_rows(X, Z);
-       return trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols)));
+       return trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
     }
   mat Ar = infMatrix(rcDesign, v, model);
   mat A = trans(linkM) * Ar * linkM;
