@@ -439,10 +439,9 @@ general.carryover<-function(design,model,t0=1,rho=0.5){
 			Xmat.trt[i,trt[i]]<-1
 		}
 		## additive first carry-over factor
-		## additive first carry-over factor
 		car<-NULL
 		for(i in 1:n.subj){
-			car<-c(car,1,design[i,1:(n.per-1)])
+			car<-c(car,0,design[i,1:(n.per-1)])
 		}
 		## additive carry-over columns
 		Xmat.car<-matrix(0,n.dat,n.trt)
