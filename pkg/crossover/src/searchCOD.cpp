@@ -101,7 +101,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       }
       
       mat rcDesign = rcd(design, v, model);
-      s1 = getS1(model==3?design:rcDesign, v, model, linkM, tCC);      
+      s1 = getS1((model==3||model==7)?design:rcDesign, v, model, linkM, tCC);      
       
       if (s2/s1 >= eOld) {
         if (verbose>2) {
@@ -259,24 +259,58 @@ SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS) {
 }
 
 double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {  
-    if (model==3) { // in this case rcDesign is actually design
-        mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, v);
-        for (unsigned j=0; j<rcDesign.n_cols; j++) {
-            for (unsigned i=0; i<rcDesign.n_rows; i++) {
-                X(i * rcDesign.n_cols + j, rcDesign(i, j)-1) = 1;
-                if (i>0) {
-                    X((i-1) * rcDesign.n_cols + j, rcDesign(i, j)-1) += 0.5; // TODO Hardcoded proportion 0.5
-                }
-            }
-        }
-          mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows);
-          X =  join_rows(X, Z);
-       return trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
+    if (model==3 || model==7) { // in this case rcDesign is actually design
+        mat X = designMatrix(rcDesign, v, model);
+        //Rprintf("Calculating Z and S1."); 
+        mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows);
+        X =  join_rows(X, Z);
+        return trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
     }
   mat Ar = infMatrix(rcDesign, v, model);
   mat A = trans(linkM) * Ar * linkM;
   double s1 = trace(pinv(A) * tCC);
   return s1;
+}
+
+arma::mat designMatrix(arma::mat design, int v, int model) {
+    mat X;
+    if (model==3) { // Proportional model:
+        X = zeros<mat>(design.n_rows * design.n_cols, v);
+        for (unsigned j=0; j<design.n_cols; j++) {
+            for (unsigned i=0; i<design.n_rows; i++) {
+                X(i * design.n_cols + j, design(i, j)-1) = 1;
+                if (i>0) {
+                    X(i * design.n_cols + j, design(i-1, j)-1) += 0.5; // TODO Hardcoded proportion 0.5
+                }
+            }
+        }
+    } else if (model==7) { // Full set of interactions:
+        //Rprintf("Creating design matrix.\n"); 
+        //design.print(Rcout, "Design:");
+        X = zeros<mat>(design.n_rows * design.n_cols, 2*v+v*v);
+        for (unsigned j=0; j<design.n_cols; j++) {
+            for (unsigned i=0; i<design.n_rows; i++) {
+                //Rprintf("i: %d, j: %d, t: %f, t-1: %f.\n", i, j, design(i, j), design(i>0?i-1:i, j));
+                X(i * design.n_cols + j, design(i, j)-1) = 1;                    
+                if (i>0) {
+                    // Carry-over:
+                    X(i * design.n_cols + j, v+design(i-1, j)-1) = 1;
+                    // Interactions:
+                    X(i * design.n_cols + j, 2*v+(design(i, j)-1)*v+design(i-1, j)-1) = 1;
+                }
+            }
+        }
+    }
+    return X;
+}
+
+SEXP designMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
+  BEGIN_RCPP
+  int v = IntegerVector(vS)[0];
+  int model = IntegerVector(modelS)[0];
+  mat design = as<mat>(designS);  
+  return wrap(designMatrix(design, v, model));
+  END_RCPP
 }
 
 //arma::mat getRandomMatrix(int s, int p, int v, IntegerVector vRep, bool balanceS, bool balanceP) {
@@ -306,11 +340,12 @@ arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
 }
 
 arma::mat infMatrix(arma::mat rcDesign, int v, int model) {
-    if (model == 3 || model == 8) {
-         return null; // TODO Throw more meaningful error.
+    if (model == 3 || model == 7) {
+         return NULL; // TODO Throw more meaningful error.
     }
     int vv = v+v*v;
-  if (model==8) { v = v+v*v+v*v*v; }
+    if (model==8) { vv = v+v*v+v*v*v; }
+    
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;
   vec r = zeros<vec>(vv);  
