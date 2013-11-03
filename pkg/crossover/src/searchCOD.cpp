@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP correlationS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -41,6 +41,8 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   //vec vRep = as<vec>(vRepS); //Not used yet
   //TODO Perhaps using umat or imat for some matrices? (Can casting rcDesign(i,j) to int result in wrong indices.)
   mat linkM = as<mat>(linkMS);
+  mat cor;
+  if (!Rf_isNull( correlationS )) cor = as<mat>(correlationS);
   mat C = as<mat>(CS); // Contrasts
   mat tCC = trans(C) * C; // t(C) %*% C
   mat Z = getZ(s,p);
@@ -101,7 +103,16 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       }
       
       mat rcDesign = rcd(design, v, model);
-      s1 = getS1((model==3||model==7)?design:rcDesign, v, model, linkM, tCC);      
+      if (!Rf_isNull( correlationS )) {
+          mat X = rcdMatrix(rcDesign, v, model) * linkM;
+          mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows);
+          X =  join_rows(X, Z);
+          pinv(trans(X) * cor * X);
+          //Rprintf("* long calc *\n");
+          s1 = trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
+      } else {
+          s1 = getS1((model==3||model==7)?design:rcDesign, v, model, linkM, tCC);      
+      }
       
       if (s2/s1 >= eOld) {
         if (verbose>2) {

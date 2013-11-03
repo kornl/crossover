@@ -183,24 +183,64 @@ for (v in 3:9) {
 
 @
 
+\subsection*{Autocorrelated errors}
+
 Two treatments and autocorrelated error:
 
 <<>>=
 
-rho <- 0.3
-V <- diag(p)
-for (i in 1:p) {
-    for (j in 1:p) {
-        V[i,j] <- rho^abs(i-j)
+getSigmaI <- function(rho, s, p, f=solve) {
+    V <- diag(p)
+    for (i in 1:p) {
+        for (j in 1:p) {
+            V[i,j] <- rho^abs(i-j)
+        }
+    }
+    # Our design matrix is indexed p=1,1,1,2,2,2,3,3,3; s=1,2,3,1,2,3,1,2,3 therefore we have to exchange the arguments:
+    sigmaI <- kronecker(f(V), diag(s)) #kronecker(diag(s), f(V))
+    return(sigmaI)
+}
+
+propSummary <- function(design) {
+    print(design)    
+    while (!is.null(dim(design)) && dim(design)[2]>0) {
+        col <- design[,1]
+        g <- apply(design, 2, function(x) {all(x==col)})
+        cat(col, " : ", sum(g), "\n")
+        design <- design[,-which(g), drop = FALSE]        
     }
 }
-sigma <- kronecker(diag(s), V)
-
-
 
 @
 
-Incomplete block design:
+Case 1: $-1<\rho\leq0$
+
+<<>>=
+
+p <- 3; v <-2; s<-10
+
+for (rho in c(-0.5, 0.2, 0.5, 0.6, 0.8)) {
+    cat("Rho =", rho,":\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p))
+    propSummary(getDesign(result))
+}
+
+p <- 4
+
+for (rho in c(-0.5, 0, 0.5)) {
+    cat("Rho =", rho,":\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p))
+    propSummary(getDesign(result))
+}
+
+cc <- 4*rho*(1-rho)^2
+k <- cc/(rho^2-3*rho+4)
+d <- 11-rho-cc
+x <- max(0, (2*k+d-d*sqrt(1+k*rho))/(cc*sqrt(1-k*rho)))
+
+@
+
+\subsection*{Incomplete block design}
 
 <<>>=
 v <- 6; p <- 4; s <- 24

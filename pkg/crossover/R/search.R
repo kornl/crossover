@@ -226,7 +226,7 @@ infMatrix <- function(X, v, model) {
 #' @export searchCrossOverDesign
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
-                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast) {
+                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast, correlation=NULL) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
@@ -278,7 +278,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
                    start.designs, H, C, model, eff.factor, 
                    v.rep, balance.s, balance.p, verbose, 
-                   as.integer(n), as.integer(jumps), S2, TRUE, PACKAGE = "crossover" )
+                   as.integer(n), as.integer(jumps), S2, TRUE, correlation, PACKAGE = "crossover" )
   
   design <- result$design
   
