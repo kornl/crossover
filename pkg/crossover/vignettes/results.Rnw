@@ -166,6 +166,47 @@ for (i in 1:8) {
 
 @
 
+Let's give a little bit of weight to the carry-over effects:
+
+<<echo=FALSE>>=
+
+i <- 6
+
+Csub <- contrMat(n=rep(1, v), type="Tukey")
+class(Csub) <- "matrix"
+
+C <- as.matrix(bdiag(Csub, Csub))
+result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
+cat("Equal weight\n")
+print(getDesign(result))
+cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
+gco <- general.carryover(designs[[i]], model=i)
+cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result)[[2]][1,2]/4,"\n\n")
+
+C <- as.matrix(bdiag(Csub, 0.1*Csub))
+result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
+cat("Weight 10:1\n")
+print(getDesign(result))
+cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
+gco <- general.carryover(designs[[i]], model=i)
+cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result)[[2]][1,2]/4,"\n\n")
+
+C <- as.matrix(bdiag(Csub, 0.01*Csub))
+result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
+cat("Weight 100:1\n")
+print(getDesign(result))
+cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
+gco <- general.carryover(designs[[i]], model=i)
+cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result)[[2]][1,2]/4,"\n\n")
+
+
+@
+
+As we can see we find the design from the book, when we give weights 100:1 for treatment / carry-over effects in the treatment decay model.
+(As seen in the first result section a zero weight for the carry-over effects results in a model with alternating treatments, so that there never occurs a treatment decay effect.)
+
+\subsection*{Williams designs}
+
 Now we try to find some Williams designs (with a short search of only a few seconds) - we had already an email discussion about the problem that the williams5t is normally not found with the short default search (it was found (multiple times), when we increased the search to for example $n=c(5000,1000)$):
 
 <<echo=FALSE, eval=TRUE, cache=TRUE>>=
