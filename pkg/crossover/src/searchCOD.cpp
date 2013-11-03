@@ -202,12 +202,12 @@ SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS) {
   END_RCPP
 }
 
-SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
+SEXP rcdMatrix2R(SEXP rcDesignS, SEXP vS, SEXP modelS) {
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
   int model = IntegerVector(modelS)[0];
-  mat design = as<mat>(designS);  
-  return wrap(rcdMatrix(design, v, model));
+  mat rcDesign = as<mat>(rcDesignS);  
+  return wrap(rcdMatrix(rcDesign, v, model));
   END_RCPP
 }
 
