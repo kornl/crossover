@@ -216,7 +216,7 @@ X
 
 \subsection{Full set of interactions}\index{model!with full set of interactions}
 
-This model has further interaction parameters $\gamma_{ij}$.\footnote{Personally I think some of the overspecified parameters should be dropped, for example $\gamma_{ii}$ - but I'll take a look at this later.}
+This model has further interaction parameters $\gamma_{ij}$ and a design matrix $X$ with $2*v+v^2$ columns:\footnote{Personally I think some of the overspecified parameters should be dropped, for example $\gamma_{ii}$ - but I'll take a look at this later.}
 
 \[E(Y)=\mu + X \left( \begin{smallmatrix}
 \tau\\ \lambda\\ \gamma
@@ -457,7 +457,7 @@ models <- c("Standard additive model",
 
 attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
 
-for (i in c(1,2,3,4,5,6)) {  
+for (i in 1:8) {  
     H <- linkMatrix(model=i, v=v)
     n <- dim(H)[2]
     cat(paste("Are the treatment differences estimable under model ",i,"? ", 
@@ -486,6 +486,8 @@ rankMatrix(A)
 @
 
 <<eval1b, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
+if (!exists("linkMatrix")) attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
+
 checkResult <- function (result, refDesign, model) {
     allDesigns <- result@misc$designs
     df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
@@ -501,7 +503,7 @@ checkResult <- function (result, refDesign, model) {
     return(list(df=df, plot=plot))
 }
 
-for (i in c(1,2,3,4,5,6)) {  
+for (i in 1:8) {  
     model <- models[i]
     cat("======= ", model, " =======","\n")
     H <- linkMatrix(model=i, v=v)
@@ -510,7 +512,7 @@ for (i in c(1,2,3,4,5,6)) {
     print(result)
     print(general.carryover(designs[[i]], model=i)) 
     print(design.efficiency(designs[[i]]))
-    print(design.efficiency(designs[[i]]))    
+    print(design.efficiency(result))    
     cat(paste("Are the treatment differences estimable under model ",i,"? ", 
               estimable(getDesign(result), v=v, model=i), "/", estimable_R(getDesign(result), v=v, model=i), "\n", sep=""))
     cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
@@ -545,7 +547,8 @@ d <- structure(c(1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2,
 
 d
 
-# Which seems to compare well in regard to Var.trt.pair (and Var.car.pair.1 but a little worde in Var.car.pair.2) to the reference design from literature:
+# Which seems to compare well in regard to Var.trt.pair (and Var.car.pair.1 
+# but a little worse in Var.car.pair.2) to the reference design from literature:
 
 general.carryover(d, model=2)
 general.carryover(design2, model=2)
