@@ -242,6 +242,10 @@ getSigmaI <- function(rho, s, p, f=solve) {
     return(sigmaI)
 }
 
+@
+
+<<echo=FALSE>>=
+
 propSummary <- function(design) {
     print(design)    
     while (!is.null(dim(design)) && dim(design)[2]>0) {
@@ -260,7 +264,7 @@ Case 1: $-1<\rho\leq0$
 
 p <- 3; v <-2; s<-10
 
-for (rho in c(-0.5, 0.2, 0.5, 0.6, 0.8)) {
+for (rho in ((1:9)/5-1)) {
     cat("Rho =", rho,":\n")
     result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p))
     propSummary(getDesign(result))
