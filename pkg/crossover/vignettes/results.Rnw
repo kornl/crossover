@@ -197,6 +197,7 @@ for (i in 1:p) {
 sigma <- kronecker(diag(s), V)
 
 
+
 @
 
 Incomplete block design:
@@ -206,23 +207,25 @@ v <- 6; p <- 4; s <- 24
 
 result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1)
 # Further results were computed only once (since it took ~ 5 minutes) and now loaded: 
-load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_5000_1000.RData")
-load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_50000_100.RData")
-load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_250000_20.RData")
+#load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_5000_1000.RData")
+#load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_50000_100.RData")
+#load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_250000_20.RData")
 data(pattersonLucasPBIBD)
 pattersonLucasPBIBD134
 
 design.efficiency(pattersonLucasPBIBD134)$av.eff.trt.pair.adj
 
 plot(result0) + ylim(0.5, 0.85) + ggtitle(sprintf("Default setting (20 runs with 5.000 steps each): %.4f", design.efficiency(result0)$av.eff.trt.pair.adj))
-plot(result3) + ylim(0.5, 0.85) + ggtitle(sprintf("20 runs with 250.000 steps each: %.4f", design.efficiency(result3)$av.eff.trt.pair.adj))
-plot(result2) + ylim(0.5, 0.85) + ggtitle(sprintf("100 runs with 50.000 steps each: %.4f", design.efficiency(result2)$av.eff.trt.pair.adj))
+#plot(result3) + ylim(0.5, 0.85) + ggtitle(sprintf("20 runs with 250.000 steps each: %.4f", design.efficiency(result3)$av.eff.trt.pair.adj))
+#plot(result2) + ylim(0.5, 0.85) + ggtitle(sprintf("100 runs with 50.000 steps each: %.4f", design.efficiency(result2)$av.eff.trt.pair.adj))
 
 # And 1000 runs a 5000 steps is actually even better:
-design.efficiency(result)$av.eff.trt.pair.adj
+design.efficiency(result0)$av.eff.trt.pair.adj
 
 #result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1, start.designs=list(pattersonLucasPBIBD134), n=c(2,200))
 
 @
+
+\bibliography{literatur}
 
 \end{document}
