@@ -26,6 +26,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.af.commons.widgets.ComponentTitledBorder;
 import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.mutoss.gui.infinite.InfiniteRunningDialog;
 
@@ -58,7 +59,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
 	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons"} );
 	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
+	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autocorrelated Error", "User defined"});
+	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
 	JLabel jlMixed;
+	JLabel jlCor;
 	JTextField jtWithinSubjectRho;
 	//JTabbedPane jTabAlgo = new jTabAlgo;
 	
@@ -135,8 +139,16 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         lsPanel.add(jCBMixed, cc.xy(4, row));
         jCBMixed.setSelectedIndex(0);
         jCBMixed.addActionListener(this);
-        jCBMixed.setEnabled(false);
+        //jCBMixed.setEnabled(false);
         
+		row+=2;  
+		
+        jlCor = new JLabel("Correlation structure");
+        //jlCor.setEnabled(false);
+        //jcbCorrelation.setEnabled(false);
+		lsPanel.add(jlCor, cc.xy(2, row));
+		lsPanel.add(jcbCorrelation, cc.xy(4, row));
+
         row+=2;
         
         jlMixed = new JLabel("Within-subject correlation coefficient");
@@ -144,9 +156,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         jtWithinSubjectRho = new JTextField("0.5");
         jtWithinSubjectRho.setEnabled(false);
 		lsPanel.add(jlMixed, cc.xy(2, row));
-		lsPanel.add(jtWithinSubjectRho, cc.xy(4, row));        
-
-
+		lsPanel.add(jtWithinSubjectRho, cc.xy(4, row));
+		
         row+=2;  
         
     	spinnerS = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1)); 
@@ -218,7 +229,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
 		weightsPanel.setBorder(BorderFactory.createTitledBorder("Contrast Weights [will be redesigned and work only under R in the moment]"));
-		weightsPanel.setEnabled(false);
+		//
+		//weightsPanel.setEnabled(false);
 		weightsPanel.setLayout(new GridBagLayout());
 		
 		List<String> labels = new Vector<String>();
@@ -261,6 +273,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		effWeights.ipadx=5; effWeights.ipady=5;
 		effWeights.weightx=1; effWeights.weighty=1;
 		effPanel.setBorder(BorderFactory.createTitledBorder("Weights:"));
+		
 		//effPanel.setEnabled(false);
 		effPanel.setLayout(new GridBagLayout());
 		
@@ -283,7 +296,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				effWeights.gridx=0;effWeights.gridy++;
 			}
 		}		
-		for (Component c : effPanel.getComponents()) c.setEnabled(false);
+		//for (Component c : effPanel.getComponents()) c.setEnabled(false);
 		lsPanel.add(effPanel, cc.xyw(2, rowEff, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
@@ -301,7 +314,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
-		ntPanel.setBorder(BorderFactory.createTitledBorder("Number of treatment assignments"));
+		ntPanel.setBorder(new ComponentTitledBorder(fixedNumber, ntPanel, BorderFactory.createTitledBorder("Weights:")));
+		//ntPanel.setBorder(BorderFactory.createTitledBorder("Number of treatment assignments"));
 
 		ntPanel.setLayout(new GridBagLayout());
 		
@@ -385,8 +399,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			RControl.getR().eval(vd.getName()+" <- getDesign(.COresult)");
 		} else if (e.getSource()==jCBMixed) {
 			boolean mixed = jCBMixed.getSelectedIndex()==1;
-			jlMixed.setEnabled(mixed);	        
-	        jtWithinSubjectRho.setEnabled(mixed);			
+			jlMixed.setEnabled(mixed);
+	        jtWithinSubjectRho.setEnabled(mixed);
 		}
 	}
 
