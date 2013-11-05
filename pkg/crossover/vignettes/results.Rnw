@@ -226,7 +226,27 @@ for (v in 3:9) {
 
 \subsection*{Autocorrelated errors}
 
+Laska and Meisner
+
+<<>>=
+
+p <- 6; s <- 8; v <- 2
+sigmaE <- 1
+
+
+C <- matrix(1,6,6)
+C <- as.matrix(bdiag(C,C,C,C,C,C,C,C))+diag(6*8)
+
+for (i in 1:5) {
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=solve(C), n = c(10000, 40))
+    propSummary(getDesign(result))
+    plot(result)
+}
+
+@
+
 Two treatments and autocorrelated error:
+
 
 <<>>=
 
@@ -262,11 +282,16 @@ Case 1: $-1<\rho\leq0$
 
 <<>>=
 
+Csub <- contrMat(n=rep(1, v), type="Tukey")
+class(Csub) <- "matrix"
+
+C <- diag(4) #as.matrix(bdiag(Csub, Csub))
+
 p <- 3; v <-2; s<-10
 
 for (rho in ((1:9)/5-1)) {
     cat("Rho =", rho,":\n")
-    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p))
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
     propSummary(getDesign(result))
 }
 
