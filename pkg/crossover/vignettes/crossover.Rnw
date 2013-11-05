@@ -47,6 +47,7 @@
 \newcommand{\kronecker}{\raisebox{1pt}{\ensuremath{\:\otimes\:}}}
 
 \DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\Var}{Var}
 
 \newcommand{\skp}[1]{\left\langle#1\right\rangle}
 
@@ -748,6 +749,11 @@ For a linear regression model with design matrix $X$ and variance $\sigma^2$ the
   %\end{Proof}
 \end{Theorem}
 
+\subsection{Linear Mixed Models}\index{Linear Mixed Models}
+In the \emph{linear mixed model} the response Y is given by
+\[Y=X\beta+Z\gamma+\epsilon\]
+with $X$ and $Z$ the fixed and random effects design matrices, $\beta\sim\sN(0,R)$ and $\gamma\sim\sN(0,G)$. Then\footnote{Citation/small prove should be provided.} \[\Var(Y)=ZGZ^T+R.\]
+
 \subsection{Restricted Maximum Likelihood}
 
 <<mixed1, echo=TRUE>>=
@@ -935,6 +941,7 @@ $\skp{\cdot,\cdot}$ & standard direct product $\skp{x,y}=\sum_{j=1}^nx_j\cdot y_
 $\id_X$ & identity on $X$, i.e.\ $\id_X:\;X\rightarrow X,\;x\mapsto x$\\
 \multicolumn{2}{l}{\textbf{Other Symbols}}\\
 $\sN(\mu,\sigma^2)$ & Normal distribution with mean $\mu$ and variance $\sigma^2$.\\
+$\sN(\mu,\Sigma)$ & Multivariate normal distribution with mean $\mu$ and covariance matrix $\Sigma$.\\
 \end{tabularx}
 %\onecolumn
 
