@@ -37,7 +37,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
-	JTextField jtN1 = new JTextField("5000", 6);	
+	JTextField jtN1 = new JTextField("5000", 6);
+	JTextField jtRatio = new JTextField("1", 6);
 
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
@@ -63,6 +64,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
 	JLabel jlMixed;
 	JLabel jlCor;
+	JLabel jlVar;
 	JTextField jtWithinSubjectRho;
 	//JTabbedPane jTabAlgo = new jTabAlgo;
 	
@@ -141,6 +143,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         jCBMixed.addActionListener(this);
         //jCBMixed.setEnabled(false);
         
+        row+=2;  
+        
+        jlVar = new JLabel("Variance of random subject effect divided by variance of ε"); 
+        jlVar.setEnabled(false);
+        jtRatio.setEnabled(false);
+        lsPanel.add(jlVar, cc.xy(2, row));
+		lsPanel.add(jtRatio, cc.xy(4, row));
+        
 		row+=2;  
 		
         jlCor = new JLabel("Correlation structure");
@@ -148,6 +158,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         //jcbCorrelation.setEnabled(false);
 		lsPanel.add(jlCor, cc.xy(2, row));
 		lsPanel.add(jcbCorrelation, cc.xy(4, row));
+		jcbCorrelation.addActionListener(this);
 
         row+=2;
         
@@ -314,6 +325,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
+		fixedNumber.addActionListener(this);
 		ntPanel.setBorder(new ComponentTitledBorder(fixedNumber, ntPanel, BorderFactory.createTitledBorder("Weights:")));
 		//ntPanel.setBorder(BorderFactory.createTitledBorder("Number of treatment assignments"));
 
@@ -341,6 +353,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				cbcWeights.gridx=0;cbcWeights.gridy++;
 			}
 		}		
+		for (Component c : ntPanel.getComponents()) c.setEnabled(false);
 		lsPanel.add(ntPanel, cc.xyw(2, rowN, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
@@ -399,8 +412,16 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			RControl.getR().eval(vd.getName()+" <- getDesign(.COresult)");
 		} else if (e.getSource()==jCBMixed) {
 			boolean mixed = jCBMixed.getSelectedIndex()==1;
+	        jlVar.setEnabled(mixed);
+	        jtRatio.setEnabled(mixed);
+		} else if (e.getSource()==jcbCorrelation) {
+			boolean mixed = jcbCorrelation.getSelectedIndex()==1;
 			jlMixed.setEnabled(mixed);
 	        jtWithinSubjectRho.setEnabled(mixed);
+		} else if (e.getSource()==fixedNumber) {
+			boolean fixed = fixedNumber.isSelected();
+			ntPanel.setEnabled(fixed);
+			for (Component c : ntPanel.getComponents()) c.setEnabled(fixed);
 		}
 	}
 
