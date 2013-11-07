@@ -166,7 +166,16 @@ for (i in 1:8) {
 
 @
 
-Let's give a little bit of weight to the carry-over effects:
+Note that for the full interaction model and the self-adjacency model we get the same results, because they are essentially the same models with \begin{equation*}
+\begin{split}
+\lambda^{SA}_1&=\lambda^{FI}_1+\gamma^{FI}_{12},\\
+\lambda^{SA}_2&=\lambda^{FI}_2+\gamma^{FI}_{21},\\
+\phi^{SA}_1&=\lambda^{FI}_1+\gamma^{FI}_{11},\text{ and}\\
+\phi^{SA}_2&=\lambda^{FI}_2+\gamma^{FI}_{22}.
+\end{split}
+\end{equation*}
+
+For the treatment decay model the algorithm provided us with Let's give a little bit of weight to the carry-over effects:
 
 <<echo=FALSE>>=
 
