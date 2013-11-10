@@ -238,8 +238,10 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   
   H <- do.call( linkMatrix, c(list(model=model, v=v), model.param) )
   
+  interchange <- TRUE
   if (missing(v.rep)) {
     v.rep <- rep((s*p) %/% v, v) + c(rep(1, (s*p) %% v), rep(0, v-((s*p) %% v)))
+    interchange <- FALSE
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
     stop("The sum of argument v.rep must equal s times p.")
   }
@@ -278,7 +280,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
                    start.designs, H, C, model, eff.factor, 
                    v.rep, balance.s, balance.p, verbose, 
-                   as.integer(n), as.integer(jumps), S2, TRUE, correlation, PACKAGE = "crossover" )
+                   as.integer(n), as.integer(jumps), S2, TRUE, correlation, interchange, PACKAGE = "crossover")
   
   design <- result$design
   

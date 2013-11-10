@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP correlationS) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP correlationS, SEXP interchangeS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -27,6 +27,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   bool balanceS = is_true( any( LogicalVector(balanceSS) ) );
   bool balanceP = is_true( any( LogicalVector(balancePS) ) );
   bool checkE = is_true( any( LogicalVector(checkES) ) );
+  bool interchange = is_true( any( LogicalVector(interchangeS) ) );
   int s = IntegerVector(sS)[0];
   int p = IntegerVector(pS)[0];
   int v = IntegerVector(vS)[0];  
@@ -63,7 +64,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   mat design;
   mat bestDesign = as<mat>(mlist[0]);
   mat bestDesignOfRun;
-  int r;
+  int r, t;
   mat designOld, rcDesign, Ar, A;  // designBeforeJump, 
   double s1, eOld = 0, effBest = 0; // eBeforeJump = 0,
   NumericVector rows, cols;  
@@ -91,15 +92,20 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       for (int dummy=0; dummy<r; dummy++) { // dummy is never used and just counts the number of exchanges
         rows = ceil(runif(2)*p)-1; 
         cols = ceil(runif(2)*s)-1;  
-        if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
-        while ( design(rows[0], cols[0]) == design(rows[1],cols[1]) ) { //TODO: Only really stupid user input can cause an infinite loop - nevertheless check for it?
-          rows = ceil(runif(2)*p)-1; 
-          cols = ceil(runif(2)*s)-1;  
+        if (interchange || i%2==0) {
           if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
+          while ( design(rows[0], cols[0]) == design(rows[1],cols[1]) ) { //TODO: Only really stupid user input can cause an infinite loop - nevertheless check for it?
+            rows = ceil(runif(2)*p)-1; 
+            cols = ceil(runif(2)*s)-1;  
+            if (balanceS) {cols[1] = cols[0];} else if (balanceP) {rows[1] = rows[0];}
+          }
+          double tmp = design(rows[0],cols[0]);
+          design(rows[0], cols[0]) = design(rows[1], cols[1]);
+          design(rows[1], cols[1]) = tmp;
+        } else {
+          t = ceil(runif(1)*v)[0];
+          design(rows[0], cols[0]) = t;
         }
-        double tmp = design(rows[0],cols[0]);
-        design(rows[0], cols[0]) = design(rows[1], cols[1]);
-        design(rows[1], cols[1]) = tmp;
       }
       
       mat rcDesign = rcd(design, v, model);

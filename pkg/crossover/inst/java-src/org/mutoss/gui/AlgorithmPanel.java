@@ -390,8 +390,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			command = "s="+spinnerS.getModel().getValue().toString()
 					+", "+gui.getParameters()
 					+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
-					//+", eff.factor="+1
-					+", v.rep="+getVRep()
+					//+", eff.factor="+1					
+					+(fixedNumber.isSelected()?", v.rep="+getVRep():"")
 					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
 					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
 					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")

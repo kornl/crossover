@@ -214,6 +214,26 @@ cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover
 As we can see we find the design from the book, when we give weights 100:1 for treatment / carry-over effects in the treatment decay model.
 (As seen in the first result section a zero weight for the carry-over effects results in a model with alternating treatments, so that there never occurs a treatment decay effect.)
 
+\subsection*{Comparisons to control}
+
+<<echo=FALSE>>=
+
+s<-8; p<-6; v<-4
+i <- 1
+
+Csub <- contrMat(n=rep(1, v), type="Dunnett")
+class(Csub) <- "matrix"
+#C <- as.matrix(bdiag(Csub, Csub))
+C <- crossover:::appendZeroColumns(Csub, model=i, v)
+C
+
+result <- searchCrossOverDesign(s=8, p=6, v=4, model=i, contrast=C)
+result
+result <- searchCrossOverDesign(s=8, p=6, v=4, model=i)
+result
+
+@
+
 \subsection*{Williams designs}
 
 Now we try to find some Williams designs (with a short search of only a few seconds) - we had already an email discussion about the problem that the williams5t is normally not found with the short default search (it was found (multiple times), when we increased the search to for example $n=c(5000,1000)$):

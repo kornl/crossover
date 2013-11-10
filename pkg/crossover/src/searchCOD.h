@@ -18,7 +18,7 @@
  * on Rcpp-devel for a misuse of RcppExport
  */
 
-RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2, SEXP checkES, SEXP correlationS);
+RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2, SEXP checkES, SEXP correlationS, SEXP interchangeS);
 
 RcppExport SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
