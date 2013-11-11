@@ -27,6 +27,7 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
     private OptionsDialog odialog;
     private JCheckBox showCarryOver;
     private JComboBox showTable = new JComboBox(new String[] {"HTML Table", "ASCII", "R matrix"});
+    String[] outputF = new String[] {"HTML", "ASCII", "R"};
 
     CrossoverGUI parent;
 
@@ -82,13 +83,13 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
         p1.add(markEpsilon, cc.xyw(1, row, 3));    
         
         row += 2;*/
-        
+       
         add(p1);
     }
 
     
     public void setProperties() throws SetLookAndFeelException {
-      	//conf.getGeneralConfig().setFontSize(fontSize);
+      	conf.setProperty("outputF", outputF[showTable.getSelectedIndex()]);
     }
 
 	public void actionPerformed(ActionEvent e) {

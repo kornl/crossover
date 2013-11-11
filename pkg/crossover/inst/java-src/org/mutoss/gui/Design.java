@@ -1,5 +1,7 @@
 package org.mutoss.gui;
 
+import org.mutoss.config.Configuration;
+
 public class Design {
 	
 	String title;
@@ -50,7 +52,7 @@ public class Design {
 	}
 
 	public String getHTMLTable() {		
-		String result = RControl.getR().eval("crossover:::getTable("+(rName==null?design:rName)+")").asRChar().getData()[0];
+		String result = RControl.getR().eval("crossover:::getTable("+(rName==null?design:rName)+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\")").asRChar().getData()[0];
 		return result;
 	}
 }
