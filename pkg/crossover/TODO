@@ -150,3 +150,17 @@ Die speziellen Designs finden sich immer zusammengefasst in Paketen bzgl. der Au
 - Try to find designs from page 203, Jones and Kenward
 - Tukey / Dunnett / Factorial (page 195 Jones&Kenward) contrasts
 - Own catalogue (or even more than 1 - loaded at start-up) perhaps saved as Rd-file?
+
+---
+
+I think what we are seeking is the marginal variance-covariance matrix of the
+parameter estimators (marginal with respect to the random effects random
+variable, B), which would have the form of the inverse of the crossproduct of a
+(q+p) by p matrix composed of the vertical concatenation of - L^{-1}RZX RX^{-1}
+and RX^{-1}. (Note: You do *not* want to calculate the first term by inverting
+L, use solve(L, RZX, system = "L") - [...] don't even think about using
+solve(L) - don't!, don't!, don't! - have I made myself clear? - don't do that
+(and we all know that someone will do exactly that for a very large L and then
+send out messages about "R is SOOOOO SLOOOOW!!!!" :-) )
+   -- Douglas Bates
+      R-SIG-Mixed-Models (March 2010)
