@@ -10,13 +10,16 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CancellationException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -28,6 +31,9 @@ import javax.swing.event.ChangeListener;
 
 import org.af.commons.widgets.ComponentTitledBorder;
 import org.af.commons.widgets.HTMLPaneWithButtons;
+import org.af.jhlir.call.RList;
+import org.jdesktop.swingworker.SwingWorker;
+import org.mutoss.gui.dialogs.TextFileViewer;
 import org.mutoss.gui.infinite.InfiniteRunningDialog;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -38,6 +44,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JTextField jtTitle = new JTextField();
 	JTextField jtReference = new JTextField();
 	JTextField jtN1 = new JTextField("5000", 6);
+	JTextField jtN2 = new JTextField("25", 6);
 	JTextField jtRatio = new JTextField("1", 6);
 
 	JButton ok = new JButton("Ready");
@@ -58,7 +65,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JButton exportR = new JButton("Export to R");
 	JButton showAlgoPerformance = new JButton("Search algorithm plot");
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
-	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons"} );
+	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey contrast)", "Comparing treatment 1 to each of the others (Dunnett contrast)", "User defined"} );
+	String[] contrasts = new String[] {"Tukey", "Dunnett", "User defined"};
 	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
 	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autocorrelated Error", "User defined"});
 	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
@@ -212,6 +220,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         useCatalogueDesigns.setSelected(true);
         lsPanel.add(useCatalogueDesigns, cc.xyw(2, row, 3));
         
+        row+=2;     
+        
+        lsPanel.add(new JLabel("Number of search runs:"), cc.xy(2, row));
+        lsPanel.add(jtN2, cc.xy(4, row));
+        
         row+=2;   
         
         lsPanel.add(new JLabel("Number of steps per run:"), cc.xy(2, row));
@@ -313,6 +326,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		lsPanel.repaint();
 	}
 	
+	private String getEffFactors() {
+		String s="c(";
+		for (JTextField jt : effV) {
+			s = s + jt.getText()+",";
+		}
+		return s.substring(0, s.length()-1)+")";
+	}
+	
 	private void createTreatmentNumberPanel() {
 		if (ntPanel!=null) {
 			lsPanel.remove(ntPanel);
@@ -381,12 +402,72 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	}
 	
 	String command = "";
-	String models = "";
+	String models = "";	
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jbCompute) {
 			gui.glassPane.start();
 			
+			command = "searchCrossOverDesign(s="+spinnerS.getModel().getValue().toString()
+					+", "+gui.getParameters()
+					+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
+					+", eff.factor="+getEffFactors()
+					+", contrast=\""+contrasts[jcbContrasts.getSelectedIndex()]+"\""
+					+", v.rep="+getVRep()
+					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
+					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
+					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
+					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
+					+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")					
+					+", n=c("+jtN1.getText()+","+jtN2.getText()+")"
+					+", verbose=FALSE)";
+			
+			//startTesting();		
+			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+				RList result;
+				String table;
+
+				@Override
+				protected Void doInBackground() throws Exception {					
+					RControl.getR().eval(".COresult <- "+command);
+					table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
+					return null;
+				}
+
+				protected final void done() {
+					try {
+						get();
+						exportR.setEnabled(true);						
+						showAlgoPerformance.setEnabled(true);
+						jta.clear();
+						jta.appendHTML(table);
+						String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
+						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
+						jta.appendParagraph("Random seed: TODO");
+						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
+						jta.setCaretPosition(0);
+					} catch (CancellationException e) {
+						// Will be perhaps used in the future.
+					} catch (Throwable e) {
+						String message = e.getMessage();
+						//System.out.println("\""+message+"\"");
+						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
+						JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
+						JDialog d = new JDialog(gui, "R Error", true);
+						d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+
+										command, true) );
+						d.pack();
+						d.setSize(800, 600);
+						d.setVisible(true);
+						e.printStackTrace();
+					} finally {
+						gui.glassPane.stop();
+					}
+				}				
+			};
+			worker.execute();
+			
+			/*
 			command = "s="+spinnerS.getModel().getValue().toString()
 					+", "+gui.getParameters()
 					+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
@@ -402,6 +483,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			models = (useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"");
 			
 			InfiniteRunningDialog ird = new InfiniteRunningDialog(gui, command, models);
+			*/
 		} else if (e.getSource()==showAlgoPerformance) {			
 			RControl.getR().eval("JavaGD(\"Search algorithm performance\")");
 			//RControl.getR().eval("png(filename=\""+getTmpFile()+"\")");

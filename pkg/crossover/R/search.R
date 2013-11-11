@@ -251,7 +251,11 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
     C <- appendZeroColumns(Csub, model, v)
   } else {
-    C <- contrast
+    if (is.matrix(contrast)) {
+      C <- contrast
+    } else {
+      C <- contrMat2(type=contrast, v, model, eff.factor)
+    }
   }
   if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
