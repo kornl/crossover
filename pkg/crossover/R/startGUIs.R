@@ -67,3 +67,7 @@ dputMatrix <- function(m, name, indent=6, rowNames=FALSE) {
 dputS <- function(x) {
   paste(capture.output(dput(x)), collapse="\n")
 }
+
+isRName <- function(x) {
+  return(x==make.names(x))
+}
