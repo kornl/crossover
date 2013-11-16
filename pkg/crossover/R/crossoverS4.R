@@ -222,3 +222,8 @@ setMethod("getDesign", c("crossoverSearchResult"),
           function(object, ...) {			
               return(object@design@design)
           })
+
+setMethod("getDesign", c("matrix"),
+          function(object, ...) {  		
+            return(object)
+          })
