@@ -1,7 +1,5 @@
 package org.mutoss.gui;
 
-import org.af.jhlir.call.REngineException;
-import org.af.jhlir.call.RObj;
 import org.mutoss.config.Configuration;
 
 public class Design {

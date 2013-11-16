@@ -37,12 +37,11 @@ import org.af.commons.logging.ApplicationLog;
 import org.af.commons.logging.LoggingSystem;
 import org.af.commons.tools.OSTools;
 import org.af.commons.widgets.InfiniteProgressPanel;
-import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.InfiniteProgressPanel.AbortListener;
+import org.af.commons.widgets.WidgetFactory;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.Configuration;
 import org.mutoss.gui.archive.DesignArchiveControl;
-import org.mutoss.gui.archive.SaveException;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
 
 import com.jgoodies.forms.layout.CellConstraints;

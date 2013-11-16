@@ -34,7 +34,6 @@ import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.af.jhlir.call.RList;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.gui.dialogs.TextFileViewer;
-import org.mutoss.gui.infinite.InfiniteRunningDialog;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

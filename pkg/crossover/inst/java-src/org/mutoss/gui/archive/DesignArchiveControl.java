@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.mutoss.gui.Design;
-import org.mutoss.gui.RControl;
 
 public class DesignArchiveControl {
 	DesignArchive searchResults;

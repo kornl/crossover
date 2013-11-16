@@ -3,7 +3,6 @@ package org.mutoss.gui.infinite;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.jdesktop.swingworker.SwingWorker;
