@@ -1,5 +1,7 @@
 package org.mutoss.gui;
 
+import org.af.jhlir.call.REngineException;
+import org.af.jhlir.call.RObj;
 import org.mutoss.config.Configuration;
 
 public class Design {
@@ -13,7 +15,19 @@ public class Design {
 	Double efficiencyUnadj = null;
 	String result = null;
 	String rName = null;
+	String uniqueName = null;
 	
+	/**
+	 * Contructor for crossover design objects. 
+	 * @param title
+	 * @param rName
+	 * @param reference
+	 * @param signature
+	 * @param t
+	 * @param s
+	 * @param p
+	 * @param design
+	 */
 	public Design(String title, String rName, String reference, String signature, int t, int s, int p, String design) {
 		this.title = title;
 		this.rName = rName;
@@ -26,6 +40,19 @@ public class Design {
 		double[] eff = RControl.getR().eval("crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
 		efficiencyUnadj = eff[0];
 		efficiencyAdj = eff[1];		
+	}
+	
+	public String saveDesign2R() {		
+		uniqueName = "CODesign."+RControl.getR().eval("digest::digest("+rName+")").asRChar().getData()[0];
+		RControl.getR().eval(uniqueName+"<-"+rName);
+		return uniqueName;
+	}
+	
+	
+	
+	public void setRName(String name) {
+		//if (RControl.getR().eval("crossover:::isRName("+name+")").asRLogical().getData()[0]) {}
+		rName = RControl.getR().eval("make.names("+name+")").asRChar().getData()[0];		
 	}
 	
 	public String getRSignature() {
