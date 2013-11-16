@@ -15,4 +15,8 @@ public class RCallServicesREngineWrapper extends RCallServicesREngine {
 		return super.eval("eval(expression("+expression+"), envir=crossover:::crossover.env)");
 	}
 
+	public RObj evalInGlobalEnv(String expression) throws REngineException {
+		return super.eval(expression);
+	}
+	
 }
