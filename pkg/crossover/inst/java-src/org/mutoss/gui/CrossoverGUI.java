@@ -41,6 +41,8 @@ import org.af.commons.widgets.WidgetFactory;
 import org.af.commons.widgets.InfiniteProgressPanel.AbortListener;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.Configuration;
+import org.mutoss.gui.archive.DesignArchiveControl;
+import org.mutoss.gui.archive.SaveException;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -54,6 +56,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 
 	Configuration conf = Configuration.getInstance();
 	public InfiniteProgressPanel glassPane;
+	DesignArchiveControl dac;
 	
 	public static DecimalFormat df = new DecimalFormat("#.####");
 	
@@ -131,6 +134,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 				screenSize.height - inset*2);
 
 		addWindowListener(this);
+		
+		dac = new DesignArchiveControl();
 		
 		//loadDefaults();
 		
@@ -329,6 +334,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 * WindowListener methods - the first one closes the R console if  
 	 */
 	public void windowClosing(WindowEvent e) {
+		dac.save();
 		if (RControl.getR().eval("exists(\".isBundle\")").asRLogical().getData()[0]) {
 			RControl.getR().eval("q(save=\"no\")");
 		} else {
