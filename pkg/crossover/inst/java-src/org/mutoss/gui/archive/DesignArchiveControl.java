@@ -3,6 +3,7 @@ package org.mutoss.gui.archive;
 import java.util.List;
 import java.util.Vector;
 
+import org.mutoss.gui.Design;
 import org.mutoss.gui.RControl;
 
 public class DesignArchiveControl {
@@ -30,6 +31,10 @@ public class DesignArchiveControl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void addSearchResult(Design design) {
+		searchResults.addDesign(design);
 	}
 	
 }

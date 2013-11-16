@@ -430,12 +430,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				@Override
 				protected Void doInBackground() throws Exception {					
 					RControl.getR().eval(".COresult <- "+command);
+					//RControl.getR().eval(".COresult <- getDesign(.COresult)");
 					table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
 					return null;
 				}
 
 				protected final void done() {
 					try {
+						gui.dac.addSearchResult(new Design("Search Result", ".COresult"));
 						get();
 						exportR.setEnabled(true);						
 						showAlgoPerformance.setEnabled(true);

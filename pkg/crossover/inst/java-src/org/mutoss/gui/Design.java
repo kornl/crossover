@@ -18,6 +18,23 @@ public class Design {
 	String uniqueName = null;
 	
 	/**
+	 * Constuctor of design object
+	 * @param title Title for Design. For example "FLETCHER FACTORIAL 2 x 2 DESIGN 3".
+	 * @param rName
+	 */
+	public Design(String title, String rName) {
+		this.title = title;		
+		this.rName = rName;
+		saveDesign2R();
+		this.t = RControl.getR().eval("length(levels(as.factor("+uniqueName+")))").asRInteger().getData()[0];		
+		int[] dim = RControl.getR().eval("dim("+uniqueName+")").asRInteger().getData();
+		p = dim[0];
+		s = dim[1];		
+		design = RControl.getR().eval("paste(capture.output(dput("+uniqueName+")), collapse=\"\")").asRChar().getData()[0];
+		saveDesign2R();
+	}
+	
+	/**
 	 * Contructor for crossover design objects. 
 	 * @param title
 	 * @param rName
@@ -40,15 +57,14 @@ public class Design {
 		double[] eff = RControl.getR().eval("crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
 		efficiencyUnadj = eff[0];
 		efficiencyAdj = eff[1];		
+		saveDesign2R();
 	}
 	
 	public String saveDesign2R() {		
-		uniqueName = "CODesign."+RControl.getR().eval("digest::digest("+rName+")").asRChar().getData()[0];
-		RControl.getR().eval(uniqueName+"<-"+rName);
+		uniqueName = "CODesign."+RControl.getR().eval("digest::digest(getDesign("+rName+"))").asRChar().getData()[0];
+		RControl.getR().eval(uniqueName+"<- getDesign("+rName+")");
 		return uniqueName;
-	}
-	
-	
+	}	
 	
 	public void setRName(String name) {
 		//if (RControl.getR().eval("crossover:::isRName("+name+")").asRLogical().getData()[0]) {}

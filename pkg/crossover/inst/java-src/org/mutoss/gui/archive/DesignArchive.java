@@ -23,7 +23,7 @@ public class DesignArchive {
 			//TODO Warn
 			return;
 		}		
-		RControl.getR().eval("load("+file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\")+")");				
+		RControl.getR().eval("load(\""+file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\")+"\")");				
 	}
 	
 	public String getDescription() {
