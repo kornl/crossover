@@ -23,17 +23,30 @@ crossoverGUI <- function() {
 	invisible(.jnew("org/mutoss/gui/CrossoverGUI"))	
 }
 
-getTable <- function(d, type="HTML") {
-  d <- design2integer(d)
-  rownames(d) <- paste("p", 1:dim(d)[1], sep="")
-  colnames(d) <- paste("s", 1:dim(d)[2], sep="")
+getTable <- function(d, type="HTML", forceInteger=TRUE, digits=4) {
+  if (forceInteger) {
+    d <- design2integer(d)
+    rownames(d) <- paste("p", 1:dim(d)[1], sep="")
+    colnames(d) <- paste("s", 1:dim(d)[2], sep="")
+  } else {
+    d <- round(d, digits)
+    rownames(d) <- paste("t", 1:dim(d)[1], sep="")
+    colnames(d) <- paste("t", 1:dim(d)[2], sep="")
+  }
   if (type=="ASCII") {
     return(paste("<pre>",paste(capture.output(print(d)), collapse="\n"),"</pre>"))
   } else if (type=="HTML") {
-    return(print(xtable(d), type="html"))
+    return(paste(capture.output(print(xtable(d, digits=digits), type="html")),collapse="\n"))
   } else if (type=="R") {
     return(paste("<pre>",dputMatrix(d),"</pre>"))
   }
+}
+
+getDesignText <- function(d, model=1, type="HTML", carryover=TRUE, digits=4) {
+  result <- "<b>Var.trt.pair:<b><br>"
+  gco <- general.carryover(d, model=model)
+  m <- gco$Var.trt.pair
+  result <- paste(result, getTable(m, type, forceInteger=FALSE, digits=digits))  
 }
 
 dputMatrix <- function(m, name, indent=6, rowNames=FALSE) {
