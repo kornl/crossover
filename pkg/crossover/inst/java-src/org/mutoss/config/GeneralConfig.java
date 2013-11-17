@@ -53,7 +53,7 @@ public class GeneralConfig extends SpecificConfig {
 	}
     
     public int getDigits() {
-		return Integer.parseInt(getProperty("Digits", "3"));		
+		return Integer.parseInt(getProperty("Digits", "4"));		
 	}
     
     DecimalFormat format = null;
