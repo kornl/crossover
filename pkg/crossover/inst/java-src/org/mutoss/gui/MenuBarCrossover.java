@@ -107,6 +107,7 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 		if (System.getProperty("eclipse") != null) 
 		{		
 			extraMenu.add(makeMenuItem("Debug console", "debugConsole", KeyEvent.VK_D));
+			extraMenu.add(makeMenuItem("Save archives", "saveArchive", KeyEvent.VK_A));
 		}
 		extraMenu.setMnemonic(KeyEvent.VK_E);
 		
@@ -188,6 +189,8 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
         } else if (e.getActionCommand().equals("load graph from R")) {
         	new RObjectLoadingDialog(control);
         	createLastUsed();        	
+        } else if (e.getActionCommand().equals("saveArchive")) {    	
+        	control.dac.save();
         } else if (e.getActionCommand().equals("showLog")) {    	
         	showLog();
         } else if (e.getActionCommand().equals("reportError")) {       	
