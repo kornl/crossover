@@ -42,11 +42,28 @@ getTable <- function(d, type="HTML", forceInteger=TRUE, digits=4) {
   }
 }
 
-getDesignText <- function(d, model=1, type="HTML", carryover=TRUE, digits=4) {
-  result <- "<b>Var.trt.pair:<b><br>"
-  gco <- general.carryover(d, model=model)
-  m <- gco$Var.trt.pair
-  result <- paste(result, getTable(m, type, forceInteger=FALSE, digits=digits))  
+getDesignText <- function(d, model=1, type="HTML", carryover=TRUE, digits=4, var=TRUE, eff=TRUE) {
+  result <- ""
+  if (var) {
+    m <- general.carryover(d, model=model)$Var.trt.pair
+    result <- paste(result, "<b>Var.trt.pair:</b><br>", getTable(m, type, forceInteger=FALSE, digits=digits))  
+  }
+  if (eff) {
+    if (model!=1) warning("") #TODO
+    m <- design.efficiency(d)$eff.trt.pair.adj
+    result <- paste(result, "<b>Eff.trt.pair:</b><br>", getTable(m, type, forceInteger=FALSE, digits=digits))  
+  }
+  if (carryover) {
+    gco <- general.carryover(d, model=model)
+    i <- 2
+    while (i<length(gco)) {
+      if (is.matrix(gco[[i]])) {
+        result <- paste(result, "<b>",names(gco)[i],":</b><br>", getTable(gco[[i]], type, forceInteger=FALSE, digits=digits))  
+      }
+      i <- i + 1
+    }
+  }
+  return(result)
 }
 
 dputMatrix <- function(m, name, indent=6, rowNames=FALSE) {
