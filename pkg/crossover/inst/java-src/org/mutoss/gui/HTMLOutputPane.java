@@ -16,6 +16,7 @@ import org.af.commons.io.FileTransfer;
 import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.config.Configuration;
 
 public class HTMLOutputPane extends JPanel implements ActionListener {
     private static final Log logger = LogFactory.getLog(HTMLOutputPane.class);
@@ -43,7 +44,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     	textArea.appendHTML(design.getHTMLTable());
     	textArea.appendParagraph("Av.eff.trt.pair.adj: "+gui.df.format(design.efficiencyAdj));
     	if (design.reference!=null) textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference.replaceAll("\\n", "<br>")+"</i>");
-    	textArea.appendParagraph("<pre>"+getGeneralCarryover(design)+"</pre>");	
+    	textArea.appendParagraph(getGeneralCarryover(design));	
 	}
 
 	private String getGeneralCarryover(Design design) {
@@ -51,9 +52,11 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
 		if (designS == null) {
 			designS = design.design;
 		}
-		String command = "print(general.carryover("+designS+", model="+(gui.jCBmodel.getSelectedIndex()+1)+"))";
-		String command2 = "paste(capture.output("+command+"),collapse=\"\\n\")";
-		return RControl.getR().eval(command2).asRChar().getData()[0];
+		String command = "crossover:::getDesignText("+designS+", model="+(gui.jCBmodel.getSelectedIndex()+1)
+				+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\""
+				+", carryover="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showCarryOver", ""+false))?"TRUE":"FALSE")+"" 
+				+", digits="+Configuration.getInstance().getGeneralConfig().getDigits()+")";
+		return RControl.getR().eval(command).asRChar().getData()[0];
 	}
 
 	public void showError(Throwable e) throws BadLocationException, IOException {    	
