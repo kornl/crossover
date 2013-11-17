@@ -48,7 +48,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 	JButton ok = new JButton("Ready");
 	JButton jbCompute = new JButton("Compute Design");
-	public HTMLPaneWithButtons jta;
+	public HTMLOutputPane jta;
 	JLabel label = new JLabel();
 	JPanel ntPanel = null;
 	JPanel weightsPanel = null;
@@ -90,10 +90,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		int row = 2;
     	
-    	jta = new HTMLPaneWithButtons();
+    	jta = new HTMLOutputPane(gui);
 		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		//jta.setLineWrap(false);		
-		jta.setMargin(new Insets(4,4,4,4));
+		//jta.setMargin(new Insets(4,4,4,4));
 		jta.setEditable(false);		
 		
 		add(new JScrollPane(getLeftSidePanel()), cc.xy(2, row));
@@ -423,30 +423,29 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			
 			//startTesting();		
 			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-				RList result;
-				String table;
+				//RList result;
+				//String table;
 
 				@Override
 				protected Void doInBackground() throws Exception {					
 					RControl.getR().eval(".COresult <- "+command);
 					//RControl.getR().eval(".COresult <- getDesign(.COresult)");
-					table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
+					//table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
 					return null;
 				}
 
 				protected final void done() {
 					try {
-						gui.dac.addSearchResult(new Design("Search Result", ".COresult"));
+						Design design = new Design("Search Result", ".COresult");
+						gui.dac.addSearchResult(design);
 						get();
 						exportR.setEnabled(true);						
 						showAlgoPerformance.setEnabled(true);
 						jta.clear();
-						jta.appendHTML(table);
-						String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
-						jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
+						jta.showDesign(design);
 						jta.appendParagraph("Random seed: TODO");
 						jta.appendParagraph("R Code: <pre>"+command+"</pre>");
-						jta.setCaretPosition(0);
+						jta.textArea.setCaretPosition(0);
 					} catch (CancellationException e) {
 						// Will be perhaps used in the future.
 					} catch (Throwable e) {
@@ -525,12 +524,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		exportR.setEnabled(true);						
 		showAlgoPerformance.setEnabled(true);
 		jta.clear();
-		jta.appendHTML(table);
+		//jta.appendHTML(table);
 		String command2 = "paste(capture.output(general.carryover(.COresult)),collapse=\"\\n\")";
 		jta.appendParagraph("<pre>"+RControl.getR().eval(command2).asRChar().getData()[0]+"</pre>");		
 		jta.appendParagraph("Random seed: TODO");
 		jta.appendParagraph("R Code: <pre>"+command+"</pre>");
-		jta.setCaretPosition(0);		
+		//jta.setCaretPosition(0);		
 	}
 
 }

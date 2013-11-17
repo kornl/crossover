@@ -102,7 +102,9 @@ public class Design {
 	}
 
 	public String getHTMLTable() {		
-		String result = RControl.getR().eval("crossover:::getTable("+(uniqueName==null?design:uniqueName)+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\")").asRChar().getData()[0];
+		String result = RControl.getR().eval("crossover:::getTable("+(uniqueName==null?design:uniqueName)
+				+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\"" 
+				+", names="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showNames", ""+true))?"TRUE":"FALSE")+")").asRChar().getData()[0];
 		return result;
 	}
 }

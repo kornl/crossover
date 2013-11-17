@@ -42,7 +42,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     	textArea.appendParagraph(textArea.makeBold(design.title + " ("+design.getRSignature()+")"));
     	textArea.appendParagraph("");
     	textArea.appendHTML(design.getHTMLTable());
-    	textArea.appendParagraph("Av.eff.trt.pair.adj: "+gui.df.format(design.efficiencyAdj));
+    	textArea.appendParagraph("<b>Av.eff.trt.pair.adj:</b> "+gui.df.format(design.efficiencyAdj));
     	if (design.reference!=null) textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference.replaceAll("\\n", "<br>")+"</i>");
     	textArea.appendParagraph(getGeneralCarryover(design));	
 	}
@@ -54,8 +54,10 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
 		}
 		String command = "crossover:::getDesignText("+designS+", model="+(gui.jCBmodel.getSelectedIndex()+1)
 				+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\""
-				+", carryover="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showCarryOver", ""+false))?"TRUE":"FALSE")+"" 
-				+", digits="+Configuration.getInstance().getGeneralConfig().getDigits()+")";
+				+", carryover="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showCarryOver", ""+false))?"TRUE":"FALSE")
+				+", digits="+Configuration.getInstance().getGeneralConfig().getDigits()
+				+", names="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showNames", ""+true))?"TRUE":"FALSE")
+				+")";
 		return RControl.getR().eval(command).asRChar().getData()[0];
 	}
 
@@ -104,4 +106,12 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         
     }
+
+	public void setEditable(boolean b) {
+		textArea.setEditable(b);		
+	}
+
+	public void appendParagraph(String string) {
+		textArea.appendParagraph(string);
+	}
 }

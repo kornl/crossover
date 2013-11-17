@@ -25,6 +25,7 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
     private Configuration conf;
     private OptionsDialog odialog;
     private JCheckBox showCarryOver;
+    private JCheckBox showNames;
     private JComboBox showTable = new JComboBox(new String[] {"HTML Table", "ASCII", "R matrix"});
     String[] outputF = new String[] {"HTML", "ASCII", "R"};
 
@@ -51,6 +52,8 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
         }
         showCarryOver.setToolTipText("<html></html>");
         showCarryOver.setSelected(Boolean.parseBoolean(conf.getProperty("showCarryOver", ""+false)));
+        showNames = new JCheckBox("Show row and column names.");
+        showNames.setSelected(Boolean.parseBoolean(conf.getProperty("showNames", ""+true)));
     }
 
     private void doTheLayout() {
@@ -70,6 +73,10 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
         row += 2;
         
         p1.add(showCarryOver, cc.xyw(1, row, 3));
+        
+        row += 2;    
+        
+        p1.add(showNames, cc.xyw(1, row, 3));
         
         row += 2;        
             
@@ -94,6 +101,7 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
     public void setProperties() throws SetLookAndFeelException {
       	conf.setProperty("outputF", outputF[showTable.getSelectedIndex()]);
       	conf.setProperty("showCarryOver", ""+showCarryOver.isSelected());
+      	conf.setProperty("showNames", ""+showNames.isSelected());
     }
 
 	public void actionPerformed(ActionEvent e) {
