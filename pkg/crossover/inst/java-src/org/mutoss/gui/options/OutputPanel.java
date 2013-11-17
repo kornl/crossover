@@ -45,8 +45,12 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
     private void makeComponents() {        
         showCarryOver = new JCheckBox("Show variances of pairwise carry-over comparisons.");
         //colorImages.setSelected(conf.getGeneralConfig().getColoredImages());
+        String f = conf.getProperty("outputF", "HTML");
+        for (int i=0; i<outputF.length; i++) {
+        	if (f.equals(outputF[i])) showTable.setSelectedIndex(i);
+        }
         showCarryOver.setToolTipText("<html></html>");
-        
+        showCarryOver.setSelected(Boolean.parseBoolean(conf.getProperty("showCarryOver", ""+false)));
     }
 
     private void doTheLayout() {
@@ -89,6 +93,7 @@ public class OutputPanel extends OptionsPanel implements ActionListener {
     
     public void setProperties() throws SetLookAndFeelException {
       	conf.setProperty("outputF", outputF[showTable.getSelectedIndex()]);
+      	conf.setProperty("showCarryOver", ""+showCarryOver.isSelected());
     }
 
 	public void actionPerformed(ActionEvent e) {
