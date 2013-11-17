@@ -80,14 +80,12 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
         add(jcbMyDesigns, cc.xy(2, row));
         jcbMyDesigns.setSelected(true);
         jcbMyDesigns.addActionListener(this);
-        jcbMyDesigns.setEnabled(false);
         
         row+=2;
         
         add(jcbSearch, cc.xy(2, row));
         jcbSearch.setSelected(true);
         jcbSearch.addActionListener(this);
-        jcbSearch.setEnabled(false);
         
 	}
 	
