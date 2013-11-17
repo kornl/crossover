@@ -7,7 +7,9 @@ public class Design {
 	String title;
 	String reference;
 	String signature;
-	int t, s, p;
+	public int t;
+	public int s;
+	public int p;
 	String design;
 	Double efficiencyAdj = null;
 	Double efficiencyUnadj = null;
@@ -29,6 +31,9 @@ public class Design {
 		p = dim[0];
 		s = dim[1];		
 		design = RControl.getR().eval("paste(capture.output(dput("+uniqueName+")), collapse=\"\")").asRChar().getData()[0];
+		double[] eff = RControl.getR().eval("crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
+		efficiencyUnadj = eff[0];
+		efficiencyAdj = eff[1];
 		saveDesign2R();
 	}
 	
@@ -85,7 +90,7 @@ public class Design {
 	
 	public String getTextDesign() {
 		if (result != null) return result;
-		result = RControl.getR().eval("paste(capture.output(print("+(rName==null?design:rName)+")), collapse=\"\\n\")").asRChar().getData()[0];
+		result = RControl.getR().eval("paste(capture.output(print("+(uniqueName==null?design:uniqueName)+")), collapse=\"\\n\")").asRChar().getData()[0];
 		/*if (efficiency == null) {
 			RControl.getR().eval("design.out<-design.efficiency(design,nseq,ntrt,nper,nrep)");
 		}*/
@@ -93,7 +98,7 @@ public class Design {
 	}
 
 	public String getHTMLTable() {		
-		String result = RControl.getR().eval("crossover:::getTable("+(rName==null?design:rName)+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\")").asRChar().getData()[0];
+		String result = RControl.getR().eval("crossover:::getTable("+(uniqueName==null?design:uniqueName)+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\")").asRChar().getData()[0];
 		return result;
 	}
 }
