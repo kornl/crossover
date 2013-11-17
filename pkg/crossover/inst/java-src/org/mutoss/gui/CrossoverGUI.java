@@ -121,6 +121,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	    setGlassPane(glassPane);
 	    glassPane.addAbortListener(this);
 		
+		dac = new DesignArchiveControl();
+	    
 		makeContent();
 		setJMenuBar(new MenuBarCrossover(this));
 		pack();
@@ -133,8 +135,6 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 				screenSize.height - inset*2);
 
 		addWindowListener(this);
-		
-		dac = new DesignArchiveControl();
 		
 		//loadDefaults();
 		
