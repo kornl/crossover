@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.jdesktop.swingworker.SwingWorker;
+import org.mutoss.gui.archive.DesignArchiveControl;
 
 public class FillTableWorker extends SwingWorker<Void, Void> {
 	
@@ -36,10 +37,16 @@ public class FillTableWorker extends SwingWorker<Void, Void> {
 					list.add(design);
 				}			
 			}
-		}
+		}		
 		if (gui.designPanel.jcbCrossdes.isSelected()) {
 			list.addAll(CrossDes.getDesigns(t, p, s1, s2));
 		}		
+		if (gui.designPanel.jcbSearch.isSelected()) {
+			list.addAll(gui.dac.getDesigns(t, p, s1, s2, DesignArchiveControl.SEARCH));
+		}
+		if (gui.designPanel.jcbMyDesigns.isSelected()) {
+			list.addAll(gui.dac.getDesigns(t, p, s1, s2, DesignArchiveControl.ENTERED));
+		}
 		return null;
 	}  
 	
