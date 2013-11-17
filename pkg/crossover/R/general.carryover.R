@@ -30,11 +30,19 @@
 #' @export general.carryover
 general.carryover<-function(design,model,t0=1,rho=0.5){  
   if (class(design)=="crossoverSearchResult") {
-      if(missing(model)) model <- design@model
+      if(missing(model)) {
+        model <- design@model
+      } else {
+        if (model!=design@model) warning("Model from object does not equal specified model")
+      }
       design <- design@design      
   }
   if (class(design)=="crossoverDesign") {
-    model <- design@model
+    if(missing(model)) {
+      model <- design@model
+    } else {
+      if (model!=design@model) warning("Model from object does not equal specified model")
+    }
     design <- design@design
   }
   model <- getModelNr(model)
