@@ -17,12 +17,16 @@ public class Design {
 	String rName = null;
 	String uniqueName = null;
 	
+	public Design(String title, String rName) {
+		this(title, rName, null);
+	}
+	
 	/**
 	 * Constuctor of design object
 	 * @param title Title for Design. For example "FLETCHER FACTORIAL 2 x 2 DESIGN 3".
 	 * @param rName
 	 */
-	public Design(String title, String rName) {
+	public Design(String title, String rName, String reference) {
 		this.title = title;		
 		this.rName = rName;
 		saveDesign2R();
