@@ -168,7 +168,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		tabbedPane = new JTabbedPane();
 		
 		designPanel = new DesignSelectionPanel(this);
-		designInputPanel = new DesignInputPanel();
+		designInputPanel = new DesignInputPanel(this);
 		designInputPanel.addActionListener(this);
 		algorithmPanel = new AlgorithmPanel(this);
 		tabbedPane.addTab("Catalogue", designPanel);

@@ -40,6 +40,10 @@ public class DesignArchiveControl {
 		searchResults.addDesign(design);
 	}
 
+	public void addEnteredDesign(Design design) {
+		defaultEntered.addDesign(design);		
+	}
+
 	public List<Design> getDesigns(int t, int p, int s1, int s2, String string) {
 		DesignArchive da = null;
 		List<Design> result = new Vector<Design>();

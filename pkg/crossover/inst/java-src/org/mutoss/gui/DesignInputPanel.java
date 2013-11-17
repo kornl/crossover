@@ -31,11 +31,15 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	JTextField jtReference = new JTextField();
 	JButton ok = new JButton("Ready");
 	JButton loadFile = new JButton("Load File");
+	JButton loadRObject = new JButton("Load from R");
+	JButton save = new JButton("Save to my archive of designs");
 	JTextArea jta;
 	JLabel label = new JLabel();
 	JComboBox jcbRows = new JComboBox(new String[] {"periods", "sequences"});
+	CrossoverGUI gui;
 	
-	public DesignInputPanel() {
+	public DesignInputPanel(CrossoverGUI gui) {
+		this.gui = gui;
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
         String rows = "5dlu, pref, 5dlu, fill:pref:grow, 5dlu, pref, 5dlu";
         
@@ -66,6 +70,9 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 		
 		loadFile.addActionListener(this);
 		add(loadFile, cc.xy(2, row));
+		save.addActionListener(this);
+		add(save, cc.xy(4, row));
+		
 	}
 	
 	public JPanel getRightSidePanel() {
@@ -136,18 +143,34 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	        }
 		} else if (e.getSource() == jcbRows) {
 			checkDesign();
+		} else if (e.getSource() == save) {
+			try {
+				saveDesign();
+				gui.dac.addEnteredDesign(new Design(jtTitle.getText(), ".newDesign", jtReference.getText()));
+			} catch (Exception error) {
+				JOptionPane.showMessageDialog(this, "Design not valid.\nPlease correct.", "Design not valid", JOptionPane.ERROR_MESSAGE);
+			}
 		}
+	}
+	
+	/**
+	 * Saves the design as .newDesign or throws error.
+	 * @return
+	 * @throws Exception 
+	 */
+	private void saveDesign() throws Exception {
+		String input = jta.getText();
+		RControl.getR().evalVoid(".con <- textConnection(\""+input+"\")");
+		RControl.getR().eval(".newDesign <- try(as.matrix(read.table(.con, header = FALSE)), silent=TRUE)");
+		if (transpose()) {
+			RControl.getR().eval(".newDesign <- t(.newDesign)");
+		}
+		if (RControl.getR().eval("(\"try-error\" %in% class(.newDesign))").asRLogical().getData()[0]) throw new Exception();
 	}
 
 	private void checkDesign() {
 		try {
-			String input = jta.getText();
-			RControl.getR().evalVoid(".con <- textConnection(\""+input+"\")");
-			RControl.getR().eval(".newDesign <- try(as.matrix(read.table(.con, header = FALSE)), silent=TRUE)");
-			if (transpose()) {
-				RControl.getR().eval(".newDesign <- t(.newDesign)");
-			}
-			if (RControl.getR().eval("(\"try-error\" %in% class(.newDesign))").asRLogical().getData()[0]) throw new Exception();
+			saveDesign();
 			int[] dim = RControl.getR().eval("dim(.newDesign)").asRInteger().getData(); 
 			int t = RControl.getR().eval("length(levels(as.factor(.newDesign)))").asRInteger().getData()[0];	
 			label.setText("p = "+dim[0]+", s = "+dim[1]+", t = "+t);
