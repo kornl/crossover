@@ -64,7 +64,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JButton exportR = new JButton("Export to R");
 	JButton showAlgoPerformance = new JButton("Search algorithm plot");
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
-	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey contrast)", "Comparing treatment 1 to each of the others (Dunnett contrast)", "User defined"} );
+	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey)", "Comparing treatment 1 to each of the others (Dunnett)", "User defined"} );
 	String[] contrasts = new String[] {"Tukey", "Dunnett", "User defined"};
 	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
 	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autocorrelated Error", "User defined"});
@@ -152,7 +152,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         
         row+=2;  
         
-        jlVar = new JLabel("Variance of random subject effect divided by variance of ε"); 
+        jlVar = new JLabel("Random subject Var divided by Var of ε"); 
         jlVar.setEnabled(false);
         jtRatio.setEnabled(false);
         lsPanel.add(jlVar, cc.xy(2, row));
