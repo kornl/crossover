@@ -1,3 +1,18 @@
+ rbind(c(2L, 2L, 1L, 1L, 2L, 1L),
+      c(1L, 1L, 2L, 2L, 1L, 2L),
+      c(2L, 2L, 1L, 1L, 2L, 1L),
+      c(1L, 1L, 2L, 2L, 1L, 2L))
+ 
+Av.eff.trt.pair.adj: 0.1818
+
+ rbind(c(1L, 2L, 2L, 1L, 2L, 1L),
+      c(2L, 2L, 2L, 1L, 1L, 1L),
+      c(1L, 1L, 1L, 2L, 2L, 2L),
+      c(1L, 1L, 1L, 2L, 2L, 2L))
+ 
+Av.eff.trt.pair.adj: 0.9141
+
+---
 Adding model "0".
 ---
 Screenshots: t=6, p=4, s=24 -> Standard settings improve not that much any more.
