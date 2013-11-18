@@ -25,7 +25,20 @@ public class DesignArchive {
 		}		
 		String[] loadedDesigns = RControl.getR().eval("load(\""+file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\")+"\")").asRChar().getData();
 		for (String s : loadedDesigns) {
-			addDesign(new Design("Search Result", s));
+			String title = "Unknown";
+			String reference = null;
+			String rName = "design";
+			try {
+				rName = RControl.getR().eval("attr("+s+",\"rName\")").asRChar().getData()[0];
+				if (rName==null) title = "design";
+				title = RControl.getR().eval("attr("+s+",\"title\")").asRChar().getData()[0];
+				if (title==null) title = "Unkown";
+				reference = RControl.getR().eval("attr("+s+",\"reference\")").asRChar().getData()[0];				
+			} catch(Exception e) {
+				//TODO Do we want to do something? We have defaults...
+			}
+			RControl.getR().eval(rName+" <- "+s);
+			addDesign(new Design(title, rName, reference));
 		}
 	}
 	
@@ -49,7 +62,7 @@ public class DesignArchive {
 		if (file==null) throw new SaveException("File is null!");
 		String cmd = "save(";
 		for (Design design : designs) {
-			cmd = cmd + design.saveDesign2R() + ",";				
+			cmd = cmd + design.saveDesign2R(false) + ",";				
 		}
 		cmd = cmd+" file=\""+file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\")+"\")";
 		RControl.getR().eval(cmd);

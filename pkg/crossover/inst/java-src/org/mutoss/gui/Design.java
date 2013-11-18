@@ -29,7 +29,7 @@ public class Design {
 	public Design(String title, String rName, String reference) {
 		this.title = title;		
 		this.rName = rName;
-		saveDesign2R();
+		saveDesign2R(true);
 		this.t = RControl.getR().eval("length(levels(as.factor("+uniqueName+")))").asRInteger().getData()[0];		
 		int[] dim = RControl.getR().eval("dim("+uniqueName+")").asRInteger().getData();
 		p = dim[0];
@@ -38,7 +38,6 @@ public class Design {
 		double[] eff = RControl.getR().eval("crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
 		efficiencyUnadj = eff[0];
 		efficiencyAdj = eff[1];
-		saveDesign2R();
 	}
 	
 	/**
@@ -64,18 +63,34 @@ public class Design {
 		double[] eff = RControl.getR().eval("crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
 		efficiencyUnadj = eff[0];
 		efficiencyAdj = eff[1];		
-		saveDesign2R();
+		saveDesign2R(true);
 	}
 	
-	public String saveDesign2R() {		
-		uniqueName = "CODesign."+RControl.getR().eval("digest::digest(getDesign("+rName+"))").asRChar().getData()[0];
-		RControl.getR().eval(uniqueName+"<- getDesign("+rName+")");
+	public String saveDesign2R(boolean useRName) {
+		if (useRName) {
+			uniqueName = "CODesign."+RControl.getR().eval("digest::digest(getDesign("+rName+"))").asRChar().getData()[0];
+			RControl.getR().eval(uniqueName+"<- getDesign("+rName+")");
+		}
+		RControl.getR().eval("attr("+uniqueName+",\"rName\") <- \""+rName+"\"");
+		if (reference!=null) RControl.getR().eval("attr("+uniqueName+",\"reference\") <- \""+escape(reference)+"\"");
+		RControl.getR().eval("attr("+uniqueName+",\"title\") <- \""+escape(title)+"\"");
 		return uniqueName;
 	}	
 	
+	public static String escape(String s) {
+		s = s.replaceAll("\\\\", "\\\\\\\\");
+		s = s.replaceAll("\"", "\\\\\"");
+		return s;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println("Test \" \\ ");
+		System.out.println(escape("Test \" \\ "));
+	}
+
 	public void setRName(String name) {
 		//if (RControl.getR().eval("crossover:::isRName("+name+")").asRLogical().getData()[0]) {}
-		rName = RControl.getR().eval("make.names("+name+")").asRChar().getData()[0];		
+		rName = RControl.getR().eval("make.names("+name+")").asRChar().getData()[0];
 	}
 	
 	public String getRSignature() {
