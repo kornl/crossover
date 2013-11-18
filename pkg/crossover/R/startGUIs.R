@@ -54,9 +54,10 @@ getDesignText <- function(d, model=1, type="HTML", carryover=TRUE, digits=4, var
     result <- paste(result, "<b>Var.trt.pair:</b><br>", getTable(m, type, forceInteger=FALSE, digits=digits, names=names))  
   }
   if (eff) {
-    if (model!=1) warning("") #TODO
+    warn <- ""
+    if (model!=1) warn <- "(Warning: efficiency is calculated for model 1)"
     m <- design.efficiency(d)$eff.trt.pair.adj
-    result <- paste(result, "<b>Eff.trt.pair:</b><br>", getTable(m, type, forceInteger=FALSE, digits=digits, names=names))  
+    result <- paste(result, "<b>Eff.trt.pair",warn,":</b><br>", getTable(m, type, forceInteger=FALSE, digits=digits, names=names),sep="")  
   }
   if (carryover) {
     gco <- general.carryover(d, model=model)
