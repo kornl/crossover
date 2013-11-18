@@ -3,11 +3,15 @@ package org.mutoss.gui;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -17,7 +21,7 @@ import org.jdesktop.swingworker.SwingWorker;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class DesignSelectionPanel extends JPanel implements ListSelectionListener, ActionListener {
+public class DesignSelectionPanel extends JPanel implements ListSelectionListener, ActionListener, MouseListener {
 	
 	DesignTable designTable;
 	//JList designList;
@@ -52,7 +56,8 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		
         row+=2;
         
-        designTable = new DesignTable();		
+        designTable = new DesignTable();	
+        designTable.addMouseListener(this);
 		designTable.getSelectionModel().addListSelectionListener(this);
 		
 		jta = new HTMLOutputPane(gui);
@@ -110,6 +115,28 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		worker.execute();		
 	}
 
+	public void mouseClicked(MouseEvent e) {}
 
+	public void mousePressed(MouseEvent e)  {popup(e);}
+	public void mouseReleased(MouseEvent e) {popup(e);}
+
+	public void popup(MouseEvent e) {
+	    if (e.isPopupTrigger()) {
+	    	int r = designTable.rowAtPoint(e.getPoint());
+	        JPopupMenu popup = makePopupMenu(r);
+            popup.show(e.getComponent(), e.getX(), e.getY());
+	    }
+	}
+
+	private JPopupMenu makePopupMenu(int r) {
+		//TODO should be an own class.
+		JPopupMenu jpm = new JPopupMenu();
+		jpm.add(new JMenuItem("Delete"));        
+		return jpm;
+	}
+
+	public void mouseEntered(MouseEvent e) {}
+
+	public void mouseExited(MouseEvent e) {}
 	
 }
