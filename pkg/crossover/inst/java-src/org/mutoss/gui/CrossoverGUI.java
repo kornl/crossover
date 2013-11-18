@@ -73,13 +73,13 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 	public static final String[][] parameters = new String[][] {
 		{"Treatment", "Carry-over"},
-		{"Treatment", "Carry-over (1st order)", "Carry-over (2nd order)"},
-		{"Treatment", "Carry-over", "Interaction"},
 		{"Treatment", "Carry-over", "Carry-over (into-self)"},
+		{"Treatment"},
 		{"Treatment", "Carry-over"},
 		{"Treatment", "Carry-over"},
-		{"Treatment", "Carry-over"},
-		{"Treatment"}
+		{"Treatment", "Carry-over"},		
+		{"Treatment", "Carry-over", "Interaction"},
+		{"Treatment", "Carry-over (1st order)", "Carry-over (2nd order)"}
 	};
 	 
 	/**
