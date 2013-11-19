@@ -1,7 +1,7 @@
 Package: crossover
 Type: Package
 Title: Crossover Designs
-Version: 0.1-6
+Version: 0.1-7
 Author: Kornelius Rohmeyer, Byron Jones
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
 Description: This package provides different crossover designs and a GUI to access them.
