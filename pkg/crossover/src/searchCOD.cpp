@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP correlationS, SEXP interchangeS) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP randomSS, SEXP correlationS, SEXP interchangeS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -27,6 +27,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   bool balanceS = is_true( any( LogicalVector(balanceSS) ) );
   bool balanceP = is_true( any( LogicalVector(balancePS) ) );
   bool checkE = is_true( any( LogicalVector(checkES) ) );
+  bool randomS = is_true( any( LogicalVector(randomSS) ) );
   bool interchange = is_true( any( LogicalVector(interchangeS) ) );
   int s = IntegerVector(sS)[0];
   int p = IntegerVector(pS)[0];
@@ -46,7 +47,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   if (!Rf_isNull( correlationS )) cor = as<mat>(correlationS);
   mat C = as<mat>(CS); // Contrasts
   mat tCC = trans(C) * C; // t(C) %*% C
-  mat Z = getZ(s,p);
+  mat Z = getZ(s,p, randomS);
   //mat design = as<mat>(designS);
 
   // TODO Read random number generators and C!
@@ -111,13 +112,13 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       mat rcDesign = rcd(design, v, model);
       if (!Rf_isNull( correlationS )) {
           mat X = rcdMatrix(rcDesign, v, model) * linkM;
-          mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows);
+          mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows, randomS);
           X =  join_rows(X, Z);
           pinv(trans(X) * cor * X);
           //Rprintf("* long calc *\n");
           s1 = trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
       } else {
-          s1 = getS1((model==3||model==7)?design:rcDesign, v, model, linkM, tCC);      
+          s1 = getS1((model==3||model==7)?design:rcDesign, v, model, linkM, tCC, randomS);      
       }
       
       if (s2/s1 >= eOld) {
@@ -226,17 +227,21 @@ SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
   END_RCPP
 }
 
-SEXP getZ2R(SEXP sS, SEXP pS) {
+SEXP getZ2R(SEXP sS, SEXP pS, SEXP randomSS) {
   BEGIN_RCPP
+  bool randomS = is_true( any( LogicalVector(randomSS) ) );
   int s = IntegerVector(sS)[0];
   int p = IntegerVector(pS)[0];
-  return wrap(getZ(s, p));
+  return wrap(getZ(s, p, randomS));
   END_RCPP
 }
 
-arma::mat getZ(int s, int p) {
+arma::mat getZ(int s, int p, bool randomS) {
     //eye<mat>(p,p).print(Rcout, "diag(p):");
     //ones<mat>(1,s).print(Rcout, "matrix(1,1,s):");
+    if (randomS) {
+      return kron(eye<mat>(p,p),ones<mat>(s,1));
+    }
     return join_rows(kron(eye<mat>(p,p),ones<mat>(s,1)),kron(ones<mat>(p,1),eye<mat>(s,s)));
 }
 
@@ -262,8 +267,9 @@ arma::mat rcd(arma::mat design, int v, int model) {
   return NULL;
 }
 
-SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS) {
+SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP randomSS) {
   BEGIN_RCPP
+  bool randomS = is_true( any( LogicalVector(randomSS) ) );
   int v = IntegerVector(vS)[0];
   int model = IntegerVector(modelS)[0];
   mat design = as<mat>(designS);  
@@ -271,15 +277,15 @@ SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS) {
   mat linkM = as<mat>(linkMS);
   mat C = as<mat>(CS); // Contrasts
   mat tCC = trans(C) * C; // t(C) %*% C
-  return wrap(getS1(rcDesign, v, model, linkM, tCC));
+  return wrap(getS1(rcDesign, v, model, linkM, tCC, randomS));
   END_RCPP
 }
 
-double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC) {  
+double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC, bool randomS) {  
     if (model==3 || model==7) { // in this case rcDesign is actually design
         mat X = designMatrix(rcDesign, v, model);
         //Rprintf("Calculating Z and S1."); 
-        mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows);
+        mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows, randomS);
         X =  join_rows(X, Z);
         return trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
     }

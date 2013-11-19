@@ -226,7 +226,7 @@ infMatrix <- function(X, v, model) {
 #' @export searchCrossOverDesign
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
-                                  n=c(5000, 20), jumps=c(5, 50), start.designs, contrast, correlation=NULL) {
+                                  n=c(5000, 20), jumps=c(5, 50), start.designs, random.subject=FALSE, contrast, correlation=NULL) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
@@ -284,7 +284,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
                    start.designs, H, C, model, eff.factor, 
                    v.rep, balance.s, balance.p, verbose, 
-                   as.integer(n), as.integer(jumps), S2, TRUE, correlation, interchange, PACKAGE = "crossover")
+                   as.integer(n), as.integer(jumps), S2, TRUE, random.subject, correlation, interchange, PACKAGE = "crossover")
   
   design <- result$design
   
@@ -325,14 +325,14 @@ randomDesignWithoutCheck <- function(s, p, v,  v.rep, balance.s=FALSE, balance.p
     return(design)
 }
 
-getS1 <- function(design, v, model, C, verbose=0) {
+getS1 <- function(design, v, model, C, randomS=FALSE, verbose=0) {
     if(missing(C)) {
         Csub <- contrMat(n=rep(1, v), type="Tukey")
         class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
         C <- appendZeroColumns(Csub, model, v)
     }
     linkM <- linkMatrix(model, v)
-    return(.Call( "getS12R", design, v, model, linkM, C))
+    return(.Call( "getS12R", design, v, model, linkM, C, randomS))
 }
 
 appendZeroColumns <- function(Csub, model, v) {

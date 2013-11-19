@@ -116,8 +116,8 @@ getZ_R <- function(s, p) {
   return(cbind(kronecker(diag(p), matrix(1,s,1)),kronecker(matrix(1,p,1),diag(s))))
 }
 
-getZ <- function(s, p) {
-    return(.Call( "getZ2R", s, p, PACKAGE = "crossover" ))    
+getZ <- function(s, p, randomS=FALSE) {
+    return(.Call( "getZ2R", s, p, randomS, PACKAGE = "crossover" ))    
 }
 
 getPZ <- function(s, p) {
