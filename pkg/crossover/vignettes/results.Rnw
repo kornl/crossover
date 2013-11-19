@@ -255,7 +255,28 @@ for (v in 3:9) {
 
 \subsection*{Autocorrelated errors}
 
+
+<<echo=FALSE>>=
+
+propSummary <- function(design) {
+    print(design)    
+    while (!is.null(dim(design)) && dim(design)[2]>0) {
+        col <- design[,1]
+        g <- apply(design, 2, function(x) {all(x==col)})
+        cat(col, " : ", sum(g), "\n")
+        design <- design[,-which(g), drop = FALSE]        
+    }
+}
+
+@
+
+
 Laska and Meisner
+
+For the specified $N_k$ the variance of the BLUE (only for the BLUE?) is
+
+\[\text{var}(\hat\theta)=m'A^{-1}m\]
+with $A=\sum N_k X_k'C^{-1}X_k$.
 
 <<>>=
 
@@ -265,12 +286,25 @@ sigmaE <- 1
 
 C <- matrix(1,6,6)
 C <- as.matrix(bdiag(C,C,C,C,C,C,C,C))+diag(6*8)
+CI <- solve(C)
+x1 <- c(1,2,2,1,1,2)
+x2 <- c(2,1,1,2,2,1)
+y1 <- c(1,1,2,2,2,1)
+y2 <- c(2,2,1,1,1,2)
 
-for (i in 1:5) {
-    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=solve(C), n = c(10000, 40))
-    propSummary(getDesign(result))
-    plot(result)
-}
+z1 <- c(1,2,2,2,1,1)
+z2 <- c(2,1,1,1,2,2)
+
+w1 <- c(1,2,2,1,1,2)
+w2 <- c(2,1,1,2,2,1)
+
+ldesign1 <- cbind(x1,x2,y1,y2,x1,x2,y1,y2)
+ldesign2 <- cbind(x1,x2,z1,z2,x1,x2,z1,z2)
+ldesign3 <- cbind(x1,x2,y1,y2,z1,z2,w1,w2)
+
+result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=CI, n = c(5000, 40), start.designs=list(ldesign1, ldesign2, ldesign3))
+propSummary(getDesign(result))
+plot(result)
 
 @
 
@@ -289,20 +323,6 @@ getSigmaI <- function(rho, s, p, f=solve) {
     # Our design matrix is indexed p=1,1,1,2,2,2,3,3,3; s=1,2,3,1,2,3,1,2,3 therefore we have to exchange the arguments:
     sigmaI <- kronecker(f(V), diag(s)) #kronecker(diag(s), f(V))
     return(sigmaI)
-}
-
-@
-
-<<echo=FALSE>>=
-
-propSummary <- function(design) {
-    print(design)    
-    while (!is.null(dim(design)) && dim(design)[2]>0) {
-        col <- design[,1]
-        g <- apply(design, 2, function(x) {all(x==col)})
-        cat(col, " : ", sum(g), "\n")
-        design <- design[,-which(g), drop = FALSE]        
-    }
 }
 
 @
