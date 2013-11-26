@@ -752,9 +752,11 @@ For a linear regression model with design matrix $X$ and variance $\sigma^2$ the
 \subsection{Linear Mixed Models}\index{Linear Mixed Models}
 In the \emph{linear mixed model} the response Y is given by
 \[Y=X\beta+Z\gamma+\epsilon\]
-with $X$ and $Z$ the fixed and random effects design matrices, $\beta\sim\sN(0,R)$ and $\gamma\sim\sN(0,G)$. Then\footnote{Citation/small prove should be provided.} \[\Var(Y)=ZGZ^T+R.\]
+with $X$ and $Z$ the fixed and random effects design matrices, $\epsilon\sim\sN(0,\Sigma)$ and $\gamma\sim\sN(0,D)$. Then\footnote{See for example \cite[chapter 5]{lee2006generalized}.} \[\Var(Y)=ZDZ^T+\Sigma.\]
 
-\subsection{Restricted Maximum Likelihood}
+For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
+
+\[\hat\beta=(X^tV^{-1}X)^{-1}X^tV^{-1}Y.\]
 
 <<mixed1, echo=TRUE>>=
 
