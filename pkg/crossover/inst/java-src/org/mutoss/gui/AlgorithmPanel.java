@@ -67,7 +67,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey)", "Comparing treatment 1 to each of the others (Dunnett)", "User defined"} );
 	String[] contrasts = new String[] {"Tukey", "Dunnett", "User defined"};
 	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
-	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autocorrelated Error", "User defined"});
+	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autocorrelated Error", "Equicorrelated Error", "User defined"});
 	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
 	JLabel jlMixed;
 	JLabel jlCor;
