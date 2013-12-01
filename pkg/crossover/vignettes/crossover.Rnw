@@ -661,7 +661,7 @@ but we also assume that the subject effects follow a normal distribution: $s_{ik
 
 In matrix notation we have
 \[Y=X\beta+Z\gamma+\epsilon\]
-with $X$ and $Z$ the fixed and random effects design matrices\footnote{Note that $X$ and $Z$ are different from the , $\epsilon\sim\sN(0,\Sigma)$ and $\gamma\sim\sN(0,D)$. Then\footnote{See for example \cite[chapter 5]{lee2006generalized}.} \[\Var(Y)=ZDZ^T+\Sigma.\]
+with $X$ and $Z$ the fixed and random effects design matrices\footnote{Note that $X$ and $Z$ are different from the ...}, $\epsilon\sim\sN(0,\Sigma)$ and $\gamma\sim\sN(0,D)$. Then\footnote{See for example \cite[chapter 5]{lee2006generalized}.} \[\Var(Y)=ZDZ^T+\Sigma.\]
 
 For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
 
