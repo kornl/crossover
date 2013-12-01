@@ -226,7 +226,7 @@ infMatrix <- function(X, v, model) {
 #' @export searchCrossOverDesign
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
-                                  n=c(5000, 20), jumps=c(5, 50), start.designs, random.subject=FALSE, contrast, correlation=NULL) {
+                                  n=c(5000, 20), jumps=c(5, 50), start.designs, random.subject=FALSE, contrast, correlation=NULL, rho=0) {
   #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
@@ -257,6 +257,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
       C <- contrMat2(type=contrast, v, model, eff.factor)
     }
   }
+  if (!is.matrix(correlation)) correlation <- corMat(correlation, s, p)
   if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
     st <- get(".summary_table", envir=crossover:::crossover.env)

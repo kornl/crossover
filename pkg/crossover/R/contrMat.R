@@ -24,3 +24,26 @@ contrMat2 <- function(type, v, model, eff.factor) {
   }
   stop("Unrecognized argument for 'type'.")
 }
+
+corMat <- function(correlation, s, p, rho) {
+  if (correlation=="equicorrelated") {
+    V <- diag(p)
+    for (i in 1:p) {
+      for (j in 1:p) {
+        if (i!=j) {
+          V[i,j] <- rho
+        }
+      }
+    }
+  } else if (correlation=="autoregressive") {
+    V <- diag(p)
+    for (i in 1:p) {
+      for (j in 1:p) {
+        V[i,j] <- rho^abs(i-j)
+      }
+    }
+  }
+  # Our design matrix is indexed p=1,1,1,2,2,2,3,3,3; s=1,2,3,1,2,3,1,2,3 therefore we have to exchange the arguments:
+  sigmaI <- kronecker(solve(V), diag(s)) #kronecker(diag(s), f(V))
+  return(sigmaI)
+}
