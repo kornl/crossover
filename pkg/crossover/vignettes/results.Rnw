@@ -211,6 +211,20 @@ cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover
 
 @
 
+<<>>=
+for (p in c("multcomp","Matrix","crossover")) require(p, character.only=TRUE)
+
+s <- 6; p <- 4; v <- 2; model <- 6
+
+result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, contrast="Tukey", eff.factor=c(1,0.01))
+
+Csub <- contrMat(n=rep(1, v), type="Tukey")
+class(Csub) <- "matrix"
+C <- as.matrix(bdiag(Csub, 0.01*Csub))
+result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, contrast=C)
+
+@
+
 As we can see we find the design from the book, when we give weights 100:1 for treatment / carry-over effects in the treatment decay model.
 (As seen in the first result section a zero weight for the carry-over effects results in a model with alternating treatments, so that there never occurs a treatment decay effect.)
 
@@ -283,7 +297,6 @@ with $A=\sum N_k X_k'C^{-1}X_k$.
 p <- 6; s <- 8; v <- 2
 sigmaE <- 1
 
-
 C <- matrix(1,6,6)
 C <- as.matrix(bdiag(C,C,C,C,C,C,C,C))+diag(6*8)
 CI <- solve(C)
@@ -302,14 +315,17 @@ ldesign1 <- cbind(x1,x2,y1,y2,x1,x2,y1,y2)
 ldesign2 <- cbind(x1,x2,z1,z2,x1,x2,z1,z2)
 ldesign3 <- cbind(x1,x2,y1,y2,z1,z2,w1,w2)
 
-result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=CI, n = c(5000, 40), start.designs=list(ldesign1, ldesign2, ldesign3))
-propSummary(getDesign(result))
-plot(result)
+result1 <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=CI, n = c(5000, 40), start.designs=list(ldesign1, ldesign2, ldesign3))
+propSummary(getDesign(result1))
+plot(result1)
+
+result2 <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=CI, n = c(5000, 40), start.designs=list(ldesign1, ldesign2, ldesign3), random.subject=TRUE)
+propSummary(getDesign(result2))
+plot(result2)
 
 @
 
 Two treatments and autocorrelated error:
-
 
 <<>>=
 
