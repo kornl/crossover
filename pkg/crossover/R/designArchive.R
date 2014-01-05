@@ -4,9 +4,9 @@ getStartDesigns <- function(s,p,v) {
   for (x in objects) {
     x <- get(x, envir=crossover:::crossover.env)
     if (!is.matrix(x)) next
-    if (!all(dim(x)==c(p,v))) next
+    if (!all(dim(x)==c(p,s))) next
     if (length(levels(as.factor(x)))!=v) next
-    candidates <- c(candidates, x)
-  }
+    candidates[[length(candidates)+1]] <- x
+  }  
   return(candidates)
 }
