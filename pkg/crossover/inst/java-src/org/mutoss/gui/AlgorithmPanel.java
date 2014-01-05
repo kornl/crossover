@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -436,7 +437,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 				protected final void done() {
 					try {
-						Design design = new Design("Search Result", ".COresult");
+						Design design = new Design("Search Result n=("+jtN1.getText()+","+jtN2.getText()+"), model="+gui.jCBmodel.getSelectedIndex()+", "+(new SimpleDateFormat("yyyy-MM-dd kk:mm").format(new Date())), ".COresult", command);
 						gui.dac.addSearchResult(design);
 						get();
 						exportR.setEnabled(true);						
