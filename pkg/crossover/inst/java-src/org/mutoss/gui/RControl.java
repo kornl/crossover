@@ -28,12 +28,12 @@ public class RControl {
 		return rc;
 	}
 
-	public static RCallServicesREngine getR() {
+	public static RCallServicesREngineWrapper getR() {
 		getRControl(true);
 		return rcs;
 	}
 
-	protected static RCallServicesREngine rcs = null;
+	protected static RCallServicesREngineWrapper rcs = null;
 	protected static DebugTextConsole console = null;
 
 	protected RControl(boolean debug) {
