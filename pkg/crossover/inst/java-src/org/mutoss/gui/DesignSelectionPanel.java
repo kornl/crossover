@@ -17,6 +17,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.jdesktop.swingworker.SwingWorker;
+import org.mutoss.config.ClassConfig;
+import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -92,7 +94,25 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
         jcbSearch.setSelected(true);
         jcbSearch.addActionListener(this);
         
+        loadDefaults();
 	}
+	
+	ClassConfig ac = new ClassConfig(Configuration.getInstance(), DesignSelectionPanel.class);
+	
+	public void loadDefaults() {
+		jcbPackageArchive.setSelected(ac.getBoolProperty("PackageArchive", true));
+		jcbCrossdes.setSelected(ac.getBoolProperty("Crossdes", true));
+		jcbMyDesigns.setSelected(ac.getBoolProperty("MyDesigns", true));
+		jcbSearch.setSelected(ac.getBoolProperty("Search", true));
+	}
+    
+	public void saveDefaults() {
+		ac.setBoolProperty("PackageArchive", jcbPackageArchive.isSelected());
+		ac.setBoolProperty("Crossdes", jcbCrossdes.isSelected());
+		ac.setBoolProperty("MyDesigns", jcbMyDesigns.isSelected());
+		ac.setBoolProperty("Search", jcbSearch.isSelected());
+	}
+	
 	
 	public DesignSelectionPanel(List<Design> designs, CrossoverGUI gui) {
 		this(gui);
@@ -110,9 +130,10 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		jta.showDesign(design);		
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) {		
 		SwingWorker<Void, Void> worker = new FillTableWorker(gui);
 		worker.execute();		
+		saveDefaults();
 	}
 
 	public void mouseClicked(MouseEvent e) {}

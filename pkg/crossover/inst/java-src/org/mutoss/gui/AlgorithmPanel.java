@@ -34,6 +34,9 @@ import org.af.commons.widgets.ComponentTitledBorder;
 import org.af.commons.widgets.HTMLPaneWithButtons;
 import org.af.jhlir.call.RList;
 import org.jdesktop.swingworker.SwingWorker;
+import org.mutoss.config.ClassConfig;
+import org.mutoss.config.Configuration;
+import org.mutoss.config.SpecificConfig;
 import org.mutoss.gui.dialogs.TextFileViewer;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -78,6 +81,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	//JTabbedPane jTabAlgo = new jTabAlgo;
 	String udcm;
 	
+	ClassConfig ac = new ClassConfig(Configuration.getInstance(), AlgorithmPanel.class);
+	
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
 		gui.spinnerT.addChangeListener(this);
@@ -102,7 +107,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		add(new JScrollPane(getLeftSidePanel()), cc.xy(2, row));
 		add((getRightSidePanel()), cc.xy(4, row));
 		
-		
+		loadDefaults();
 	}
 	
 	JSpinner spinnerS;
@@ -136,7 +141,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		return panel;
 	}
+	
+	public void loadDefaults() {
+		jcbCorrelation.setSelectedIndex(ac.getIntProperty("CVPattern", 0));
+	}
     
+	public void saveDefaults() {
+		ac.setIntProperty("CVPattern", jcbCorrelation.getSelectedIndex());
+	}
 	
 	public JPanel getLeftSidePanel() {
 		lsPanel = new JPanel();
@@ -410,6 +422,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	String models = "";	
 
 	public void actionPerformed(ActionEvent e) {
+		saveDefaults();
 		if (e.getSource() == jbCompute) {
 			gui.glassPane.start();
 			
@@ -460,8 +473,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						//System.out.println("\""+message+"\"");
 						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
 						JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
+						String traceback = RControl.getR().eval("paste(unlist(traceback()),collapse=\"\\n\")").asRChar().getData()[0];
 						JDialog d = new JDialog(gui, "R Error", true);
-						d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+
+						d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+"\n\nTraceback:\n\n"+traceback+"\n\n"+
 										command, true) );
 						d.pack();
 						d.setSize(800, 600);

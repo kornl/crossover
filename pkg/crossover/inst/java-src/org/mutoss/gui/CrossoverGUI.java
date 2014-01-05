@@ -40,6 +40,7 @@ import org.af.commons.widgets.InfiniteProgressPanel;
 import org.af.commons.widgets.InfiniteProgressPanel.AbortListener;
 import org.af.commons.widgets.WidgetFactory;
 import org.jdesktop.swingworker.SwingWorker;
+import org.mutoss.config.ClassConfig;
 import org.mutoss.config.Configuration;
 import org.mutoss.gui.archive.DesignArchiveControl;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
@@ -136,7 +137,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 
 		addWindowListener(this);
 		
-		//loadDefaults();
+		loadDefaults();
 		
 		setVisible(true);
 		
@@ -261,10 +262,27 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		return modelPanel;
 	}
 	
+	ClassConfig ac = new ClassConfig(Configuration.getInstance(), CrossoverGUI.class);
+	
+	public void loadDefaults() {
+		spinnerS1.getModel().setValue(ac.getIntProperty("s1", 4));
+		spinnerS2.getModel().setValue(ac.getIntProperty("s2", 8));
+		spinnerT.getModel().setValue(ac.getIntProperty("t", 4));
+		spinnerP.getModel().setValue(ac.getIntProperty("p", 4));
+	}
+    
+	public void saveDefaults() {
+		ac.setIntProperty("s1", Integer.parseInt(spinnerS1.getModel().getValue().toString()));
+		ac.setIntProperty("s2", Integer.parseInt(spinnerS2.getModel().getValue().toString()));
+		ac.setIntProperty("t", Integer.parseInt(spinnerT.getModel().getValue().toString()));
+		ac.setIntProperty("p", Integer.parseInt(spinnerP.getModel().getValue().toString()));		
+	}
+	
 	/**
 	 * This function handles events from buttons, check boxes and combo boxes. 
 	 */
 	public void actionPerformed(ActionEvent e) {
+		saveDefaults(); //TODO: Should we call saveDefaults at other places (stateChanged - check, Model parameter Text field?)?
 		if (e.getSource() == jCBmodel) {
 			algorithmPanel.createEffPanel();
 			if (jCBmodel.getSelectedIndex()==4) {
@@ -353,6 +371,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 
 	public void stateChanged(ChangeEvent e) {
+		saveDefaults();
 		//if (e.getSource()==tabbedPane)		
 		if (e!=null && (e.getSource()==spinnerS1 || e.getSource()==spinnerS2)) {
 			int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());
