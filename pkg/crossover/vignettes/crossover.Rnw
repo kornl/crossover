@@ -651,7 +651,7 @@ S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
 @
 
 
-\section{Random (Subject) Effects Model}
+\section{Random Subject Effects Model}
 
 See \cite{jones2003design}, 5.3, page 213ff. The model stays the same
 
@@ -666,6 +666,8 @@ with $X$ and $Z$ the fixed and random effects design matrices\footnote{Note that
 For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
 
 \[\hat\beta=(X^tV^{-1}X)^{-1}X^tV^{-1}Y.\]
+
+The information matrix is $\ldots$
 
 <<informationMatrixRandomEffects, echo=TRUE>>=
 s <- 4
