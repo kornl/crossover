@@ -137,8 +137,6 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 
 		addWindowListener(this);
 		
-		loadDefaults();
-		
 		setVisible(true);
 		
 		//JOptionPane.showMessageDialog(this, "THIS PACKAGE IS AN ALPHA VERSION!\nIt may give you good designs or it may make mistakes.\nPlease check for every design whether it fits your needs.", "ALPHA VERSION", JOptionPane.WARNING_MESSAGE);
@@ -177,10 +175,11 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		tabbedPane.addTab("Input own design", designInputPanel);
 		tabbedPane.addChangeListener(this);
 		
-
 		c.gridy++; c.gridx=0; c.gridwidth=2;	 
 		c.weighty=1;
 		getContentPane().add(tabbedPane, c);	
+		
+		loadDefaults();
 		
 		stateChanged(null);
 	}

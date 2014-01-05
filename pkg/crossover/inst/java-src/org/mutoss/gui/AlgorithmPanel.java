@@ -140,10 +140,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	public void loadDefaults() {
 		jcbCorrelation.setSelectedIndex(ac.getIntProperty("CVPattern", 0));
+		jtN2.setText(ac.getProperty("nRuns", "20"));
+		jtN1.setText(ac.getProperty("nSteps", "5000"));
 	}
     
 	public void saveDefaults() {
 		ac.setIntProperty("CVPattern", jcbCorrelation.getSelectedIndex());
+		ac.setProperty("nRuns", jtN2.getText());
+		ac.setProperty("nSteps", jtN1.getText());
 	}
 	
 	public JPanel getLeftSidePanel() {
