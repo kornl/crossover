@@ -2,6 +2,13 @@ package org.mutoss.gui;
 
 import org.mutoss.config.Configuration;
 
+/**
+ * Class for crossover design 
+ * @author kornel
+ * The class design is created with a reference to an R object.
+ * 
+ */
+
 public class Design {
 	
 	String title;
@@ -66,6 +73,12 @@ public class Design {
 		saveDesign2R(true);
 	}
 	
+	/**
+	 * Saves a design to R with an unique name consisting out of the prefix "CODesig." and the result of a hash function applied to the object.
+	 * @param useRName If useRName is false, it is required that uniqueName is already set.
+	 * Normally saveDesign2R(true) is only called in the constructor and after that one calls saveDesign2R(false).
+	 * @return
+	 */
 	public String saveDesign2R(boolean useRName) {
 		if (useRName) {
 			uniqueName = "CODesign."+RControl.getR().eval("digest::digest(getDesign("+rName+"))").asRChar().getData()[0];
