@@ -68,13 +68,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey)", "Comparing treatment 1 to each of the others (Dunnett)", "User defined"} );
 	String[] contrasts = new String[] {"Tukey", "Dunnett", "User defined"};
 	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
-	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autocorrelated Error", "Equicorrelated Error", "User defined"});
+	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autoregressive Error", "Equicorrelated Error", "User defined"});
+	String[] correlations = new String[] {"NULL", "autoregressive", "equicorrelated", "user defined"};
 	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
 	JLabel jlMixed;
 	JLabel jlCor;
 	JLabel jlVar;
 	JTextField jtWithinSubjectRho;
 	//JTabbedPane jTabAlgo = new jTabAlgo;
+	String udcm;
 	
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
@@ -145,6 +147,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		
 		int row = 2;
     	
+		/*
 
         lsPanel.add(jCBMixed, cc.xy(4, row));
         jCBMixed.setSelectedIndex(0);
@@ -161,7 +164,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         
 		row+=2;  
 		
-        jlCor = new JLabel("Correlation structure");
+		*/
+		
+        jlCor = new JLabel("Covariance pattern");
         //jlCor.setEnabled(false);
         //jcbCorrelation.setEnabled(false);
 		lsPanel.add(jlCor, cc.xy(2, row));
@@ -170,7 +175,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
         row+=2;
         
-        jlMixed = new JLabel("Within-subject correlation coefficient");
+        jlMixed = new JLabel("Covariance pattern coefficient");
         jlMixed.setEnabled(false);
         jtWithinSubjectRho = new JTextField("0.5");
         jtWithinSubjectRho.setEnabled(false);
@@ -416,6 +421,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+", v.rep="+getVRep()
 					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
 					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
+					+getCorrelation()
 					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
 					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
 					+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")					
@@ -498,15 +504,22 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	        jlVar.setEnabled(mixed);
 	        jtRatio.setEnabled(mixed);
 		} else if (e.getSource()==jcbCorrelation) {
-			boolean mixed = jcbCorrelation.getSelectedIndex()==1;
+			boolean mixed = jcbCorrelation.getSelectedIndex()==1 || jcbCorrelation.getSelectedIndex()==2;
+			jtWithinSubjectRho.setEnabled(mixed);
 			jlMixed.setEnabled(mixed);
-	        jtWithinSubjectRho.setEnabled(mixed);
 		} else if (e.getSource()==fixedNumber) {
 			boolean fixed = fixedNumber.isSelected();
 			ntPanel.setEnabled(fixed);
 			for (Component c : ntPanel.getComponents()) c.setEnabled(fixed);
 		}
 	}
+
+	private String getCorrelation() {
+		if (jcbCorrelation.getSelectedIndex()==0) return "";
+		if (jcbCorrelation.getSelectedIndex()==3) return ", correlation="+udcm;		
+		return ", correlation=\""+correlations[jcbCorrelation.getSelectedIndex()]+"\", rho="+jtWithinSubjectRho.getText();
+	}
+
 
 	private String getTmpFile() {
 		String file = System.getProperty("java.io.tmpdir")+"/searchplot"+(new Date()).getTime()+".png";
