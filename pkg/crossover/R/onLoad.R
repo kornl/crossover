@@ -42,6 +42,12 @@
 		}
 	}
     
+	#TODO How to test for 64-bit R? In the moment I use: .Machine$sizeof.pointer != 8
+	if (length(grep("64-bit", sessionInfo()$platform))==0 || .Machine$sizeof.pointer != 8) {
+		rversion <- c(sessionInfo()$R.version$major, unlist(strsplit(sessionInfo()$R.version$minor, "\\.")))
+		if ((rversion[1]==2&&rversion[2]==15&&rversion[3]>=2)|| rversion[1]>=3) warning("WARNING: You may experience crashes due to memory problems.\nPlease try to either i) use an old R<=2.15.2 or ii) R with 64-bit on Windows 64.\nWe are working on this problem.\nIf you experience no crashes everything is fine.")
+	}
+	
 	assign(".summary_table",  buildSummaryTable(), envir=crossover:::crossover.env)
 }  
 
