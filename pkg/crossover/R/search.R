@@ -262,7 +262,8 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
     st <- get(".summary_table", envir=crossover:::crossover.env)
     start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get, envir=crossover:::crossover.env)
-    start.designs <- c(start.designs, getStartDesigns(s=s, p=p, v=v))
+    x <- getStartDesigns(s=s, p=p, v=v)
+    if (length(x)!=0) start.designs <- c(start.designs, x)
   }
   if (!is.list(start.designs)) {
       start.designs <- list(start.designs)
