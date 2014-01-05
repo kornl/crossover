@@ -36,7 +36,7 @@ public class RObjectLoadingDialog extends JDialog implements ActionListener, Lis
     String[] graphs;
     JTextArea jtInfo = new JTextArea(12, 40);
     
-	public RObjectLoadingDialog(CrossoverGUI parent) {
+	public RObjectLoadingDialog(CrossoverGUI parent, String description) {
 		super(parent, "Select an R object to load", true);
 		this.parent = parent;
 		jtInfo.setEditable(false);
