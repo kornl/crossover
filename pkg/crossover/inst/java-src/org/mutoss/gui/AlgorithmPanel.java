@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -31,12 +30,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.af.commons.widgets.ComponentTitledBorder;
-import org.af.commons.widgets.HTMLPaneWithButtons;
-import org.af.jhlir.call.RList;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.ClassConfig;
 import org.mutoss.config.Configuration;
-import org.mutoss.config.SpecificConfig;
 import org.mutoss.gui.dialogs.TextFileViewer;
 
 import com.jgoodies.forms.layout.CellConstraints;

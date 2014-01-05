@@ -7,7 +7,6 @@ import java.io.PrintStream;
 import org.af.commons.errorhandling.ErrorHandler;
 import org.af.commons.logging.ApplicationLog;
 import org.af.commons.logging.LoggingSystem;
-import org.af.jhlir.backends.rengine.RCallServicesREngine;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
