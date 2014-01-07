@@ -268,13 +268,17 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		spinnerS2.getModel().setValue(ac.getIntProperty("s2", 8));
 		spinnerT.getModel().setValue(ac.getIntProperty("t", 4));
 		spinnerP.getModel().setValue(ac.getIntProperty("p", 4));
+		jCBmodel.setSelectedIndex(ac.getIntProperty("CVPattern", 0));
+		jtfParam.setText(ac.getProperty("modelParam", "1"));
 	}
     
 	public void saveDefaults() {
 		ac.setIntProperty("s1", Integer.parseInt(spinnerS1.getModel().getValue().toString()));
 		ac.setIntProperty("s2", Integer.parseInt(spinnerS2.getModel().getValue().toString()));
 		ac.setIntProperty("t", Integer.parseInt(spinnerT.getModel().getValue().toString()));
-		ac.setIntProperty("p", Integer.parseInt(spinnerP.getModel().getValue().toString()));		
+		ac.setIntProperty("p", Integer.parseInt(spinnerP.getModel().getValue().toString()));
+		ac.setIntProperty("CVPattern", jCBmodel.getSelectedIndex());
+		ac.setProperty("modelParam", jtfParam.getText());
 	}
 	
 	/**

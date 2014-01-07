@@ -140,12 +140,32 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	public void loadDefaults() {
 		jcbCorrelation.setSelectedIndex(ac.getIntProperty("CVPattern", 0));
+		jtWithinSubjectRho.setText(ac.getProperty("cpc", "0.5"));
+		spinnerS.getModel().setValue(ac.getIntProperty("s", 4));
+		fixedNumber.setSelected(ac.getBoolProperty("fixedNumber", false));
+		// TODO Number of treatments
+		jbBalanceNothing.setSelected(ac.getBoolProperty("jbBalanceNothing", true));
+		jbBalanceSequences.setSelected(ac.getBoolProperty("jbBalanceSequences", false));
+		jbBalancePeriods.setSelected(ac.getBoolProperty("jbBalancePeriods", false));
+		jcbContrasts.setSelectedIndex(ac.getIntProperty("contrast", 0));
+		// TODO weights
+		useCatalogueDesigns.setSelected(ac.getBoolProperty("catalogue", false));
 		jtN2.setText(ac.getProperty("nRuns", "20"));
-		jtN1.setText(ac.getProperty("nSteps", "5000"));
+		jtN1.setText(ac.getProperty("nSteps", "5000"));		
 	}
     
 	public void saveDefaults() {
 		ac.setIntProperty("CVPattern", jcbCorrelation.getSelectedIndex());
+		ac.setProperty("cpc", jtWithinSubjectRho.getText());
+		ac.setIntProperty("s", Integer.parseInt(spinnerS.getModel().getValue().toString()));
+		ac.setBoolProperty("fixedNumber", fixedNumber.isSelected());
+		// TODO Number of treatments
+		ac.getBoolProperty("jbBalanceNothing", jbBalanceNothing.isSelected());
+		ac.getBoolProperty("jbBalanceSequences", jbBalanceSequences.isSelected());
+		ac.getBoolProperty("jbBalancePeriods", jbBalancePeriods.isSelected());
+		ac.setIntProperty("contrast", jcbContrasts.getSelectedIndex());
+		// TODO weights
+		ac.setBoolProperty("catalogue", useCatalogueDesigns.isSelected());		
 		ac.setProperty("nRuns", jtN2.getText());
 		ac.setProperty("nSteps", jtN1.getText());
 	}

@@ -20,6 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.af.commons.io.FileTools;
+import org.mutoss.config.ClassConfig;
 import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -37,6 +38,8 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	JLabel label = new JLabel();
 	JComboBox jcbRows = new JComboBox(new String[] {"periods", "sequences"});
 	CrossoverGUI gui;
+	
+	ClassConfig ac = new ClassConfig(Configuration.getInstance(), DesignInputPanel.class);
 	
 	public DesignInputPanel(CrossoverGUI gui) {
 		this.gui = gui;
@@ -73,6 +76,8 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 		save.addActionListener(this);
 		add(save, cc.xy(4, row));
 		
+		loadDefaults();
+		
 	}
 	
 	public JPanel getRightSidePanel() {
@@ -106,6 +111,14 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
         return panel;
 	}
 	
+	public void loadDefaults() {
+		jcbRows.setSelectedIndex(ac.getIntProperty("CVPattern", 0));
+	}
+    
+	public void saveDefaults() {
+		ac.setIntProperty("CVPattern", jcbRows.getSelectedIndex());
+	}
+	
 	public boolean transpose() {
 		return !jcbRows.getSelectedItem().equals("periods");
 	}
@@ -127,6 +140,7 @@ public class DesignInputPanel extends JPanel implements KeyListener, ActionListe
 	public void keyTyped(KeyEvent e) {	}
 
 	public void actionPerformed(ActionEvent e) {
+		saveDefaults();
 		if (e.getSource() == loadFile) {
 			JFileChooser fc = new JFileChooser(Configuration.getInstance().getClassProperty(this.getClass(), "DesignDirectory"));		
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
