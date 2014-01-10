@@ -51,9 +51,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public HTMLOutputPane jta;
 	JLabel label = new JLabel();
 	JPanel ntPanel = null;
-	JPanel weightsPanel = null;
 	JPanel effPanel = null;
-	List<JTextField> weightsV = new Vector<JTextField>();
 	List<JTextField> effV = new Vector<JTextField>();
 	List<JTextField> nV = new Vector<JTextField>();
 	CellConstraints cc = new CellConstraints();
@@ -143,12 +141,17 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		jtWithinSubjectRho.setText(ac.getProperty("cpc", "0.5"));
 		spinnerS.getModel().setValue(ac.getIntProperty("s", 4));
 		fixedNumber.setSelected(ac.getBoolProperty("fixedNumber", false));
-		// TODO Number of treatments
+		// TODO Could this result in inconsistencies?
+		for (int i=0; i<nV.size(); i++) {
+			nV.get(i).setText(ac.getProperty("nV"+i, ""));
+		}
 		jbBalanceNothing.setSelected(ac.getBoolProperty("jbBalanceNothing", true));
 		jbBalanceSequences.setSelected(ac.getBoolProperty("jbBalanceSequences", false));
 		jbBalancePeriods.setSelected(ac.getBoolProperty("jbBalancePeriods", false));
 		jcbContrasts.setSelectedIndex(ac.getIntProperty("contrast", 0));
-		// TODO weights
+		for (int i=0; i<effV.size(); i++) {
+			effV.get(i).setText(ac.getProperty("effV"+i, ""));
+		}		
 		useCatalogueDesigns.setSelected(ac.getBoolProperty("catalogue", false));
 		jtN2.setText(ac.getProperty("nRuns", "20"));
 		jtN1.setText(ac.getProperty("nSteps", "5000"));		
@@ -159,12 +162,16 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		ac.setProperty("cpc", jtWithinSubjectRho.getText());
 		ac.setIntProperty("s", Integer.parseInt(spinnerS.getModel().getValue().toString()));
 		ac.setBoolProperty("fixedNumber", fixedNumber.isSelected());
-		// TODO Number of treatments
+		for (int i=0; i<nV.size(); i++) {
+			ac.setProperty("nV"+i, nV.get(i).getText());			
+		}
 		ac.getBoolProperty("jbBalanceNothing", jbBalanceNothing.isSelected());
 		ac.getBoolProperty("jbBalanceSequences", jbBalanceSequences.isSelected());
 		ac.getBoolProperty("jbBalancePeriods", jbBalancePeriods.isSelected());
 		ac.setIntProperty("contrast", jcbContrasts.getSelectedIndex());
-		// TODO weights
+		for (int i=0; i<effV.size(); i++) {
+			ac.setProperty("effV"+i, effV.get(i).getText());			
+		}
 		ac.setBoolProperty("catalogue", useCatalogueDesigns.isSelected());		
 		ac.setProperty("nRuns", jtN2.getText());
 		ac.setProperty("nSteps", jtN1.getText());
@@ -225,7 +232,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         row+=2;
         
         rowN = row; 
-        createTreatmentNumberPanel();
+        createTreatmentNumberPanel(true);
         
         row+=2;  
         
@@ -242,8 +249,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         lsPanel.add(jbBalancePeriods, cc.xyw(2, row, 3));        
         row+=2;
         
-        //rowTNP = row;        
-        //createWeightsPanel();
         lsPanel.add(new JLabel("Contrasts:"), cc.xy(2, row));
         lsPanel.add(jcbContrasts, cc.xy(4, row));
 
@@ -275,51 +280,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         return lsPanel;
 	}
 	
-	int rowTNP, rowN, rowEff;
-	
-	private void createWeightsPanel() {		
-		if (weightsPanel!=null) {
-			lsPanel.remove(weightsPanel);
-		}
-
-		weightsPanel = new JPanel();
-		GridBagConstraints cbcWeights = new GridBagConstraints();
-		cbcWeights.fill = GridBagConstraints.BOTH;	
-		cbcWeights.gridx=0; cbcWeights.gridy=0;
-		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
-		cbcWeights.ipadx=5; cbcWeights.ipady=5;
-		cbcWeights.weightx=1; cbcWeights.weighty=1;
-		weightsPanel.setBorder(BorderFactory.createTitledBorder("Contrast Weights [will be redesigned and work only under R in the moment]"));
-		//
-		//weightsPanel.setEnabled(false);
-		weightsPanel.setLayout(new GridBagLayout());
-		
-		List<String> labels = new Vector<String>();
-        
-		int s = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
-		for (int i=1; i<s; i++) {
-        	for (int j=1; j<=s; j++) {
-        		labels.add(i+"-"+j);
-        	}        	
-        }  
-
-		weightsV.clear();
-		for (int i=0;i<labels.size();i++) {        		
-			weightsV.add(new JTextField("1.0", 6));
-			weightsPanel.add(new JLabel(labels.get(i)), cbcWeights);
-			cbcWeights.gridx++;
-			weightsPanel.add(weightsV.get(i), cbcWeights);	
-			if ((i+1)%3!=0) {
-				cbcWeights.gridx++;
-			} else {
-				cbcWeights.gridx=0;cbcWeights.gridy++;
-			}
-		}		
-		for (Component c : weightsPanel.getComponents()) c.setEnabled(false);
-		//lsPanel.add(weightsPanel, cc.xyw(2, rowTNP, 3));
-		lsPanel.revalidate();
-		lsPanel.repaint();
-	}
+	private int rowN, rowEff;
 	
 	public void createEffPanel() {		
 		if (effPanel!=null) {
@@ -371,7 +332,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		return s.substring(0, s.length()-1)+")";
 	}
 	
-	private void createTreatmentNumberPanel() {
+	private void createTreatmentNumberPanel(boolean firstCall) {
 		if (ntPanel!=null) {
 			lsPanel.remove(ntPanel);
 		}
@@ -383,7 +344,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
-		fixedNumber.addActionListener(this);
+		if (!firstCall) fixedNumber.addActionListener(this);
 		ntPanel.setBorder(new ComponentTitledBorder(fixedNumber, ntPanel, BorderFactory.createTitledBorder("Weights:")));
 		//ntPanel.setBorder(BorderFactory.createTitledBorder("Number of treatment assignments"));
 
@@ -411,7 +372,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				cbcWeights.gridx=0;cbcWeights.gridy++;
 			}
 		}		
-		for (Component c : ntPanel.getComponents()) c.setEnabled(false);
+		for (Component c : ntPanel.getComponents()) c.setEnabled(!fixedNumber.isSelected());
 		lsPanel.add(ntPanel, cc.xyw(2, rowN, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
@@ -543,8 +504,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			jlMixed.setEnabled(mixed);
 		} else if (e.getSource()==fixedNumber) {
 			boolean fixed = fixedNumber.isSelected();
-			ntPanel.setEnabled(fixed);
-			for (Component c : ntPanel.getComponents()) c.setEnabled(fixed);
+			ntPanel.setEnabled(!fixed);
+			for (Component c : ntPanel.getComponents()) c.setEnabled(!fixed);
 		}
 	}
 
@@ -563,8 +524,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 
 	public void stateChanged(ChangeEvent e) {
-		createWeightsPanel();
-		createTreatmentNumberPanel();
+		createTreatmentNumberPanel(false);
 	}
 
 
