@@ -36,6 +36,7 @@ public class Design {
 	public Design(String title, String rName, String reference) {
 		this.title = title;		
 		this.rName = rName;
+		this.reference = reference;
 		saveDesign2R(true);
 		this.t = RControl.getR().eval("length(levels(as.factor("+uniqueName+")))").asRInteger().getData()[0];		
 		int[] dim = RControl.getR().eval("dim("+uniqueName+")").asRInteger().getData();
