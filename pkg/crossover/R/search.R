@@ -79,6 +79,9 @@ linkMatrix <- function(model, v, ppp=0.5, placebos=1) {
     }
     return(M)
   }
+  if (model=="No carry-over effects" || model==9) {
+    #TODO
+  }  
   stop(paste("Sorry model \"",model,"\" is not known.", sep=""))
 }
 
@@ -89,7 +92,8 @@ models <- c("Standard additive model",
             "No carry-over into self model",
             "Treatment decay model",
             "Full set of interactions",
-            "Second-order carry-over effects")
+            "Second-order carry-over effects",
+            "No carry-over effects")
 #"No carry-over effects")
 
 #' Get the number or character string specifying the model

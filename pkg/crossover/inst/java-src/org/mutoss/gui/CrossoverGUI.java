@@ -68,8 +68,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 			"No carry-over into self model",
 			"Treatment decay model",
 			"Full set of interactions",
-			"Second-order carry-over effects"
-			//"No carry-over effects"
+			"Second-order carry-over effects",
+			"No carry-over effects"
 	};
 	
 	public static final String[][] parameters = new String[][] {
@@ -80,7 +80,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		{"Treatment", "Carry-over"},
 		{"Treatment", "Carry-over"},		
 		{"Treatment", "Carry-over", "Interaction"},
-		{"Treatment", "Carry-over (1st order)", "Carry-over (2nd order)"}
+		{"Treatment", "Carry-over (1st order)", "Carry-over (2nd order)"},
+		{}
 	};
 	 
 	/**
