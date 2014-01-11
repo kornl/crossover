@@ -325,6 +325,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	}
 	
 	private String getEffFactors() {
+		if (effV.size()==0) return "1";
 		String s="c(";
 		for (JTextField jt : effV) {
 			s = s + jt.getText()+",";

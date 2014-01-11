@@ -80,7 +80,14 @@ linkMatrix <- function(model, v, ppp=0.5, placebos=1) {
     return(M)
   }
   if (model=="No carry-over effects" || model==9) {
-    #TODO
+    #M <- matrix(0, sum(1:v)*2, v) 
+    #M[1:v,1:v] <- diag(v)
+    #for (j in (v+1):(sum(1:v)*2)) {
+    #  jv <- (j-1)%/%v      
+    #  M[j, j-v*jv] <- 1      
+    #}
+    #return(M)
+    return(diag(v))
   }  
   stop(paste("Sorry model \"",model,"\" is not known.", sep=""))
 }
@@ -118,10 +125,10 @@ getModelNr <- function(model, type="numeric") {
         }
     }
     if (is.numeric(model)) {
-        if (model %in% 1:8) {
+        if (model %in% 1:9) {
             return(model)
         } else {
-            stop("Model must be number between 1 and 8.")
+            stop("Model must be number between 1 and 9.")
         }
     }
     modelNr <- which(models==model)
@@ -153,7 +160,7 @@ rcd <- function(X, v, model) {
 #' @examples
 #' # TODO
 rcdMatrix <- function(X, v, model) {
-    if (length(levels(as.factor(X)))<=v) warning("It looks like you called rcdMatrix with a crossover design,\nbut you should provide the row-column design.")
+    if (length(levels(as.factor(X)))<=v && model !=9) warning("It looks like you called rcdMatrix with a crossover design,\nbut you should provide the row-column design.")
     model <- getModelNr(model)
     return(.Call( "rcdMatrix2R", X, v, model, PACKAGE = "crossover" ))
 }
@@ -283,13 +290,15 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
 
   if (model==8) { # Second-order carry-over effects
       r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2), rep((p-2)*s/v^3, v^3))
+  } else if (model==9) {
+      r <- c(rep(s*p/v, v))
   } else {
       r <- c(rep(s/v, v), rep((p-1)*s/v^2, v^2))
   }
   S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
   
   result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
-                   start.designs, H, C, model, eff.factor, 
+                   start.designs, H, C, model, 
                    v.rep, balance.s, balance.p, verbose, 
                    as.integer(n), as.integer(jumps), S2, TRUE, random.subject, correlation, interchange, PACKAGE = "crossover")
   
@@ -345,7 +354,7 @@ getS1 <- function(design, v, model, C, randomS=FALSE, verbose=0) {
 appendZeroColumns <- function(Csub, model, v) {
   if (model %in% c(2,8)) {
     C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[1], 2*v)))
-  } else if (model==3) {
+  } else if (model %in% c(3,9)) {
     C <- Csub
   } else if (model == 7) {
       C <- as.matrix(cbind(Csub,matrix(0,dim(Csub)[1], v+v*v)))

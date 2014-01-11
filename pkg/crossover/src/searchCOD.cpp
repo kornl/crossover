@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP effFactorS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP randomSS, SEXP correlationS, SEXP interchangeS) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP randomSS, SEXP correlationS, SEXP interchangeS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -110,15 +110,20 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
       }
       
       mat rcDesign = rcd(design, v, model);
+      if (verbose) rcDesign.print(Rcout, "rcDesign:");
       if (!Rf_isNull( correlationS )) {
+          if (verbose) rcdMatrix(rcDesign, v, model).print(Rcout, "rcdMatrix:");
           mat X = rcdMatrix(rcDesign, v, model) * linkM;
+          if (verbose) design.print(Rcout, "X:");
           mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows, randomS);
-          X =  join_rows(X, Z);
+          if (verbose) design.print(Rcout, "Z:");
+          X = join_rows(X, Z);
+          if (verbose) design.print(Rcout, "cor:");
           pinv(trans(X) * cor * X);
           //Rprintf("* long calc *\n");
           s1 = trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
       } else {
-          s1 = getS1((model==3||model==7)?design:rcDesign, v, model, linkM, tCC, randomS);      
+          s1 = getS1((model==3||model==7||model==9)?design:rcDesign, v, model, linkM, tCC, randomS);      
       }
       
       if (s2/s1 >= eOld) {
@@ -256,14 +261,16 @@ arma::mat rcd(arma::mat design, int v, int model) {
       }
     }
     return rcDesign;
-  } else { //if (model>0 && model<8) {
+  } else if (model>0 && model<8) {
     mat rcDesign = design;
     for (unsigned i=1; i<rcDesign.n_rows; i++) {
       rcDesign.row(i) = design.row(i)+design.row(i-1)*v;
     }
     return rcDesign;
+  } else if (model==9) {
+    return design;
   }
-  throw std::range_error("Model not found. Has to be between 1 and 8.");
+  throw std::range_error("Model not found. Has to be between 1 and 9.");
   return NULL;
 }
 
@@ -282,7 +289,7 @@ SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP rand
 }
 
 double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC, bool randomS) {  
-    if (model==3 || model==7) { // in this case rcDesign is actually design
+    if (model==3 || model==7 || model==9) { // in this case rcDesign is actually design
         mat X = designMatrix(rcDesign, v, model);
         //Rprintf("Calculating Z and S1."); 
         mat Z = getZ(rcDesign.n_cols,rcDesign.n_rows, randomS);
@@ -323,6 +330,13 @@ arma::mat designMatrix(arma::mat design, int v, int model) {
                 }
             }
         }
+    } else if (model==9) {
+       X = zeros<mat>(design.n_rows * design.n_cols, v);
+        for (unsigned j=0; j<design.n_cols; j++) {
+            for (unsigned i=0; i<design.n_rows; i++) {
+                X(i * design.n_cols + j, design(i, j)-1) = 1;
+            }
+        }
     }
     return X;
 }
@@ -352,6 +366,7 @@ SEXP designMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
 
 arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
     int vv = v+v*v;
+    if (model==9) { vv = v; }
     if (model==8) { vv = v+v*v+v*v*v; }
     mat X = zeros<mat>(rcDesign.n_rows * rcDesign.n_cols, vv);
     for (unsigned j=0; j<rcDesign.n_cols; j++) {
