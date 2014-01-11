@@ -14,6 +14,7 @@ import javax.swing.text.DefaultStyledDocument;
 
 import org.af.commons.io.FileTransfer;
 import org.af.commons.widgets.HTMLPaneWithButtons;
+import org.af.commons.widgets.RightClickTextMenuListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mutoss.config.Configuration;
@@ -30,6 +31,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     public HTMLOutputPane(CrossoverGUI gui) {
     	this.gui = gui;
         makeComponents();
+        textArea.addMouseListener(new RightClickTextMenuListener(textArea));
         doTheLayout();
     }
 
