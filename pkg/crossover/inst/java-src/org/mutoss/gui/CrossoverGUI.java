@@ -75,7 +75,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	public static final String[][] parameters = new String[][] {
 		{"Treatment", "Carry-over"},
 		{"Treatment", "Carry-over", "Carry-over (into-self)"},
-		{"Treatment"},
+		{},
 		{"Treatment", "Carry-over"},
 		{"Treatment", "Carry-over"},
 		{"Treatment", "Carry-over"},		
@@ -181,6 +181,13 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		getContentPane().add(tabbedPane, c);	
 		
 		loadDefaults();
+		newModelSelected();
+		
+		spinnerT.addChangeListener(this);
+		spinnerP.addChangeListener(this);
+		spinnerS1.addChangeListener(this);
+		spinnerS2.addChangeListener(this);
+		jCBmodel.addActionListener(this);
 		
 		stateChanged(null);
 	}
@@ -203,7 +210,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		int row = 2;
 		
 		spinnerT = new JSpinner(new SpinnerNumberModel(4, 2, maxSp, 1));    	
-    	spinnerT.addChangeListener(this);
+    	
     	
     	panel.add(new JLabel("Number of treatments:"), cc.xyw(2, row, 3));
         panel.add(spinnerT, cc.xy(6, row));
@@ -211,7 +218,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
         row+=2;
 		
     	spinnerP = new JSpinner(new SpinnerNumberModel(4, 2, maxSp, 1));    	
-    	spinnerP.addChangeListener(this);
+    	
     	
     	panel.add(new JLabel("Number of periods:"), cc.xyw(2, row, 3));
         panel.add(spinnerP, cc.xy(6, row));		
@@ -219,10 +226,10 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
         row+=2;
 		
     	spinnerS1 = new JSpinner(new SpinnerNumberModel(4, 2, maxSp, 1));    	
-    	spinnerS1.addChangeListener(this);
+    	
 		
     	spinnerS2 = new JSpinner(new SpinnerNumberModel(8, 2, maxSp, 1));    	
-    	spinnerS2.addChangeListener(this);
+    	
     	
     	panel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
     	panel.add(new JLabel("Min:"), cc.xy(4, row));
@@ -248,7 +255,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		int row = 2;
 
 		jCBmodel = new JComboBox(CrossoverGUI.models);
-		jCBmodel.addActionListener(this);
+		
 
 		modelPanel.add(new JLabel("Model"), cc.xy(2, row));
 		modelPanel.add(jCBmodel, cc.xy(4, row));
@@ -265,6 +272,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	ClassConfig ac = new ClassConfig(Configuration.getInstance(), CrossoverGUI.class);
 	
 	public void loadDefaults() {
+		//JOptionPane.showMessageDialog(this, "Loading Settings");
 		spinnerS1.getModel().setValue(ac.getIntProperty("s1", 4));
 		spinnerS2.getModel().setValue(ac.getIntProperty("s2", 8));
 		spinnerT.getModel().setValue(ac.getIntProperty("t", 4));
@@ -274,6 +282,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	}
     
 	public void saveDefaults() {
+		//JOptionPane.showMessageDialog(this, "Saving Settings");
 		ac.setIntProperty("s1", Integer.parseInt(spinnerS1.getModel().getValue().toString()));
 		ac.setIntProperty("s2", Integer.parseInt(spinnerS2.getModel().getValue().toString()));
 		ac.setIntProperty("t", Integer.parseInt(spinnerT.getModel().getValue().toString()));
@@ -288,24 +297,28 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	public void actionPerformed(ActionEvent e) {
 		saveDefaults(); //TODO: Should we call saveDefaults at other places (stateChanged - check, Model parameter Text field?)?
 		if (e.getSource() == jCBmodel) {
-			algorithmPanel.createEffPanel();
-			if (jCBmodel.getSelectedIndex()==4) {
-				jtfParam.setEnabled(true);
-				pLabel.setEnabled(true);
-				pLabel.setText("Number of placebo treatments:");
-			} else if (jCBmodel.getSelectedIndex()==7) {
-				jtfParam.setEnabled(true);
-				pLabel.setEnabled(true);
-				pLabel.setText("Proportionality parameter:");
-			} else {
-				jtfParam.setEnabled(false);
-				pLabel.setEnabled(false);
-				pLabel.setText("Further model parameters:");
-			}
-			designPanel.valueChanged(null);
+			newModelSelected();
 		}
 	}
 	
+	private void newModelSelected() {
+		algorithmPanel.createEffPanel();
+		if (jCBmodel.getSelectedIndex()==4) {
+			jtfParam.setEnabled(true);
+			pLabel.setEnabled(true);
+			pLabel.setText("Number of placebo treatments:");
+		} else if (jCBmodel.getSelectedIndex()==7) {
+			jtfParam.setEnabled(true);
+			pLabel.setEnabled(true);
+			pLabel.setText("Proportionality parameter:");
+		} else {
+			jtfParam.setEnabled(false);
+			pLabel.setEnabled(false);
+			pLabel.setText("Further model parameters:");
+		}
+		designPanel.valueChanged(null);		
+	}
+
 	/**
 	 * @param e
 	 */
@@ -355,7 +368,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 * WindowListener methods - the first one closes the R console if  
 	 */
 	public void windowClosing(WindowEvent e) {
-		dac.save();
+		// dac.save(); // This is not very save if closed with q()
 		if (RControl.getR().eval("exists(\".isBundle\")").asRLogical().getData()[0]) {
 			RControl.getR().eval("q(save=\"no\")");
 		} else {
@@ -375,7 +388,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 
 	public void stateChanged(ChangeEvent e) {
-		saveDefaults();
+		if (e!=null) saveDefaults();
 		//if (e.getSource()==tabbedPane)		
 		if (e!=null && (e.getSource()==spinnerS1 || e.getSource()==spinnerS2)) {
 			int s1 = Integer.parseInt(spinnerS1.getModel().getValue().toString());

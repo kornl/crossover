@@ -64,7 +64,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
 	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey)", "Comparing treatment 1 to each of the others (Dunnett)", "User defined"} );
 	String[] contrasts = new String[] {"Tukey", "Dunnett", "User defined"};
-	JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
+	//JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
 	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autoregressive Error", "Equicorrelated Error", "User defined"});
 	String[] correlations = new String[] {"NULL", "autoregressive", "equicorrelated", "user defined"};
 	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
@@ -79,8 +79,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
-		gui.spinnerT.addChangeListener(this);
-		gui.spinnerP.addChangeListener(this);
+		
 		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow";
         String rows = "5dlu, fill:pref:grow, 5dlu";
         
@@ -102,6 +101,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		add((getRightSidePanel()), cc.xy(4, row));
 		
 		loadDefaults();
+		
+		gui.spinnerT.addChangeListener(this);
+		gui.spinnerP.addChangeListener(this);
+		spinnerS.addChangeListener(this);
+    	jcbCorrelation.addActionListener(this);
 	}
 	
 	JSpinner spinnerS;
@@ -137,10 +141,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	}
 	
 	public void loadDefaults() {
+		//JOptionPane.showMessageDialog(this, "Loading Settings");
 		jcbCorrelation.setSelectedIndex(ac.getIntProperty("CVPattern", 0));
 		jtWithinSubjectRho.setText(ac.getProperty("cpc", "0.5"));
-		spinnerS.getModel().setValue(ac.getIntProperty("s", 4));
-		fixedNumber.setSelected(ac.getBoolProperty("fixedNumber", false));
+		boolean mixed = jcbCorrelation.getSelectedIndex()==1 || jcbCorrelation.getSelectedIndex()==2;
+		jtWithinSubjectRho.setEnabled(mixed);
+		jlMixed.setEnabled(mixed);
+		spinnerS.getModel().setValue(ac.getIntProperty("s", 4));		
+		// effPanel is created more than one time. settings have to be loaded there.
 		// TODO Could this result in inconsistencies?
 		for (int i=0; i<nV.size(); i++) {
 			nV.get(i).setText(ac.getProperty("nV"+i, ""));
@@ -149,15 +157,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		jbBalanceSequences.setSelected(ac.getBoolProperty("jbBalanceSequences", false));
 		jbBalancePeriods.setSelected(ac.getBoolProperty("jbBalancePeriods", false));
 		jcbContrasts.setSelectedIndex(ac.getIntProperty("contrast", 0));
-		for (int i=0; i<effV.size(); i++) {
-			effV.get(i).setText(ac.getProperty("effV"+i, ""));
-		}		
+			
 		useCatalogueDesigns.setSelected(ac.getBoolProperty("catalogue", false));
 		jtN2.setText(ac.getProperty("nRuns", "20"));
 		jtN1.setText(ac.getProperty("nSteps", "5000"));		
 	}
     
 	public void saveDefaults() {
+		//JOptionPane.showMessageDialog(this, "Saving Settings");
 		ac.setIntProperty("CVPattern", jcbCorrelation.getSelectedIndex());
 		ac.setProperty("cpc", jtWithinSubjectRho.getText());
 		ac.setIntProperty("s", Integer.parseInt(spinnerS.getModel().getValue().toString()));
@@ -210,7 +217,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         //jcbCorrelation.setEnabled(false);
 		lsPanel.add(jlCor, cc.xy(2, row));
 		lsPanel.add(jcbCorrelation, cc.xy(4, row));
-		jcbCorrelation.addActionListener(this);
+		
 
         row+=2;
         
@@ -224,8 +231,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         row+=2;  
         
     	spinnerS = new JSpinner(new SpinnerNumberModel(5, 1, 100, 1)); 
-    	spinnerS.addChangeListener(this);
-        
+    	        
         lsPanel.add(new JLabel("Number of sequences:"), cc.xy(2, row));
         lsPanel.add(spinnerS, cc.xy(4, row));
         
@@ -317,7 +323,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			} else {
 				effWeights.gridx=0;effWeights.gridy++;
 			}
-		}		
+		}	
+		if (labels.size()==0) {
+			effPanel.add(new JLabel("Not applicable."), effWeights);
+		}
+		for (int i=0; i<effV.size(); i++) {
+			effV.get(i).setText(ac.getProperty("effV"+i, ""));
+		}	
 		//for (Component c : effPanel.getComponents()) c.setEnabled(false);
 		lsPanel.add(effPanel, cc.xyw(2, rowEff, 3));
 		lsPanel.revalidate();
@@ -345,7 +357,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
 		cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
-		if (!firstCall) fixedNumber.addActionListener(this);
+		if (firstCall) fixedNumber.addActionListener(this);
 		ntPanel.setBorder(new ComponentTitledBorder(fixedNumber, ntPanel, BorderFactory.createTitledBorder("Weights:")));
 		//ntPanel.setBorder(BorderFactory.createTitledBorder("Number of treatment assignments"));
 
@@ -373,7 +385,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				cbcWeights.gridx=0;cbcWeights.gridy++;
 			}
 		}		
-		for (Component c : ntPanel.getComponents()) c.setEnabled(!fixedNumber.isSelected());
+		boolean fixed = ac.getBoolProperty("fixedNumber", false);
+		fixedNumber.setSelected(fixed);
+		ntPanel.setEnabled(fixed);
+		for (Component c : ntPanel.getComponents()) c.setEnabled(fixed);
 		lsPanel.add(ntPanel, cc.xyw(2, rowN, 3));
 		lsPanel.revalidate();
 		lsPanel.repaint();
@@ -405,6 +420,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 	public void actionPerformed(ActionEvent e) {
 		saveDefaults();
+		//System.out.println(""+e.getActionCommand()+", "+e.toString());
 		if (e.getSource() == jbCompute) {
 			gui.glassPane.start();
 			
@@ -495,18 +511,18 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		} else if (e.getSource()==exportR) {
 			VariableNameDialog vd = new VariableNameDialog(gui, "design");			
 			RControl.getR().eval(vd.getName()+" <- getDesign(.COresult)");
-		} else if (e.getSource()==jCBMixed) {
+			/*} else if (e.getSource()==jCBMixed) {
 			boolean mixed = jCBMixed.getSelectedIndex()==1;
 	        jlVar.setEnabled(mixed);
-	        jtRatio.setEnabled(mixed);
+	        jtRatio.setEnabled(mixed);*/
 		} else if (e.getSource()==jcbCorrelation) {
 			boolean mixed = jcbCorrelation.getSelectedIndex()==1 || jcbCorrelation.getSelectedIndex()==2;
 			jtWithinSubjectRho.setEnabled(mixed);
 			jlMixed.setEnabled(mixed);
 		} else if (e.getSource()==fixedNumber) {
 			boolean fixed = fixedNumber.isSelected();
-			ntPanel.setEnabled(!fixed);
-			for (Component c : ntPanel.getComponents()) c.setEnabled(!fixed);
+			ntPanel.setEnabled(fixed);
+			for (Component c : ntPanel.getComponents()) c.setEnabled(fixed);
 		}
 	}
 
