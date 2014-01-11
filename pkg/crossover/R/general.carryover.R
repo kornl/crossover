@@ -91,8 +91,8 @@ general.carryover<-function(design,model,t0=1,rho=0.5){
 		Xmat.per[i,per[i]]<-1
 	}
 	
-	## MODEL 0 - TREATMENTS ONLY
-	if(model==0){
+	## MODEL 9 - TREATMENTS ONLY
+	if(model==9){
 		## treatments only model
 		## factor for treatments
 		trt<-NULL

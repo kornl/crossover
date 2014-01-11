@@ -128,6 +128,7 @@ getModelNr <- function(model, type="numeric") {
         if (model %in% 1:9) {
             return(model)
         } else {
+            if (model==0) return(9) 
             stop("Model must be number between 1 and 9.")
         }
     }
