@@ -172,9 +172,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		for (int i=0; i<nV.size(); i++) {
 			ac.setProperty("nV"+i, nV.get(i).getText());			
 		}
-		ac.getBoolProperty("jbBalanceNothing", jbBalanceNothing.isSelected());
-		ac.getBoolProperty("jbBalanceSequences", jbBalanceSequences.isSelected());
-		ac.getBoolProperty("jbBalancePeriods", jbBalancePeriods.isSelected());
+		ac.setBoolProperty("jbBalanceNothing", jbBalanceNothing.isSelected());
+		ac.setBoolProperty("jbBalanceSequences", jbBalanceSequences.isSelected());
+		ac.setBoolProperty("jbBalancePeriods", jbBalancePeriods.isSelected());
 		ac.setIntProperty("contrast", jcbContrasts.getSelectedIndex());
 		for (int i=0; i<effV.size(); i++) {
 			ac.setProperty("effV"+i, effV.get(i).getText());			
