@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -36,8 +37,7 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 	JCheckBox jcbMyDesigns = new JCheckBox("Designs manually entered");
 	JCheckBox jcbSearch = new JCheckBox("Designs from previous search runs");
 	CrossoverGUI gui;
-	
-	
+	JSplitPane pane;	
 	
 	public DesignSelectionPanel(CrossoverGUI gui) {
 		this.gui = gui;
