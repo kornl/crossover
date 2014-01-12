@@ -121,7 +121,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
           if (verbose) design.print(Rcout, "cor:");
           pinv(trans(X) * cor * X);
           //Rprintf("* long calc *\n");
-          s1 = trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
+          s1 = trace(pinv(trans(X) * cor * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
       } else {
           s1 = getS1((model==3||model==7||model==9)?design:rcDesign, v, model, linkM, tCC, randomS);      
       }
