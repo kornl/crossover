@@ -68,6 +68,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autoregressive Error", "Equicorrelated Error", "User defined"});
 	String[] correlations = new String[] {"NULL", "autoregressive", "equicorrelated", "user defined"};
 	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
+	JCheckBox fixedSubjectEffects = new JCheckBox("Include fixed subject effects in design matrix.");
 	JLabel jlMixed;
 	JLabel jlCor;
 	JLabel jlVar;
@@ -148,6 +149,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		jtWithinSubjectRho.setEnabled(mixed);
 		jlMixed.setEnabled(mixed);
 		spinnerS.getModel().setValue(ac.getIntProperty("s", 4));		
+		fixedSubjectEffects.setSelected(ac.getBoolProperty("fixedSubjectEffects", true));
 		// effPanel is created more than one time. settings have to be loaded there.
 		// TODO Could this result in inconsistencies?
 		for (int i=0; i<nV.size(); i++) {
@@ -169,6 +171,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		ac.setProperty("cpc", jtWithinSubjectRho.getText());
 		ac.setIntProperty("s", Integer.parseInt(spinnerS.getModel().getValue().toString()));
 		ac.setBoolProperty("fixedNumber", fixedNumber.isSelected());
+		ac.setBoolProperty("fixedSubjectEffects", fixedSubjectEffects.isSelected());		
 		for (int i=0; i<nV.size(); i++) {
 			ac.setProperty("nV"+i, nV.get(i).getText());			
 		}
@@ -227,6 +230,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         jtWithinSubjectRho.setEnabled(false);
 		lsPanel.add(jlMixed, cc.xy(2, row));
 		lsPanel.add(jtWithinSubjectRho, cc.xy(4, row));
+		
+		row+=2;
+		
+		lsPanel.add(fixedSubjectEffects, cc.xyw(2, row, 3));		
 		
         row+=2;  
         
@@ -436,7 +443,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+getCorrelation()
 					+(gui.jCBmodel.getSelectedIndex()==4?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
 					+(gui.jCBmodel.getSelectedIndex()==7?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
-					+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")					
+					+(useCatalogueDesigns.isSelected()?", start.designs=\"catalog\"":"")	
+					+", random.subject="+(fixedSubjectEffects.isSelected()?"FALSE":"TRUE")
 					+", n=c("+jtN1.getText()+","+jtN2.getText()+")"
 					+", verbose=FALSE)";
 			
