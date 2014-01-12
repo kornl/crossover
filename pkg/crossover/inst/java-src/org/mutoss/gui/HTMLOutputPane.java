@@ -32,6 +32,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     	this.gui = gui;
         makeComponents();
         textArea.addMouseListener(new RightClickTextMenuListener(textArea));
+        textArea.setEditable(true);
         doTheLayout();
     }
 
