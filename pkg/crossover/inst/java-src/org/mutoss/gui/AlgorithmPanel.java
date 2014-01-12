@@ -542,6 +542,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 	public void stateChanged(ChangeEvent e) {
 		createTreatmentNumberPanel(false);
+		int s1 = Integer.parseInt(gui.spinnerS1.getModel().getValue().toString());
+		int s2 = Integer.parseInt(gui.spinnerS2.getModel().getValue().toString());
+		int s = Integer.parseInt(spinnerS.getModel().getValue().toString());
+		if (s<s1) {
+			gui.spinnerS1.getModel().setValue(s);
+		} else if (s>s2) {
+			gui.spinnerS2.getModel().setValue(s);
+		}
 	}
 
 
