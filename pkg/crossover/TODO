@@ -1,4 +1,37 @@
- rbind(c(2L, 2L, 1L, 1L, 2L, 1L),
+The following R code produced the following error:
+
+org.af.jhlir.call.RErrorException: Error in cbind(m, Csub2) : 
+  number of rows of matrices must match (see arg 2)
+
+
+Traceback:
+
+cbind(m, Csub2)
+rbind(C * eff.factor[1], cbind(m, Csub2) * eff.factor[2]) at contrMat.R#14
+contrMat2(type = contrast, v, model, eff.factor) at search.R#269
+searchCrossOverDesign(s = 7, p = 2, v = 4, model = "Standard additive model", 
+    eff.factor = c(1, 1), contrast = "Dunnett", v.rep = c(4, 
+        4, 3, 3), balance.s = FALSE, balance.p = FALSE, start.designs = "catalog", 
+    n = c(5000, 20), verbose = FALSE)
+eval(expr, envir, enclos)
+eval(expression(.COresult <- searchCrossOverDesign(s = 7, p = 2, 
+    v = 4, model = "Standard additive model", eff.factor = c(1, 
+        1), contrast = "Dunnett", v.rep = c(4, 4, 3, 3), balance.s = FALSE, 
+    balance.p = FALSE, start.designs = "catalog", n = c(5000, 
+        20), verbose = FALSE)), envir = crossover:::crossover.env)
+
+searchCrossOverDesign(s=7, p=2, v=4, model="Standard additive model", eff.factor=c(1.0,1.0), contrast="Dunnett", v.rep=c(4,4,3,3), balance.s=FALSE, balance.p=FALSE, start.designs="catalog", n=c(5000,20), verbose=FALSE)
+----
+
+Adjusting number of sequences in algorithm panel should effect main panel.
+
+----
+
+Show estimability.
+
+----
+
+rbind(c(2L, 2L, 1L, 1L, 2L, 1L),
       c(1L, 1L, 2L, 2L, 1L, 2L),
       c(2L, 2L, 1L, 1L, 2L, 1L),
       c(1L, 1L, 2L, 2L, 1L, 2L))
