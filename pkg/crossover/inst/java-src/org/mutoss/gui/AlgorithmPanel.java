@@ -395,7 +395,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	}
 	
 	private String getVRep() {
-		String vrep = "c(";
+		if (!fixedNumber.isSelected()) return "";
+		String vrep = ", v.rep=c(";
 		for (int i=0; i<nV.size(); i++) {   
 			vrep += nV.get(i).getText();
 			if (i!=nV.size()-1) vrep += ",";
@@ -429,7 +430,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 					+", model=\""+gui.jCBmodel.getSelectedItem()+"\""
 					+", eff.factor="+getEffFactors()
 					+", contrast=\""+contrasts[jcbContrasts.getSelectedIndex()]+"\""
-					+", v.rep="+getVRep()
+					+getVRep()
 					+", balance.s="+(jbBalanceSequences.isSelected()?"TRUE":"FALSE")
 					+", balance.p="+(jbBalancePeriods.isSelected()?"TRUE":"FALSE")
 					+getCorrelation()
