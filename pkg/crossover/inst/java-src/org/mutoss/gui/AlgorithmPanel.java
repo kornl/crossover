@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
@@ -75,22 +76,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JTextField jtWithinSubjectRho;
 	//JTabbedPane jTabAlgo = new jTabAlgo;
 	String udcm;
+	JSplitPane pane;
 	
 	ClassConfig ac = new ClassConfig(Configuration.getInstance(), AlgorithmPanel.class);
 	
 	public AlgorithmPanel(CrossoverGUI gui) {
 		this.gui = gui;
-		
-		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow";
-        String rows = "5dlu, fill:pref:grow, 5dlu";
-        
-        FormLayout layout = new FormLayout(cols, rows);
-        layout.setColumnGroups(new int[][]{ {2, 4} });
-
-        setLayout(layout);
-        CellConstraints cc = new CellConstraints();        
-		
-		int row = 2;
     	
     	jta = new HTMLOutputPane(gui);
 		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -98,8 +89,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		//jta.setMargin(new Insets(4,4,4,4));
 		jta.setEditable(false);		
 		
-		add(new JScrollPane(getLeftSidePanel()), cc.xy(2, row));
-		add((getRightSidePanel()), cc.xy(4, row));
+		pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(getLeftSidePanel()), getRightSidePanel());
+		
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx=1; c.weighty=1;
+		add(pane, c);
 		
 		loadDefaults();
 		
@@ -116,18 +112,19 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		JPanel panel = new JPanel();
 		
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "pref, 5dlu, fill:min:grow, 5dlu, pref";
+        String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu, pref, 5dlu";
         
         panel.setLayout(new FormLayout(cols, rows));
         CellConstraints cc = new CellConstraints();
 		
-		int row = 1;
+		int row = 2;
     	
 		panel.add(new JLabel("Created Design"), cc.xy(2, row));
 		
 		row += 2;
 		
 		panel.add(new JScrollPane(jta), cc.xyw(2, row, 3));
+		jta.setEditable(true);
 		
 		row += 2;
 		
