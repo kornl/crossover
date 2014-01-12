@@ -70,6 +70,8 @@ if (exists("opts_chunk")) {
   opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=95))
   #opts_chunk$set(size="footnotesize")
   #opts_chunk$set(size="tiny")
+  opts_chunk$set(cache=TRUE)
+  opts_chunk$set(autodep=TRUE)
   opts_chunk$set(size="scriptsize") 
 }
 library(crossover, quietly=TRUE)
@@ -85,7 +87,7 @@ library(Matrix)
 
 \subsection*{Evaluation of Algorithm Performance}
 
-We compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
+We compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~202ff]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
 
 <<echo=FALSE, eval=TRUE, cache=TRUE>>=
 s <- 6; p <- 4; v <- 2
@@ -175,9 +177,9 @@ Note that for the full interaction model and the self-adjacency model we get the
 \end{split}
 \end{equation*}
 
-For the treatment decay model the algorithm provided us with Let's give a little bit of weight to the carry-over effects:
+For the treatment decay model the algorithm provided us with a design where the treatment decay effect never occurs. Let's give a little bit of weight to this treatment decay effect:
 
-<<echo=FALSE>>=
+<<echo=FALSE, results='hide'>>=
 
 i <- 6
 
@@ -186,7 +188,7 @@ class(Csub) <- "matrix"
 
 C <- as.matrix(bdiag(Csub, Csub))
 result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
-cat("Equal weight\n")
+cat("**** Equal weight ****\n")
 print(getDesign(result))
 cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
 gco <- general.carryover(designs[[i]], model=i)
@@ -194,7 +196,7 @@ cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover
 
 C <- as.matrix(bdiag(Csub, 0.1*Csub))
 result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
-cat("Weight 10:1\n")
+cat("**** Weight 10:1 ****\n")
 print(getDesign(result))
 cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
 gco <- general.carryover(designs[[i]], model=i)
@@ -202,12 +204,11 @@ cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover
 
 C <- as.matrix(bdiag(Csub, 0.01*Csub))
 result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
-cat("Weight 100:1\n")
+cat("**** Weight 100:1 ****\n")
 print(getDesign(result))
 cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
 gco <- general.carryover(designs[[i]], model=i)
 cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result)[[2]][1,2]/4,"\n\n")
-
 
 @
 
@@ -218,19 +219,22 @@ s <- 6; p <- 4; v <- 2; model <- 6
 
 result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, contrast="Tukey", eff.factor=c(1,0.01))
 
+# Or alternatively manually:
 Csub <- contrMat(n=rep(1, v), type="Tukey")
 class(Csub) <- "matrix"
 C <- as.matrix(bdiag(Csub, 0.01*Csub))
+C
 result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, contrast=C)
+result
 
 @
 
-As we can see we find the design from the book, when we give weights 100:1 for treatment / carry-over effects in the treatment decay model.
+As we can see we find the design from the book, when we give weights 10:1 for treatment / carry-over effects in the treatment decay model.
 (As seen in the first result section a zero weight for the carry-over effects results in a model with alternating treatments, so that there never occurs a treatment decay effect.)
 
-\subsection*{Comparisons to control}
+\subsubsection{Comparison with control}
 
-<<echo=FALSE>>=
+<<>>=
 
 s<-8; p<-6; v<-4
 i <- 1
@@ -269,7 +273,6 @@ for (v in 3:9) {
 
 \subsection*{Autocorrelated errors}
 
-
 <<echo=FALSE>>=
 
 propSummary <- function(design) {
@@ -277,22 +280,19 @@ propSummary <- function(design) {
     while (!is.null(dim(design)) && dim(design)[2]>0) {
         col <- design[,1]
         g <- apply(design, 2, function(x) {all(x==col)})
-        cat(col, " : ", sum(g), "\n")
+        cat("Sequence ",col, " occurs ", sum(g), " times.\n")
         design <- design[,-which(g), drop = FALSE]        
     }
 }
 
 @
 
+%Laska and Meisner
+%For the specified $N_k$ the variance of the BLUE (only for the BLUE?) is
+%\[\text{var}(\hat\theta)=m'A^{-1}m\]
+%with $A=\sum N_k X_k'C^{-1}X_k$.
 
-Laska and Meisner
-
-For the specified $N_k$ the variance of the BLUE (only for the BLUE?) is
-
-\[\text{var}(\hat\theta)=m'A^{-1}m\]
-with $A=\sum N_k X_k'C^{-1}X_k$.
-
-<<>>=
+<<eval=FALSE, include=FALSE>>=
 
 p <- 6; s <- 8; v <- 2
 sigmaE <- 1
@@ -325,7 +325,9 @@ plot(result2)
 
 @
 
-Two treatments and autocorrelated error:
+In this section we reproduce result for two treatments and autocorrelated errors.
+
+We use the following function to create the inverse of the appropriate correlation matrix:
 
 <<>>=
 
@@ -337,29 +339,31 @@ getSigmaI <- function(rho, s, p, f=solve) {
         }
     }
     # Our design matrix is indexed p=1,1,1,2,2,2,3,3,3; s=1,2,3,1,2,3,1,2,3 therefore we have to exchange the arguments:
-    sigmaI <- kronecker(f(V), diag(s)) #kronecker(diag(s), f(V))
+    sigmaI <- kronecker(f(V), diag(s))
     return(sigmaI)
 }
 
 @
 
-Case 1: $-1<\rho\leq0$
+Let's first look at a result from \cite{matthews1987optimal} for $p=3$:
+
+\emph{Routine but lengthy calculation shows that the optimal designs, for direct effects, are
+given by} \[N_2=2\rho/(3\rho-1),\; N_4=1-N_2\; (-1<\rho\leq0):\]
 
 <<>>=
 
-Csub <- contrMat(n=rep(1, v), type="Tukey")
-class(Csub) <- "matrix"
+C <- matrix(c(-1,1,0,0),1,4)
+p <- 3; v <- 2; s<- 20
 
-C <- diag(4) #as.matrix(bdiag(Csub, Csub))
-
-p <- 3; v <-2; s<-10
-
-for (rho in ((1:9)/5-1)) {
-    cat("Rho =", rho,":\n")
+for (rho in c(-0.9,-0.6,-0.5,-0.3,-0.1,0)) {
+    cat("Rho =", rho,", (1 1 2) should occur ",10*2*rho/(3*rho-1)," times, (1 2 2) ",10*(1-2*rho/(3*rho-1))," times:\n")
     result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
     propSummary(getDesign(result))
 }
 
+@
+
+<<results='hide', echo=FALSE>>=
 p <- 4
 
 for (rho in c(-0.5, 0, 0.5)) {
@@ -372,6 +376,42 @@ cc <- 4*rho*(1-rho)^2
 k <- cc/(rho^2-3*rho+4)
 d <- 11-rho-cc
 x <- max(0, (2*k+d-d*sqrt(1+k*rho))/(cc*sqrt(1-k*rho)))
+
+@
+
+Let's take a look at the results from \cite{laska1985variational} who assume normally distributed random subject effects (the call to \texttt{searchCrossOverDesign} gains an additional argument \texttt{random.subject=TRUE}):
+
+\emph{"For $p=3$, the optimal design utilizes only the sequences $AAB, ABB$, and their duals. The allocation of subjects to the sequences varies depending on $\rho$, but it always has more than 90\% of the subjects on the sequence $AAB$ and its dual."}
+
+<<>>=
+
+p <- 3; v <-2; s<-20
+C <- matrix(c(-1,1,0,0),1,4)
+
+for (rho in c(0.1, 0.9)) {
+  cat("Rho =", rho,":\n")
+  result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C, random.subject=TRUE)
+  propSummary(getDesign(result))
+}
+
+@
+
+\emph{"For $p=4$, and $\rho\leq .42$, the only sequences in the optimal design are, as before, $AABB$ and $ABBA$ and their duals. At $\rho=0$, however, half of the subjects are allocated at the first sequence and its dual, and as $\rho$ increases the proportion decreases to zero. For $\rho > .42$ only $ABBA$ and its dual are used in the optimal design."}
+
+%C1 <- diag(4)
+%Csub <- contrMat(n=rep(1, v), type="Tukey")
+%class(Csub) <- "matrix"
+%C2 <- as.matrix(bdiag(Csub, Csub))
+
+<<>>=
+
+p <- 4; v <-2; s<-20
+C <- matrix(c(-1,1,0,0),1,4)
+for (rho in c(0.01, 0.1, 0.3, 0.5, 0.9)) {
+  cat("Rho =", rho,":\n")
+  result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C, random.subject=TRUE)
+  propSummary(getDesign(result))
+}
 
 @
 
