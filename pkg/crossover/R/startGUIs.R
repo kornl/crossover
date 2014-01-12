@@ -41,7 +41,7 @@ getTable <- function(d, type="HTML", forceInteger=TRUE, digits=4, names=TRUE) {
                   row.names=F, col.names=F, quote=F)), collapse="\n"),"</pre>"))
     }
   } else if (type=="HTML") {
-    return(paste(capture.output(print(xtable(d, digits=digits), type="html", include.rownames=names, include.colnames=names)),collapse="\n"))
+    return(paste(capture.output(print(xtable(d, digits=digits), comment=FALSE, type="html", include.rownames=names, include.colnames=names)),collapse="\n"))
   } else if (type=="R") {
     return(paste("<pre>",dputMatrix(d),"</pre>"))
   }
