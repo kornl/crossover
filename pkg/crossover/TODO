@@ -23,6 +23,28 @@ eval(expression(.COresult <- searchCrossOverDesign(s = 7, p = 2,
 searchCrossOverDesign(s=7, p=2, v=4, model="Standard additive model", eff.factor=c(1.0,1.0), contrast="Dunnett", v.rep=c(4,4,3,3), balance.s=FALSE, balance.p=FALSE, start.designs="catalog", n=c(5000,20), verbose=FALSE)
 ----
 
+The following R code produced the following error:
+
+Error in La.svd(x, nu, nv) : error code 1 from Lapack routine 'dgesdd'
+
+
+Traceback:
+
+La.svd(x, nu, nv)
+svd(X)
+ginv(XtX) at general.carryover.R#149
+general.carryover(d, model = model) at startGUIs.R#53
+crossover:::getDesignText(.COresult, model = 1, type = "HTML", 
+    carryover = FALSE, digits = 3, names = TRUE)
+eval(expr, envir, enclos)
+eval(expression(crossover:::getDesignText(.COresult, model = 1, 
+    type = "HTML", carryover = FALSE, digits = 3, names = TRUE)), 
+    envir = crossover:::crossover.env)
+
+searchCrossOverDesign(s=24, p=4, v=6, model="Standard additive model", eff.factor=c(1.0,0), contrast="Tukey", balance.s=FALSE, balance.p=FALSE, start.designs="catalog", random.subject=FALSE, n=c(10000,50), verbose=FALSE)
+
+----
+
 Adjusting number of sequences in algorithm panel should effect main panel.
 
 ----
