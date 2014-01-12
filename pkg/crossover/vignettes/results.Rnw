@@ -363,6 +363,59 @@ for (rho in c(-0.9,-0.6,-0.5,-0.3,-0.1,0)) {
 
 @
 
+\[N_3=2\rho^2/(3+\rho)^2,\; N_4=1-N_3\; (0<\rho\leq2\sqrt{3}-3):\]
+
+<<>>=
+
+for (rho in c(0.1,0.2,0.3,0.4)) {
+    cat("Rho =", rho,", (1 2 1) should occur ",10*2*rho^2/(3+rho)^2," times, (1 2 2) ",10*(1-2*rho^2/(3+rho)^2)," times:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+\[N_4=(-3\rho-\rho^2)/(3\rho^2+2\rho-1)^2,\; N_2=1-N_4\; (2\sqrt{3}-3\leq\rho\leq(\sqrt{17}-3)/2):\]
+
+<<>>=
+
+for (rho in c(0.5)) {
+    cat("Rho =", rho,", (1 2 2) should occur ",10*(2-3*rho-rho^2)/(3*rho^2+2*rho-1)," times, (1 1 2) ",10*(1-(2-3*rho-rho^2)/(3*rho^2+2*rho-1))," times:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+\[N_2=1\; ((\sqrt{17}-3)/2\leq\rho\leq 0.675..):\]
+
+<<>>=
+
+for (rho in c(0.6)) {
+    cat("Rho =", rho,", (1 1 2) should occur always:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+\[N_3=\frac12(1+\rho)^{-1}\left(\sqrt{\frac{4+4\rho+\rho^2}{1+2\rho+2\rho^2}}\rho-1\right),\; N_2=1-N_3\; (0.675..\leq\rho\leq1):\]
+
+
+<<>>=
+
+s<- 40
+
+for (rho in c(0.7, 0.8, 0.9)) {
+    N3 <- 1/2*1/(1+rho)*(sqrt((4+4*rho+rho^2)/(1+2*rho+2*rho^2))*rho-1)
+    cat("Rho =", rho,", (1 2 1) should occur ",s/2*N3," times, (1 1 2) ",s/2*(1-N3)," times:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+
 <<results='hide', echo=FALSE>>=
 p <- 4
 
