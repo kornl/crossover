@@ -23,3 +23,16 @@ for (f in dir()) {
 
 save(list=ls(pattern="clatworthy*"), file="../clatworthy1.rda")
 
+t <- t(matrix(c(
+  1,2,4,6, 2,3,5,1, 3,4,6,2, 4,5,1,3, 5,6,2,4, 6,1,3,5,
+  2,4,6,1, 3,5,1,2, 4,6,2,3, 5,1,3,4, 6,2,4,5, 1,3,5,6,
+  6,1,2,4, 1,2,3,5, 2,3,4,6, 3,4,5,1, 4,5,6,2, 5,6,1,3,
+  4,6,1,2, 5,1,2,3, 6,2,3,4, 1,3,4,5, 2,4,5,6, 3,5,6,1),ncol=4,byrow=FALSE))
+
+rownames(t) <- colnames(t) <- NULL
+attr(t, "reference") <- "Clatworthy, W.H. (1973). Tables of Two-Associate-Class Partially Balanced Designs. National Bureau of Standards, Applied Mathematics Series 63. U.S. Department of Commerce."
+attr(t, "signature") <- "p = 4, n = 24, t = 6"
+attr(t, "title") <- "PB2.94"
+pb2.64 <- t
+
+save(list=ls(pattern="pb2*"), file="../clatworthyC.rda")
