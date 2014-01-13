@@ -1,6 +1,8 @@
 package org.mutoss.gui;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -42,59 +44,91 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 	public DesignSelectionPanel(CrossoverGUI gui) {
 		this.gui = gui;
 		
-		String cols = "5dlu, fill:min:grow, 5dlu, fill:min:grow, 5dlu,";
+		pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(getLeftSide()), getRightSide());
+		
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx=1; c.weighty=1;
+		add(pane, c);
+        
+        loadDefaults();
+	}
+	
+	public JPanel getLeftSide() {
+		JPanel panel = new JPanel();
+		
+		String cols = "5dlu, fill:min:grow, 5dlu";
         String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu, pref, 2dlu, pref, 2dlu, pref, 2dlu, pref, 5dlu";
         
         FormLayout layout = new FormLayout(cols, rows);
-        layout.setColumnGroups(new int[][]{ {2, 4} });
 
-        setLayout(layout);
+        panel.setLayout(layout);
         CellConstraints cc = new CellConstraints();
 		
 		int row = 2;
     	
-    	add(new JLabel("List of designs:"), cc.xy(2, row));
-        add(new JLabel("Selected design:"), cc.xy(4, row));
-		
+    	panel.add(new JLabel("List of designs:"), cc.xy(2, row));
+        		
         row+=2;
         
         designTable = new DesignTable();	
         designTable.addMouseListener(this);
 		designTable.getSelectionModel().addListSelectionListener(this);
 		
-		jta = new HTMLOutputPane(gui);
-		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		/*jta.setLineWrap(false);		
-		jta.setMargin(new Insets(4,4,4,4));*/
-		
-    	add(new JScrollPane(designTable), cc.xy(2, row));
-        add(new JScrollPane(jta), cc.xywh(4, row, 1, 9));
-		
+		panel.add(new JScrollPane(designTable), cc.xy(2, row));        
+    	
         row+=2;
         
-        add(jcbPackageArchive, cc.xy(2, row));
+        panel.add(jcbPackageArchive, cc.xy(2, row));
         jcbPackageArchive.setSelected(true);
         jcbPackageArchive.addActionListener(this);
         
         row+=2;
         
-        add(jcbCrossdes, cc.xy(2, row));
+        panel.add(jcbCrossdes, cc.xy(2, row));
         jcbCrossdes.setSelected(true);
         jcbCrossdes.addActionListener(this);
         
         row+=2;
         
-        add(jcbMyDesigns, cc.xy(2, row));
+        panel.add(jcbMyDesigns, cc.xy(2, row));
         jcbMyDesigns.setSelected(true);
         jcbMyDesigns.addActionListener(this);
         
         row+=2;
         
-        add(jcbSearch, cc.xy(2, row));
+        panel.add(jcbSearch, cc.xy(2, row));
         jcbSearch.setSelected(true);
         jcbSearch.addActionListener(this);
         
-        loadDefaults();
+        return panel;
+	}
+	
+	public JPanel getRightSide() {
+		JPanel panel = new JPanel();
+		
+		String cols = "5dlu, fill:min:grow, 5dlu";
+        String rows = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
+        
+        FormLayout layout = new FormLayout(cols, rows);
+
+        panel.setLayout(layout);
+        CellConstraints cc = new CellConstraints();
+		
+		int row = 2;
+		panel.add(new JLabel("Selected design:"), cc.xy(2, row));
+		
+		row+=2;
+		
+		jta = new HTMLOutputPane(gui);
+		jta.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		/*jta.setLineWrap(false);		
+		jta.setMargin(new Insets(4,4,4,4));*/
+		
+		panel.add(new JScrollPane(jta), cc.xy(2, row));		
+		
+		return panel;
 	}
 	
 	ClassConfig ac = new ClassConfig(Configuration.getInstance(), DesignSelectionPanel.class);
