@@ -332,7 +332,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 			effPanel.add(new JLabel("Not applicable."), effWeights);
 		}
 		for (int i=0; i<effV.size(); i++) {
-			effV.get(i).setText(ac.getProperty("effV"+i, ""));
+			effV.get(i).setText(ac.getProperty("effV"+i, i==0?"1":"0"));
 		}	
 		//for (Component c : effPanel.getComponents()) c.setEnabled(false);
 		lsPanel.add(effPanel, cc.xyw(2, rowEff, 3));
