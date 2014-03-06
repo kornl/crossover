@@ -1,3 +1,5 @@
+CITATION file
+
 The following R code produced the following error:
 
 org.af.jhlir.call.RErrorException: Error in cbind(m, Csub2) : 
