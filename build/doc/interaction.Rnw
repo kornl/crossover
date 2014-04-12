@@ -83,12 +83,64 @@ library(MASS)
 library(multcomp)
 library(ggplot2)
 library(Matrix)
+
+s <- 6; p <- 4; v <- 2
+
+design1 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,2,2,1),
+                   c(2,1,1,2)))
+design2 <- t(rbind(c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,2,2,1),
+                   c(2,1,1,2)))
+design3 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1)))
+design4 <- t(rbind(c(1,1,2,2), # TODO Also correct in other version
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,2,2,1),
+                   c(2,1,1,2))) # Why is there no design 4 in the book?
+design5 <- t(rbind(c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1)))
+design6 <- t(rbind(c(1,2,1,2),
+                   c(2,1,2,1),
+                   c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,2,1,2),
+                   c(2,1,2,1)))
+design7 <- t(rbind(c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,1,1,2),
+                   c(2,2,2,1),
+                   c(1,2,1,1),
+                   c(2,1,2,2)))
+design8 <- t(rbind(c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,2,1,2),
+                   c(2,1,2,1)))
+
 @
 
 \subsection*{Interaction}
 
 
-<<echo=FALSE, eval=TRUE, cache=TRUE>>=
+<<echo=TRUE, eval=TRUE, cache=TRUE>>=
 
 x <- c(-1,-1,1,1)
 y <- c(-1,1,-1,1)
@@ -115,7 +167,65 @@ What you want to estimate is the following contrast:
 <<>>=
 
 
+x <- c(-1,-1,1,1)
+y <- c(-1,1,-1,1)
+r <- rnorm(4)
+model.matrix(lm(r~x*y))
+
+
+
 
 @
+
+
+Link matrix:
+
+<<>>=
+
+design7
+
+# Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
+rcDesign <- crossover:::rcd(design7, v=v, model=1)
+rcDesign
+# Design Matrix of Row-Column Design:
+Xr <- crossover:::rcdMatrix(rcDesign, v, model=1)
+Xr
+
+H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H
+# Design Matrix of Cross-Over Design:
+X <- Xr %*% H
+X
+
+H1 <- rbind(c(1, 0, 0, 0, 0, 0, 0, 0),
+            c(0, 1, 0, 0, 0, 0, 0, 0),
+            c(1, 0, 1, 0, 1, 0, 0, 0), 
+            c(0, 1, 1, 0, 0, 0, 1, 0), 
+            c(1, 0, 0, 1, 0, 1, 0, 0), 
+            c(0, 1, 0, 1, 0, 0, 0, 1))
+
+H2 <- rbind(c(1, 0, 0, 0, 0, 0),
+            c(0, 1, 0, 0, 0, 0),
+            c(1, 0, 1, 0, 1, 0), 
+            c(0, 1, 1, 0, 0, 0), 
+            c(1, 0, 0, 1, 0, 0), 
+            c(0, 1, 0, 1, 0, 1))
+
+# Design Matrix of Cross-Over Design:
+X <- Xr %*% H2
+X
+
+fX <- cbind(Xr %*% H, crossover:::getZ(s,p))
+A2 <- t(fX) %*% fX
+ginv(A2)[1:6,1:6]
+
+fX <- cbind(Xr %*% H2, crossover:::getZ(s,p))
+A2 <- t(fX) %*% fX
+ginv(A2)[1:6,1:6]
+
+
+
+@
+
 
 \end{document}
