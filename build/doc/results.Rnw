@@ -156,7 +156,7 @@ for (i in 1:8) {
     model <- models[i]
     cat("======= ", model, " =======","\n")
     for (k in 1:3) {
-        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model) #, start.designs=list(designs[[i]]))
+        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, v.rep=c(12,12)) #, start.designs=list(designs[[i]]))
         print(getDesign(result))
         cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
         gco <- general.carryover(designs[[i]], model=i)
@@ -234,7 +234,7 @@ As we can see we find the design from the book, when we give weights 100:1 for t
 
 \subsubsection*{Comparison with control}
 
-<<>>=
+<<compareWithControl>>=
 
 s<-8; p<-6; v<-4
 i <- 1
@@ -256,7 +256,7 @@ result
 
 Now we try to find some Williams designs (with a short search of only a few seconds) - we had already an email discussion about the problem that the williams5t is normally not found with the short default search (it was found (multiple times), when we increased the search to for example $n=c(5000,1000)$):
 
-<<echo=FALSE, eval=TRUE, cache=TRUE>>=
+<<Williams, echo=FALSE, eval=TRUE, cache=TRUE>>=
 data(williams)
 for (v in 3:9) {
     name <- paste("williams",v,"t",sep="")
@@ -273,7 +273,7 @@ for (v in 3:9) {
 
 \subsection*{Autocorrelated errors}
 
-<<echo=FALSE>>=
+<<Autocorrelated, echo=FALSE>>=
 
 propSummary <- function(design) {
     print(design)    
@@ -470,7 +470,7 @@ for (rho in c(0.01, 0.1, 0.3, 0.5, 0.9)) {
 
 \subsection*{Incomplete block design}
 
-<<>>=
+<<ICBD>>=
 v <- 6; p <- 4; s <- 24
 
 result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1)
