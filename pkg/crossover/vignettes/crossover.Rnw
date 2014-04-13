@@ -612,9 +612,26 @@ H <- linkMatrix(model=model,v=v)
 fX <- cbind(Xr%*%H, getZ(s,p))
 A1 <- t(fX) %*% fX
 A2 <- t(H)%*%Ar%*%H
+
+# While A1 and A2 differ:
+
 ginv(A1)[1:6,1:6]
 ginv(A2)
 max(abs(ginv(A1)[1:6,1:6]-ginv(A2)))
+
+# The variances for the estimable contrasts are the same:
+
+C <- matrix(0,nrow=15,ncol=1)
+C[1:2,1] <- c(-1,1)
+tdiff1 <- t(C)%*%ginv(A1)%*%C
+tdiff2 <- t(C[1:6,])%*%ginv(A2)%*%C[1:6,]
+tdiff1 - tdiff2
+
+C <- matrix(0,nrow=6,ncol=1)
+C[1:2,1] <- c(-1,1)
+tdiff1 <- t(C)%*%ginv(A1)[1:6,1:6]%*%C
+tdiff2 <- t(C)%*%ginv(A2)%*%C
+tdiff1 - tdiff2
 
 @
   
