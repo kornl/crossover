@@ -156,7 +156,7 @@ for (i in 1:8) {
     model <- models[i]
     cat("======= ", model, " =======","\n")
     for (k in 1:3) {
-        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model) #, start.designs=list(designs[[i]]))
+        result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, v.rep=c(12,12)) #, start.designs=list(designs[[i]]))
         print(getDesign(result))
         cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
         gco <- general.carryover(designs[[i]], model=i)
