@@ -184,6 +184,11 @@ Link matrix:
 
 design7
 
+Csub <- contrMat(n=rep(1, v), type="Tukey")
+class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
+C1 <- crossover:::appendZeroColumns(Csub, model=7, v)
+C2 <- C1[,1:6, drop=FALSE]
+
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
 rcDesign <- crossover:::rcd(design7, v=v, model=1)
 rcDesign
@@ -193,9 +198,6 @@ Xr
 
 H <- crossover:::linkMatrix(model="Full set of interactions", v)
 H
-# Design Matrix of Cross-Over Design:
-X <- Xr %*% H
-X
 
 H1 <- rbind(c(1, 0, 0, 0, 0, 0, 0, 0),
             c(0, 1, 0, 0, 0, 0, 0, 0),
@@ -212,8 +214,29 @@ H2 <- rbind(c(1, 0, 0, 0, 0, 0),
             c(0, 1, 0, 1, 0, 1))
 
 # Design Matrix of Cross-Over Design:
+X1 <- Xr %*% H1
+X1
+
+X2 <- Xr %*% H2
+X2
+
+
+
+
+Ar <- t(Xr) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% Xr
+A1 <- t(H1) %*% Ar %*% H1
+C1 %*% ginv(A1) %*% t(C1)
+
+A2 <- t(H2) %*% Ar %*% H2
+C2 %*% ginv(A2) %*% t(C2)
+
+
+# Design Matrix of Cross-Over Design:
 X <- Xr %*% H2
 X
+
+
+
 
 fX <- cbind(Xr %*% H, crossover:::getZ(s,p))
 A2 <- t(fX) %*% fX
@@ -225,7 +248,26 @@ ginv(A2)[1:6,1:6]
 
 
 
+
 @
 
+
+We have\footnote{\url{http://en.wikipedia.org/wiki/Block_matrix_pseudoinverse}}:
+
+\[
+\left(\left[\begin{matrix}X^T\\Z^T\end{matrix}\right]\left[\begin{matrix}X & Z\end{matrix}\right]\right)^{-1}
+=\left[\begin{matrix}X^TX&X^TZ\\Z^TX&Z^TZ\end{matrix}\right]^{-1}%\\
+=\left[\begin{matrix}(X^TP^\perp_ZX)^{-1}&-(X^TP^\perp_ZX)^{-1}X^TZ(Z^TZ)^{-1}\\
+-(Z^TP^\perp_XZ)^{-1}Z^TX(X^TX)^{-1}&(Z^TP^\perp_XZ)^{-1}\end{matrix}\right].
+\]
+
+
+
+<<>>=
+
+rnorm(2)
+
+
+@
 
 \end{document}
