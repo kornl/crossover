@@ -163,6 +163,8 @@ for (i in 1:8) {
         if (!is.null(dim(gco[[2]]))) {
             cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result)[[2]][1,2]/4,"\n\n")
         }
+        cat(paste("designB",i,sep=""), "<-", crossover:::dputMatrix(getDesign(result)))
+        
     }
 }    
 
