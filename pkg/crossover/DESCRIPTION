@@ -1,8 +1,8 @@
 Package: crossover
 Type: Package
 Title: Crossover Designs
-Version: 0.1-8
-Author: Kornelius Rohmeyer, Byron Jones
+Version: 0.1-9
+Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
 Description: This package provides different crossover designs and a GUI to access them.
 Depends: R (>= 3.0.0), rJava (>= 0.8-3), CommonJavaJars (>= 1.0.4), JavaGD, ggplot2, parallel
