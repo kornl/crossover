@@ -135,6 +135,60 @@ design8 <- t(rbind(c(1,2,2,2),
                    c(1,2,1,2),
                    c(2,1,2,1)))
 
+designB1 <- rbind(c(2, 2, 1, 1, 2, 1),
+      c(2, 1, 2, 1, 2, 1),
+      c(1, 1, 2, 2, 1, 2),
+      c(1, 2, 1, 2, 1, 2))
+
+designB2 <- rbind(c(1, 1, 2, 2, 2, 1),
+      c(1, 2, 2, 1, 1, 2),
+      c(2, 2, 1, 1, 2, 1),
+      c(1, 1, 2, 2, 1, 2))
+
+designB3 <- rbind(c(1, 1, 1, 2, 2, 2),
+      c(1, 1, 1, 2, 2, 2),
+      c(2, 2, 2, 1, 1, 1),
+      c(2, 2, 2, 1, 1, 1))
+
+designB4 <- rbind(c(1, 2, 2, 2, 1, 1),
+                  c(2, 2, 1, 1, 1, 2),
+                  c(2, 1, 1, 1, 2, 2),
+                  c(1, 1, 2, 2, 2, 1))
+
+designB5 <- rbind(c(2, 1, 1, 2, 1, 2),
+      c(2, 2, 1, 2, 1, 1),
+      c(1, 2, 2, 1, 2, 1),
+      c(1, 2, 2, 1, 2, 1))
+
+designB6 <- rbind(c(1, 2, 2, 1, 1, 2),
+      c(2, 1, 1, 2, 2, 1),
+      c(1, 2, 2, 1, 1, 2),
+      c(2, 1, 1, 2, 2, 1))
+
+designB7 <- rbind(c(1, 1, 2, 2, 2, 1),
+      c(2, 2, 1, 1, 1, 2),
+      c(1, 2, 1, 2, 2, 1),
+      c(1, 1, 2, 2, 1, 2))
+
+designB8 <- rbind(c(1, 2, 1, 1, 2, 2),
+      c(2, 1, 1, 2, 2, 1),
+      c(2, 2, 2, 1, 1, 1),
+      c(2, 1, 2, 2, 1, 1))
+
+newBookDesigns <- list(designB1, designB2, designB3, designB4, 
+                       designB5, designB6, designB7, designB8)
+
+for (model in 1:8) {
+  for (i in 1:8) {
+    design <- newBookDesigns[[i]]
+    Ar <- crossover:::infMatrix_R(rcd(design,v,model), v=v, model=model)
+    H <- linkMatrix(model=model,v=v)
+    A <- t(H)%*%Ar%*%H
+    M <- ginv(A)[1:2,1:2]
+    cat("Model ",model,":",round((M[1,1]+M[2,2]-M[1,2]-M[2,1])/4,3)," (",crossover:::models[model],")\n")
+  }
+}
+
 @
 
 \subsection*{Interaction}
