@@ -85,6 +85,23 @@ if (exists("opts_chunk")) {
   opts_chunk$set(cache=TRUE)
   opts_chunk$set(autodep=TRUE)
 }
+
+# See http://yihui.name/knitr/hooks for the following code.
+crossoverNamespace <- function(before, options, envir) {
+  if (before) {
+    ## code to be run before a chunk
+    #attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
+    attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
+  } else {
+    ## code to be run after a chunk
+    detach("namespace:crossover")
+  }
+}
+
+if (exists("opts_chunk")) {
+  knit_hooks$set(withNameSpace = crossoverNamespace)
+}
+
 library(crossover, quietly=TRUE)
 options(width=128)
 options(digits=4)
@@ -94,6 +111,8 @@ library(MASS)
 library(multcomp)
 library(ggplot2)
 library(Matrix)
+
+
 @
 
 \newpage
@@ -496,15 +515,14 @@ rankMatrix(A)
 
 @
 
-<<eval1b, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
-if (!exists("linkMatrix")) attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
+<<eval1b, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE, withNameSpace=TRUE>>=
 
 checkResult <- function (result, refDesign, model) {
     allDesigns <- result@misc$designs
     df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
     for (i in 1:length(allDesigns)) {
         designs <- allDesigns[[i]]
-        for (j in 1:length(designs)) {
+        for (j in 1:min(10, length(designs))) {
             design <- designs[[j]]
             crit <- sum(general.carryover(design, model=model)$Var.trt.pair)/2
             df <- rbind(df, data.frame(run=i, step=j, crit=crit))
@@ -543,8 +561,6 @@ searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
 #infMatrix_R(X,v,model, method=1)
 #infMatrix_R(X,v,model, method=2)
 
-detach("namespace:crossover")
-
 @
 
 \end{Example}
@@ -575,9 +591,9 @@ crossover:::estimable(d, v, model=2, diag(6))
 
 @
 
-<<attachNameSpace, echo=TRUE, eval=TRUE, results='hide'>>=
+<<attachNameSpace, echo=TRUE, eval=FALSE, results='hide'>>=
  # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
- attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
+# attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
 # When we are finished we call 'detach("namespace:crossover")'.
 @
 
@@ -588,7 +604,8 @@ In the following code fragment we compare the two different approaches:
 \[A_r=X_r'(I-P_z)X_r.\]
 For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004crossover}.
 
-<<TestOfDifferentApproaches, echo=TRUE, eval=TRUE>>=
+<<TestOfDifferentApproaches, echo=TRUE, eval=TRUE, withNameSpace=TRUE>>=
+
 s <- 6
 p <- 3
 v <- 3
@@ -646,7 +663,7 @@ In the following code chunk we will compare the results from our approach in the
   The efficiency is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\]
 \end{Def}
 
-<<checkS2>>=
+<<checkS2, withNameSpace=TRUE>>=
 
 s <- 6
 p <- 3
@@ -664,7 +681,7 @@ S2 <- sum(diag(ginv(t(H) %*% diag(r) %*% H) %*% CC))
 
 @
   
-<<TestWithGeneral.carryover, echo=FALSE, eval=FALSE>>=
+<<TestWithGeneral.carryover, echo=FALSE, eval=FALSE, withNameSpace=TRUE>>=
   compareApproaches
   compareApproaches(design)
   data(atkinson)
@@ -696,7 +713,7 @@ For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
 
 The information matrix is $\ldots$
 
-<<informationMatrixRandomEffects, echo=TRUE>>=
+<<informationMatrixRandomEffects, echo=TRUE, withNameSpace=TRUE>>=
 s <- 4
 p <- 5
 v <- 2
@@ -732,7 +749,7 @@ plot(Vectorize(f), xlim=c(0.01,0.99))
 
 @
 
-<<detachNameSpace, echo=TRUE, eval=TRUE, results='hide'>>=
+<<detachNameSpace, echo=TRUE, eval=FALSE, results='hide'>>=
 detach("namespace:crossover")
 @
 
