@@ -1,8 +1,8 @@
 \docType{methods}
 \name{getDesign}
 \alias{getDesign}
-\alias{getDesign,crossoverSearchResult-method}
-\title{Extract Design from a crossoverSearchResult}
+\alias{getDesign,CrossoverSearchResult-method}
+\title{Extract Design from a CrossoverSearchResult}
 \arguments{
   \item{object}{A searchCrossOverDesign object from which
   the design should be extracted.}
@@ -12,7 +12,7 @@
   design.
 }
 \description{
-  Extract Design from a crossoverSearchResult
+  Extract Design from a CrossoverSearchResult
 }
 \examples{
 #'

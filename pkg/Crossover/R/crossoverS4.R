@@ -208,7 +208,7 @@ setGeneric("getDesign", function(object, ...) standardGeneric("getDesign"))
 #' @name getDesign
 #' @aliases getDesign,CrossoverSearchResult-method getDesign
 #' @param object A searchCrossOverDesign object from which the design should be extracted.
-#' @return Returns a numeric matrix representing the Crossover design.
+#' @return Returns a numeric matrix representing the crossover design.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @examples
 #' #' 
