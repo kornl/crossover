@@ -1,5 +1,6 @@
 \docType{data}
-\name{crossoverdesigns}
+\name{Crossoverdesigns}
+\alias{Crossoverdesigns}
 \alias{anderson}
 \alias{andersonPreece}
 \alias{archdeacon}
@@ -18,7 +19,6 @@
 \alias{blaisdellRaghavarao6t}
 \alias{blaisdellRaghavarao8t}
 \alias{blaisdellRaghavarao9t}
-\alias{crossoverdesigns}
 \alias{davisHall6ta}
 \alias{davisHall6tb}
 \alias{davisHall6tc}

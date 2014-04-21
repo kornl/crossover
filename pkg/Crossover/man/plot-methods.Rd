@@ -1,7 +1,7 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,crossoverSearchResult,missing-method}
+\alias{plot,CrossoverSearchResult,missing-method}
 \title{Plots information about the search algorithm and its process.}
 \arguments{
   \item{x}{Result from searchCrossOverDesign.}

@@ -1,12 +1,12 @@
 \docType{class}
-\name{crossoverDesign-class}
-\alias{crossoverDesign}
-\alias{crossoverDesign-class}
-\alias{print,crossoverDesign-method}
-\alias{show,crossoverDesign-method}
-\title{Class crossoverDesign}
+\name{CrossoverDesign-class}
+\alias{CrossoverDesign}
+\alias{CrossoverDesign-class}
+\alias{print,CrossoverDesign-method}
+\alias{show,CrossoverDesign-method}
+\title{Class CrossoverDesign}
 \description{
-  A S4 class for crossover designs: crossoverDesign
+  A S4 class for Crossover designs: CrossoverDesign
 }
 \section{Slots}{
   \describe{ \item{list("design")}{ Matrix }\item{:}{
@@ -34,7 +34,7 @@ design <- t(rbind(c(1,1,2,2),
                   c(1,2,2,1),
                   c(2,1,1,2)))
 
-new("crossoverDesign", design)
+new("CrossoverDesign", design)
 }
 \author{
   Kornelius Rohmeyer \email{rohmeyer@small-projects.de}

@@ -14,12 +14,12 @@
 #' 
 #' 
 #' \dontrun{
-#' crossoverGUI()
+#' CrossoverGUI()
 #' }
 #' 
 #' 
-#' @export crossoverGUI
-crossoverGUI <- function() {
+#' @export CrossoverGUI
+CrossoverGUI <- function() {
 	invisible(.jnew("org/mutoss/gui/CrossoverGUI"))	
 }
 

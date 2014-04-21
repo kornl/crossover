@@ -7,7 +7,8 @@
     v.rep, balance.s = FALSE, balance.p = FALSE,
     verbose = 0, model.param = list(), n = c(5000, 20),
     jumps = c(5, 50), start.designs,
-    random.subject = FALSE, contrast, correlation = NULL)
+    random.subject = FALSE, contrast, correlation = NULL,
+    rho = 0)
 }
 \arguments{
   \item{s}{Number of sequences.}

@@ -1,8 +1,8 @@
-\name{crossoverGUI}
-\alias{crossoverGUI}
+\name{CrossoverGUI}
+\alias{CrossoverGUI}
 \title{Graphical User Interface for the Creation of SRMTP Graphs}
 \usage{
-  crossoverGUI()
+  CrossoverGUI()
 }
 \value{
   The function itself returns NULL. But from the GUI
@@ -21,7 +21,7 @@
 }
 \examples{
 \dontrun{
-crossoverGUI()
+CrossoverGUI()
 }
 }
 \author{

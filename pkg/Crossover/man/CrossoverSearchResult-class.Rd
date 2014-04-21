@@ -1,19 +1,19 @@
 \docType{class}
-\name{crossoverSearchResult-class}
-\alias{crossoverSearchResult}
-\alias{crossoverSearchResult-class}
-\alias{print,crossoverSearchResult-method}
-\alias{show,crossoverSearchResult-method}
-\title{Class crossoverSearchResult}
+\name{CrossoverSearchResult-class}
+\alias{CrossoverSearchResult}
+\alias{CrossoverSearchResult-class}
+\alias{print,CrossoverSearchResult-method}
+\alias{show,CrossoverSearchResult-method}
+\title{Class CrossoverSearchResult}
 \description{
-  A S4 class for the search result for crossover designs:
-  crossoverSearchResult
+  A S4 class for the search result for Crossover designs:
+  CrossoverSearchResult
 }
 \section{Slots}{
   \describe{ \item{list("design")}{An object of class
-  \code{crossoverDesign} describing the best design that
+  \code{CrossoverDesign} describing the best design that
   was found.}\item{:}{An object of class
-  \code{crossoverDesign} describing the best design that
+  \code{CrossoverDesign} describing the best design that
   was found.} \item{list("startDesigns")}{A list of start
   designs to search from.}\item{:}{A list of start designs
   to search from.} \item{list("model")}{A numeric

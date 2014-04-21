@@ -1,6 +1,6 @@
 \docType{package}
-\name{crossover-package}
-\alias{crossover-package}
+\name{Crossover-package}
+\alias{Crossover-package}
 \title{This package provides more than two hundred cross-over design from
 literature, a search algorithm to find efficient cross-over designs for
 various models and a graphical user interface to find/generate appropriate

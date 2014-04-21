@@ -19,8 +19,8 @@
   Get the number or character string specifying the model
 }
 \examples{
-crossover:::getModelNr("Self-adjacency model")==crossover:::getModelNr(2)
-"Self-adjacency model"==crossover:::getModelNr(2, type="character")
-crossover:::getModelNr("Self-adjacency model")==2
+Crossover:::getModelNr("Self-adjacency model")==Crossover:::getModelNr(2)
+"Self-adjacency model"==Crossover:::getModelNr(2, type="character")
+Crossover:::getModelNr("Self-adjacency model")==2
 }
 
