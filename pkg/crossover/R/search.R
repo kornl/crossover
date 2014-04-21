@@ -98,8 +98,8 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   if (!is.null(correlation) && !is.matrix(correlation)) correlation <- corMat(correlation, s=s, p=p, rho=rho)
   if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
-    st <- get(".summary_table", envir=crossover:::crossover.env)
-    start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get, envir=crossover:::crossover.env)
+    st <- get(".summary_table", envir=Crossover:::Crossover.env)
+    start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get, envir=Crossover:::Crossover.env)
     x <- getStartDesigns(s=s, p=p, v=v)
     if (length(x)!=0) start.designs <- c(start.designs, x)
   }
@@ -127,7 +127,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   result <- .Call( "searchCOD", as.integer(s), as.integer(p), as.integer(v), 
                    start.designs, H, C, model, 
                    v.rep, balance.s, balance.p, verbose, 
-                   as.integer(n), as.integer(jumps), S2, TRUE, random.subject, correlation, interchange, PACKAGE = "crossover")
+                   as.integer(n), as.integer(jumps), S2, TRUE, random.subject, correlation, interchange, PACKAGE = "Crossover")
   
   design <- result$design
   
@@ -138,7 +138,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   class(time) <- NULL
   #varTrtPair <- paste(capture.output(print(general.carryover(t(design), model=model))), collapse = "\n")
   #return(list(design=design, varTrtPair=varTrtPair, eff=eff, search=, time=))
-  return(new("crossoverSearchResult", design=new("crossoverDesign", design, v=v, model=model, description="Found by search algorithm"), startDesigns=start.designs, eff=result$eff,                   
+  return(new("CrossoverSearchResult", design=new("CrossoverDesign", design, v=v, model=model, description="Found by search algorithm"), startDesigns=start.designs, eff=result$eff,                   
              search=list(n=n, jumps=jumps), model=model, time=time, misc=list(designs=result$designs)))
 }
 
@@ -210,8 +210,8 @@ getValues <- function(design, model=1, C, v) {
 }
 
 getDesignMatrix <- function(design, v) {
-    H <- crossover:::linkMatrix(model="Standard additive model", v)
-    rcDesign <- crossover:::rcd(design, v=v, model=1)
-    Xr <- crossover:::rcdMatrix(rcDesign, v, model=1)
+    H <- Crossover:::linkMatrix(model="Standard additive model", v)
+    rcDesign <- Crossover:::rcd(design, v=v, model=1)
+    Xr <- Crossover:::rcdMatrix(rcDesign, v, model=1)
     return(Xr %*% H)
 }

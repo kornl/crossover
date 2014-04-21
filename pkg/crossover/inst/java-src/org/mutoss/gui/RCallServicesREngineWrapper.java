@@ -12,7 +12,7 @@ public class RCallServicesREngineWrapper extends RCallServicesREngine {
 	}
 	
 	public RObj eval(String expression) throws REngineException {
-		return super.eval("eval(expression("+expression+"), envir=crossover:::crossover.env)");
+		return super.eval("eval(expression("+expression+"), envir=Crossover:::Crossover.env)");
 	}
 
 	public RObj evalInGlobalEnv(String expression) throws REngineException {

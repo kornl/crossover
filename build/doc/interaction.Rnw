@@ -62,7 +62,7 @@
 \begin{document}
 
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{crossover - Comparing results}
+%\VignetteIndexEntry{Crossover - Comparing results}
 
 <<include=FALSE, message=FALSE>>=
 if (exists("opts_chunk")) {
@@ -74,7 +74,7 @@ if (exists("opts_chunk")) {
   opts_chunk$set(autodep=TRUE)
   opts_chunk$set(size="scriptsize") 
 }
-library(crossover, quietly=TRUE)
+library(Crossover, quietly=TRUE)
 options(width=128)
 options(digits=4)
 startGUI <- function(...) {invisible(NULL)}
@@ -181,11 +181,11 @@ newBookDesigns <- list(designB1, designB2, designB3, designB4,
 for (model in 1:8) {
   for (i in 1:8) {
     design <- newBookDesigns[[i]]
-    Ar <- crossover:::infMatrix_R(rcd(design,v,model), v=v, model=model)
+    Ar <- Crossover:::infMatrix_R(rcd(design,v,model), v=v, model=model)
     H <- linkMatrix(model=model,v=v)
     A <- t(H)%*%Ar%*%H
     M <- ginv(A)[1:2,1:2]
-    cat("Model ",model,":",round((M[1,1]+M[2,2]-M[1,2]-M[2,1])/4,3)," (",crossover:::models[model],")\n")
+    cat("Model ",model,":",round((M[1,1]+M[2,2]-M[1,2]-M[2,1])/4,3)," (",Crossover:::models[model],")\n")
   }
 }
 
@@ -240,17 +240,17 @@ design7
 
 Csub <- contrMat(n=rep(1, v), type="Tukey")
 class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
-C1 <- crossover:::appendZeroColumns(Csub, model=7, v)
+C1 <- Crossover:::appendZeroColumns(Csub, model=7, v)
 C2 <- C1[,1:6, drop=FALSE]
 
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::rcd(design7, v=v, model=1)
+rcDesign <- Crossover:::rcd(design7, v=v, model=1)
 rcDesign
 # Design Matrix of Row-Column Design:
-Xr <- crossover:::rcdMatrix(rcDesign, v, model=1)
+Xr <- Crossover:::rcdMatrix(rcDesign, v, model=1)
 Xr
 
-H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H <- Crossover:::linkMatrix(model="Full set of interactions", v)
 H
 
 H1 <- rbind(c(1, 0, 0, 0, 0, 0, 0, 0),
@@ -277,7 +277,7 @@ X2
 
 
 
-Ar <- t(Xr) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% Xr
+Ar <- t(Xr) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% Xr
 A1 <- t(H1) %*% Ar %*% H1
 C1 %*% ginv(A1) %*% t(C1)
 
@@ -292,11 +292,11 @@ X
 
 
 
-fX <- cbind(Xr %*% H, crossover:::getZ(s,p))
+fX <- cbind(Xr %*% H, Crossover:::getZ(s,p))
 A2 <- t(fX) %*% fX
 ginv(A2)[1:6,1:6]
 
-fX <- cbind(Xr %*% H2, crossover:::getZ(s,p))
+fX <- cbind(Xr %*% H2, Crossover:::getZ(s,p))
 A2 <- t(fX) %*% fX
 ginv(A2)[1:6,1:6]
 

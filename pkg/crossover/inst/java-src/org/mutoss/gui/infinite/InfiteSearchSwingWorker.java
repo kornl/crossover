@@ -34,10 +34,10 @@ public class InfiteSearchSwingWorker extends SwingWorker<SearchProgress, SearchP
 	
 	private SearchProgress newSearchProgress(boolean first) {
 		run++;
-		fullcommand = "crossover:::infiniteSearchStep("+(first?"oldResult=NULL, ":"oldResult=.COresult, ")+ird.getCommand()
+		fullcommand = "Crossover:::infiniteSearchStep("+(first?"oldResult=NULL, ":"oldResult=.COresult, ")+ird.getCommand()
 				+(first?ird.models:"")+")";
 		RControl.getR().eval(".COresult <- " + fullcommand);	
-		double[] maxEff = RControl.getR().eval("crossover:::getMaxEffPerRun(.COresult)").asRNumeric().getData();
+		double[] maxEff = RControl.getR().eval("Crossover:::getMaxEffPerRun(.COresult)").asRNumeric().getData();
 		return new SearchProgress(run, maxEff, null);
 	}
 
@@ -50,7 +50,7 @@ public class InfiteSearchSwingWorker extends SwingWorker<SearchProgress, SearchP
 	public void done() {                
 		try {
             SearchProgress sp = get();
-            String table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
+            String table = RControl.getR().eval("Crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
             ird.gui.algorithmPanel.searchResultReady(table);            
         } catch (CancellationException e) {
             //onCancel();

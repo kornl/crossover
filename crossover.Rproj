@@ -13,7 +13,7 @@ RnwWeave: knitr
 LaTeX: pdfLaTeX
 
 BuildType: Package
-PackagePath: pkg/crossover
+PackagePath: pkg/Crossover
 PackageInstallArgs: --with-keep.source
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd

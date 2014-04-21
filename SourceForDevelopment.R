@@ -1,8 +1,8 @@
-library(crossover)
+library(Crossover)
 library(RUnit)
 
-for (file in dir(path ="pkg/crossover/R")) {
-  source(paste("pkg/crossover/R",file,sep="/"))
+for (file in dir(path ="pkg/Crossover/R")) {
+  source(paste("pkg/Crossover/R",file,sep="/"))
 }
 
 

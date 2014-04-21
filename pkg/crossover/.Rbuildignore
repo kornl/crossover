@@ -1,8 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-vignettes/crossover.aux
-vignettes/crossover.bbl
-vignettes/crossover.blg
-vignettes/crossover.log
-vignettes/crossover.out
-vignettes/crossover.toc
+vignettes/Crossover.aux
+vignettes/Crossover.bbl
+vignettes/Crossover.blg
+vignettes/Crossover.log
+vignettes/Crossover.out
+vignettes/Crossover.toc

@@ -106,7 +106,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		/* Get and save R and gMCP version numbers */
 		try {		
 			Configuration.getInstance().getGeneralConfig().setRVersionNumber(RControl.getR().eval("paste(R.version$major,R.version$minor,sep=\".\")").asRChar().getData()[0]);
-			Configuration.getInstance().getGeneralConfig().setVersionNumber(RControl.getR().eval("crossover:::crossoverVersion()").asRChar().getData()[0]);
+			Configuration.getInstance().getGeneralConfig().setVersionNumber(RControl.getR().eval("Crossover:::CrossoverVersion()").asRChar().getData()[0]);
 			this.setTitle("CROSS-OVER DESIGN SEARCH TOOL "+Configuration.getInstance().getGeneralConfig().getVersionNumber());
 		} catch (Exception e) {
 			// This is no vital information and will fail for e.g. R 2.8.0, so no error handling here...
@@ -336,7 +336,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 * @param s String like 
 	 */
 	public void showFile(String s) {
-		File f = new File(RControl.getR().eval("system.file(\""+s+"\", package=\"crossover\")").asRChar().getData()[0]);
+		File f = new File(RControl.getR().eval("system.file(\""+s+"\", package=\"Crossover\")").asRChar().getData()[0]);
 		if (!f.exists()) {
 			throw new RuntimeException("This is strange. The file \""+s+"\" could not be found.");
 		} else {

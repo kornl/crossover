@@ -29,7 +29,7 @@
 #' 
 #' @export general.carryover
 general.carryover<-function(design,model,t0=1,rho=0.5){  
-  if (class(design)=="crossoverSearchResult") {
+  if (class(design)=="CrossoverSearchResult") {
       if(missing(model)) {
         model <- design@model
       } else {
@@ -37,7 +37,7 @@ general.carryover<-function(design,model,t0=1,rho=0.5){
       }
       design <- design@design      
   }
-  if (class(design)=="crossoverDesign") {
+  if (class(design)=="CrossoverDesign") {
     if(missing(model)) {
       model <- design@model
     } else {

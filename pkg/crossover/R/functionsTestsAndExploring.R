@@ -117,7 +117,7 @@ getZ_R <- function(s, p) {
 }
 
 getZ <- function(s, p, randomS=FALSE) {
-    return(.Call( "getZ2R", s, p, randomS, PACKAGE = "crossover" ))    
+    return(.Call( "getZ2R", s, p, randomS, PACKAGE = "Crossover" ))    
 }
 
 getPZ <- function(s, p) {
@@ -153,7 +153,7 @@ searchCrossOverDesignCTest <- function() {
   C <- as.matrix(bdiag(Csub,Csub))  
   CC <- t(C) %*% C
   H <- linkMatrix(model, v)
-  .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 50000, PACKAGE = "crossover" )
+  .Call( "searchCOD", s, p, v, design, H, CC, model, eff.factor, v.rep, balance.s, balance.p, verbose, 50000, PACKAGE = "Crossover" )
 }
 
 searchCrossOverDesign_R <- function(s, p, v, model="Standard additive model", eff.factor, v.rep, balance.s=FALSE, balance.p=FALSE, verbose=FALSE, ppp=0.5, placebos=1) {

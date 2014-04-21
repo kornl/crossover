@@ -27,8 +27,8 @@
 #' 
 #' @export design.efficiency
 design.efficiency <- function(design) {
-    if (class(design)=="crossoverSearchResult") design <- design@design
-    if (class(design)=="crossoverDesign") {
+    if (class(design)=="CrossoverSearchResult") design <- design@design
+    if (class(design)=="CrossoverDesign") {
         #model <- design@model
         design <- design@design
     }

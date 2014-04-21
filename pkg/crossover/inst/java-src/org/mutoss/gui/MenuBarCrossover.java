@@ -82,7 +82,7 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 		menu.setMnemonic(KeyEvent.VK_H);
 		menu.add(makeMenuItem("About", "showAbout", KeyEvent.VK_B));         
 		menu.add(makeMenuItem("Package vignette", "showAppHelp", KeyEvent.VK_I));
-		//menu.add(makeMenuItem("crossover R Online Reference manual", "showManual", KeyEvent.VK_M));
+		//menu.add(makeMenuItem("Crossover R Online Reference manual", "showManual", KeyEvent.VK_M));
 		//menu.add(makeMenuItem("References", "showReferences", KeyEvent.VK_R));
 		//menu.add(makeMenuItem("Theoretical Background", "showAppHelp"));
 		/*menu.addSeparator();
@@ -198,7 +198,7 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
         } else if (e.getActionCommand().equals("exit")) {       	
         	 control.windowClosing(null);
         } else if (e.getActionCommand().equals("showAppHelp")) {
-        	showFile("doc/crossover.pdf");       	 	
+        	showFile("doc/Crossover.pdf");       	 	
         } else if (e.getActionCommand().equals("showManual")) {
         	showURL("http://cran.at.r-project.org/web/packages/gMCP/gMCP.pdf");
         } else if (e.getActionCommand().equals("showReferences")) {
@@ -206,7 +206,7 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
         } else if (e.getActionCommand().equals("showEpsDoc")) {
         	showFile("doc/EpsilonEdges.pdf");       	 	
         } else if (e.getActionCommand().equals("showNEWS")) {
-        	new TextFileViewer(control, new File(RControl.getR().eval("system.file(\"NEWS\", package=\"crossover\")").asRChar().getData()[0]));      	 	
+        	new TextFileViewer(control, new File(RControl.getR().eval("system.file(\"NEWS\", package=\"Crossover\")").asRChar().getData()[0]));      	 	
         } else if (e.getActionCommand().equals("showAbout")) {
         	new AboutDialog(control);
         } else if (e.getActionCommand().equals("showOptions")) {
@@ -237,7 +237,7 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 	}
 
 	public void showFile(String s) {
-		File f = new File(RControl.getR().eval("system.file(\""+s+"\", package=\"crossover\")").asRChar().getData()[0]);
+		File f = new File(RControl.getR().eval("system.file(\""+s+"\", package=\"Crossover\")").asRChar().getData()[0]);
 		if (OSTools.isWindows() && s.indexOf('.') == -1) {
 			try {
 				f = FileTransfer.copyFile(f, new File(System.getProperty("java.io.tmpdir"), f.getName()+"TXT"));

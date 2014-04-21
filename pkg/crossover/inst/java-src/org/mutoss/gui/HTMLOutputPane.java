@@ -55,7 +55,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
 		if (designS == null) {
 			designS = design.design;
 		}
-		String command = "crossover:::getDesignText("+designS+", model="+(gui.jCBmodel.getSelectedIndex()+1)
+		String command = "Crossover:::getDesignText("+designS+", model="+(gui.jCBmodel.getSelectedIndex()+1)
 				+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\""
 				+", carryover="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showCarryOver", ""+false))?"TRUE":"FALSE")
 				+", digits="+Configuration.getInstance().getGeneralConfig().getDigits()

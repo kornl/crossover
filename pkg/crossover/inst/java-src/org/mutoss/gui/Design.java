@@ -68,7 +68,7 @@ public class Design {
 		this.s = s;
 		this.p = p;
 		this.design = design;
-		double[] eff = RControl.getR().eval("crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
+		double[] eff = RControl.getR().eval("Crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
 		efficiencyUnadj = eff[0];
 		efficiencyAdj = eff[1];		
 		saveDesign2R(true);
@@ -103,7 +103,7 @@ public class Design {
 	}
 
 	public void setRName(String name) {
-		//if (RControl.getR().eval("crossover:::isRName("+name+")").asRLogical().getData()[0]) {}
+		//if (RControl.getR().eval("Crossover:::isRName("+name+")").asRLogical().getData()[0]) {}
 		rName = RControl.getR().eval("make.names("+name+")").asRChar().getData()[0];
 	}
 	
@@ -131,7 +131,7 @@ public class Design {
 	}
 
 	public String getHTMLTable() {		
-		String result = RControl.getR().eval("crossover:::getTable("+(uniqueName==null?design:uniqueName)
+		String result = RControl.getR().eval("Crossover:::getTable("+(uniqueName==null?design:uniqueName)
 				+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\"" 
 				+", names="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showNames", ""+true))?"TRUE":"FALSE")+")").asRChar().getData()[0];
 		return result;

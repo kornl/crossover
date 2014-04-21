@@ -62,7 +62,7 @@
 \begin{document}
 
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{crossover - Comparing results}
+%\VignetteIndexEntry{Crossover - Comparing results}
 
 <<include=FALSE, message=FALSE>>=
 if (exists("opts_chunk")) {
@@ -74,7 +74,7 @@ if (exists("opts_chunk")) {
   opts_chunk$set(autodep=TRUE)
   opts_chunk$set(size="scriptsize") 
 }
-library(crossover, quietly=TRUE)
+library(Crossover, quietly=TRUE)
 options(width=128)
 options(digits=4)
 startGUI <- function(...) {invisible(NULL)}
@@ -163,7 +163,7 @@ for (i in 1:8) {
         if (!is.null(dim(gco[[2]]))) {
             cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result)[[2]][1,2]/4,"\n\n")
         }
-        cat(paste("designB",i,sep=""), "<-", crossover:::dputMatrix(getDesign(result)))
+        cat(paste("designB",i,sep=""), "<-", Crossover:::dputMatrix(getDesign(result)))
         
     }
 }    
@@ -215,7 +215,7 @@ cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover
 @
 
 <<>>=
-for (p in c("multcomp","Matrix","crossover")) require(p, character.only=TRUE)
+for (p in c("multcomp","Matrix","Crossover")) require(p, character.only=TRUE)
 
 s <- 6; p <- 4; v <- 2; model <- 6
 
@@ -244,7 +244,7 @@ i <- 1
 Csub <- contrMat(n=rep(1, v), type="Dunnett")
 class(Csub) <- "matrix"
 #C <- as.matrix(bdiag(Csub, Csub))
-C <- crossover:::appendZeroColumns(Csub, model=i, v)
+C <- Crossover:::appendZeroColumns(Csub, model=i, v)
 C
 
 result <- searchCrossOverDesign(s=8, p=6, v=4, model=i, contrast=C)

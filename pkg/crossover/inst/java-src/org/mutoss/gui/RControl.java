@@ -63,7 +63,7 @@ public class RControl {
 		try {
 			rcs = new RCallServicesREngineWrapper(new JRIEngine(rengine));
 			if (System.getProperty("eclipse") != null) {	
-				rcs.eval("require(crossover)");
+				rcs.eval("require(Crossover)");
 				rcs.eval("require(JavaGD)");
 				rcs.eval("warnings()"); /* Otherwise the first error will also show: 
 					In addition: Warning message:

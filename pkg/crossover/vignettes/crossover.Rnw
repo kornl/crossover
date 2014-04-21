@@ -63,9 +63,9 @@
 \begin{document}
 
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{crossover - A search algorithm and GUI for cross-over designs}
+%\VignetteIndexEntry{Crossover - A search algorithm and GUI for cross-over designs}
 
-\title{crossover - A search algorithm and GUI for cross-over designs} 
+\title{Crossover - A search algorithm and GUI for cross-over designs} 
 
 \author{Kornelius Rohmeyer}
 
@@ -87,22 +87,22 @@ if (exists("opts_chunk")) {
 }
 
 # See http://yihui.name/knitr/hooks for the following code.
-crossoverNamespace <- function(before, options, envir) {
+CrossoverNamespace <- function(before, options, envir) {
   if (before) {
     ## code to be run before a chunk
-    #attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
-    attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
+    #attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3)
+    attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
   } else {
     ## code to be run after a chunk
-    detach("namespace:crossover")
+    detach("namespace:Crossover")
   }
 }
 
 if (exists("opts_chunk")) {
-  knit_hooks$set(withNameSpace = crossoverNamespace)
+  knit_hooks$set(withNameSpace = CrossoverNamespace)
 }
 
-library(crossover, quietly=TRUE)
+library(Crossover, quietly=TRUE)
 options(width=128)
 options(digits=4)
 startGUI <- function(...) {invisible(NULL)}
@@ -126,15 +126,15 @@ The computationally intensive parts of the package, i.e.\ the search algorithm, 
 \subsection{Installation}
 
 %If you don't already have R on your system, you can download a bundled
-%version of R and crossover from \url{http://www.algorithm-forge.com/gMCP/bundle/}.
+%version of R and Crossover from \url{http://www.algorithm-forge.com/gMCP/bundle/}.
 
-%Open R and type \texttt{install.packages("crossover")}, 
-%select an arbitrary mirror and crossover will be downloaded and installed.
+%Open R and type \texttt{install.packages("Crossover")}, 
+%select an arbitrary mirror and Crossover will be downloaded and installed.
 
-Once it is installed, whenever you start R you can load the crossover
-package by entering \texttt{library(crossover)} into the R Console. The
+Once it is installed, whenever you start R you can load the Crossover
+package by entering \texttt{library(Crossover)} into the R Console. The
 graphical user interface as shown in figure \ref{GUI} is started with the command
-\texttt{crossoverGUI()}.
+\texttt{CrossoverGUI()}.
 
 \begin{figure}[ht]
   \centering    
@@ -230,13 +230,13 @@ design <- rbind(c(3,2,1),
 design
 v <- 3 # number of treatments
 # Link matrix:
-H <- crossover:::linkMatrix(model="Standard additive model", v)
+H <- Crossover:::linkMatrix(model="Standard additive model", v)
 H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::rcd(design, v=v, model=1)
+rcDesign <- Crossover:::rcd(design, v=v, model=1)
 rcDesign
 # Design Matrix of Row-Column Design:
-Xr <- crossover:::rcdMatrix(rcDesign, v, model=1)
+Xr <- Crossover:::rcdMatrix(rcDesign, v, model=1)
 Xr
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -256,7 +256,7 @@ This model has further interaction parameters $\gamma_{ij}$ and a design matrix 
 
 <<FullInteractions, echo=TRUE>>=
 
-H <- crossover:::linkMatrix(model="Full set of interactions", v)
+H <- Crossover:::linkMatrix(model="Full set of interactions", v)
 H
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -276,7 +276,7 @@ In the \emph{self-adjacency model} $\lambda_i$ is replaced by $\phi_i$ in case o
 
 <<SelfAdjacency, echo=TRUE>>=
 
-H <- crossover:::linkMatrix(model="Self-adjacency model", v)
+H <- Crossover:::linkMatrix(model="Self-adjacency model", v)
 H
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -298,7 +298,7 @@ In the placebo model there are no carry-over effects for the placebo treatment(s
 
 <<echo=TRUE, eval=TRUE>>=
 # Link matrix:
-H <- crossover:::linkMatrix(model="Placebo model", v, placebos=1)
+H <- Crossover:::linkMatrix(model="Placebo model", v, placebos=1)
 H
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -318,7 +318,7 @@ This model differs from the standard additive model in the assumption that in th
 
 <<NoIntoSelf, echo=TRUE>>=
 
-H <- crossover:::linkMatrix(model="No carry-over into self model", v)
+H <- Crossover:::linkMatrix(model="No carry-over into self model", v)
 H
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -338,7 +338,7 @@ In contrast to the no carry-over into self model in the \emph{treatment decay mo
 
 <<TreatmentDecay, echo=TRUE>>=
 
-H <- crossover:::linkMatrix(model="Treatment decay model", v)
+H <- Crossover:::linkMatrix(model="Treatment decay model", v)
 H
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -356,7 +356,7 @@ For the proportionality model we have no separate carry-over effects, but assume
 
 <<Proportionality, echo=TRUE>>=
 
-H <- crossover:::linkMatrix(model="Proportionality model", v)
+H <- Crossover:::linkMatrix(model="Proportionality model", v)
 H
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -378,13 +378,13 @@ Therefore the link matrix has $3*v$ columns. % and we calculate the row-column d
 
 <<SecondOrder, echo=TRUE>>=
 # Link matrix:
-H <- crossover:::linkMatrix(model="Second-order carry-over effects", v)
+H <- Crossover:::linkMatrix(model="Second-order carry-over effects", v)
 H
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
-rcDesign <- crossover:::rcd(design, v=v, model=8)
+rcDesign <- Crossover:::rcd(design, v=v, model=8)
 rcDesign
 # Design Matrix of Row-Column Design:
-Xr <- crossover:::rcdMatrix(rcDesign, v, model=8)
+Xr <- Crossover:::rcdMatrix(rcDesign, v, model=8)
 Xr
 # Design Matrix of Cross-Over Design:
 X <- Xr %*% H
@@ -485,7 +485,7 @@ models <- c("Standard additive model",
 
 <<eval1a, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
 
-attach(loadNamespace("crossover"), name="namespace:crossover", pos=3, warn.conflicts=FALSE)
+attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
 
 for (i in 1:8) {  
     H <- linkMatrix(model=i, v=v)
@@ -580,11 +580,11 @@ d
 general.carryover(d, model=2)
 general.carryover(design2, model=2)
 
-rcDesign <- crossover:::rcd(d, v=v, model=2)
+rcDesign <- Crossover:::rcd(d, v=v, model=2)
 rcDesign
-X <- crossover:::rcdMatrix(rcDesign, v=v, model=2) %*% crossover:::linkMatrix(model="Self-adjacency model", v)
-crossover:::estimable_R(d, v, model=2, diag(6))
-crossover:::estimable(d, v, model=2, diag(6))
+X <- Crossover:::rcdMatrix(rcDesign, v=v, model=2) %*% Crossover:::linkMatrix(model="Self-adjacency model", v)
+Crossover:::estimable_R(d, v, model=2, diag(6))
+Crossover:::estimable(d, v, model=2, diag(6))
 
 
 
@@ -593,8 +593,8 @@ crossover:::estimable(d, v, model=2, diag(6))
 
 <<attachNameSpace, echo=TRUE, eval=FALSE, results='hide'>>=
  # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
-# attach(loadNamespace("crossover"), name="namespace:crossover", pos=3)
-# When we are finished we call 'detach("namespace:crossover")'.
+# attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3)
+# When we are finished we call 'detach("namespace:Crossover")'.
 @
 
 There are different approaches to calculate the Information matrix $A_r$ of the row-column design.
@@ -602,7 +602,7 @@ In the following code fragment we compare the two different approaches:
 
 \[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr' \text{ and }\]
 \[A_r=X_r'(I-P_z)X_r.\]
-For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004crossover}.
+For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004Crossover}.
 
 <<TestOfDifferentApproaches, echo=TRUE, eval=TRUE, withNameSpace=TRUE>>=
 
@@ -618,7 +618,7 @@ rcDesign <- rcd(design, v, model)
 Ar <- infMatrix(rcDesign, v, model)
 Xr <- rcdMatrix(rcDesign, v, model)
 # JRW, p 2650, second equation on that page, number 11
-Ar2 <- t(Xr) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% Xr
+Ar2 <- t(Xr) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% Xr
 max(abs(Ar-Ar2))
 
 fXr <- cbind(Xr, getZ(s,p))
@@ -750,7 +750,7 @@ plot(Vectorize(f), xlim=c(0.01,0.99))
 @
 
 <<detachNameSpace, echo=TRUE, eval=FALSE, results='hide'>>=
-detach("namespace:crossover")
+detach("namespace:Crossover")
 @
 
 
@@ -884,7 +884,7 @@ arma::mat createRCDesign(arma::mat design, int v, int model) {...}
 \lstset{language=R}
 \begin{lstlisting}
 createRCDesign <- function(X, v, model) {
-  return(.Call("createRCDesign2R", X, v, model, PACKAGE = "crossover"))
+  return(.Call("createRCDesign2R", X, v, model, PACKAGE = "Crossover"))
 }
 createRCDesign_R <- function(X, v, model) {
   # Same functionality written in R
@@ -899,10 +899,10 @@ A variable $v$ means \emph{always} the original number of treatments. A variable
 
 data(williams)
 designA <- williams3t; v <- 3; s <- 6; p <- 3; model <- 1
-rcDesignA <- crossover:::rcd(designA, v, model=model)
-XrA <- crossover:::rcdMatrix(rcDesignA, v, model)
-ArA <- t(XrA) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% XrA
-ArA2 <- crossover:::infMatrix(rcDesignA, v, model=model)
+rcDesignA <- Crossover:::rcd(designA, v, model=model)
+XrA <- Crossover:::rcdMatrix(rcDesignA, v, model)
+ArA <- t(XrA) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% XrA
+ArA2 <- Crossover:::infMatrix(rcDesignA, v, model=model)
 all.equal(ArA, ArA2)
 
 p1 <- 1; s1 <- 1
@@ -910,7 +910,7 @@ p2 <- 1; s2 <- 2
 XrB <- XrA
 XrB[1,] <- XrA[2,]
 XrB[2,] <- XrA[1,]
-ArB <- t(XrB) %*% (diag(s*p)-crossover:::getPZ(s,p)) %*% XrB
+ArB <- t(XrB) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% XrB
 
 n1 <- matrix(0, v+v*v, s) # sequences
 n2 <- matrix(0, v+v*v, p) # periods

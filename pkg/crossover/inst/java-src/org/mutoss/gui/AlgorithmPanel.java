@@ -454,7 +454,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 				protected Void doInBackground() throws Exception {					
 					RControl.getR().eval(".COresult <- "+command);
 					//RControl.getR().eval(".COresult <- getDesign(.COresult)");
-					//table = RControl.getR().eval("crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
+					//table = RControl.getR().eval("Crossover:::getTable(getDesign(.COresult))").asRChar().getData()[0];
 					return null;
 				}
 

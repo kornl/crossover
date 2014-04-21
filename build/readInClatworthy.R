@@ -1,4 +1,4 @@
-setwd("~/git/crossover/build/Clatworthy Designs cleaned/RS")
+setwd("~/git/Crossover/build/Clatworthy Designs cleaned/RS")
 
 for (f in dir()) {
   data <- readLines(f)

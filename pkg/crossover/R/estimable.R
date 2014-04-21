@@ -29,5 +29,5 @@ estimable <- function(design, v, model, C, verbose=0) {
 	rcDesign <- rcd(design, v=v, model=model)
 	linkM <- linkMatrix(model, v)
 	Z <- getZ(s=dim(design)[2],p=dim(design)[1])
-	return(.Call( "estimable2R", rcDesign, v, model, linkM, C, Z, verbose, PACKAGE = "crossover" ))    
+	return(.Call( "estimable2R", rcDesign, v, model, linkM, C, Z, verbose, PACKAGE = "Crossover" ))    
 }

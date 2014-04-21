@@ -38,7 +38,7 @@ test.brute.force.compare.approaches <- function() {
     for (i in 1:10) {
       cat("\nRun ",i,":\n")
       design <- matrix(sample(rep(1:v, v.rep)), p, s)
-      result <- try(crossover:::compareApproaches(design, models2check=model, stop.on.diff=TRUE))
+      result <- try(Crossover:::compareApproaches(design, models2check=model, stop.on.diff=TRUE))
       if ("try-error" %in% class(result)) {
         differences <- differences + 1
       }

@@ -1,8 +1,8 @@
 getStartDesigns <- function(s,p,v) {
-  objects <- ls(envir=crossover:::crossover.env)
+  objects <- ls(envir=Crossover:::Crossover.env)
   candidates <- list()
   for (x in objects) {
-    x <- get(x, envir=crossover:::crossover.env)
+    x <- get(x, envir=Crossover:::Crossover.env)
     if (!is.matrix(x)) next
     if (!all(dim(x)==c(p,s))) next
     if (length(levels(as.factor(x)))!=v) next

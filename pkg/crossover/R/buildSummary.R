@@ -15,12 +15,12 @@
 #' @export buildSummaryTable
 buildSummaryTable <- function() {	
 	summaryTable <- data.frame(dataset=character(0), title=character(0), reference=character(0), signature=character(0), t=numeric(0), p=numeric(0), s=numeric(0))
-	path <- system.file("data", package="crossover")
+	path <- system.file("data", package="Crossover")
 	for (file in dir(path=path)) {		 
-		designs <- load(paste(path, file, sep="/"), envir=crossover:::crossover.env)
+		designs <- load(paste(path, file, sep="/"), envir=Crossover:::Crossover.env)
 		for (design in designs) {
 			dataset <- design
-			design <- get(design, envir=crossover:::crossover.env)
+			design <- get(design, envir=Crossover:::Crossover.env)
 			title <- attr(design, "title")
 			reference <- attr(design, "reference")
 			signature <- attr(design, "signature")
@@ -68,8 +68,8 @@ getEff <- function(design) {
 	return(c(l$av.eff.trt.pair, l$av.eff.trt.pair.adj))
 }
 
-crossoverVersion <- function() {
-	x <- try(as.character(packageVersion("crossover")), silent=TRUE)
+CrossoverVersion <- function() {
+	x <- try(as.character(packageVersion("Crossover")), silent=TRUE)
 	if (class(x)!="try-error") {
 		return(x)
 	} else {

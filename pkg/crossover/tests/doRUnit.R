@@ -6,7 +6,7 @@ if(require("RUnit", quietly=TRUE)) {
     library(MASS)
     library(Matrix)
     library(multcomp)
-	pkg <- "crossover" 
+	pkg <- "Crossover" 
 	if(Sys.getenv("RCMDCHECK") == "FALSE") {
 		## Path to unit tests for standalone running under Makefile (not R CMD check)
 		## PKG/tests/../inst/unitTests

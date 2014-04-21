@@ -1,11 +1,11 @@
-#' Class crossoverDesign
+#' Class CrossoverDesign
 #' 
-#' A S4 class for crossover designs: crossoverDesign
+#' A S4 class for Crossover designs: CrossoverDesign
 #' 
 #' 
-#' @name crossoverDesign-class
-#' @aliases crossoverDesign-class crossoverDesign show,crossoverDesign-method
-#' print,crossoverDesign-method
+#' @name CrossoverDesign-class
+#' @aliases CrossoverDesign-class CrossoverDesign show,CrossoverDesign-method
+#' print,CrossoverDesign-method
 #' @docType class
 #' @section Slots: \describe{ \item{list("design")}{ Matrix }\item{:}{ Matrix }
 #' \item{list("s")}{ Number of sequences. }\item{:}{ Number of sequences. }
@@ -30,10 +30,10 @@
 #'                   c(1,2,2,1),
 #'                   c(2,1,1,2)))
 #'                    
-#' new("crossoverDesign", design)
+#' new("CrossoverDesign", design)
 #' 
 #' 
-setClass("crossoverDesign",	
+setClass("CrossoverDesign",	
 		representation(design="matrix", 
 				s="numeric", p="numeric", v="numeric", 
         model="numeric",
@@ -42,7 +42,7 @@ setClass("crossoverDesign",
 				misc="list"),
 		validity=function(object) validDesign(object))
 
-setMethod("initialize", "crossoverDesign",
+setMethod("initialize", "CrossoverDesign",
 		function(.Object, design, v, model, description="", attr=list(), misc=list()) {			
 			if (missing(design)) {			
 				stop("Please specify missing design.")
@@ -69,12 +69,12 @@ validDesign <- function(object) {
 	return(TRUE)
 }
 
-setMethod("print", "crossoverDesign",
+setMethod("print", "CrossoverDesign",
           function(x, ...) {
             callNextMethod(x, ...)
           })
 
-setMethod("show", "crossoverDesign",
+setMethod("show", "CrossoverDesign",
           function(object) {
             # callNextMethod(x, ...)            
             cat(paste(object@description, " (s=", object@s, ", p=",  object@p, ", v=",  object@v ,")\n", sep=""))
@@ -86,19 +86,19 @@ setMethod("show", "crossoverDesign",
             }
           })
 
-#' Class crossoverSearchResult
+#' Class CrossoverSearchResult
 #' 
-#' A S4 class for the search result for crossover designs:
-#' crossoverSearchResult
+#' A S4 class for the search result for Crossover designs:
+#' CrossoverSearchResult
 #' 
 #' 
-#' @name crossoverSearchResult-class
-#' @aliases crossoverSearchResult-class crossoverSearchResult
-#' show,crossoverSearchResult-method print,crossoverSearchResult-method
+#' @name CrossoverSearchResult-class
+#' @aliases CrossoverSearchResult-class CrossoverSearchResult
+#' show,CrossoverSearchResult-method print,CrossoverSearchResult-method
 #' @docType class
 #' @section Slots: \describe{ \item{list("design")}{An object of class
-#' \code{crossoverDesign} describing the best design that was
-#' found.}\item{:}{An object of class \code{crossoverDesign} describing the
+#' \code{CrossoverDesign} describing the best design that was
+#' found.}\item{:}{An object of class \code{CrossoverDesign} describing the
 #' best design that was found.} \item{list("startDesigns")}{A list of start
 #' designs to search from.}\item{:}{A list of start designs to search from.}
 #' \item{list("model")}{A numeric specifying the model the design was searched
@@ -117,8 +117,8 @@ setMethod("show", "crossoverDesign",
 #' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 #' print(x)
 #' 
-setClass("crossoverSearchResult",		
-		representation(design="crossoverDesign",
+setClass("CrossoverSearchResult",		
+		representation(design="CrossoverDesign",
         startDesigns="list",
 		    model="numeric",
 				eff="list",
@@ -127,12 +127,12 @@ setClass("crossoverSearchResult",
         misc="list")
 )
 
-setMethod("print", "crossoverSearchResult",
+setMethod("print", "CrossoverSearchResult",
 		function(x, ...) {
 			callNextMethod(x, ...)
 		})
 
-setMethod("show", "crossoverSearchResult",
+setMethod("show", "CrossoverSearchResult",
 		function(object) {
 			# callNextMethod(x, ...)
 			cat("Crossover Search Result\n")			
@@ -152,7 +152,7 @@ setMethod("show", "crossoverSearchResult",
 #' vignette for a few examples and a discussion what can be derived from this
 #' plots.
 #' @name plot
-#' @aliases plot,crossoverSearchResult,missing-method plot
+#' @aliases plot,CrossoverSearchResult,missing-method plot
 #' @param x Result from searchCrossOverDesign.
 #' @param y Missing.
 #' @param ...  Further arguments: \itemize{ \item type Type of plot. Number 1 is
@@ -174,7 +174,7 @@ setMethod("show", "crossoverSearchResult",
 #' @export
 #' @docType methods
 #' @rdname plot-methods
-setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
+setMethod("plot", c(x="CrossoverSearchResult", y="missing") ,
           function(x, y, type=1, show.jumps=FALSE, ...) { #function(x, ) {
             eff <- unlist(x@eff)
             run <- as.factor(rep(1:length(x@eff), each=length(x@eff[[1]])))
@@ -201,14 +201,14 @@ setMethod("plot", c(x="crossoverSearchResult", y="missing") ,
 
 setGeneric("getDesign", function(object, ...) standardGeneric("getDesign"))
 
-#' Extract Design from a crossoverSearchResult
+#' Extract Design from a CrossoverSearchResult
 #' 
-#' Extract Design from a crossoverSearchResult
+#' Extract Design from a CrossoverSearchResult
 #' 
 #' @name getDesign
-#' @aliases getDesign,crossoverSearchResult-method getDesign
+#' @aliases getDesign,CrossoverSearchResult-method getDesign
 #' @param object A searchCrossOverDesign object from which the design should be extracted.
-#' @return Returns a numeric matrix representing the crossover design.
+#' @return Returns a numeric matrix representing the Crossover design.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @examples
 #' #' 
@@ -218,7 +218,7 @@ setGeneric("getDesign", function(object, ...) standardGeneric("getDesign"))
 #' @export
 #' @docType methods
 #' @rdname getDesign-methods
-setMethod("getDesign", c("crossoverSearchResult"),
+setMethod("getDesign", c("CrossoverSearchResult"),
           function(object, ...) {			
               return(object@design@design)
           })

@@ -9,7 +9,7 @@
 #' designs.
 #' 
 #' 
-#' @name crossover-package
+#' @name Crossover-package
 #' @docType package
 #' @author %Kornelius Rohmeyer, Byron Jones
 #' 
@@ -84,7 +84,7 @@ NULL
 #' williams8t, williams9t.
 #' 
 #' 
-#' @name crossoverdesigns
+#' @name Crossoverdesigns
 #' @aliases anderson andersonPreece archdeacon atkinson3t atkinson4t atkinson5t
 #' balaam3t balaam4t balaam5t balaam6t bateJones5t bateJones8t berenblut3t
 #' berenblut4t berenblut5t blaisdellRaghavarao6t blaisdellRaghavarao8t

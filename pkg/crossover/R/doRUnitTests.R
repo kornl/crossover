@@ -12,7 +12,7 @@ unitTestsCrossover <- function(extended=FALSE, java=FALSE, interactive=FALSE, ju
 	} else {
 		Sys.setenv(CROSSOVER_UNIT_TEST_OPATH=outputPath)
 	}
-	pkg <- "crossover" 
+	pkg <- "Crossover" 
 	path <- system.file("unitTests", package=pkg)
 	cat("\nRunning unit tests\n")
 	print(list(pkg=pkg, getwd=getwd(), pathToUnitTests=path))

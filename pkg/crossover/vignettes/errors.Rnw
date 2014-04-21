@@ -62,7 +62,7 @@
 \begin{document}
 
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{crossover - Comparing results}
+%\VignetteIndexEntry{Crossover - Comparing results}
 
 <<OptionsAndLibraries, include=FALSE, message=FALSE>>=
 if (exists("opts_chunk")) {
@@ -74,7 +74,7 @@ if (exists("opts_chunk")) {
   #opts_chunk$set(cache=TRUE)
   #opts_chunk$set(autodep=TRUE)
 }
-library(crossover, quietly=TRUE)
+library(Crossover, quietly=TRUE)
 options(width=128)
 options(digits=4)
 startGUI <- function(...) {invisible(NULL)}
@@ -106,13 +106,13 @@ general.carryover(design3, model=3)
 general.carryover(design, model=3)
 
 # Our program claims S1 to be better (see John, Russell, Whitaker 2004, p.2651)
-crossover:::getS1(design, v=2, model=3)
-crossover:::getS1(design3, v=2, model=3)
+Crossover:::getS1(design, v=2, model=3)
+Crossover:::getS1(design3, v=2, model=3)
 
 #So how is S1 calculated?
 
 C <- contrMat(n=rep(1, v), type="Tukey")
-linkM <- crossover:::linkMatrix(model=3, v=v)
+linkM <- Crossover:::linkMatrix(model=3, v=v)
 .Call( "getS12R", design, v, model=3, linkM, C)
 
 # So how does this C function look like? (Omitting the type conversion part.)  
@@ -122,7 +122,7 @@ linkM <- crossover:::linkMatrix(model=3, v=v)
 # double s1 = trace(pinv(A) * tCC);
 
 # Creating rcDesign:
-rcDesign <- crossover:::rcd(design, v=v, model=3)
+rcDesign <- Crossover:::rcd(design, v=v, model=3)
 rcDesign
 
 # 

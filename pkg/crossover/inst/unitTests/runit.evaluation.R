@@ -32,22 +32,22 @@ test.evaluation <- function() {
   
   model <- 1
   v <- 2
-  H <- crossover:::linkMatrix(model=1, v=2)
+  H <- Crossover:::linkMatrix(model=1, v=2)
   for (design in list(design1, design2, design3)) {
-    rcD1 <- crossover:::rcd_R(design, v, model=model) # R-Code
-    rcD2 <- crossover:::rcd(design, v, model=model) # C-Code
+    rcD1 <- Crossover:::rcd_R(design, v, model=model) # R-Code
+    rcD2 <- Crossover:::rcd(design, v, model=model) # C-Code
     all(rcD1==rcD2)
     X1 <- rcD1
-    #X1 <- crossover:::getRCDesignMatrix(rcD1, v*v+v) # R-Code
-    A1 <- crossover:::infMatrix_R(X1, v, model=model) # R-Code
-    A1b <- crossover:::infMatrix_R(X1, v, model=model, method=2) # R-Code
+    #X1 <- Crossover:::getRCDesignMatrix(rcD1, v*v+v) # R-Code
+    A1 <- Crossover:::infMatrix_R(X1, v, model=model) # R-Code
+    A1b <- Crossover:::infMatrix_R(X1, v, model=model, method=2) # R-Code
     all(A1==A1b)
     Csub <- contrMat(n = rep(1, v), type = "Tukey")
     C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[1], v)))
     general.carryover(design, model=model)
     diag(C %*% ginv(t(H) %*% A1 %*% H) %*% t(C))
     diag(ginv(t(H) %*% A1 %*% H) %*% t(C) %*% C)
-    A2 <- crossover:::infMatrix(X1, v, model=model) # C-Code
+    A2 <- Crossover:::infMatrix(X1, v, model=model) # C-Code
     A2
     rcD1
     X1
