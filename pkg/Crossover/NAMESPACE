@@ -1,4 +1,4 @@
-useDynLib(crossover)
+useDynLib(Crossover)
 
 importFrom(stats4, plot)
 import(methods)
@@ -16,7 +16,7 @@ importFrom(ggplot2, ggplot)
 importFrom(crossdes, allcombs, des.MOLS, balmin.RMD, find.BIB, williams, williams.BIB)
 importFrom(xtable, xtable)
 
-export(crossoverGUI)
+export(CrossoverGUI)
 export(design.efficiency)
 export(general.carryover)
 

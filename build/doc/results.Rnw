@@ -477,9 +477,9 @@ v <- 6; p <- 4; s <- 24
 
 result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1)
 # Further results were computed only once (since it took ~ 5 minutes) and now loaded: 
-#load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_5000_1000.RData")
-#load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_50000_100.RData")
-#load("/home/kornel/git/crossover/pkg/crossover/vignettes/BIBD_6_4_24_250000_20.RData")
+#load("/home/kornel/git/crossover/pkg/Crossover/vignettes/BIBD_6_4_24_5000_1000.RData")
+#load("/home/kornel/git/crossover/pkg/Crossover/vignettes/BIBD_6_4_24_50000_100.RData")
+#load("/home/kornel/git/crossover/pkg/Crossover/vignettes/BIBD_6_4_24_250000_20.RData")
 data(pattersonLucasPBIBD)
 pattersonLucasPBIBD134
 

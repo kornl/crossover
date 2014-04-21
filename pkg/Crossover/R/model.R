@@ -148,7 +148,7 @@ getModelNr <- function(model, type="numeric") {
 #' # TODO
 rcd <- function(X, v, model) {
   model <- getModelNr(model)
-  return(.Call( "rcd2R", X, v, model, PACKAGE = "crossover" ))
+  return(.Call( "rcd2R", X, v, model, PACKAGE = "Crossover" ))
 }
 
 #' Create the design matrix for a given row column design 
@@ -163,10 +163,10 @@ rcd <- function(X, v, model) {
 rcdMatrix <- function(X, v, model) {
   if (length(levels(as.factor(X)))<=v && model !=9) warning("It looks like you called rcdMatrix with a crossover design,\nbut you should provide the row-column design.")
   model <- getModelNr(model)
-  return(.Call( "rcdMatrix2R", X, v, model, PACKAGE = "crossover" ))
+  return(.Call( "rcdMatrix2R", X, v, model, PACKAGE = "Crossover" ))
 }
 
 infMatrix <- function(X, v, model) {
   model <- getModelNr(model)
-  return(.Call( "infMatrix2R", X, v, model, PACKAGE = "crossover" ))
+  return(.Call( "infMatrix2R", X, v, model, PACKAGE = "Crossover" ))
 }

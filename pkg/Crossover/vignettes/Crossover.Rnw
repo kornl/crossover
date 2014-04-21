@@ -602,7 +602,7 @@ In the following code fragment we compare the two different approaches:
 
 \[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr' \text{ and }\]
 \[A_r=X_r'(I-P_z)X_r.\]
-For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004Crossover}.
+For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004crossover}.
 
 <<TestOfDifferentApproaches, echo=TRUE, eval=TRUE, withNameSpace=TRUE>>=
 

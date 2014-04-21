@@ -43,7 +43,7 @@ public class Design {
 		p = dim[0];
 		s = dim[1];		
 		design = RControl.getR().eval("paste(capture.output(dput("+uniqueName+")), collapse=\"\")").asRChar().getData()[0];
-		double[] eff = RControl.getR().eval("crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
+		double[] eff = RControl.getR().eval("Crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
 		efficiencyUnadj = eff[0];
 		efficiencyAdj = eff[1];
 	}
