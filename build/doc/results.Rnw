@@ -88,7 +88,9 @@ library(Matrix)
 
 \subsection*{Evaluation of Algorithm Performance}
 
-We compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~202ff]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
+We compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~202ff]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments under the constraint that each treatment should occur 12 times.
+
+The following shows all designs that were found. For some models the algorithm always returned only one design, but for some 2 or even 3 equally good designs were found:
 
 <<echo=FALSE, eval=TRUE, cache=TRUE>>=
 s <- 6; p <- 4; v <- 2
@@ -157,7 +159,7 @@ sortDesign <- function(X) {
   X[, do.call(order, lapply(1:NROW(X), function(i) X[i, ]))]
 }
 
-TRYS <- 5
+TRYS <- 25
 
 resultL <- list()
 for (i in 1:8) {  
@@ -197,46 +199,14 @@ Note that for the full interaction model and the self-adjacency model we get the
 
 For the treatment decay model the algorithm provided us with a design where the treatment decay effect never occurs. Let's give a little bit of weight to this treatment decay effect:
 
-<<echo=FALSE, results='hide'>>=
-
-i <- 6
-
-Csub <- contrMat(n=rep(1, v), type="Tukey")
-class(Csub) <- "matrix"
-
-C <- as.matrix(bdiag(Csub, Csub))
-result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
-cat("**** Equal weight ****\n")
-print(getDesign(result))
-cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
-gco <- general.carryover(designs[[i]], model=i)
-cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result, model=i)[[2]][1,2]/4,"\n\n")
-
-C <- as.matrix(bdiag(Csub, 0.1*Csub))
-result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
-cat("**** Weight 10:1 ****\n")
-print(getDesign(result))
-cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
-gco <- general.carryover(designs[[i]], model=i)
-cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result, model=i)[[2]][1,2]/4,"\n\n")
-
-C <- as.matrix(bdiag(Csub, 0.01*Csub))
-result <- searchCrossOverDesign(s=s, p=p, v=v, model=i, contrast=C)
-cat("**** Weight 100:1 ****\n")
-print(getDesign(result))
-cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result)$Var.trt.pair[1,2]/4,"\n")
-gco <- general.carryover(designs[[i]], model=i)
-cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result, model=i)[[2]][1,2]/4,"\n\n")
-
-@
-
 <<echo=FALSE>>=
 
+resultSubL <- list()
 i <- 6
 model <- models[i]
 cat("======= ", model, " =======","\n")
 for (k in 1:TRYS) {
-  result <- sortDesign(getDesign(searchCrossOverDesign(s=s, p=p, v=v, model=model, v.rep=c(12,12), eff.factor=c(1,0.01)))) #, start.designs=list(designs[[i]]))
+  result <- sortDesign(getDesign(searchCrossOverDesign(s=s, p=p, v=v, model=model, v.rep=c(12,12), eff.factor=c(1,0.01), contrast="Tukey"))) #, start.designs=list(designs[[i]]))
   already.found <- FALSE
   for (design in resultSubL) {
     if (all(result==design)) already.found <- TRUE
@@ -256,20 +226,16 @@ resultL <- c(resultL, resultSubL)
 
 @
 
-<<echo=FALSE, include=FALSE>>=
-# Or alternatively manually:
-Csub <- contrMat(n=rep(1, v), type="Tukey")
-class(Csub) <- "matrix"
-C <- as.matrix(bdiag(Csub, 0.01*Csub))
-C
-result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, contrast=C)
-result
-@
 
 As we can see we find the design from the book, when we give weights 100:1 for treatment / carry-over effects in the treatment decay model.
 (As seen in the first result section a zero weight for the carry-over effects results in a model with alternating treatments, so that there never occurs a treatment decay effect.)
 
 \subsubsection*{Summary}
+
+Here are all the designs as found by the above code. Actually there are only \Sexpr{length(unique(resultL))} different designs, since the following designs were already found for other models: \Sexpr{which(duplicated(resultL))}.
+
+\vspace*{1cm}
+
 
 <<echo=FALSE, results='asis'>>=
 options(xtable.include.rownames=FALSE, xtable.include.colnames=FALSE, xtable.floating=FALSE)
@@ -282,21 +248,29 @@ for (i in 1:length(resultL)) {
   print(xtable(design, digits=0)) 
   var <- c()
   for (i in models) {
-       var <- c(var, general.carryover(design, model=i)$Var.trt.pair[1,2]/4)
+    if (Crossover:::estimable_R(design, v=2, model=Crossover:::getModelNr(i))) {
+      var <- c(var, general.carryover(design, model=i)$Var.trt.pair[1,2]/4)
+    } else {
+      var <- c(var, NA)
+    }
   }
   df <- rbind(df, var)
 }
 rownames(df) <- NULL
 df <- as.data.frame(df)
 colnames(df) <- c("Additive", "Self-adjacency", "Proportional", "Placebo", "No into self", "Decay", "Interaction", "2nd-order carry-over")
-df <- cbind(data.frame(Model=1:length(resultL)), df)
+df <- cbind(data.frame(Design=1:length(resultL)), df)
 
-options(xtable.include.colnames=TRUE)
-cat("\\scriptsize")
-print(xtable(df, digits=4))
+options(xtable.include.colnames=TRUE, xtable.NA.string="Not estimable")
+cat("\\scriptsize\\vspace*{1cm}\\\\")
+print(xtable(df, digits=3))
 @
 
 \normalsize
+
+The designs 1-6, 8 in the new version of your book you send me are: 3, 5, 6, 9, 10, 11, 14.
+I must have made a not any more traceable mistake with the design called number 7 in your book. Please replace it with design 13 from this document.
+
 \bibliography{literatur}
 
 \end{document}
