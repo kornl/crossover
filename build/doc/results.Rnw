@@ -241,29 +241,50 @@ Here are all the designs as found by the above code. Actually there are only \Se
 options(xtable.include.rownames=FALSE, xtable.include.colnames=FALSE, xtable.floating=FALSE)
 
 df <- c()
+df2 <- c() 
 
 for (i in 1:length(resultL)) {
   design <- resultL[[i]]
   cat("Design ",i,":\n")
   print(xtable(design, digits=0)) 
   var <- c()
+  var2 <- c()
   for (i in models) {
     if (Crossover:::estimable_R(design, v=2, model=Crossover:::getModelNr(i))) {
       var <- c(var, general.carryover(design, model=i)$Var.trt.pair[1,2]/4)
+      var2 <- c(var2, Crossover:::general.carryover2(design=design, model=i, v=2))
     } else {
       var <- c(var, NA)
+      var2 <- c(var2, NA)
     }
   }
   df <- rbind(df, var)
+  df2 <- rbind(df2, var2)
 }
+
 rownames(df) <- NULL
 df <- as.data.frame(df)
 colnames(df) <- c("Additive", "Self-adjacency", "Proportional", "Placebo", "No into self", "Decay", "Interaction", "2nd-order carry-over")
 df <- cbind(data.frame(Design=1:length(resultL)), df)
 
+df2 <- df2/4
+rownames(df2) <- NULL
+df2 <- as.data.frame(df2)
+colnames(df2) <- c("Additive", "Self-adjacency", "Proportional", "Placebo", "No into self", "Decay", "Interaction", "2nd-order carry-over")
+df2 <- cbind(data.frame(Design=1:length(resultL)), df2)
+
 options(xtable.include.colnames=TRUE, xtable.NA.string="Not estimable")
-cat("\\scriptsize\\vspace*{1cm}\\\\")
+
+cat("\\[\\]")
+
+cat("\\scriptsize")
+
 print(xtable(df, digits=3))
+
+# cat("\\[\\]")
+# print(xtable(df2, digits=3))
+# max(abs(df-df2))
+
 @
 
 \normalsize
