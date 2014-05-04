@@ -181,8 +181,8 @@ newBookDesigns <- list(designB1, designB2, designB3, designB4,
 for (model in 1:8) {
   for (i in 1:8) {
     design <- newBookDesigns[[i]]
-    Ar <- Crossover:::infMatrix_R(rcd(design,v,model), v=v, model=model)
-    H <- linkMatrix(model=model,v=v)
+    Ar <- Crossover:::infMatrix_R(Crossover:::rcd(design,v,model), v=v, model=model)
+    H <- Crossover:::linkMatrix(model=model,v=v)
     A <- t(H)%*%Ar%*%H
     M <- ginv(A)[1:2,1:2]
     cat("Model ",model,":",round((M[1,1]+M[2,2]-M[1,2]-M[2,1])/4,3)," (",Crossover:::models[model],")\n")
@@ -202,7 +202,9 @@ z <- c(-1,-1,-1,-1,1,1,1,1)
 x <- c(-1,-1,1,1,-1,-1,1,1)
 y <- c(-1,1,-1,1,-1,1,-1,1)
 r <- rnorm(8)
-model.matrix(lm(r~x*y*z))
+M <- model.matrix(lm(r~x*y*z))
+M
+
 
 
 x <- as.factor(c(-1,-1,1,1))
@@ -211,7 +213,15 @@ z <- as.factor(c(-1,-1,-1,-1,1,1,1,1))
 x <- as.factor(c(-1,-1,1,1,-1,-1,1,1))
 y <- as.factor(c(-1,1,-1,1,-1,1,-1,1))
 r <- rnorm(8)
-model.matrix(lm(r~x*y*z))
+M <- model.matrix(lm(r~x*y*z))
+M
+
+treatment <- as.factor(c(-1, 1,-1, 1, 1,-1, 1,-1))
+carryover <- as.factor(c( 0, 0,-1, 1,-1, 1, 1,-1))
+#y <- as.factor(c(-1,1,-1,1,-1,1,-1,1))
+r <- rnorm(8)
+M <- model.matrix(lm(r~treatment*carryover))
+M
 
 
 @
@@ -242,6 +252,7 @@ Csub <- contrMat(n=rep(1, v), type="Tukey")
 class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
 C1 <- Crossover:::appendZeroColumns(Csub, model=7, v)
 C2 <- C1[,1:6, drop=FALSE]
+C3 <- C1[,1:5, drop=FALSE]
 
 # Row-Column-Design: (cf. John et al. 2004, Table II and page 2649f.)
 rcDesign <- Crossover:::rcd(design7, v=v, model=1)
@@ -253,6 +264,7 @@ Xr
 H <- Crossover:::linkMatrix(model="Full set of interactions", v)
 H
 
+# This is again H from above:
 H1 <- rbind(c(1, 0, 0, 0, 0, 0, 0, 0),
             c(0, 1, 0, 0, 0, 0, 0, 0),
             c(1, 0, 1, 0, 1, 0, 0, 0), 
@@ -267,6 +279,17 @@ H2 <- rbind(c(1, 0, 0, 0, 0, 0),
             c(1, 0, 0, 1, 0, 0), 
             c(0, 1, 0, 1, 0, 1))
 
+H3 <- rbind(c(1, 0, 0, 0,  0), # This setting defines the 1st parameter.
+            c(0, 1, 0, 0,  0), # This setting defines the 2nd parameter.
+            c(1, 0, 1, 0, -1), # This and the next setting define
+            c(0, 1, 1, 0,  1), # the 3rd and 5th parameter.
+            c(1, 0, 0, 1,  1), #
+            c(0, 1, 0, 1, -1)) # This is not the full interaction model. 
+
+rankMatrix(H1)[1]
+rankMatrix(H2)[1]
+rankMatrix(H3)[1]
+
 # Design Matrix of Cross-Over Design:
 X1 <- Xr %*% H1
 X1
@@ -274,7 +297,8 @@ X1
 X2 <- Xr %*% H2
 X2
 
-
+X3 <- Xr %*% H3
+X3
 
 
 Ar <- t(Xr) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% Xr
@@ -283,6 +307,9 @@ C1 %*% ginv(A1) %*% t(C1)
 
 A2 <- t(H2) %*% Ar %*% H2
 C2 %*% ginv(A2) %*% t(C2)
+
+A3 <- t(H3) %*% Ar %*% H3
+C3 %*% ginv(A3) %*% t(C3)
 
 
 # Design Matrix of Cross-Over Design:
