@@ -219,7 +219,8 @@ which we can write as
 with $X$ and $Z$ called the \emph{treatment}\index{treatment design matrix} and \emph{block design matrices}\index{block design matrix}, respectively.
 
 We call $H$ a \emph{link matrix}\index{link matrix} if $X=X_rH$ were $X_r$ is the design matrix for the row-column design.
-The rows of the link matrix specify all possible parameter combinations.
+The rows of the link matrix specify all possible parameter combinations. Therefore $H$ has as many columns as there are parameters
+and in the row-column-setting $i$ parameter $j$ is included $h_{ij}$ times.
 
 <<StandardAdditive, echo=TRUE>>=
 # Design:
