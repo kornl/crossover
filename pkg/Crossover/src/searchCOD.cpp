@@ -126,9 +126,9 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
           s1 = getS1((model==3||model==7||model==9)?design:rcDesign, v, model, linkM, tCC, randomS);      
       }
       
-      if (s2/s1 >= eOld) {
+      if (s2/s1 > eOld) { 
         if (verbose>2) {
-          Rprintf("Yeah, s2/s1=%f is greater or equal to eOld=%f.\n", s2/s1, eOld);
+          Rprintf("Yeah, s2/s1=%f is greater to eOld=%f.\n", s2/s1, eOld);
         }
         if(checkE && !estimable(rcDesign, v, model, linkM, C, Z, verbose)) {          
           eff[i] = NA_REAL;
