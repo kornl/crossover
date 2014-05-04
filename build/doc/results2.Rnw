@@ -1,0 +1,352 @@
+\documentclass[a4paper, 10pt]{article}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+ \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+%\usepackage{tikz}
+%\usetikzlibrary{decorations,arrows,shapes}
+\usepackage[margin=0.9in]{geometry}
+%\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xspace}
+\usepackage{tabularx}
+\usepackage{makeidx}\makeindex
+\usepackage{algorithmic} 
+\usepackage{algorithm}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1mm}
+\newcommand{\commentout}[1]{}
+\renewcommand{\theequation}{\thesection.\arabic{\equation}}
+\numberwithin{equation}{section}
+
+\theoremstyle{definition}
+\newtheorem{Def}{Definition}[section]
+\newtheorem{Rem}[Def]{Remark}
+\newtheorem{RemDef}[Def]{Remark und Definition}
+\newtheorem{DefRem}[Def]{Definition und Remark}
+\newtheorem{Example}[Def]{Example}
+\theoremstyle{plain}
+\newtheorem{Theorem}[Def]{Theorem}
+\newtheorem{DefTheorem}[Def]{Definition and Theorem}
+\newtheorem{Corollary}[Def]{Corollary}
+\newtheorem{Lemma}[Def]{Lemma}
+
+\newcommand{\C}{\ensuremath{\mathbb{C}}\xspace}
+\newcommand{\R}{\ensuremath{\mathbb{R}}\xspace}
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}\xspace}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\NN}{\ensuremath{\mathbb{N}_0}\xspace}
+\newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
+\newcommand{\sF}{\ensuremath{\mathcal{F}}\xspace}
+\newcommand{\sN}{\ensuremath{\mathcal{N}}\xspace}
+\newcommand{\Pot}{\ensuremath{\mathfrak{Pot}}\xspace}
+\newcommand{\kronecker}{\raisebox{1pt}{\ensuremath{\:\otimes\:}}}
+
+\DeclareMathOperator{\range}{range}
+
+\newcommand{\skp}[1]{\left\langle#1\right\rangle}
+
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\newcommand{\id}{\text{id}}
+
+\newenvironment{Proof}{\par\noindent\upshape\textit{Proof. }\nopagebreak}{\qed\par}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\begin{document}
+
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{Crossover - Comparing results}
+
+<<include=FALSE, message=FALSE>>=
+if (exists("opts_chunk")) {
+  opts_chunk$set(concordance=TRUE)
+  opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=95))
+  #opts_chunk$set(size="footnotesize")
+  #opts_chunk$set(size="tiny")
+  opts_chunk$set(cache=TRUE)
+  opts_chunk$set(autodep=TRUE)
+  opts_chunk$set(size="scriptsize") 
+}
+library(Crossover, quietly=TRUE)
+options(width=128)
+options(digits=4)
+startGUI <- function(...) {invisible(NULL)}
+#options(prompt="> ", continue="+ ")
+library(MASS)
+library(multcomp)
+library(ggplot2)
+library(Matrix)
+@
+
+\subsubsection*{Comparison with control}
+
+<<compareWithControl>>=
+
+s<-8; p<-6; v<-4
+i <- 1
+
+Csub <- contrMat(n=rep(1, v), type="Dunnett")
+class(Csub) <- "matrix"
+#C <- as.matrix(bdiag(Csub, Csub))
+C <- Crossover:::appendZeroColumns(Csub, model=i, v)
+C
+
+result <- searchCrossOverDesign(s=8, p=6, v=4, model=i, contrast=C)
+result
+result <- searchCrossOverDesign(s=8, p=6, v=4, model=i)
+result
+
+@
+
+\subsection*{Williams designs}
+
+Now we try to find some Williams designs (with a short search of only a few seconds) - we had already an email discussion about the problem that the williams5t is normally not found with the short default search (it was found (multiple times), when we increased the search to for example $n=c(5000,1000)$):
+
+<<Williams, echo=FALSE, eval=TRUE, cache=TRUE>>=
+data(williams)
+for (v in 3:9) {
+    name <- paste("williams",v,"t",sep="")
+    design <- get(name)
+    p <- dim(design)[1]
+    s <- dim(design)[2]
+    cat("Searching for",name,"\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1)
+    print(getDesign(result))
+    cat("av.eff.trt.pair.adj: ", design.efficiency(design)$av.eff.trt.pair.adj, "(Williams) vs. ", design.efficiency(result)$av.eff.trt.pair.adj, "\n\n")
+}
+
+@
+
+\subsection*{Autocorrelated errors}
+
+<<Autocorrelated, echo=FALSE>>=
+
+propSummary <- function(design) {
+    print(design)    
+    while (!is.null(dim(design)) && dim(design)[2]>0) {
+        col <- design[,1]
+        g <- apply(design, 2, function(x) {all(x==col)})
+        cat("Sequence ",col, " occurs ", sum(g), " times.\n")
+        design <- design[,-which(g), drop = FALSE]        
+    }
+}
+
+@
+
+%Laska and Meisner
+%For the specified $N_k$ the variance of the BLUE (only for the BLUE?) is
+%\[\text{var}(\hat\theta)=m'A^{-1}m\]
+%with $A=\sum N_k X_k'C^{-1}X_k$.
+
+<<eval=FALSE, include=FALSE>>=
+
+p <- 6; s <- 8; v <- 2
+sigmaE <- 1
+
+C <- matrix(1,6,6)
+C <- as.matrix(bdiag(C,C,C,C,C,C,C,C))+diag(6*8)
+CI <- solve(C)
+x1 <- c(1,2,2,1,1,2)
+x2 <- c(2,1,1,2,2,1)
+y1 <- c(1,1,2,2,2,1)
+y2 <- c(2,2,1,1,1,2)
+
+z1 <- c(1,2,2,2,1,1)
+z2 <- c(2,1,1,1,2,2)
+
+w1 <- c(1,2,2,1,1,2)
+w2 <- c(2,1,1,2,2,1)
+
+ldesign1 <- cbind(x1,x2,y1,y2,x1,x2,y1,y2)
+ldesign2 <- cbind(x1,x2,z1,z2,x1,x2,z1,z2)
+ldesign3 <- cbind(x1,x2,y1,y2,z1,z2,w1,w2)
+
+result1 <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=CI, n = c(5000, 40), start.designs=list(ldesign1, ldesign2, ldesign3))
+propSummary(getDesign(result1))
+plot(result1)
+
+result2 <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=CI, n = c(5000, 40), start.designs=list(ldesign1, ldesign2, ldesign3), random.subject=TRUE)
+propSummary(getDesign(result2))
+plot(result2)
+
+@
+
+In this section we reproduce result for two treatments and autocorrelated errors.
+
+We use the following function to create the inverse of the appropriate correlation matrix:
+
+<<>>=
+
+getSigmaI <- function(rho, s, p, f=solve) {
+    V <- diag(p)
+    for (i in 1:p) {
+        for (j in 1:p) {
+            V[i,j] <- rho^abs(i-j)
+        }
+    }
+    # Our design matrix is indexed p=1,1,1,2,2,2,3,3,3; s=1,2,3,1,2,3,1,2,3 therefore we have to exchange the arguments:
+    sigmaI <- kronecker(f(V), diag(s))
+    return(sigmaI)
+}
+
+@
+
+Let's first look at a result from \cite{matthews1987optimal} for $p=3$:
+
+\emph{Routine but lengthy calculation shows that the optimal designs, for direct effects, are
+given by} \[N_2=2\rho/(3\rho-1),\; N_4=1-N_2\; (-1<\rho\leq0):\]
+
+<<Matthews1>>=
+
+C <- matrix(c(-1,1,0,0),1,4)
+p <- 3; v <- 2; s<- 20
+
+for (rho in c(-0.9,-0.6,-0.5,-0.3,-0.1,0)) {
+    cat("Rho =", rho,", (1 1 2) should occur ",10*2*rho/(3*rho-1)," times, (1 2 2) ",10*(1-2*rho/(3*rho-1))," times:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+\[N_3=2\rho^2/(3+\rho)^2,\; N_4=1-N_3\; (0<\rho\leq2\sqrt{3}-3):\]
+
+<<Matthews2>>=
+
+for (rho in c(0.1,0.2,0.3,0.4)) {
+    cat("Rho =", rho,", (1 2 1) should occur ",10*2*rho^2/(3+rho)^2," times, (1 2 2) ",10*(1-2*rho^2/(3+rho)^2)," times:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+\[N_4=(-3\rho-\rho^2)/(3\rho^2+2\rho-1)^2,\; N_2=1-N_4\; (2\sqrt{3}-3\leq\rho\leq(\sqrt{17}-3)/2):\]
+
+<<Matthews3>>=
+
+for (rho in c(0.5)) {
+    cat("Rho =", rho,", (1 2 2) should occur ",10*(2-3*rho-rho^2)/(3*rho^2+2*rho-1)," times, (1 1 2) ",10*(1-(2-3*rho-rho^2)/(3*rho^2+2*rho-1))," times:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+\[N_2=1\; ((\sqrt{17}-3)/2\leq\rho\leq 0.675..):\]
+
+<<Matthews4>>=
+
+for (rho in c(0.6)) {
+    cat("Rho =", rho,", (1 1 2) should occur always:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+\[N_3=\frac12(1+\rho)^{-1}\left(\sqrt{\frac{4+4\rho+\rho^2}{1+2\rho+2\rho^2}}\rho-1\right),\; N_2=1-N_3\; (0.675..\leq\rho\leq1):\]
+
+
+<<Matthews5>>=
+
+s <- 40
+
+for (rho in c(0.7, 0.8, 0.9)) {
+    N3 <- 1/2*1/(1+rho)*(sqrt((4+4*rho+rho^2)/(1+2*rho+2*rho^2))*rho-1)
+    cat("Rho =", rho,", (1 2 1) should occur ",s/2*N3," times, (1 1 2) ",s/2*(1-N3)," times:\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C)
+    propSummary(getDesign(result))
+}
+
+@
+
+
+<<Matthews6, results='hide', echo=FALSE>>=
+p <- 4
+
+for (rho in c(-0.5, 0, 0.5)) {
+    cat("Rho =", rho,":\n")
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p))
+    propSummary(getDesign(result))
+}
+
+cc <- 4*rho*(1-rho)^2
+k <- cc/(rho^2-3*rho+4)
+d <- 11-rho-cc
+x <- max(0, (2*k+d-d*sqrt(1+k*rho))/(cc*sqrt(1-k*rho)))
+
+@
+
+Let's take a look at the results from \cite{laska1985variational} who assume normally distributed random subject effects (the call to \texttt{searchCrossOverDesign} gains an additional argument \texttt{random.subject=TRUE}):
+
+\emph{"For $p=3$, the optimal design utilizes only the sequences $AAB, ABB$, and their duals. The allocation of subjects to the sequences varies depending on $\rho$, but it always has more than 90\% of the subjects on the sequence $AAB$ and its dual."}
+
+<<Laska1>>=
+
+p <- 3; v <-2; s<-20
+C <- matrix(c(-1,1,0,0),1,4)
+
+for (rho in c(0.1, 0.9)) {
+  cat("Rho =", rho,":\n")
+  result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C, random.subject=TRUE)
+  propSummary(getDesign(result))
+}
+
+@
+
+\emph{"For $p=4$, and $\rho\leq .42$, the only sequences in the optimal design are, as before, $AABB$ and $ABBA$ and their duals. At $\rho=0$, however, half of the subjects are allocated at the first sequence and its dual, and as $\rho$ increases the proportion decreases to zero. For $\rho > .42$ only $ABBA$ and its dual are used in the optimal design."}
+
+%C1 <- diag(4)
+%Csub <- contrMat(n=rep(1, v), type="Tukey")
+%class(Csub) <- "matrix"
+%C2 <- as.matrix(bdiag(Csub, Csub))
+
+<<Laska2>>=
+
+p <- 4; v <-2; s<-20
+C <- matrix(c(-1,1,0,0),1,4)
+for (rho in c(0.01, 0.1, 0.3, 0.5, 0.9)) {
+  cat("Rho =", rho,":\n")
+  result <- searchCrossOverDesign(s=s, p=p, v=v, model=1, correlation=getSigmaI(rho, s=s, p=p), contrast=C, random.subject=TRUE)
+  propSummary(getDesign(result))
+}
+
+@
+
+\subsection*{Incomplete block design}
+
+<<ICBD>>=
+v <- 6; p <- 4; s <- 24
+
+result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1)
+# Further results were computed only once (since it took ~ 5 minutes) and now loaded: 
+#load("/home/kornel/git/crossover/pkg/Crossover/vignettes/BIBD_6_4_24_5000_1000.RData")
+#load("/home/kornel/git/crossover/pkg/Crossover/vignettes/BIBD_6_4_24_50000_100.RData")
+#load("/home/kornel/git/crossover/pkg/Crossover/vignettes/BIBD_6_4_24_250000_20.RData")
+data(pattersonLucasPBIBD)
+pattersonLucasPBIBD134
+
+design.efficiency(pattersonLucasPBIBD134)$av.eff.trt.pair.adj
+
+plot(result0) + ylim(0.5, 0.85) + ggtitle(sprintf("Default setting (20 runs with 5.000 steps each): %.4f", design.efficiency(result0)$av.eff.trt.pair.adj))
+#plot(result3) + ylim(0.5, 0.85) + ggtitle(sprintf("20 runs with 250.000 steps each: %.4f", design.efficiency(result3)$av.eff.trt.pair.adj))
+#plot(result2) + ylim(0.5, 0.85) + ggtitle(sprintf("100 runs with 50.000 steps each: %.4f", design.efficiency(result2)$av.eff.trt.pair.adj))
+
+# And 1000 runs a 5000 steps is actually even better:
+design.efficiency(result0)$av.eff.trt.pair.adj
+
+#result0 <- searchCrossOverDesign(s=s, p=p, v=v, model=1, start.designs=list(pattersonLucasPBIBD134), n=c(2,200))
+
+@
+
+\bibliography{literatur}
+
+\end{document}
