@@ -223,6 +223,7 @@ for (k in 1:TRYS) {
   }
 }
 resultL <- c(resultL, resultSubL)
+save(resultL, file="resultL.RData")
 
 @
 
@@ -238,19 +239,25 @@ Here are all the designs as found by the above code. Actually there are only \Se
 
 
 <<echo=FALSE, results='asis'>>=
+load("resultL.RData")
+
 options(xtable.include.rownames=FALSE, xtable.include.colnames=FALSE, xtable.floating=FALSE)
 
 df <- c()
 df2 <- c() 
 
-for (i in 1:length(resultL)) {
+for (i in 1:length(resultL)) { 
   design <- resultL[[i]]
   cat("Design ",i,":\n")
   print(xtable(design, digits=0)) 
   var <- c()
   var2 <- c()
   for (i in models) {
-    if (Crossover:::estimable_R(design, v=2, model=Crossover:::getModelNr(i))) {
+    
+    C <- Crossover:::contrMat2(type="Tukey", v, i, eff.factor=c(1,1,1))
+    #C <- contrMat(rep(1, Crossover:::nrOfParameters(model=i, v=v)), "Tukey")
+    
+    if (Crossover:::estimable_R(design, v=2, model=Crossover:::getModelNr(i), C=C)) {
       var <- c(var, general.carryover(design, model=i)$Var.trt.pair[1,2]/4)
       var2 <- c(var2, Crossover:::general.carryover2(design=design, model=i, v=2))
     } else {
