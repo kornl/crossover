@@ -4,7 +4,7 @@ contrMat2 <- function(type, v, model, eff.factor) {
     Csub <- contrMat(n=rep(1, v), type=type)
     class(Csub) <- "matrix"
     C <- Crossover:::appendZeroColumns(Csub, model=model, v)
-    if (length(eff.factor)<=1 || all(eff.factor[-1]==0) || model ==3) {
+    if (length(eff.factor)<=1 || all(eff.factor[-1]==0) || model %in% c(3,9)) {
       return(C)
     }
     Csub2 <- contrMat(n=rep(1, v), type="Tukey")
@@ -16,6 +16,7 @@ contrMat2 <- function(type, v, model, eff.factor) {
       C <- rbind(C*eff.factor[1], cbind(m, Csub2, matrix(0,dim(Csub2)[1],v))*eff.factor[2])
       C <- rbind(C*eff.factor[1], cbind(m, matrix(0,dim(Csub2)[1],v), Csub2)*eff.factor[2])      
     } else if (model %in% c(7)) { # Full set of interactions v+v+v^2
+      warning("Full set of interactions are not yet implemented in contrMat2.")
       #C <- rbind(C)
       # TODO
     }
@@ -23,6 +24,14 @@ contrMat2 <- function(type, v, model, eff.factor) {
     
   }
   stop("Unrecognized argument for 'type'.")
+}
+
+nrOfParameters <- function(model, v) {
+  model <- getModelNr(model)
+  if (model %in% c(3,9)) return(v)
+  if (model %in% c(1, 4, 5, 6)) return(2*v)
+  if (model %in% c(2, 8)) return(3*v)
+  if (model==7) return(v+v+v*v) 
 }
 
 corMat <- function(correlation, s, p, rho, q=0) {
