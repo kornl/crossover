@@ -179,13 +179,14 @@ getS1 <- function(design, v, model, C, randomS=FALSE, verbose=0) {
 }
 
 appendZeroColumns <- function(Csub, model, v) {
+  model <- getModelNr(model)
   if (model %in% c(2,8)) {
     C <- as.matrix(cbind(Csub, matrix(0, dim(Csub)[1], 2*v)))
   } else if (model %in% c(3,9)) {
     C <- Csub
   } else if (model == 7) {
       C <- as.matrix(cbind(Csub,matrix(0,dim(Csub)[1], v+v*v)))
-  } else {
+  } else if (model %in% c(1,4,5,6) ) {
     C <- as.matrix(cbind(Csub, matrix(0,dim(Csub)[1], v)))
   }  
   return(C)
