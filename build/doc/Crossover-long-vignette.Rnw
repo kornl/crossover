@@ -419,7 +419,178 @@ Let's compare the results from the search algorithm with results from the litera
 \begin{Example}
 First we compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~215]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments.
 
+<<modelsFromLiterature1, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
+s <- 6; p <- 4; v <- 2
+
+design1 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,2,2,1),
+                   c(2,1,1,2)))
+design2 <- t(rbind(c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,2,2,1),
+                   c(2,1,1,2)))
+design3 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1)))
+design4 <- t(rbind(c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1))) # Why is there no design 4 in the book?
+design5 <- t(rbind(c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1)))
+design6 <- t(rbind(c(1,2,1,2),
+                   c(2,1,2,1),
+                   c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,2,1,2),
+                   c(2,1,2,1)))
+design7 <- t(rbind(c(1,1,2,1),
+                   c(2,2,1,2),
+                   c(1,1,1,2),
+                   c(2,2,2,1),
+                   c(1,2,1,1),
+                   c(2,1,2,2)))
+design8 <- t(rbind(c(1,2,2,2),
+                   c(2,1,1,1),
+                   c(1,1,2,2),
+                   c(2,2,1,1),
+                   c(1,2,1,2),
+                   c(2,1,2,1)))
+
+designs <- list(design1, design2, design3, design4, design5, design6, design7, design8)
+
+models <- c("Standard additive model",
+            "Self-adjacency model",
+            "Proportionality model",
+            "Placebo model",
+            "No carry-over into self model",
+            "Treatment decay model",
+            "Full set of interactions",
+            "Second-order carry-over effects")
+
+@
+
+<<eval1a, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE>>=
+
+attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
+
+for (i in 1:8) {  
+    H <- linkMatrix(model=i, v=v)
+    n <- dim(H)[2]
+    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i), "/", estimable_R(designs[[i]], v=v, model=i), "\n", sep=""))
+    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
+    cat(paste("Are all parameters estimable under model ",i,"? ", 
+              estimable(designs[[i]], v=v, model=i, C=diag(n)), "/", estimable_R(designs[[i]], v=v, model=i, C=diag(n)), "\n", sep=""))
+}
+
+rcDesign <- rcd(design1, v, model=1)
+Ar <- infMatrix(rcDesign, v, model=1)
+Xr <- rcdMatrix(rcDesign, v, model=1)
+H <- linkMatrix(1,v)
+X <- Xr %*% H
+A <- t(H) %*% Ar %*% H
+rankMatrix(X)
+C <- rbind(diag(v), matrix(0, v, v))
+XX <- t(X) %*% X
+all.equal(t(C) %*% ginv(XX) %*% XX, t(C)) # Criterion to test whether - see Theorem \ref{thr:estimable}
+
+A
+rankMatrix(A)
+
+
+@
+
+<<eval1b, echo=TRUE, eval=TRUE, cache=TRUE, tidy=FALSE, withNameSpace=TRUE>>=
+
+checkResult <- function (result, refDesign, model) {
+    allDesigns <- result@misc$designs
+    df <- data.frame(run=numeric(0), step=numeric(0), crit=numeric(0))
+    for (i in 1:length(allDesigns)) {
+        designs <- allDesigns[[i]]
+        for (j in 1:min(10, length(designs))) {
+            design <- designs[[j]]
+            crit <- sum(general.carryover(design, model=model)$Var.trt.pair)/2
+            df <- rbind(df, data.frame(run=i, step=j, crit=crit))
+        }
+    }
+    plot <- ggplot(df, aes(x=step, y=crit)) + geom_point() + facet_wrap( ~ run)
+    return(list(df=df, plot=plot))
+}
+
+for (i in 1:8) {  
+    model <- models[i]
+    cat("======= ", model, " =======","\n")
+    H <- linkMatrix(model=i, v=v)
+    n <- dim(H)[2]
+    result <- searchCrossOverDesign(s=s, p=p, v=v, model=model, start.designs=list(designs[[i]]))
+    print(result)
+    print(general.carryover(designs[[i]], model=i)) 
+    print(design.efficiency(designs[[i]]))
+    print(design.efficiency(result))    
+    cat(paste("Are the treatment differences estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i), "/", estimable_R(getDesign(result), v=v, model=i), "\n", sep=""))
+    cat(paste("Are the treatment parameters estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)[1:2,]), "\n", sep=""))
+    cat(paste("Are all parameters estimable under model ",i,"? ", 
+              estimable(getDesign(result), v=v, model=i, C=diag(n)), "/", estimable_R(getDesign(result), v=v, model=i, C=diag(n)), "\n", sep=""))
+    
+    print(plot(result) + ggtitle(models[i]))  
+    print(checkResult(result, designs[[i]], model=i)$plot+ ggtitle(models[i]))
+    
+}
+
+searchCrossOverDesign(s=s, p=p, v=v, model=3)
+searchCrossOverDesign(s=s, p=p, v=v, model=3, start.designs=list(design3))
+
+#infMatrix(X,v,model)
+#infMatrix_R(X,v,model, method=1)
+#infMatrix_R(X,v,model, method=2)
+
+@
+
 \end{Example}
+
+<<correct, echo=TRUE, eval=TRUE, cache=TRUE>>=
+
+# For the self-adjacency model our algorithm found for example:
+v <- 2
+d <- structure(c(1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 
+2, 2, 2, 1, 1, 2, 1), .Dim = c(4L, 6L))
+
+d
+
+# Which seems to compare well in regard to Var.trt.pair (and Var.car.pair.1 
+# but a little worse in Var.car.pair.2) to the reference design from literature:
+
+general.carryover(d, model=2)
+general.carryover(design2, model=2)
+
+rcDesign <- Crossover:::rcd(d, v=v, model=2)
+rcDesign
+X <- Crossover:::rcdMatrix(rcDesign, v=v, model=2) %*% Crossover:::linkMatrix(model="Self-adjacency model", v)
+Crossover:::estimable_R(d, v, model=2, diag(6))
+Crossover:::estimable(d, v, model=2, diag(6))
+
+
+
+
+@
 
 <<attachNameSpace, echo=TRUE, eval=FALSE, results='hide'>>=
  # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
@@ -435,8 +606,6 @@ In the following code fragment we compare the two different approaches:
 For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004crossover}.
 
 <<TestOfDifferentApproaches, echo=TRUE, eval=TRUE, withNameSpace=TRUE>>=
-
-attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
 
 s <- 6
 p <- 3
