@@ -21,6 +21,11 @@ unitTestsCrossover <- function(extended=FALSE, java=FALSE, interactive=FALSE, ju
 	
 	## --- Testing ---
 	
+	# Yes, these functions always exist, since we stopped if RUnit could not be required:
+	defineTestSuite <- get("defineTestSuite")
+	runTestSuite <- get("runTestSuite")
+	printTextProtocol <- get("printTextProtocol")
+  
 	## Define tests
 	testSuite <- defineTestSuite(name=paste(pkg, "unit testing"), dirs=path)
 	
