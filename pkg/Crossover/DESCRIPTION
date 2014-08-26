@@ -5,10 +5,10 @@ Version: 0.1-9
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
 Description: This package provides different crossover designs and a GUI to access them.
-Depends: R (>= 3.0.0), rJava (>= 0.8-3), CommonJavaJars (>= 1.0.4), JavaGD, ggplot2, parallel
-Imports: MASS, crossdes (>= 1.1-1), xtable, methods, Matrix, multcomp, Rcpp (>= 0.10.3), RcppArmadillo (>= 0.2.0), stats4, digest
+Depends: R (>= 3.0.2), rJava (>= 0.8-3), CommonJavaJars (>= 1.0.4), JavaGD, ggplot2
+Imports: MASS, crossdes (>= 1.1-1), xtable, methods, Matrix, multcomp, stats4, digest
 Suggests: knitr, RUnit, nlme
 SystemRequirements: Java (>= 5.0) 
-LinkingTo: Rcpp, RcppArmadillo
-License: Other
+LinkingTo: Rcpp (>= 0.10.3), RcppArmadillo (>= 0.2.0)
+License: GPL-2
 VignetteBuilder: knitr

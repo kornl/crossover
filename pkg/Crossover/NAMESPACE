@@ -2,8 +2,6 @@ useDynLib(Crossover)
 
 importFrom(stats4, plot)
 import(methods)
-import(Rcpp)
-import(RcppArmadillo)
 import(JavaGD)
 import(rJava)
 importFrom(CommonJavaJars, loadJars)
