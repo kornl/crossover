@@ -242,6 +242,203 @@
 \alias{williams7t}
 \alias{williams8t}
 \alias{williams9t}
+\alias{clatworthy.r1}
+\alias{clatworthy.r10}
+\alias{clatworthy.r101}
+\alias{clatworthy.r103}
+\alias{clatworthy.r104}
+\alias{clatworthy.r106}
+\alias{clatworthy.r109}
+\alias{clatworthy.r111}
+\alias{clatworthy.r112}
+\alias{clatworthy.r114}
+\alias{clatworthy.r115}
+\alias{clatworthy.r117}
+\alias{clatworthy.r118}
+\alias{clatworthy.r119}
+\alias{clatworthy.r13}
+\alias{clatworthy.r133}
+\alias{clatworthy.r134}
+\alias{clatworthy.r137}
+\alias{clatworthy.r139}
+\alias{clatworthy.r140}
+\alias{clatworthy.r143}
+\alias{clatworthy.r144}
+\alias{clatworthy.r145}
+\alias{clatworthy.r15}
+\alias{clatworthy.r150}
+\alias{clatworthy.r153}
+\alias{clatworthy.r153.}
+\alias{clatworthy.r16}
+\alias{clatworthy.r164}
+\alias{clatworthy.r165}
+\alias{clatworthy.r169}
+\alias{clatworthy.r17}
+\alias{clatworthy.r170}
+\alias{clatworthy.r171}
+\alias{clatworthy.r172}
+\alias{clatworthy.r175}
+\alias{clatworthy.r176}
+\alias{clatworthy.r177}
+\alias{clatworthy.r18}
+\alias{clatworthy.r186}
+\alias{clatworthy.r19}
+\alias{clatworthy.r193}
+\alias{clatworthy.r2}
+\alias{clatworthy.r20}
+\alias{clatworthy.r203}
+\alias{clatworthy.r21}
+\alias{clatworthy.r22}
+\alias{clatworthy.r24}
+\alias{clatworthy.r25}
+\alias{clatworthy.r26}
+\alias{clatworthy.r27}
+\alias{clatworthy.r29}
+\alias{clatworthy.r3}
+\alias{clatworthy.r30}
+\alias{clatworthy.r31}
+\alias{clatworthy.r32}
+\alias{clatworthy.r34}
+\alias{clatworthy.r35}
+\alias{clatworthy.r36}
+\alias{clatworthy.r37}
+\alias{clatworthy.r38}
+\alias{clatworthy.r39}
+\alias{clatworthy.r4}
+\alias{clatworthy.r40}
+\alias{clatworthy.r41}
+\alias{clatworthy.r42}
+\alias{clatworthy.r43}
+\alias{clatworthy.r44}
+\alias{clatworthy.r45}
+\alias{clatworthy.r46}
+\alias{clatworthy.r47}
+\alias{clatworthy.r48}
+\alias{clatworthy.r5}
+\alias{clatworthy.r50}
+\alias{clatworthy.r51}
+\alias{clatworthy.r52}
+\alias{clatworthy.r54}
+\alias{clatworthy.r56}
+\alias{clatworthy.r58}
+\alias{clatworthy.r59}
+\alias{clatworthy.r6}
+\alias{clatworthy.r60}
+\alias{clatworthy.r61}
+\alias{clatworthy.r62}
+\alias{clatworthy.r63}
+\alias{clatworthy.r65}
+\alias{clatworthy.r66}
+\alias{clatworthy.r67}
+\alias{clatworthy.r68}
+\alias{clatworthy.r69}
+\alias{clatworthy.r7}
+\alias{clatworthy.r70}
+\alias{clatworthy.r71}
+\alias{clatworthy.r72}
+\alias{clatworthy.r73}
+\alias{clatworthy.r75}
+\alias{clatworthy.r78}
+\alias{clatworthy.r79}
+\alias{clatworthy.r80}
+\alias{clatworthy.r81}
+\alias{clatworthy.r82}
+\alias{clatworthy.r84}
+\alias{clatworthy.r85}
+\alias{clatworthy.r86}
+\alias{clatworthy.r89}
+\alias{clatworthy.r91}
+\alias{clatworthy.r93}
+\alias{clatworthy.r94}
+\alias{clatworthy.r95}
+\alias{clatworthy.r96}
+\alias{clatworthy.r97}
+\alias{clatworthy.r98}
+\alias{clatworthy.s1}
+\alias{clatworthy.s101}
+\alias{clatworthy.s106}
+\alias{clatworthy.s11}
+\alias{clatworthy.s110}
+\alias{clatworthy.s116}
+\alias{clatworthy.s18}
+\alias{clatworthy.s21}
+\alias{clatworthy.s24}
+\alias{clatworthy.s26}
+\alias{clatworthy.s27}
+\alias{clatworthy.s28}
+\alias{clatworthy.s29}
+\alias{clatworthy.s3}
+\alias{clatworthy.s31}
+\alias{clatworthy.s32}
+\alias{clatworthy.s34}
+\alias{clatworthy.s35}
+\alias{clatworthy.s37}
+\alias{clatworthy.s38}
+\alias{clatworthy.s51}
+\alias{clatworthy.s52}
+\alias{clatworthy.s53}
+\alias{clatworthy.s58}
+\alias{clatworthy.s59}
+\alias{clatworthy.s6}
+\alias{clatworthy.s61}
+\alias{clatworthy.s63}
+\alias{clatworthy.s65}
+\alias{clatworthy.s66}
+\alias{clatworthy.s67}
+\alias{clatworthy.s7}
+\alias{clatworthy.s82}
+\alias{clatworthy.s85}
+\alias{clatworthy.s86}
+\alias{clatworthy.s88}
+\alias{clatworthy.s9}
+\alias{clatworthy.s91}
+\alias{clatworthy.s98}
+\alias{clatworthy.sr1}
+\alias{clatworthy.sr100}
+\alias{clatworthy.sr106}
+\alias{clatworthy.sr109}
+\alias{clatworthy.sr11}
+\alias{clatworthy.sr18}
+\alias{clatworthy.sr19}
+\alias{clatworthy.sr23}
+\alias{clatworthy.sr24}
+\alias{clatworthy.sr25}
+\alias{clatworthy.sr26}
+\alias{clatworthy.sr3}
+\alias{clatworthy.sr35}
+\alias{clatworthy.sr36}
+\alias{clatworthy.sr36a}
+\alias{clatworthy.sr37}
+\alias{clatworthy.sr41}
+\alias{clatworthy.sr42}
+\alias{clatworthy.sr44}
+\alias{clatworthy.sr46}
+\alias{clatworthy.sr52}
+\alias{clatworthy.sr53}
+\alias{clatworthy.sr54}
+\alias{clatworthy.sr55}
+\alias{clatworthy.sr56}
+\alias{clatworthy.sr6}
+\alias{clatworthy.sr60}
+\alias{clatworthy.sr65}
+\alias{clatworthy.sr66}
+\alias{clatworthy.sr67}
+\alias{clatworthy.sr68}
+\alias{clatworthy.sr7}
+\alias{clatworthy.sr72}
+\alias{clatworthy.sr73}
+\alias{clatworthy.sr75}
+\alias{clatworthy.sr80}
+\alias{clatworthy.sr81}
+\alias{clatworthy.sr82}
+\alias{clatworthy.sr9}
+\alias{clatworthy.sr90}
+\alias{clatworthy.sr91}
+\alias{clatworthy.sr92}
+\alias{clatworthy.sr93}
+\alias{clatworthy.sr94}
+\alias{clatworthy.sr99}
+\alias{pb2.64}
 \title{Selected Cross-Over designs from literature}
 \format{A integer matrix ...: \describe{ \item{cross-over design}{All
 designs are integer matrices. ...} }}
@@ -378,7 +575,56 @@ pidgeon5, pidgeon6, pidgeon7, pidgeon8, pidgeon9, prescott1, prescott2,
 quenouille3t1, quenouille3t2, quenouille4t1, quenouille4t2, quenouille4t3,
 russel4t, russel7t, switchback3t, switchback4t, switchback5t, switchback6t,
 switchback7t, williams3t, williams4t, williams5t, williams6t, williams7t,
-williams8t, williams9t.
+williams8t, williams9t, clatworthy.r1, clatworthy.r10, clatworthy.r101, clatworthy.r103,
+clatworthy.r104, clatworthy.r106, clatworthy.r109, clatworthy.r111,
+clatworthy.r112, clatworthy.r114, clatworthy.r115, clatworthy.r117,
+clatworthy.r118, clatworthy.r119, clatworthy.r13, clatworthy.r133,
+clatworthy.r134, clatworthy.r137, clatworthy.r139, clatworthy.r140,
+clatworthy.r143, clatworthy.r144, clatworthy.r145, clatworthy.r15,
+clatworthy.r150, clatworthy.r153, clatworthy.r153., clatworthy.r16,
+clatworthy.r164, clatworthy.r165, clatworthy.r169, clatworthy.r17,
+clatworthy.r170, clatworthy.r171, clatworthy.r172, clatworthy.r175,
+clatworthy.r176, clatworthy.r177, clatworthy.r18, clatworthy.r186,
+clatworthy.r19, clatworthy.r193, clatworthy.r2, clatworthy.r20,
+clatworthy.r203, clatworthy.r21, clatworthy.r22, clatworthy.r24,
+clatworthy.r25, clatworthy.r26, clatworthy.r27, clatworthy.r29,
+clatworthy.r3, clatworthy.r30, clatworthy.r31, clatworthy.r32,
+clatworthy.r34, clatworthy.r35, clatworthy.r36, clatworthy.r37,
+clatworthy.r38, clatworthy.r39, clatworthy.r4, clatworthy.r40,
+clatworthy.r41, clatworthy.r42, clatworthy.r43, clatworthy.r44,
+clatworthy.r45, clatworthy.r46, clatworthy.r47, clatworthy.r48,
+clatworthy.r5, clatworthy.r50, clatworthy.r51, clatworthy.r52,
+clatworthy.r54, clatworthy.r56, clatworthy.r58, clatworthy.r59,
+clatworthy.r6, clatworthy.r60, clatworthy.r61, clatworthy.r62,
+clatworthy.r63, clatworthy.r65, clatworthy.r66, clatworthy.r67,
+clatworthy.r68, clatworthy.r69, clatworthy.r7, clatworthy.r70,
+clatworthy.r71, clatworthy.r72, clatworthy.r73, clatworthy.r75,
+clatworthy.r78, clatworthy.r79, clatworthy.r80, clatworthy.r81,
+clatworthy.r82, clatworthy.r84, clatworthy.r85, clatworthy.r86,
+clatworthy.r89, clatworthy.r91, clatworthy.r93, clatworthy.r94,
+clatworthy.r95, clatworthy.r96, clatworthy.r97, clatworthy.r98,
+clatworthy.s1, clatworthy.s101, clatworthy.s106, clatworthy.s11,
+clatworthy.s110, clatworthy.s116, clatworthy.s18, clatworthy.s21,
+clatworthy.s24, clatworthy.s26, clatworthy.s27, clatworthy.s28,
+clatworthy.s29, clatworthy.s3, clatworthy.s31, clatworthy.s32,
+clatworthy.s34, clatworthy.s35, clatworthy.s37, clatworthy.s38,
+clatworthy.s51, clatworthy.s52, clatworthy.s53, clatworthy.s58,
+clatworthy.s59, clatworthy.s6, clatworthy.s61, clatworthy.s63,
+clatworthy.s65, clatworthy.s66, clatworthy.s67, clatworthy.s7,
+clatworthy.s82, clatworthy.s85, clatworthy.s86, clatworthy.s88,
+clatworthy.s9, clatworthy.s91, clatworthy.s98, clatworthy.sr1,
+clatworthy.sr100, clatworthy.sr106, clatworthy.sr109, clatworthy.sr11,
+clatworthy.sr18, clatworthy.sr19, clatworthy.sr23, clatworthy.sr24,
+clatworthy.sr25, clatworthy.sr26, clatworthy.sr3, clatworthy.sr35,
+clatworthy.sr36, clatworthy.sr36a, clatworthy.sr37, clatworthy.sr41,
+clatworthy.sr42, clatworthy.sr44, clatworthy.sr46, clatworthy.sr52,
+clatworthy.sr53, clatworthy.sr54, clatworthy.sr55, clatworthy.sr56,
+clatworthy.sr6, clatworthy.sr60, clatworthy.sr65, clatworthy.sr66,
+clatworthy.sr67, clatworthy.sr68, clatworthy.sr7, clatworthy.sr72,
+clatworthy.sr73, clatworthy.sr75, clatworthy.sr80, clatworthy.sr81,
+clatworthy.sr82, clatworthy.sr9, clatworthy.sr90, clatworthy.sr91,
+clatworthy.sr92, clatworthy.sr93, clatworthy.sr94, clatworthy.sr99,
+pb2.64.
 }
 \examples{
 data(anderson)
