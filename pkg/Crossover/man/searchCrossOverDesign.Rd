@@ -86,7 +86,9 @@ See the vignette of this package for further details.
 \dontrun{
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 
-result <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1, jumps=c(10000,200), n=c(1000,5))
+jumps <- c(10000, 200) # Do a long jump (10000 changes) every 200 steps
+n <- c(1000, 5)        # Do 5 trials with 1000 steps in each trial
+result <- searchCrossOverDesign(s=9, p=5, v=4, model=4, jumps=jumps, n=n)
 plot(result)
 }
 }
