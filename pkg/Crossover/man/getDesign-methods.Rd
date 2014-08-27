@@ -9,6 +9,8 @@
 }
 \arguments{
 \item{object}{A searchCrossOverDesign object from which the design should be extracted.}
+
+\item{...}{Possible parameters for subclasses (not yet used).}
 }
 \value{
 Returns a numeric matrix representing the crossover design.

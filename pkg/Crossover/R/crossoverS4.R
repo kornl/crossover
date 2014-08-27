@@ -155,10 +155,10 @@ setMethod("show", "CrossoverSearchResult",
 #' @aliases plot,CrossoverSearchResult,missing-method plot
 #' @param x Result from searchCrossOverDesign.
 #' @param y Missing.
-#' @param ...  Further arguments: \itemize{ \item type Type of plot. Number 1 is
+#' @param type Type of plot. Number 1 is
 #' more colorful, but number 2 perhaps a bit easier to understand.
-#' \item show.jumps If \code{TRUE} vertical lines will show where the specified
-#' jumps occured.  }
+#' @param show.jumps If \code{TRUE} vertical lines will show where the specified
+#' jumps occured.
 #' @return Returns a ggplot object of the plot.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @examples
@@ -208,6 +208,7 @@ setGeneric("getDesign", function(object, ...) standardGeneric("getDesign"))
 #' @name getDesign
 #' @aliases getDesign,CrossoverSearchResult-method getDesign
 #' @param object A searchCrossOverDesign object from which the design should be extracted.
+#' @param ... Possible parameters for subclasses (not yet used).
 #' @return Returns a numeric matrix representing the crossover design.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @examples
