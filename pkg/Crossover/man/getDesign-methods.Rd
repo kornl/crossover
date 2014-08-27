@@ -3,6 +3,7 @@
 \name{getDesign}
 \alias{getDesign}
 \alias{getDesign,CrossoverSearchResult-method}
+\alias{getDesign,matrix-method}
 \title{Extract Design from a CrossoverSearchResult}
 \usage{
 \S4method{getDesign}{CrossoverSearchResult}(object, ...)

@@ -83,12 +83,12 @@ Search for a Cross-Over Design
 See the vignette of this package for further details.
 }
 \examples{
+\dontrun{
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 
 result <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1, jumps=c(10000,200), n=c(1000,5))
 plot(result)
-
-#x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, contrast=)
+}
 }
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
