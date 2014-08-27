@@ -27,6 +27,11 @@ test.design.functions <- function () {
 }
 
 test.brute.force.compare.approaches <- function() {
+  if (!"extended" %in% strsplit(Sys.getenv("CROSSOVER_UNIT_TESTS"),",")[[1]]) {
+    cat("Skipping design tests for comparing approaches.\n")
+    return()
+  }
+  
   for (model in c(1:6,8)) { #TODO model 7 differs for general.carryover and search algorithm
     s <- 10 #TODO Also make s, p and v random.
     p <- 6
