@@ -25,4 +25,4 @@ export(buildSummaryTable)
 
 exportMethods(plot, print, show, getDesign)
 
-export(getDesignMatrix)
+# export(getDesignMatrix) TODO: Do we want to export this function?
