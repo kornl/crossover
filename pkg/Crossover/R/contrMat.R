@@ -57,7 +57,7 @@ corMat <- function(correlation, s, p, rho, q=0) {
   if (q==0) {
     sigmaI <- kronecker(solve(V), diag(s)) #kronecker(diag(s), f(V))
   } else {
-    sigmaI <- solve(q*diag(p*s)+(1-q)*qkronecker(V, diag(s)))
+    sigmaI <- solve(q*diag(p*s)+(1-q)*kronecker(V, diag(s)))
   }
   return(sigmaI)
 }

@@ -64,6 +64,14 @@ hand.}
 
 \item{contrast}{Contrast matrix to be optimised. TODO: Example and better
 explanation for contrast.}
+
+\item{random.subject}{Should the subject effects be random (\code{random.subject=TRUE})
+or fixed effects (\code{random.subject=FALSE}).}
+
+\item{correlation}{Either a correlation matrix for the random subject effects or one
+of the following character strings: "equicorrelated", "autoregressive"}
+
+\item{rho}{Parameter for the correlation if parameter \code{correlation} is a character string.}
 }
 \value{
 Returns the design as an integer matrix.
