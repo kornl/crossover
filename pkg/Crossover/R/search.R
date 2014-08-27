@@ -45,6 +45,11 @@
 #' hand.
 #' @param contrast Contrast matrix to be optimised. TODO: Example and better
 #' explanation for contrast.
+#' @param random.subject Should the subject effects be random (\code{random.subject=TRUE})
+#' or fixed effects (\code{random.subject=FALSE}).
+#' @param correlation Either a correlation matrix for the random subject effects or one 
+#' of the following character strings: "equicorrelated", "autoregressive"
+#' @param rho Parameter for the correlation if parameter \code{correlation} is a character string.
 #' @return Returns the design as an integer matrix.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @references John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver:
@@ -53,12 +58,12 @@
 #' @keywords misc
 #' @examples
 #' 
+#' \dontrun{
 #' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 #' 
 #' result <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1, jumps=c(10000,200), n=c(1000,5))
 #' plot(result)
-#' 
-#' #x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, contrast=)
+#' }
 #' 
 #' 
 #' @export searchCrossOverDesign
