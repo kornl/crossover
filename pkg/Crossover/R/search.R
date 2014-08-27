@@ -88,6 +88,7 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   } else if (sum(v.rep)!=s*p) { # TODO Feature: Allow NA or sum(v.rep)<s*p
     stop("The sum of argument v.rep must equal s times p.")
   }
+  if (balance.s || balance.p) interchange <- TRUE
   if (balance.s && balance.p) stop("Balancing sequences AND periods simultaneously is a heavy restriction and not supported (yet?).")  
   if (missing(contrast)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
