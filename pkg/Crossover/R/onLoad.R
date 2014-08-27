@@ -6,7 +6,7 @@
 	.jpackage("JavaGD")
 	
 	jars <- c("afcommons",
-			"commons-logging", "forms", 
+			"commons-logging", "jgoodies-common", "forms",  
 			"iText", "jhlir.jar", "jxlayer", 
 			"log4j", "swing-worker")
 	
