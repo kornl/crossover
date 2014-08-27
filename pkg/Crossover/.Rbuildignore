@@ -9,6 +9,6 @@ vignettes/Crossover.toc
 vignettes/Crossover-concordance.tex
 vignettes/Crossover.synctex.gz
 vignettes/cache
-vignettes/figure
+vignettes/figure/
 inst/classes
 java/classes
