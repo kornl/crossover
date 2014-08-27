@@ -98,8 +98,8 @@ searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.
   if (!is.null(correlation) && !is.matrix(correlation)) correlation <- corMat(correlation, s=s, p=p, rho=rho)
   if (missing(start.designs)) { start.designs <- list() }  # In this list we save n[2] random start designs.
   if (isTRUE(start.designs %in% c("catalog","catalogue"))) { 
-    st <- get(".summary_table", envir=Crossover:::Crossover.env)
-    start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get, envir=Crossover:::Crossover.env)
+    st <- get(".summary_table", envir=Crossover.env)
+    start.designs <- lapply(st[st$t==v & st$p==p & st$s==s,]$dataset, get, envir=Crossover.env)
     x <- getStartDesigns(s=s, p=p, v=v)
     if (length(x)!=0) start.designs <- c(start.designs, x)
   }
@@ -211,8 +211,8 @@ getValues <- function(design, model=1, C, v) {
 }
 
 getDesignMatrix <- function(design, v) {
-    H <- Crossover:::linkMatrix(model="Standard additive model", v)
-    rcDesign <- Crossover:::rcd(design, v=v, model=1)
-    Xr <- Crossover:::rcdMatrix(rcDesign, v, model=1)
+    H <- linkMatrix(model="Standard additive model", v)
+    rcDesign <- rcd(design, v=v, model=1)
+    Xr <- rcdMatrix(rcDesign, v, model=1)
     return(Xr %*% H)
 }

@@ -569,16 +569,16 @@ general.carryover2 <-function(design, v, model, ppp=0.5, placebos=1){
   
   Csub <- contrMat(n=rep(1, v), type="Tukey")
   class(Csub) <- "matrix"
-  C <- Crossover:::appendZeroColumns(Csub, model=model, v=v)
-  H <- Crossover:::linkMatrix(model, v, ppp, placebos)
+  C <- appendZeroColumns(Csub, model=model, v=v)
+  H <- linkMatrix(model, v, ppp, placebos)
   
   p <- dim(design)[1]
   s <- dim(design)[2]
   # Row-Column-Design:
-  rcDesign <- Crossover:::rcd(design, v=v, model=model)
-  Xr <- Crossover:::rcdMatrix(rcDesign, v=v, model=model)
+  rcDesign <- rcd(design, v=v, model=model)
+  Xr <- rcdMatrix(rcDesign, v=v, model=model)
   #X <- Xr %*% H
-  Ar <- t(Xr) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% Xr
+  Ar <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
   A <- t(H) %*% Ar %*% H
   return(C %*% ginv(A) %*% t(C))
 }

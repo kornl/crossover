@@ -9,12 +9,12 @@ infiniteSearchStep <- function(oldResult=NULL, ..., start.designs) {
 
 infiniteSearch <- function(...) {
     oldResult <- NULL
-    assign(".search", TRUE, envir=Crossover:::Crossover.env)
-    while(get(".search", envir=Crossover:::Crossover.env)) {
+    assign(".search", TRUE, envir=Crossover.env)
+    while(get(".search", envir=Crossover.env)) {
         result <- tryCatch({        
             infiniteSearchStep(oldResult=oldResult, ...)
         }, interrupt = function(interrupt) {            
-            assign(".search", FALSE, envir=Crossover:::Crossover.env)    
+            assign(".search", FALSE, envir=Crossover.env)    
         }, finally = {
             print("Another loop.")
         })

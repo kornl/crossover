@@ -3,7 +3,7 @@ contrMat2 <- function(type, v, model, eff.factor) {
   if (type %in% c("Dunnett", "Tukey")) {
     Csub <- contrMat(n=rep(1, v), type=type)
     class(Csub) <- "matrix"
-    C <- Crossover:::appendZeroColumns(Csub, model=model, v)
+    C <- appendZeroColumns(Csub, model=model, v)
     if (length(eff.factor)<=1 || all(eff.factor[-1]==0) || model %in% c(3,9)) {
       return(C)
     }

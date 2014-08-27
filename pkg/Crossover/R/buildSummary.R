@@ -17,10 +17,10 @@ buildSummaryTable <- function() {
 	summaryTable <- data.frame(dataset=character(0), title=character(0), reference=character(0), signature=character(0), t=numeric(0), p=numeric(0), s=numeric(0))
 	path <- system.file("data", package="Crossover")
 	for (file in dir(path=path)) {		 
-		designs <- load(paste(path, file, sep="/"), envir=Crossover:::Crossover.env)
+		designs <- load(paste(path, file, sep="/"), envir=Crossover.env)
 		for (design in designs) {
 			dataset <- design
-			design <- get(design, envir=Crossover:::Crossover.env)
+			design <- get(design, envir=Crossover.env)
 			title <- attr(design, "title")
 			reference <- attr(design, "reference")
 			signature <- attr(design, "signature")
