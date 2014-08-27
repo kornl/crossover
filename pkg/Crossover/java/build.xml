@@ -21,7 +21,7 @@
 	<property name="compiler.max.memory" value="128m"/>
 	
 	<path id="sourcepath">
-	        <dirset dir="${content.root}/java-src">
+	        <dirset dir="${content.root}">
 	            <include name="*"/>
 	        </dirset>
 	</path>
@@ -41,7 +41,7 @@
 	
 	<target name="compile">
 			<mkdir dir="${output.dir}"/>	
-			<javac srcdir="${content.root}/java-src" destdir="${output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}"
+			<javac srcdir="${content.root}" destdir="${output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}"
 	                memorymaximumsize="${compiler.max.memory}" fork="true" includeantruntime="false"> <!--  bootclasspath="/usr/lib/jvm/java-1.5.0-gcj-4.6/jre/lib/rt.jar">  -->
 				<compilerarg line="${compiler.args}"/>
 				<classpath refid="complete.classpath"/>
@@ -52,7 +52,7 @@
 	<target name="build" depends="clean, compile">				
 		
 		<copy todir="${output.dir}">
-		    <fileset dir="${content.root}/java-src">
+		    <fileset dir="${content.root}">
 		      	<include name="**/*.jpg"/>
 		    	<include name="**/*.png"/>
 		    	<include name="**/*.properties"/>
