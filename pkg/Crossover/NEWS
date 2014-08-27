@@ -1,4 +1,16 @@
-Changes in version 0.1-2 (11-05-2013)
-================================================
 
-- First version of search algorithm supporting a subset of models. 
+Changes in version 0.1-11 (??-0?-2014)
+======================================
+
+
+
+Features in version 0.1-10 (27-08-2014)
+=======================================
+
+- First version of package on CRAN. 
+
+- More than two hundred cross-over design from literature.
+
+- Search algorithm to find efficient cross-over designs.
+
+- Graphical user interface (GUI) to find/generate appropriate designs.
