@@ -17,7 +17,7 @@
 
 	<property name="compiler.debug" value="on"/>
 	<property name="compiler.generate.no.warnings" value="off"/>
-	<property name="compiler.args" value="-target 1.5 -source 1.5"/>
+	<property name="compiler.args" value="-target 1.5 -source 1.5 -encoding utf8"/>
 	<property name="compiler.max.memory" value="128m"/>
 	
 	<path id="sourcepath">
@@ -30,9 +30,9 @@
 	        <fileset dir="${content.root}/../../../build">
 	        	<include name="*.jar"/>	        		        	
 	        </fileset>
-		<fileset dir="${content.root}/../inst/java">
+		<!-- <fileset dir="${content.root}/../inst/java">
 		      	<include name="*.jar"/>	        		        	
-	    </fileset>
+	    </fileset> -->
 	</path> 
 	
 	<path id="complete.classpath">
