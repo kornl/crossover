@@ -18,13 +18,13 @@
  * on Rcpp-devel for a misuse of RcppExport
  */
 
-RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2, SEXP checkES, SEXP randomSS, SEXP correlationS, SEXP interchangeS);
+RcppExport SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP contrastS, SEXP modelS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2, SEXP checkES, SEXP randomSS, SEXP correlationS, SEXP interchangeS);
 
 RcppExport SEXP rcd2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP rcdMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
 RcppExport SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
-RcppExport SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP ZS, SEXP verboseS);
-RcppExport SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP randomSS);
+RcppExport SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP contrastS, SEXP ZS, SEXP verboseS);
+RcppExport SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP contrastS, SEXP randomSS);
 RcppExport SEXP getZ2R(SEXP sS, SEXP pS, SEXP randomSS);
 RcppExport SEXP designMatrix2R(SEXP designS, SEXP vS, SEXP modelS);
 

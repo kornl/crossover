@@ -18,7 +18,7 @@ using namespace Rcpp;
     return ret;
 } */
 
-SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SEXP modelS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP randomSS, SEXP correlationS, SEXP interchangeS) {
+SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP contrastS, SEXP modelS, SEXP vRepS, SEXP balanceSS, SEXP balancePS, SEXP verboseS, SEXP nS, SEXP jumpS, SEXP s2S, SEXP checkES, SEXP randomSS, SEXP correlationS, SEXP interchangeS) {
   
   BEGIN_RCPP // Rcpp defines the BEGIN_RCPP and END_RCPP macros that should be used to bracket code that might throw C++ exceptions.
   
@@ -45,7 +45,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP CS, SE
   mat linkM = as<mat>(linkMS);
   mat cor;
   if (!Rf_isNull( correlationS )) cor = as<mat>(correlationS);
-  mat C = as<mat>(CS); // Contrasts
+  mat C = as<mat>(contrastS); // Contrasts
   mat tCC = trans(C) * C; // t(C) %*% C
   mat Z = getZ(s,p, randomS);
   //mat design = as<mat>(designS);
@@ -192,13 +192,13 @@ bool estimable(mat rcDesign, int v, int model, mat linkM, mat C, mat Z, int verb
     return(estCriterion < 0.0000001);
 }
 
-SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP ZS, SEXP verboseS) {    
+SEXP estimable2R(SEXP rcDesignS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP contrastS, SEXP ZS, SEXP verboseS) {    
     BEGIN_RCPP
     mat rcDesign = as<mat>(rcDesignS);    
     int v = IntegerVector(vS)[0];    
     int model = IntegerVector(modelS)[0];    
     mat linkM = as<mat>(linkMS);  
-    mat C = as<mat>(CS);  
+    mat C = as<mat>(contrastS);  
     mat Z = as<mat>(ZS);  
     int verbose = IntegerVector(verboseS)[0];
     return wrap(estimable(rcDesign, v, model, linkM, C, Z, verbose));
@@ -274,7 +274,7 @@ arma::mat rcd(arma::mat design, int v, int model) {
   return NULL;
 }
 
-SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP randomSS) {
+SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP contrastS, SEXP randomSS) {
   BEGIN_RCPP
   bool randomS = is_true( any( LogicalVector(randomSS) ) );
   int v = IntegerVector(vS)[0];
@@ -282,7 +282,7 @@ SEXP getS12R(SEXP designS, SEXP vS, SEXP modelS, SEXP linkMS, SEXP CS, SEXP rand
   mat design = as<mat>(designS);  
   mat rcDesign = rcd(design, v, model);
   mat linkM = as<mat>(linkMS);
-  mat C = as<mat>(CS); // Contrasts
+  mat C = as<mat>(contrastS); // Contrasts
   mat tCC = trans(C) * C; // t(C) %*% C
   return wrap(getS1(rcDesign, v, model, linkM, tCC, randomS));
   END_RCPP
