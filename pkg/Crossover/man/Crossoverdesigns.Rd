@@ -440,8 +440,7 @@
 \alias{clatworthy.sr99}
 \alias{pb2.64}
 \title{Selected Cross-Over designs from literature}
-\format{A integer matrix ...: \describe{ \item{cross-over design}{All
-designs are integer matrices. ...} }}
+\format{A integer matrix specifying the design. Rows represent periods and columns the subjects.}
 \source{
 Anderson, I. and Preece, D.A. (2002) Locally balanced change-over
 designs. Utilitas Mathematica, To appear.
@@ -519,7 +518,7 @@ residual effects of treatments. Australian Journal of Science Res(A), 2,
 14900168.
 }
 \description{
-Selected Cross-Over designs from literature. The available data sets are:
+Selected Cross-Over designs from literature. The available data sets are:\cr\cr
 federerAtkinson3ta, federerAtkinson3tb, federerAtkinson4ta,
 federerAtkinson4tb, federerAtkinson5ta, fletcher1, fletcher10, fletcher11,
 fletcher12, fletcher13, fletcher14, fletcher15, fletcher16, fletcher17,
@@ -629,8 +628,9 @@ pb2.64.
 \examples{
 data(anderson)
 }
-\references{
-...
-}
+%\references{
+% source - Details of the original source (a reference or URL). In addition, section \references could give secondary sources and usages.
+% references - A section with references to the literature. 
+%}
 \keyword{datasets}
 
