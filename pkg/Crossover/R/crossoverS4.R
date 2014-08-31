@@ -173,7 +173,7 @@ setMethod("show", "CrossoverSearchResult",
 #' @docType methods
 #' @rdname plot-methods
 setMethod("plot", c(x="CrossoverSearchResult", y="missing") ,
-          function(x, y, type=1, show.jumps=FALSE, ...) { #function(x, ) {
+          function(x, y, type=1, show.jumps=FALSE) { #function(x, ) {
             eff <- unlist(x@eff)
             run <- as.factor(rep(1:length(x@eff), each=length(x@eff[[1]])))
             n <- 1:(length(x@eff[[1]])*length(x@eff))
