@@ -26,7 +26,7 @@ public class ConfirmArchivePath extends JDialog implements ActionListener {
 	private static final Log logger = LogFactory.getLog(ConfirmArchivePath.class);
 	
 	public ConfirmArchivePath(JFrame p) {		
-		super(p, "Confirm directory to save designs");	
+		super(p, "Confirm directory to save designs", true);	
 		setUp();
 		
 	}
@@ -56,8 +56,8 @@ public class ConfirmArchivePath extends JDialog implements ActionListener {
 	}
 	
 	private void setUp() {
-		String cols = "5dlu, fill:pref:grow, 5dlu, pref, 5dlu";
-        String rows = "5dlu, fill:200dlu:grow, 5dlu, pref, 5dlu, pref, 5dlu";
+		String cols = "5dlu, fill:pref:grow, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         FormLayout layout = new FormLayout(cols, rows);
         getContentPane().setLayout(layout);
@@ -65,12 +65,18 @@ public class ConfirmArchivePath extends JDialog implements ActionListener {
 		
 		//getContentPane().add(jsp, cc.xyw(2, 2, 3));
 		
+		save.addActionListener(this);
+		getContentPane().add(path, cc.xyw(2, 2, 2));
+		path.setText(System.getProperty("user.home"));
+		
+		selectPath.addActionListener(this);
+		getContentPane().add(selectPath, cc.xy(6, 2));       
 			
 		save.addActionListener(this);
 		getContentPane().add(save, cc.xy(4, 6));
 		
 		dontsave.addActionListener(this);
-		getContentPane().add(dontsave, cc.xy(4, 6));
+		getContentPane().add(dontsave, cc.xy(6, 6));
 		
 		pack();
 		setSize(800,600);
