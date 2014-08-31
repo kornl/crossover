@@ -97,18 +97,17 @@ setMethod("show", "CrossoverDesign",
 #' @docType class
 #' @section Slots: \describe{ \item{list("design")}{An object of class
 #' \code{CrossoverDesign} describing the best design that was
-#' found.}\item{:}{An object of class \code{CrossoverDesign} describing the
-#' best design that was found.} \item{list("startDesigns")}{A list of start
-#' designs to search from.}\item{:}{A list of start designs to search from.}
+#' found.}
+#' \item{list("startDesigns")}{A list of start
+#' designs to search from.}
 #' \item{list("model")}{A numeric specifying the model the design was searched
-#' for or -1 if unknown.}\item{:}{A numeric specifying the model the design was
-#' searched for or -1 if unknown.} \item{list("eff")}{List, Progress of the
-#' algorithm. TODO: Explain further.}\item{:}{List, Progress of the algorithm.
-#' TODO: Explain further.} \item{list("search")}{List, TODO}\item{:}{List,
-#' TODO} \item{list("time")}{Named numeric with the time in seconds the
-#' algorithm was searching.}\item{:}{Named numeric with the time in seconds the
-#' algorithm was searching.} \item{list("misc")}{List - in the moment not
-#' used.}\item{:}{List - in the moment not used.} }
+#' for or -1 if unknown.}
+#' \item{list("eff")}{List, Progress of the
+#' algorithm. TODO: Explain further.}
+#' \item{list("search")}{List, TODO}
+#' \item{list("time")}{Named numeric with the time in seconds the
+#' algorithm was searching.}
+#' \item{list("misc")}{List - in the moment not used.}}
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @examples
 #' 
