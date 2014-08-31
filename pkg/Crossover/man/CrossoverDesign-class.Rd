@@ -10,17 +10,16 @@
 A S4 class for Crossover designs: CrossoverDesign
 }
 \section{Slots}{
- \describe{ \item{list("design")}{ Matrix }\item{:}{ Matrix }
-\item{list("s")}{ Number of sequences. }\item{:}{ Number of sequences. }
-\item{list("p")}{ Number of periods. }\item{:}{ Number of periods. }
-\item{list("v")}{ Number of treatments. }\item{:}{ Number of treatments. }
+ \describe{ \item{list("design")}{ Matrix specifying the design. Rows represent periods and columns the subjects.}
+\item{list("s")}{ Number of sequences. }
+\item{list("p")}{ Number of periods. }
+\item{list("v")}{ Number of treatments. }
 \item{list("model")}{ A numeric specifying the model the design was searched
-for or -1 if unknown. }\item{:}{ A numeric specifying the model the design
-was searched for or -1 if unknown. } \item{list("description")}{ Optional
-description of design or reference. }\item{:}{ Optional description of
-design or reference. } \item{list("attr")}{ List with attributes. }\item{:}{
-List with attributes. } \item{list("misc")}{ List with miscellaneous stuff -
-not used yet. }\item{:}{ List with miscellaneous stuff - not used yet. } }
+for or -1 if unknown. }
+\item{list("description")}{ Optional
+description of design or reference. }
+\item{list("attr")}{ List with attributes. }
+\item{list("misc")}{ List with miscellaneous stuff - not used yet. } }
 }
 \examples{
 design <- t(rbind(c(1,1,2,2),
