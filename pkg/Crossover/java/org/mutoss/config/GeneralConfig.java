@@ -235,4 +235,12 @@ public class GeneralConfig extends SpecificConfig {
 		return Boolean.parseBoolean(getProperty("askWhenGraphIsNotSaved", "false"));
 	}
 
+	public void setHaveAskedForSaveDir(boolean b) {
+		setProperty("haveAskedForSaveDir", ""+b);		
+	}
+	
+	public boolean haveAskedForSaveDir() {
+		return Boolean.parseBoolean(getProperty("haveAskedForSaveDir", "false"));
+	}
+
 }
