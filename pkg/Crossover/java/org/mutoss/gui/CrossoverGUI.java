@@ -43,6 +43,7 @@ import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.ClassConfig;
 import org.mutoss.config.Configuration;
 import org.mutoss.gui.archive.DesignArchiveControl;
+import org.mutoss.gui.dialogs.ConfirmArchivePath;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -137,6 +138,12 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 				screenSize.height - inset*2);
 
 		addWindowListener(this);
+		
+		//TODO: Do we want to bother the user with saving on first start-up?
+		if (!Configuration.getInstance().getGeneralConfig().haveAskedForSaveDir() || true) {
+			new ConfirmArchivePath(this);
+			Configuration.getInstance().getGeneralConfig().setHaveAskedForSaveDir(true);
+		}
 		
 		setVisible(true);
 		
