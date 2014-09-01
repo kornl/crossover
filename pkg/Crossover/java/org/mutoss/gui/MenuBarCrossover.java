@@ -67,7 +67,8 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
 		JMenu menu = new JMenu("Analysis");
 		menu.setMnemonic(KeyEvent.VK_A);
 
-		menu.add(makeMenuItem("Extended analysis", "analysis"));
+		menu.add(makeMenuItem("Extended analysis", "analysis", false));
+		menu.add(makeMenuItem("Sample size calculations", "analysis", false));
 		//if (Configuration.getInstance().getGeneralConfig().experimentalFeatures()) {
 		//menu.addSeparator();
 		//menu.add(makeMenuItem("Power analysis (still experimental)", "powerAnalysis"));		
