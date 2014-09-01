@@ -83,6 +83,14 @@ public class GeneralConfig extends SpecificConfig {
 	
 	public void setCheckOnline(boolean checkOnline) {
 		setProperty("checkOnline", ""+checkOnline);
+	}	
+	
+	public boolean haveReadGPL() {
+		return Boolean.parseBoolean(getProperty("haveReadGPL", "false"));
+	}
+	
+	public void setHaveReadGPL(boolean checkOnline) {
+		setProperty("haveReadGPL", ""+checkOnline);
 	}
 	
 	public boolean tellAboutCheckOnline() {
@@ -235,12 +243,22 @@ public class GeneralConfig extends SpecificConfig {
 		return Boolean.parseBoolean(getProperty("askWhenGraphIsNotSaved", "false"));
 	}
 
-	public void setHaveAskedForSaveDir(boolean b) {
-		setProperty("haveAskedForSaveDir", ""+b);		
+	public void setAskForSaveDir(boolean b) {
+		setProperty("askForSaveDir", ""+b);		
 	}
 	
-	public boolean haveAskedForSaveDir() {
-		return Boolean.parseBoolean(getProperty("haveAskedForSaveDir", "false"));
+	public boolean askForSaveDir() {
+		return Boolean.parseBoolean(getProperty("askForSaveDir", "true"));
 	}
 
+	public void setSaveDir(String saveDir) {
+        setProperty("savedir", saveDir);
+    }
+
+    public String getSaveDir() {    	
+        String saveDir = getProperty("savedir", "NOT_SET");
+        if (!new File(saveDir).exists()) return "NOT_SET";
+        return saveDir;
+    }
+	
 }
