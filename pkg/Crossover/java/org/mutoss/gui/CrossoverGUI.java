@@ -46,6 +46,7 @@ import org.mutoss.config.Configuration;
 import org.mutoss.gui.archive.DesignArchiveControl;
 import org.mutoss.gui.dialogs.ConfirmArchivePath;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
+import org.mutoss.gui.dialogs.TellAboutOnlineUpate;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
