@@ -32,6 +32,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.af.commons.errorhandling.DefaultExceptionHandler;
 import org.af.commons.errorhandling.ErrorHandler;
 import org.af.commons.logging.ApplicationLog;
 import org.af.commons.logging.LoggingSystem;
@@ -101,6 +102,14 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 					new ApplicationLog());
 			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
 		} 
+		
+		// Java 7 does not respect system property "sun.awt.exception.handler".
+		// Eventually this fix should be included in afcommons.
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {		
+				Thread.currentThread().setUncaughtExceptionHandler(new DefaultExceptionHandler());
+			}
+		});
 		
 		RControl.getRControl(true);
 		
