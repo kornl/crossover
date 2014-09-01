@@ -7,6 +7,14 @@ import java.util.Vector;
 import org.mutoss.gui.Design;
 import org.mutoss.gui.RControl;
 
+/**
+ * The class DesignArchive has 
+ * <ul>
+ * <li>a list of designs,</li>
+ * <li>a general description of the archive and</li>
+ * <li>it contains and a specific file it should save these designs on request (methods save).</li> 
+ * @author kornel
+ */
 public class DesignArchive {
 	
 	List<Design> designs = new Vector<Design>();
@@ -14,12 +22,12 @@ public class DesignArchive {
 	String description = "";
 
 	public DesignArchive(String file) {
-		this(new File(file));
+		this(file==null?null:new File(file));
 	}
 
 	public DesignArchive(File file) {
 		this.file = file;
-		if (!file.exists()) {
+		if (file == null || !file.exists()) {
 			//TODO Warn
 			return;
 		}		
@@ -50,7 +58,7 @@ public class DesignArchive {
 		this.description = description;
 	}
 
-	public void addDesign(Design design) {
+	void addDesign(Design design) {
 		designs.add(design);
 	}
 	

@@ -191,7 +191,7 @@ public class MenuBarCrossover extends JMenuBar implements ActionListener {
         	new RObjectLoadingDialog(control, "Select design");
         	createLastUsed();        	
         } else if (e.getActionCommand().equals("saveArchive")) {    	
-        	control.dac.save();
+        	control.dac.save(control);
         } else if (e.getActionCommand().equals("showLog")) {    	
         	showLog();
         } else if (e.getActionCommand().equals("reportError")) {       	

@@ -147,13 +147,27 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 				screenSize.width  - inset*2,
 				screenSize.height - inset*2);
 
+		/* 
+		 * We want to check for unsaved changes and eventually quit the R console as well, 
+		 * so we implement the WindowListener interface and let windowClosing() do the work.
+		 */
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 		
-		//TODO: Do we want to bother the user with saving on first start-up?
-		if (!Configuration.getInstance().getGeneralConfig().haveAskedForSaveDir() || true) {
-			new ConfirmArchivePath(this);
-			Configuration.getInstance().getGeneralConfig().setHaveAskedForSaveDir(true);
-		}
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {				
+				if (!Configuration.getInstance().getGeneralConfig().haveReadGPL()) {
+					new TellAboutOnlineUpate(null);
+					Configuration.getInstance().getGeneralConfig().setTellAboutCheckOnline(true);
+				}
+				/*new Thread(new Runnable() {
+					public void run() {
+						Thread.currentThread().setUncaughtExceptionHandler(new DefaultExceptionHandler());
+						VersionComparator.getOnlineVersion();
+					}
+				}).start();*/				
+			}
+		});
 		
 		setVisible(true);
 		
@@ -337,18 +351,6 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	}
 
 	/**
-	 * @param e
-	 */
-	private void callOCFunction(ActionEvent e) {
-		String s = "";
-		try {
-					
-		} catch (Exception exc) {
-			JOptionPane.showMessageDialog(this, "An error ocurred with the following command:\n"+s+"\n\nError message:\n"+exc.getMessage(), "Error in calculation", JOptionPane.ERROR_MESSAGE);			
-		}
-	}
-
-	/**
 	 * Shows a file from a package
 	 * @param s String like 
 	 */
@@ -385,7 +387,14 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	 * WindowListener methods - the first one closes the R console if  
 	 */
 	public void windowClosing(WindowEvent e) {
-		// dac.save(); // This is not very save if closed with q()
+		if (dac.designsChanged) {
+			int answer = JOptionPane.showConfirmDialog(this, "There are unsaved designs. Should they be saved?", "Unsaved designs", JOptionPane.YES_NO_OPTION);
+			if (answer==JOptionPane.YES_OPTION) {
+				dac.save(this);
+				// It is not save to continue if saving is still in progress.
+				return;
+			}
+		}
 		if (RControl.getR().eval("exists(\".isBundle\")").asRLogical().getData()[0]) {
 			RControl.getR().eval("q(save=\"no\")");
 		} else {

@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.config.Configuration;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -43,7 +44,7 @@ public class ConfirmArchivePath extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, path.getText()+" is not a directory.", "No valid directory", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			//TODO Saving path
+			Configuration.getInstance().getGeneralConfig().setSaveDir(f.getAbsolutePath());
 			dispose();
 		} else if (e.getSource()==dontsave) {
 			dispose();
