@@ -97,7 +97,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		// This Errorhandling should be uncommented for testing versions that should report errors:
 		if (!LoggingSystem.alreadyInitiated()) {
 			LoggingSystem.init(
-					"/org/mutoss/gui/commons-logging-verbose.properties",
+					"/org/mutoss/gui/commons-logging.properties",
 					true,
 					false,
 					new ApplicationLog());
