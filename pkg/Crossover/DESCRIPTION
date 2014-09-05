@@ -1,7 +1,7 @@
 Package: Crossover
 Type: Package
 Title: Crossover Designs
-Version: 0.1-11
+Version: 0.1-12
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
 Description: Package Crossover provides different crossover designs from combinatorial or search algorithms as well as from literature and a GUI to access them.

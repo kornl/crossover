@@ -1,8 +1,24 @@
 
-Changes in version 0.1-11 (??-0?-2014)
+Changes in version 0.1-12 (??-0?-2014)
 ======================================
 
+- Fixed portable C++ code problem: "Other macros, typically upper-case,
+  may be defined by the compiler or system headers and can cause problems. 
+  The most common issue involves the names of the Intel CPU registers such
+  as CS, DS and SS defined on i586/x64 Solaris in <sys/regset.h> and often 
+  included indirectly by <stdlib.h> and other core headers."
 
+- User is asked whether files should be saved, if new designs were created.
+
+- Less logging output in the R console.
+
+- Clean-up
+
+
+Features in version 0.1-11 (05-09-2014)
+=======================================
+
+- Solarix x64 support.
 
 Features in version 0.1-10 (27-08-2014)
 =======================================
@@ -14,3 +30,5 @@ Features in version 0.1-10 (27-08-2014)
 - Search algorithm to find efficient cross-over designs.
 
 - Graphical user interface (GUI) to find/generate appropriate designs.
+
+ 666 files changed, 30746 insertions(+), 2494 deletions(-)
