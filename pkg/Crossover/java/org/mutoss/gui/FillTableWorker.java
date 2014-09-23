@@ -16,6 +16,13 @@ public class FillTableWorker extends SwingWorker<Void, Void> {
 	}
 	
 	protected Void doInBackground() throws Exception {
+		while (!gui.getLock()) {
+			try {
+				Thread.sleep(1000);
+			} catch(InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+		}
 		int s1 = Integer.parseInt(gui.spinnerS1.getModel().getValue().toString());
 		int s2 = Integer.parseInt(gui.spinnerS2.getModel().getValue().toString());
 		int t = Integer.parseInt(gui.spinnerT.getModel().getValue().toString());
@@ -47,6 +54,7 @@ public class FillTableWorker extends SwingWorker<Void, Void> {
 		if (gui.designPanel.jcbMyDesigns.isSelected()) {
 			list.addAll(gui.dac.getDesigns(t, p, s1, s2, DesignArchiveControl.ENTERED));
 		}
+		gui.resetLock();
 		return null;
 	}  
 	

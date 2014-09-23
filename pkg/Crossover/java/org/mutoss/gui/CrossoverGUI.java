@@ -166,6 +166,15 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 						VersionComparator.getOnlineVersion();
 					}
 				}).start();*/				
+		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {				
+				try {
+				    Thread.sleep(1000);
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+				lock = false;
 			}
 		});
 		
@@ -481,6 +490,26 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		UIManager.setLookAndFeel(Configuration.getInstance().getJavaConfig().getLooknFeel());
 		WidgetFactory.setFontSizeGlobal(Configuration.getInstance().getGeneralConfig().getFontSize());
 		SwingUtilities.updateComponentTreeUI(this);
+	}
+
+	private boolean lock = true;
+	
+	/**
+	 * We must make sure that we return on the same thread that we entered from R.
+	 * FillTableWorker must therefore wait until CrossoverGUI is finished.
+	 * See for example: https://github.com/s-u/rJava/issues/18
+	 * @return
+	 */
+	public synchronized boolean getLock() {
+		if (!lock) {
+			lock = true;
+			return true;
+		}
+		return false;
+	}
+	
+	public void resetLock() {
+		lock = false;
 	}
 
 }
