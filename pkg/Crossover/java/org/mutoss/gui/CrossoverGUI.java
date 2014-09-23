@@ -94,26 +94,36 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		super("CROSS-OVER DESIGN SEARCH TOOL");
 		//setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/graph/images/rjavaicon64.png"))).getImage());
 		
-		// This Errorhandling should be uncommented for testing versions that should report errors:
-		if (!LoggingSystem.alreadyInitiated()) {
-			LoggingSystem.init(
-					"/org/mutoss/gui/commons-logging.properties",
-					true,
-					false,
-					new ApplicationLog());
-			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
-		} 
+		if (!Configuration.getInstance().getGeneralConfig().failSafeMode() 
+				|| JOptionPane.showConfirmDialog(this, "Start Logging and Error Handler?", "Logging and error handler", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+
+			// This Errorhandling should be uncommented for testing versions that should report errors:
+			if (!LoggingSystem.alreadyInitiated()) {
+				LoggingSystem.init(
+						"/org/mutoss/gui/commons-logging.properties",
+						true,
+						false,
+						new ApplicationLog());
+				ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
+			} 
+
+			// Java 7 does not respect system property "sun.awt.exception.handler".
+			// Eventually this fix should be included in afcommons.
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {		
+					Thread.currentThread().setUncaughtExceptionHandler(new DefaultExceptionHandler());
+				}
+			});
+		}
 		
-		// Java 7 does not respect system property "sun.awt.exception.handler".
-		// Eventually this fix should be included in afcommons.
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {		
-				Thread.currentThread().setUncaughtExceptionHandler(new DefaultExceptionHandler());
-			}
-		});
-		
+		if (Configuration.getInstance().getGeneralConfig().failSafeMode()) {
+			JOptionPane.showMessageDialog(this, "The R enginge will now be initialized.", "Initializing R engine", JOptionPane.INFORMATION_MESSAGE);
+		}
 		RControl.getRControl(true);
 		
+		if (Configuration.getInstance().getGeneralConfig().failSafeMode()) {
+			JOptionPane.showMessageDialog(this, "R version will be inspected", "R version", JOptionPane.INFORMATION_MESSAGE);
+		}
 		/* Get and save R and gMCP version numbers */
 		try {		
 			Configuration.getInstance().getGeneralConfig().setRVersionNumber(RControl.getR().eval("paste(R.version$major,R.version$minor,sep=\".\")").asRChar().getData()[0]);
@@ -123,11 +133,14 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 			// This is no vital information and will fail for e.g. R 2.8.0, so no error handling here...
 		}
 		
-		setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/rjavaicon64.png"))).getImage());
-		try {
-			setLooknFeel();
-		} catch (Exception e1) {
-			JOptionPane.showMessageDialog(this, "Font size and Look'n'Feel could not be restored.", "Error restoring Look'n'Feel", JOptionPane.ERROR_MESSAGE);
+		if (!Configuration.getInstance().getGeneralConfig().failSafeMode() 
+				|| JOptionPane.showConfirmDialog(this, "Set Icon and Look'n'Feel?", "Icon and Look and Feel", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+			setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/rjavaicon64.png"))).getImage());
+			try {
+				setLooknFeel();
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(this, "Font size and Look'n'Feel could not be restored.", "Error restoring Look'n'Feel", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		
 		glassPane = new InfiniteProgressPanel(this, "Calculating");
@@ -154,18 +167,23 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
 		
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {				
-				if (!Configuration.getInstance().getGeneralConfig().haveReadGPL()) {
-					new TellAboutOnlineUpate(null);
-					Configuration.getInstance().getGeneralConfig().setTellAboutCheckOnline(true);
-				}
-				/*new Thread(new Runnable() {
+		if (!Configuration.getInstance().getGeneralConfig().failSafeMode() 
+				|| JOptionPane.showConfirmDialog(this, "Show GPL?", "GPL", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {				
+					if (!Configuration.getInstance().getGeneralConfig().haveReadGPL()) {
+						new TellAboutOnlineUpate(null);
+						Configuration.getInstance().getGeneralConfig().setTellAboutCheckOnline(true);
+					}
+					/*new Thread(new Runnable() {
 					public void run() {
 						Thread.currentThread().setUncaughtExceptionHandler(new DefaultExceptionHandler());
 						VersionComparator.getOnlineVersion();
 					}
 				}).start();*/				
+				}
+			});
+		}
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {				

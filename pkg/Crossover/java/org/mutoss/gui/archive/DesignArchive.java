@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
+import org.mutoss.config.Configuration;
 import org.mutoss.gui.Design;
 import org.mutoss.gui.RControl;
 
@@ -31,6 +34,10 @@ public class DesignArchive {
 			//TODO Warn
 			return;
 		}		
+		if (Configuration.getInstance().getGeneralConfig().failSafeMode()) {
+			int answer = JOptionPane.showConfirmDialog(null, "Should the file\n"+file.getAbsolutePath()+"\nbe loaded?", "Load result files", JOptionPane.YES_NO_OPTION);
+			if (answer == JOptionPane.NO_OPTION) return;
+		}
 		String[] loadedDesigns = RControl.getR().eval("load(\""+file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\")+"\")").asRChar().getData();
 		for (String s : loadedDesigns) {
 			String title = "Unknown";

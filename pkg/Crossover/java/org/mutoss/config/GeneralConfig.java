@@ -260,5 +260,19 @@ public class GeneralConfig extends SpecificConfig {
         if (!new File(saveDir).exists()) return "NOT_SET";
         return saveDir;
     }
+    
+    /**
+     * For example use
+     * <pre> 
+     * Sys.setenv(FAILSAFE="true")
+ 	 * </pre>
+ 	 * to activate failsafe mode.
+     * @return
+     */
+    public Boolean failSafeMode() {
+    	String failsafe = System.getenv("FAILSAFE");
+    	if (failsafe==null) return false;
+    	return Boolean.parseBoolean(failsafe);
+    }
 	
 }
