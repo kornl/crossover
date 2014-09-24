@@ -43,12 +43,9 @@ public class DesignArchiveControl {
 		savedir = Configuration.getInstance().getGeneralConfig().getSaveDir();	
 		if (!savedir.equals("NOT_SET")) {
 			try {
-				if (searchResults.file == null) {
-					searchResults.file = new File(savedir+"/"+"searchResults.RData");
-				}
-				if (defaultEntered.file == null) {
-					defaultEntered.file = new File(savedir+"/"+"enteredDesigns.RData");
-				}
+				searchResults.file = new File(savedir+"/"+"searchResults.RData");
+				defaultEntered.file = new File(savedir+"/"+"enteredDesigns.RData");
+				
 				searchResults.save();		
 				defaultEntered.save();
 				for (DesignArchive da : archiveLibrary) {
