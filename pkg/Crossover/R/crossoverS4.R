@@ -161,11 +161,12 @@ setMethod("show", "CrossoverSearchResult",
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @examples
 #' 
-#' 
+#' \dontrun{
 #' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
 #' plot(x)
+#' }
 #' 
-#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, n=c(500,10), jumps=c(10, 100))
+#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, n=c(50,10), jumps=c(10, 10))
 #' plot(x, show.jumps=TRUE)
 #' plot(x, type=2)
 #' 
