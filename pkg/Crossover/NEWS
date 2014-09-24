@@ -1,5 +1,5 @@
 
-Changes in version 0.1-12 (??-0?-2014)
+Changes in version 0.1-12 (25-09-2014)
 ======================================
 
 - Fixed portable C++ code problem: "Other macros, typically upper-case,
@@ -8,9 +8,16 @@ Changes in version 0.1-12 (??-0?-2014)
   as CS, DS and SS defined on i586/x64 Solaris in <sys/regset.h> and often 
   included indirectly by <stdlib.h> and other core headers."
 
+- GUI threads analysing the available pacakages by calling Rare stopped until 
+  the call to show the GUI has been returned back to R. 
+  (Before you could notice "stack imbalance" warnings and complete crashes of R.)
+
 - User is asked whether files should be saved, if new designs were created.
 
 - Less logging output in the R console.
+
+- Removed a few designs that were only building blocks for crossover designs from
+  the list of crossover designs.
 
 - Clean-up
 
