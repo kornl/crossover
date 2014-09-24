@@ -518,7 +518,15 @@ residual effects of treatments. Australian Journal of Science Res(A), 2,
 14900168.
 }
 \description{
-Selected Cross-Over designs from literature. The available data sets are:\cr\cr
+Selected Cross-Over designs from literature. 
+
+These data sets are stored combined by prefix, so if you want to access design
+\code{fletcher10}, you would use the command \code{data(fletcher10)} and
+afterwards all 31 design from fletcher1 up to fletcher31 are loaded.
+
+%Another way to get these data sets is to use the function 
+
+The available data sets are:\cr\cr
 federerAtkinson3ta, federerAtkinson3tb, federerAtkinson4ta,
 federerAtkinson4tb, federerAtkinson5ta, fletcher1, fletcher10, fletcher11,
 fletcher12, fletcher13, fletcher14, fletcher15, fletcher16, fletcher17,
