@@ -8,7 +8,7 @@ Changes in version 0.1-12 (25-09-2014)
   as CS, DS and SS defined on i586/x64 Solaris in <sys/regset.h> and often 
   included indirectly by <stdlib.h> and other core headers."
 
-- GUI threads analysing the available pacakages by calling Rare stopped until 
+- GUI threads analysing the available packages by calling R are stopped until 
   the call to show the GUI has been returned back to R. 
   (Before you could notice "stack imbalance" warnings and complete crashes of R.)
 
