@@ -22,8 +22,8 @@
 #' @keywords misc
 #' @examples
 #' 
-#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
-#' design.efficiency(x)
+#' data(fletcher)
+#' design.efficiency(fletcher1)
 #' 
 #' @export design.efficiency
 design.efficiency <- function(design) {

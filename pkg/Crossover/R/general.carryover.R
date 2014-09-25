@@ -25,7 +25,8 @@
 #' @keywords misc
 #' @examples
 #' 
-#' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+#' data(fletcher)
+#' general.carryover(fletcher1, model=1)
 #' 
 #' @export general.carryover
 general.carryover<-function(design,model,t0=1,rho=0.5){  

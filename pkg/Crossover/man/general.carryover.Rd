@@ -28,7 +28,8 @@ Search for a Cross-Over Design
 See the vignette of this package for further details.
 }
 \examples{
-x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, eff.factor=1)
+data(fletcher)
+general.carryover(fletcher1, model=1)
 }
 \author{
 Byron Jones

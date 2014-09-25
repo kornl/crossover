@@ -1,12 +1,12 @@
-#' Graphical User Interface for the Creation of SRMTP Graphs
+#' Graphical User Interface for Crossover Designs
 #' 
-#' Starts a graphical user interface for the creation of SRMTP graphs.
+#' Starts a graphical user interface for accessing and creating crossover designs.
 #' 
 #' See the vignette of this package for further details, since describing a GUI
-#' interface is better done with a lot of nice pictures.
+#' interface is better done with some nice pictures.
 #' 
-#' @return The function itself returns NULL. But from the GUI designs and
-#' objects can be created or edited that will be available in R under the
+#' @return The function itself returns nothing of interest. But from the GUI designs
+#' and objects can be created or edited that will be available in R under the
 #' specified variable name after saving.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @keywords misc
