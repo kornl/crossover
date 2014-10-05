@@ -169,7 +169,7 @@ This section is work in progress.
 
 \end{appendix}
 
-<<bibtexA, results='asis'>>=
+<<bibtexA, results='asis', echo=FALSE>>=
 if (!exists("bibCall")) {
   # RStudio / bibtex / knitr child document workaround from http://tex.stackexchange.com/questions/31373/citations-with-no-bibliography-at-the-end
   cat("\\newsavebox\\mytempbib \\savebox\\mytempbib{\\parbox{\\textwidth}{\\bibliography{literatur}}}")
