@@ -1,0 +1,177 @@
+<<set-parent, echo=FALSE, cache=FALSE, include=FALSE>>=
+set_parent('Crossover.Rnw')
+library(multcomp)
+@
+
+\begin{appendix} 
+
+The appendices are all work in progress in the moment.
+
+\section{Appendix - Row-Column Designs}
+
+This section is work in progress.
+
+\section{Appendix - Variance Balance / Partial Balance}
+
+\begin{Def}{Variance Balance}
+  A design is \emph{variance balanced} if $\Var[\hat\tau_i-\hat\tau_j]$ is constant for all pairs of the $n$ treatment effects $\tau_i$, $\tau_j$, $1\leq i,j\leq n$, $i\neq j$.
+\end{Def}
+
+\begin{Def}{Partially balanced incomplete block design with two associate classes}
+  A \emph{partially balanced incomplete block design with two associate classes} (or short PBIBD(2) or sometimes even shorter D(2)) is a design that fulfils the following (see \cite{clatworthy1973tables}):
+  \begin{itemize}
+    \item There are $b$ blocks of $k$ units each.
+    \item There are $v$ treatments and $v>k$, so that not all treatments can occur in a block. Each treatment occurs once in each block and is assigned $r$ times.
+    \item Let X be the set of treatments. Then there is a partition of $X\times X$ into three relations, with one relation the identity and the other two relations $R_1$ and $R_2$ fulfilling the following properties:
+    \begin{itemize}
+      \item A treatment $y$ is called an $i$th associates, $i\in\{1,2\}$, if and only if $(x,y)\in R_i$. Each treatment $x$ has $n_i$ $i$th associates.
+      \item For all $i,j,k\in\{1,2\}$ there is a constant numbers $p_{jk}^i$, so that for all $(x,y)\in R_i$ the number of treatments $z$ with $(x,z)\in R_j$ and $(z,y)\in R_k$ is $p_{jk}^i$.
+      \item The association scheme is \emph{commutative}, i.e.\ $p_{jk}^i=p_{kj}^i$.
+    \end{itemize}
+  \item There are two numbers $\lambda_1$, $\lambda_2$ so that $(x,y)\in R_i$, $i\in\{1,2\}$, implies that treatment $x$ and $y$ occur together in exactly $\lambda_i$ blocks.
+  \end{itemize}
+\end{Def}
+
+\section{Appendix - Matrix Algebra}
+
+\subsection{Fisher information}\index{Fisher information}\index{information matrix}
+
+For a linear regression model with design matrix $X$ and variance $\sigma^2$ the information matrix is given by
+\[\frac{1}{\sigma^2}X^TX.\]
+(Any constraints or citations?)
+
+\subsection{Generalized inverse}
+
+\begin{Def}[Moore-Penrose pseudoinverse]\index{Moore-Penrose pseudoinverse}
+ For $A\in\R^{m\times n}$ a matrix $A^+$ is called Moore-Penrose pseudoinverse iff
+ \begin{enumerate}
+ \item $AA^+A=A$,
+ \item $A^+AA^+=A^+$,
+ \item $(AA^+)^T=AA^+$ and
+ \item $(A^+A)^T=A^+A$.
+ \end{enumerate}
+ The Moore-Penrose pseudoinverse exists for every real matrix and is unique.
+\end{Def}
+
+\begin{Theorem}
+  Let $Ax=b$ a linear equation system in $n$ variables and $A^+$ the Moore-Penrose pseudoinverse
+  of $A$. Solutions exist if and only if $AA^+b=b$ and are given in this case by
+  \[\{A^+b+(I-A^+A)y\;|\; y\in\R^n\}.\]
+  \begin{Proof}
+  If  $AA^+b=b$ we have for every $A^+b+(I-A^+A)y$ with $y\in\R^n$:
+  \[A(A^+b+(I-A^+A)y)=b+Ay-AA^+Ay=b+Ay-Ay=b\]
+  ...
+  \end{Proof}
+\end{Theorem}
+
+\begin{Theorem}\label{thr:estimable}
+  Let $y=X\beta+\epsilon$ be a linear model with $\epsilon\sim\sN(0,\sigma^2I)$. 
+  Then $t^T\beta$ is estimable iff $t^T(X^TX)^+X^TX=t^T$.  
+  %\begin{Proof}
+  %"$\Rightarrow$": %If $t^T\beta$ is estimable if a $z$ exists with $X^TXz=t$.
+  %\[X^TX(X^TX)^+t=t\]
+  %\end{Proof}
+\end{Theorem}
+
+\subsection{Linear Mixed Models}\index{Linear Mixed Models}
+In the \emph{linear mixed model} the response Y is given by
+\[Y=X\beta+Z\gamma+\epsilon\]
+with $X$ and $Z$ the fixed and random effects design matrices, $\epsilon\sim\sN(0,\Sigma)$ and $\gamma\sim\sN(0,D)$. Then\footnote{See for example \cite[chapter 5]{lee2006generalized}.} \[\Var(Y)=ZDZ^T+\Sigma.\]
+
+For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
+
+\[\hat\beta=(X^tV^{-1}X)^{-1}X^tV^{-1}Y.\]
+
+<<mixed1, echo=TRUE>>=
+
+tc <- textConnection("subject period treatment outcome
+1 1 C 5.15
+1 2 B 5.97
+2 1 B 3.19
+2 2 C 4.74
+3 1 A 6.59
+3 2 B 6.28
+4 1 C 2.26
+4 2 A 4.12
+5 1 B 5.87
+5 2 A 2.99
+6 1 A 4.94
+6 2 C 3.71
+7 1 C 3.81
+7 2 A 1.54
+8 1 A 6.18
+8 2 C 5.56
+9 1 A 2.37
+9 2 B 5.76
+10 1 C 5.15
+10 2 B 5.87
+11 1 B 3.09
+11 2 A 1.44
+12 1 B 3.91
+12 2 C 4.32
+13 1 A 4.32
+13 2 B 6.07
+14 1 B 4.94
+14 2 A 0.62
+15 1 C 2.68
+15 2 A 5.76
+16 1 B 3.60
+16 2 C 1.85
+17 1 C 4.43
+17 2 B 5.15
+18 1 A 0.82
+18 2 C 0.62")            
+
+example5.2 <- read.table(tc, header = TRUE, as.is=TRUE)
+close(tc)
+example5.2$treatment <- factor(example5.2$treatment, levels=c("C", "A", "B"))
+
+fit <- lm(outcome~subject+period+treatment, data=example5.2)
+summary(glht(fit, linfct=mcp(treatment="Dunnett")))
+
+library(nlme)
+
+fit <- lme(outcome~period+treatment, random=~1| subject, data=example5.2)
+summary(fit)
+# Compare standard error with book (REML, p.219): check.
+summary(glht(fit, linfct=mcp(treatment="Dunnett")))
+
+@
+
+\section{Appendix - Internals}
+
+\subsection{Naming conventions}
+Most functions exist as R and C/C++ variant, with the following naming conventions:
+
+We have functions in R and on the C/C++ level with the same name (in our folowing example \texttt{rcd}) that should be used in R and C/C++ respectively. The R function \texttt{rcd} calls the C function \texttt{rcd2R} which handles the conversion from and to the R structures the SEXP are pointing to. Apart from that we often provide an R function with a suffix \texttt{\_R}, i.e.\ in our example \texttt{rcd\_R}, which is a pure R function and reimplements the same functionality for testing purposes.
+
+\lstset{language=C++}
+\begin{lstlisting}
+SEXP createRCDesign2R(SEXP designS, SEXP vS, SEXP modelS) {...}
+arma::mat createRCDesign(arma::mat design, int v, int model) {...}
+\end{lstlisting}
+
+\lstset{language=R}
+\begin{lstlisting}
+createRCDesign <- function(X, v, model) {
+  return(.Call("createRCDesign2R", X, v, model, PACKAGE = "Crossover"))
+}
+createRCDesign_R <- function(X, v, model) {
+  # Same functionality written in R
+}
+\end{lstlisting}
+
+A variable $v$ means \emph{always} the original number of treatments. A variable $vv$ stands for the maximum number of different settings\footnote{For the no carry-over into self or placebo model there are actually less settings.}, either $v+v^2$ or for the second-order carry-over effects $v+v^2+v^3$.
+
+\section{Updating the information matrix}
+
+This section is work in progress.
+
+\end{appendix}
+
+<<bibtexA, results='asis'>>=
+if (!exists("bibCall")) {
+  # RStudio / bibtex / knitr child document workaround from http://tex.stackexchange.com/questions/31373/citations-with-no-bibliography-at-the-end
+  cat("\\newsavebox\\mytempbib \\savebox\\mytempbib{\\parbox{\\textwidth}{\\bibliography{literatur}}}")
+}
+@
