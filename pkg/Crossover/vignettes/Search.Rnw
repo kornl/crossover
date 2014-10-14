@@ -1,0 +1,101 @@
+<<set-parent-search, echo=FALSE, cache=FALSE, include=FALSE>>=
+set_parent('Crossover.Rnw')
+library(multcomp)
+@
+
+\section{Search strategy}\label{sec:search}
+Monte-Carlo search for first candidates, followed by parallel hill climbing search, extended by long jumps.
+
+In the following graphic we see 100.000 design evaluations (that take less than 7 seconds on my computer), consisting out of 20 hill climbing search \emph{runs} from 20 different designs as starting point which were selected by a Monte-Carlo search. We can see that 10 out of the 20 search runs were not able to achieve the efficieny the other 10 achieved. We can see, that there were most likely at least four local maxima the hill climbing search found and got stuck:
+
+<<SearchStrategy, echo=TRUE, eval=TRUE, cache=TRUE, dev='png', dpi=150>>=
+
+set.seed(42)
+x <- searchCrossOverDesign(s=9, p=5, v=4, model=4)
+plot(x)
+plot(x, type=2)
+
+@
+
+%For a given cross-over design we create a row-column design, calculate the information matrix $A_r$ for this design from
+%\[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr'.\]
+%For details see \cite{j1995cyclic} and \cite{john2004crossover}.
+
+<<attachNameSpace, echo=TRUE, eval=FALSE, include=FALSE>>=
+ # We will use a lot of internal commands since we will test and evaluate things the normal user will probably not be interested in. Therefore we load and attach the namespace.
+# attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3)
+# When we are finished we call 'detach("namespace:Crossover")'.
+@
+
+There are different approaches to calculate the Information matrix $A_r$ of the row-column design.
+In the following code fragment we compare the two different approaches:
+
+\[A_r=r^\delta-\tfrac{1}{s}N_pN_p'-\tfrac{1}{p}N_sN_s'+\tfrac{1}{ps}rr' \text{ and }\]
+\[A_r=X_r'(I-P_z)X_r.\]
+For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cite{john2004crossover}.
+
+<<TestOfDifferentApproaches, echo=TRUE, eval=TRUE, withNameSpace=TRUE>>=
+
+attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
+
+s <- 6
+p <- 3
+v <- 3
+model <- 1
+data(williams)
+design <- williams3t
+  
+rcDesign <- rcd(design, v, model)
+# JRW, p 2650, first equation on that page, whithout number
+Ar <- infMatrix(rcDesign, v, model)
+Xr <- rcdMatrix(rcDesign, v, model)
+# JRW, p 2650, second equation on that page, number 11
+Ar2 <- t(Xr) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% Xr
+max(abs(Ar-Ar2))
+
+fXr <- cbind(Xr, getZ(s,p))
+Ar3 <- t(fXr) %*% fXr
+ginv(Ar3)[1:12,1:12]-ginv(Ar2)
+
+H <- linkMatrix(model=model,v=v)
+fX <- cbind(Xr%*%H, getZ(s,p))
+A1 <- t(fX) %*% fX
+A2 <- t(H)%*%Ar%*%H
+
+# While A1 and A2 differ:
+
+ginv(A1)[1:6,1:6]
+ginv(A2)
+max(abs(ginv(A1)[1:6,1:6]-ginv(A2)))
+
+# The variances for the estimable contrasts are the same:
+
+C <- matrix(0,nrow=15,ncol=1)
+C[1:2,1] <- c(-1,1)
+tdiff1 <- t(C)%*%ginv(A1)%*%C
+tdiff2 <- t(C[1:6,])%*%ginv(A2)%*%C[1:6,]
+tdiff1 - tdiff2
+
+C <- matrix(0,nrow=6,ncol=1)
+C[1:2,1] <- c(-1,1)
+tdiff1 <- t(C)%*%ginv(A1)[1:6,1:6]%*%C
+tdiff2 <- t(C)%*%ginv(A2)%*%C
+tdiff1 - tdiff2
+
+@
+  
+\begin{Def}[Efficiency]
+  If the difference of two treatments, each replicated r times, is estimated in an \emph{ideal design} with residual variance $\sigma^2$, the variance of the estimated difference $\overline{y}\!_A-\overline{y}\!_B$ is
+  \[V_I=\frac{2\sigma^2}{r}.\]
+  In a cross-over design the variance of a parameter estimates for $A$ and $B$ are given by the corresponding elements $\sigma^2x_A$ and $\sigma^2x_A$ of
+  \[\sigma^2(X^TX)^{-1}\]
+  with $X$ the crossover design matrix. The variance of the difference is $\sigma^2 (x_A + x_B - 2*x_{AB})$ where $x_{AB}$ is the element of $X^TX$ specifying the covariance of the two treatment parameter estimates.
+  The efficiency is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\]
+\end{Def}
+
+<<bibtex-search, results='asis', echo=FALSE>>=
+if (!exists("bibCall")) {
+  # RStudio / bibtex / knitr child document workaround from http://tex.stackexchange.com/questions/31373/citations-with-no-bibliography-at-the-end
+  cat("\\newsavebox\\mytempbib \\savebox\\mytempbib{\\parbox{\\textwidth}{\\bibliography{literatur}}}")
+}
+@
