@@ -136,4 +136,8 @@ public class Design {
 				+", names="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showNames", ""+true))?"TRUE":"FALSE")+")").asRChar().getData()[0];
 		return result;
 	}
+
+	public boolean isEstimable(int model) {
+		return RControl.getR().eval("Crossover:::estimable("+uniqueName+", "+t+", "+model+")").asRLogical().getData()[0];		
+	}
 }

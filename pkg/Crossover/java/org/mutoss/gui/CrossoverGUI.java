@@ -530,4 +530,8 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		lock = false;
 	}
 
+	public int getModel() {		
+		return jCBmodel.getSelectedIndex()+1;
+	}
+
 }
