@@ -51,17 +51,19 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
 	}
 
 	private String getGeneralCarryover(Design design) {
-		String designS = design.rName;
-		if (designS == null) {
-			designS = design.design;
-		}
-		String command = "Crossover:::getDesignText("+designS+", model="+(gui.jCBmodel.getSelectedIndex()+1)
-				+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\""
-				+", carryover="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showCarryOver", ""+false))?"TRUE":"FALSE")
-				+", digits="+Configuration.getInstance().getGeneralConfig().getDigits()
-				+", names="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showNames", ""+true))?"TRUE":"FALSE")
-				+")";
-		return RControl.getR().eval(command).asRChar().getData()[0];
+		String result = "<p><b>Model:</b> "+(gui.jCBmodel.getSelectedItem())+ "<br></p>";
+		if (!design.isEstimable(gui.getModel())) {
+    		result += "<b style=\"color:red\"> Design does not allow to estimate all treatment differences under this model. </b>";
+    	} else {
+    		String command = "Crossover:::getDesignText("+design.uniqueName+", model="+gui.getModel()
+    				+", type=\""+Configuration.getInstance().getProperty("outputF", "HTML")+"\""
+    				+", carryover="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showCarryOver", ""+false))?"TRUE":"FALSE")
+    				+", digits="+Configuration.getInstance().getGeneralConfig().getDigits()
+    				+", names="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showNames", ""+true))?"TRUE":"FALSE")
+    				+")";
+    		result += RControl.getR().eval(command).asRChar().getData()[0];
+    	}
+		return result;
 	}
 
 	public void showError(Throwable e) throws BadLocationException, IOException {    	

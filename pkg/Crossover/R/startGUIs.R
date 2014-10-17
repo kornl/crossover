@@ -47,8 +47,7 @@ getTable <- function(d, type="HTML", forceInteger=TRUE, digits=4, names=TRUE) {
   }
 }
 
-getDesignText <- function(d, model=1, type="HTML", carryover=TRUE, digits=4, var=TRUE, eff=TRUE, names=TRUE) {
-  result <- paste("<p><b>Model:</b> ", models[[getModelNr(model)]], "<br></p>")
+getDesignText <- function(d, model=1, type="HTML", carryover=TRUE, digits=4, var=TRUE, eff=TRUE, names=TRUE) {  
   if (var) {
     m <- general.carryover(d, model=model)$Var.trt.pair
     result <- paste(result, "<b>Var.trt.pair:</b><br>", getTable(m, type, forceInteger=FALSE, digits=digits, names=names))  
