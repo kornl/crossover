@@ -21,4 +21,22 @@ public class DesignTable extends JTable {
 		getModel().setDesigns(designs);
 	}
 	
+	public String getToolTipText(MouseEvent e) {
+        String tooltip = null;
+        java.awt.Point p = e.getPoint();
+        int rowIndex = rowAtPoint(p);
+        int colIndex = columnAtPoint(p);
+        int realRowIndex = convertRowIndexToModel(rowIndex);
+        int realColumnIndex = convertColumnIndexToModel(colIndex);
+
+        if (realColumnIndex == 0) {
+            tooltip = getModel().getDesigns().get(realRowIndex).reference;
+        } else if (realColumnIndex == 3) { //TODO Show how balanced design is.
+        	//
+        } else {
+            tooltip = super.getToolTipText(e);
+        }
+        return tooltip;
+    }
+	
 }
