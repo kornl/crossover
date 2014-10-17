@@ -13,11 +13,11 @@
 #'   buildSummaryTable()
 #' 
 #' @export buildSummaryTable
-buildSummaryTable <- function() {	
+buildSummaryTable <- function(extended=FALSE) {	
 	summaryTable <- data.frame(dataset=character(0), title=character(0), reference=character(0), signature=character(0), t=numeric(0), p=numeric(0), s=numeric(0))
 	path <- system.file("data", package="Crossover")
 	for (file in dir(path=path)) {	
-    # clatworthy1.rda contains the PBIB(2) designs while clatworthyC.rda contains the crossover designs.
+    # clatworthy1.rda contains the PBIB(2) designs while clatworthyC.rda / pbib2combine.rda contains the crossover designs.
     if (file %in% c("clatworthy1.rda")) next
 		designs <- load(paste(path, file, sep="/"), envir=Crossover.env)
 		for (design in designs) {
@@ -28,9 +28,22 @@ buildSummaryTable <- function() {
 			signature <- attr(design, "signature")
 			p <- dim(design)[1]
 			s <- dim(design)[2]
-			t <- length(levels(as.factor(design)))			
-			summaryTable <- rbind(summaryTable, 
-					data.frame(dataset=dataset, title=title, reference=reference, signature=signature, t=t, p=p, s=s))
+			t <- length(levels(as.factor(design)))
+      if (!extended) {
+        summaryTable <- rbind(summaryTable, 
+                              data.frame(dataset=dataset, title=title, reference=reference, signature=signature, t=t, p=p, s=s))
+      } else {
+        variances <- general.carryover(design, model=1)$Var.trt.pair[upper.tri(diag(t))]        
+        balance.delta <- max(variances)-min(variances)
+        
+        for (i in 1:8) {
+          assign(paste("est", i, sep=""), estimable(design, t, i))
+        }
+        
+        summaryTable <- rbind(summaryTable, 
+                              data.frame(dataset=dataset, title=title, reference=reference, signature=signature, t=t, p=p, s=s,
+                                         balance.delta=balance.delta, est1, est2, est3, est4, est5, est6, est7, est8))
+      }
 		}
 	}
 	summaryTable$dataset <- as.character(summaryTable$dataset)
@@ -38,6 +51,27 @@ buildSummaryTable <- function() {
 	summaryTable$signature <- as.character(summaryTable$signature)
 	summaryTable$reference <- as.character(summaryTable$reference)
 	return(summaryTable)
+}
+
+#' Get Crossover Design from Literature Archive
+#' 
+#' Get Crossover Design from Literature Archive
+#' 
+#' See also the documentation for the data files.
+#' 
+#' @return The requested design as numeric matrix. 
+#' Rows represent periods, columns represent sequences.
+#' 
+#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
+#' @references See the documentation for the data files.
+#' @keywords misc
+#' @examples
+#' 
+#' getDesign(williams4t)
+#' 
+#' @export getDesign
+getDesign <- function(design) {
+  return(get(design, envir=Crossover.env))
 }
 
 getSignatureStr <- function(design) {
