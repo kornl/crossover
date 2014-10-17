@@ -4,12 +4,18 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
 
 public class DesignTable extends JTable {
 
+	TableRowSorter<DesignTableModel> sorter;
+	
 	public DesignTable() {
 		super(new DesignTableModel());
-		setAutoCreateRowSorter(true);
+		sorter = new TableRowSorter<DesignTableModel>(getModel());
+		this.setRowSorter(sorter);
+		//setAutoCreateRowSorter(true);
 		//setModel(new DesignTableModel(this));
 	}
 	
@@ -38,5 +44,14 @@ public class DesignTable extends JTable {
         }
         return tooltip;
     }
+	
+	private void setExpressionFilter(String expr) {	    	    
+	    try {
+	    	RowFilter<DesignTableModel, Object> rf = RowFilter.regexFilter(expr, 0);
+	        sorter.setRowFilter(rf);
+	    } catch (java.util.regex.PatternSyntaxException e) {
+	        //TODO: Tell user that expression doesn't parse. 
+	    }
+	}
 	
 }
