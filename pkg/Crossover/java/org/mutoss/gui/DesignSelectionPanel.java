@@ -160,7 +160,7 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 	public void valueChanged(ListSelectionEvent e) {
 		int i = designTable.getSelectedRow();
 		if (i == -1) return;
-		Design design = designTable.getModel().getDesigns().get(i);
+		Design design = designTable.getModel().getDesigns().get(designTable.convertRowIndexToModel(i));
 		jta.showDesign(design);		
 	}
 
