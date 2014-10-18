@@ -3,6 +3,7 @@
 \name{getDesign}
 \alias{getDesign}
 \alias{getDesign,CrossoverSearchResult-method}
+\alias{getDesign,character-method}
 \alias{getDesign,matrix-method}
 \title{Extract Design from a CrossoverSearchResult}
 \usage{
@@ -15,6 +16,7 @@
 }
 \value{
 Returns a numeric matrix representing the crossover design.
+Rows represent periods, columns represent sequences.
 }
 \description{
 Extract Design from a CrossoverSearchResult
@@ -23,6 +25,8 @@ Extract Design from a CrossoverSearchResult
 # n=c(100,10) is very small, but it's just an example and should not take much time
 x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, n=c(100,10))
 getDesign(x)
+
+getDesign("williams4t")
 }
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}

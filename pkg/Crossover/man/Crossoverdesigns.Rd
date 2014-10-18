@@ -439,6 +439,155 @@
 \alias{clatworthy.sr94}
 \alias{clatworthy.sr99}
 \alias{pb2.64}
+\alias{pb2.williams4t.r101}
+\alias{pb2.williams4t.r103}
+\alias{pb2.williams4t.r104}
+\alias{pb2.williams4t.r106}
+\alias{pb2.williams4t.r109}
+\alias{pb2.williams4t.r111}
+\alias{pb2.williams4t.r112}
+\alias{pb2.williams4t.r114}
+\alias{pb2.williams4t.r115}
+\alias{pb2.williams4t.r117}
+\alias{pb2.williams4t.r118}
+\alias{pb2.williams4t.r119}
+\alias{pb2.williams5t.r133}
+\alias{pb2.williams5t.r134}
+\alias{pb2.williams5t.r137}
+\alias{pb2.williams5t.r139}
+\alias{pb2.williams5t.r140}
+\alias{pb2.williams5t.r143}
+\alias{pb2.williams5t.r144}
+\alias{pb2.williams5t.r145}
+\alias{pb2.williams5t.r150}
+\alias{pb2.williams5t.r153}
+\alias{pb2.williams5t.r153~}
+\alias{pb2.williams6t.r164}
+\alias{pb2.williams6t.r165}
+\alias{pb2.williams6t.r169}
+\alias{pb2.williams6t.r170}
+\alias{pb2.williams6t.r171}
+\alias{pb2.williams7t.r172}
+\alias{pb2.williams7t.r175}
+\alias{pb2.williams7t.r176}
+\alias{pb2.williams7t.r177}
+\alias{pb2.williams8t.r186}
+\alias{pb2.williams9t.r193}
+\alias{pb2.williams3t.r42}
+\alias{pb2.williams3t.r43}
+\alias{pb2.williams3t.r44}
+\alias{pb2.williams3t.r45}
+\alias{pb2.williams3t.r46}
+\alias{pb2.williams3t.r47}
+\alias{pb2.williams3t.r48}
+\alias{pb2.williams3t.r50}
+\alias{pb2.williams3t.r51}
+\alias{pb2.williams3t.r52}
+\alias{pb2.williams3t.r54}
+\alias{pb2.williams3t.r56}
+\alias{pb2.williams3t.r58}
+\alias{pb2.williams3t.r59}
+\alias{pb2.williams3t.r60}
+\alias{pb2.williams3t.r61}
+\alias{pb2.williams3t.r62}
+\alias{pb2.williams3t.r63}
+\alias{pb2.williams3t.r65}
+\alias{pb2.williams3t.r66}
+\alias{pb2.williams3t.r67}
+\alias{pb2.williams3t.r68}
+\alias{pb2.williams3t.r69}
+\alias{pb2.williams3t.r70}
+\alias{pb2.williams3t.r71}
+\alias{pb2.williams3t.r72}
+\alias{pb2.williams3t.r73}
+\alias{pb2.williams3t.r75}
+\alias{pb2.williams3t.r78}
+\alias{pb2.williams3t.r79}
+\alias{pb2.williams3t.r80}
+\alias{pb2.williams3t.r81}
+\alias{pb2.williams3t.r82}
+\alias{pb2.williams3t.r84}
+\alias{pb2.williams3t.r85}
+\alias{pb2.williams3t.r86}
+\alias{pb2.williams3t.r89}
+\alias{pb2.williams3t.r91}
+\alias{pb2.williams3t.r93}
+\alias{pb2.williams4t.r94}
+\alias{pb2.williams4t.r95}
+\alias{pb2.williams4t.r96}
+\alias{pb2.williams4t.r97}
+\alias{pb2.williams4t.r98}
+\alias{pb2.williams4t.s1}
+\alias{pb2.williams4t.s11}
+\alias{pb2.williams6t.s18}
+\alias{pb2.williams6t.s21}
+\alias{pb2.williams6t.s24}
+\alias{pb2.williams6t.s26}
+\alias{pb2.williams6t.s27}
+\alias{pb2.williams6t.s28}
+\alias{pb2.williams6t.s29}
+\alias{pb2.williams4t.s3}
+\alias{pb2.williams6t.s31}
+\alias{pb2.williams6t.s32}
+\alias{pb2.williams6t.s34}
+\alias{pb2.williams6t.s35}
+\alias{pb2.williams6t.s37}
+\alias{pb2.williams6t.s38}
+\alias{pb2.williams8t.s51}
+\alias{pb2.williams8t.s52}
+\alias{pb2.williams8t.s53}
+\alias{pb2.williams8t.s58}
+\alias{pb2.williams8t.s59}
+\alias{pb2.williams4t.s6}
+\alias{pb2.williams8t.s61}
+\alias{pb2.williams8t.s63}
+\alias{pb2.williams8t.s65}
+\alias{pb2.williams8t.s66}
+\alias{pb2.williams8t.s67}
+\alias{pb2.williams4t.s7}
+\alias{pb2.williams9t.s82}
+\alias{pb2.williams9t.s85}
+\alias{pb2.williams9t.s86}
+\alias{pb2.williams9t.s88}
+\alias{pb2.williams4t.s9}
+\alias{pb2.williams9t.s91}
+\alias{pb2.williams9t.sr100}
+\alias{pb2.williams3t.sr18}
+\alias{pb2.williams3t.sr19}
+\alias{pb2.williams3t.sr23}
+\alias{pb2.williams3t.sr24}
+\alias{pb2.williams3t.sr25}
+\alias{pb2.williams3t.sr26}
+\alias{pb2.williams4t.sr35}
+\alias{pb2.williams4t.sr36}
+\alias{pb2.williams6t.sr36a}
+\alias{pb2.williams4t.sr37}
+\alias{pb2.williams4t.sr41}
+\alias{pb2.williams4t.sr42}
+\alias{pb2.williams4t.sr44}
+\alias{pb2.williams4t.sr46}
+\alias{pb2.williams5t.sr52}
+\alias{pb2.williams5t.sr53}
+\alias{pb2.williams5t.sr54}
+\alias{pb2.williams5t.sr55}
+\alias{pb2.williams5t.sr56}
+\alias{pb2.williams5t.sr60}
+\alias{pb2.williams6t.sr65}
+\alias{pb2.williams6t.sr66}
+\alias{pb2.williams6t.sr67}
+\alias{pb2.williams6t.sr68}
+\alias{pb2.williams6t.sr72}
+\alias{pb2.williams6t.sr73}
+\alias{pb2.williams6t.sr75}
+\alias{pb2.williams7t.sr80}
+\alias{pb2.williams7t.sr81}
+\alias{pb2.williams7t.sr82}
+\alias{pb2.williams8t.sr90}
+\alias{pb2.williams8t.sr91}
+\alias{pb2.williams8t.sr92}
+\alias{pb2.williams8t.sr93}
+\alias{pb2.williams8t.sr94}
+\alias{pb2.williams9t.sr99}
 \title{Selected Cross-Over designs from literature}
 \format{A integer matrix specifying the design. Rows represent periods and columns the subjects.}
 \source{
@@ -467,6 +616,9 @@ residual effects. Biometrics, 23, 578--580.
 Blaisdell, E.A. and Raghavarao, D. (1980) Partially balanced change-over
 designs based on m-associate class PBIB designs. Journal of the Royal
 Statistical Society, B, 42, 334--338.
+
+Clatworthy, W. H. (1973). Tables of two-associate-class partially balanced 
+designs. US Government Printing Office.
 
 Davis, A.W. and Hall, W.B. (1969) Cyclic change-over designs. Biometrika,
 56, 283--293.
@@ -520,8 +672,13 @@ residual effects of treatments. Australian Journal of Science Res(A), 2,
 \description{
 Selected Cross-Over designs from literature. 
 
-These data sets are stored combined by prefix, so if you want to access design
-\code{fletcher10}, you would use the command \code{data(fletcher10)} and
+You can access all designs via the function \code{getDesign} as in the 
+example \code{getDesign("williams4t")}.
+}
+\details{
+These data sets are stored combined by prefix, so alternatively to using the
+recommended function \code{getDesign} you coud access for example design
+\code{fletcher10} by using the command \code{data(fletcher10)} and
 afterwards all 31 design from fletcher1 up to fletcher31 are loaded.
 
 %Another way to get these data sets is to use the function 
@@ -585,6 +742,9 @@ switchback7t, williams3t, williams4t, williams5t, williams6t, williams7t,
 williams8t, williams9t, pb2.64.
 }
 \examples{
+
+getDesign("williams4t")
+
 data(fletcher)
 ls(pattern="fletcher*")
 fletcher10

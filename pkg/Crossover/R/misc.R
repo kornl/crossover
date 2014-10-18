@@ -64,7 +64,8 @@ combine.PBIB <- function() {
     coDesigns <- summary[ summary$t==t.per.block, ]
     if (dim(coDesigns)[1]>0) {
       for (row in 1:(dim(coDesigns)[1])) {
-        coDesign <- get(coDesigns$dataset[row], envir=Crossover:::Crossover.env)
+        #coDesign <- get(coDesigns$dataset[row], envir=Crossover:::Crossover.env)
+        coDesign <- get(coDesigns$dataset[row], envir=Crossover.env)
         coTitle <- coDesigns[row, "title"]
         coReference <- coDesigns[row, "reference"]
         title <- paste(paste("PB2.", tail(strsplit(pbib.title, " ")[[1]], 1), "-",  coDesigns$dataset[row], sep=""), "- Design from combining PBIB(2)", pbib.title, "with", coTitle)
@@ -88,4 +89,11 @@ combine.PBIB <- function() {
     }    
   }
   save(list=designs, file="/home/kornel/pbib2combine.rda")
+  
+  # Generating alias
+  # designs <- load(paste(system.file("data", package="Crossover"), "pbib2combine.rda", sep="/"), envir=Crossover:::Crossover.env)
+  designs <- load(paste(system.file("data", package="Crossover"), "pbib2combine.rda", sep="/"), envir=Crossover.env)
+  for (design in designs) {
+    cat(paste("\\alias{",design,"}\n", sep=""))
+  }  
 }

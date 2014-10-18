@@ -4,6 +4,10 @@
 #' 
 #' See also the documentation for the data files.
 #' 
+#' @param extended If \code{TRUE} the summary table will have further 
+#' columns with extended information as how balanced the design is and
+#' whether all treatment effect differences are estimable under all
+#' models.
 #' @return TODO
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @references See the documentation for the data files.
@@ -53,27 +57,6 @@ buildSummaryTable <- function(extended=FALSE) {
 	summaryTable$signature <- as.character(summaryTable$signature)
 	summaryTable$reference <- as.character(summaryTable$reference)
 	return(summaryTable)
-}
-
-#' Get Crossover Design from Literature Archive
-#' 
-#' Get Crossover Design from Literature Archive
-#' 
-#' See also the documentation for the data files.
-#' 
-#' @return The requested design as numeric matrix. 
-#' Rows represent periods, columns represent sequences.
-#' 
-#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
-#' @references See the documentation for the data files.
-#' @keywords misc
-#' @examples
-#' 
-#' getDesign(williams4t)
-#' 
-#' @export getDesign
-getDesign <- function(design) {
-  return(get(design, envir=Crossover.env))
 }
 
 getSignatureStr <- function(design) {

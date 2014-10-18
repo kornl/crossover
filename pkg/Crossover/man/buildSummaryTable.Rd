@@ -3,7 +3,13 @@
 \alias{buildSummaryTable}
 \title{Build Summary Table For All Examples From Literature}
 \usage{
-buildSummaryTable()
+buildSummaryTable(extended = FALSE)
+}
+\arguments{
+\item{extended}{If \code{TRUE} the summary table will have further
+columns with extended information as how balanced the design is and
+whether all treatment effect differences are estimable under all
+models.}
 }
 \value{
 TODO

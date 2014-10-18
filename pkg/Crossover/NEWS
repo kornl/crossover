@@ -4,7 +4,15 @@ Changes in version 0.1-13 (??-10-2014)
 
 - It is possible to sort the design table (e.g. by efficiency or number of sequences).
 
-- 
+- The now easiest and recommended way to access designs from literature is to use
+  function 'getDesign' as in: 
+    getDesign("williams4t")
+
+- Combination of Clatworthy designs with balanced Williams designs are included.
+  Combination of Clatworthy designs with all balanced designs in the archive is available here:
+  https://github.com/kornl/crossover/blob/master/build/pbib2combine.rda?raw=true
+  (Replace this file in library/Crossover/data/.)
+  Due to size they are (not yet) included in the CRAN package.
 
 Changes in version 0.1-12 (25-09-2014)
 ======================================

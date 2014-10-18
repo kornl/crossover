@@ -205,16 +205,19 @@ setGeneric("getDesign", function(object, ...) standardGeneric("getDesign"))
 #' Extract Design from a CrossoverSearchResult
 #' 
 #' @name getDesign
-#' @aliases getDesign,CrossoverSearchResult-method getDesign getDesign,matrix-method
+#' @aliases getDesign,CrossoverSearchResult-method getDesign getDesign,matrix-method getDesign,character-method
 #' @param object A searchCrossOverDesign object from which the design should be extracted.
 #' @param ... Possible parameters for subclasses (not yet used).
 #' @return Returns a numeric matrix representing the crossover design.
+#' Rows represent periods, columns represent sequences.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @examples
 #' 
 #' # n=c(100,10) is very small, but it's just an example and should not take much time
 #' x <- searchCrossOverDesign(s=9, p=5, v=4, model=4, n=c(100,10))
 #' getDesign(x)
+#' 
+#' getDesign("williams4t")
 #' 
 #' @export
 #' @docType methods
@@ -227,4 +230,9 @@ setMethod("getDesign", c("CrossoverSearchResult"),
 setMethod("getDesign", c("matrix"),
           function(object, ...) {  		
             return(object)
+          })
+
+setMethod("getDesign", c("character"),
+          function(object, ...) {    	
+            return(get(object, envir=Crossover.env))
           })
