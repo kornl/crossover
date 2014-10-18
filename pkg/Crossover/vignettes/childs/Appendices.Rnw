@@ -15,21 +15,39 @@ This section is work in progress.
 \section{Appendix - Variance Balance / Partial Balance}
 
 \begin{Def}{Variance Balance}
-  A design is \emph{variance balanced} if $\Var[\hat\tau_i-\hat\tau_j]$ is constant for all pairs of the $n$ treatment effects $\tau_i$, $\tau_j$, $1\leq i,j\leq n$, $i\neq j$.
+  A design is \emph{variance balanced} if
+  $\Var[\hat\tau_i-\hat\tau_j]$ is constant for all pairs of the $n$
+  treatment effects $\tau_i$, $\tau_j$, $1\leq i,j\leq n$, $i\neq j$.
 \end{Def}
 
 \begin{Def}{Partially balanced incomplete block design with two associate classes}
-  A \emph{partially balanced incomplete block design with two associate classes} (or short PBIBD(2) or sometimes even shorter D(2)) is a design that fulfils the following (see \cite{clatworthy1973tables}):
+  A \emph{partially balanced incomplete block design with two
+    associate classes} (or short PBIBD(2) or sometimes even shorter
+  D(2)) is a design that fulfils the following (see
+  \cite{clatworthy1973tables}):
   \begin{itemize}
-    \item There are $b$ blocks of $k$ units each.
-    \item There are $v$ treatments and $v>k$, so that not all treatments can occur in a block. Each treatment occurs once in each block and is assigned $r$ times.
-    \item Let X be the set of treatments. Then there is a partition of $X\times X$ into three relations, with one relation the identity and the other two relations $R_1$ and $R_2$ fulfilling the following properties:
+  \item There are $b$ blocks of $k$ units each.
+  \item There are $v$ treatments and $v>k$, so that not all treatments
+    can occur in a block. Each treatment occurs once in each block and
+    is assigned $r$ times.
+  \item Let X be the set of treatments. Then there is a partition of
+    $X\times X$ into three relations, with one relation the identity
+    and the other two relations $R_1$ and $R_2$ fulfilling the
+    following properties:
     \begin{itemize}
-      \item A treatment $y$ is called an $i$th associates, $i\in\{1,2\}$, if and only if $(x,y)\in R_i$. Each treatment $x$ has $n_i$ $i$th associates.
-      \item For all $i,j,k\in\{1,2\}$ there is a constant numbers $p_{jk}^i$, so that for all $(x,y)\in R_i$ the number of treatments $z$ with $(x,z)\in R_j$ and $(z,y)\in R_k$ is $p_{jk}^i$.
-      \item The association scheme is \emph{commutative}, i.e.\ $p_{jk}^i=p_{kj}^i$.
+    \item A treatment $y$ is called an $i$th associates,
+      $i\in\{1,2\}$, if and only if $(x,y)\in R_i$. Each treatment $x$
+      has $n_i$ $i$th associates.
+    \item For all $i,j,k\in\{1,2\}$ there is a constant numbers
+      $p_{jk}^i$, so that for all $(x,y)\in R_i$ the number of
+      treatments $z$ with $(x,z)\in R_j$ and $(z,y)\in R_k$ is
+      $p_{jk}^i$.
+    \item The association scheme is \emph{commutative}, i.e.\
+      $p_{jk}^i=p_{kj}^i$.
     \end{itemize}
-  \item There are two numbers $\lambda_1$, $\lambda_2$ so that $(x,y)\in R_i$, $i\in\{1,2\}$, implies that treatment $x$ and $y$ occur together in exactly $\lambda_i$ blocks.
+  \item There are two numbers $\lambda_1$, $\lambda_2$ so that
+    $(x,y)\in R_i$, $i\in\{1,2\}$, implies that treatment $x$ and $y$
+    occur together in exactly $\lambda_i$ blocks.
   \end{itemize}
 \end{Def}
 
@@ -37,26 +55,30 @@ This section is work in progress.
 
 \subsection{Fisher information}\index{Fisher information}\index{information matrix}
 
-For a linear regression model with design matrix $X$ and variance $\sigma^2$ the information matrix is given by
+For a linear regression model with design matrix $X$ and variance
+$\sigma^2$ the information matrix is given by
 \[\frac{1}{\sigma^2}X^TX.\]
 (Any constraints or citations?)
 
 \subsection{Generalized inverse}
 
 \begin{Def}[Moore-Penrose pseudoinverse]\index{Moore-Penrose pseudoinverse}
- For $A\in\R^{m\times n}$ a matrix $A^+$ is called Moore-Penrose pseudoinverse iff
- \begin{enumerate}
- \item $AA^+A=A$,
- \item $A^+AA^+=A^+$,
- \item $(AA^+)^T=AA^+$ and
- \item $(A^+A)^T=A^+A$.
- \end{enumerate}
- The Moore-Penrose pseudoinverse exists for every real matrix and is unique.
+  For $A\in\R^{m\times n}$ a matrix $A^+$ is called Moore-Penrose
+  pseudoinverse iff
+  \begin{enumerate}
+  \item $AA^+A=A$,
+  \item $A^+AA^+=A^+$,
+  \item $(AA^+)^T=AA^+$ and
+  \item $(A^+A)^T=A^+A$.
+  \end{enumerate}
+  The Moore-Penrose pseudoinverse exists for every real matrix and is
+  unique.
 \end{Def}
 
 \begin{Theorem}
-  Let $Ax=b$ a linear equation system in $n$ variables and $A^+$ the Moore-Penrose pseudoinverse
-  of $A$. Solutions exist if and only if $AA^+b=b$ and are given in this case by
+  Let $Ax=b$ a linear equation system in $n$ variables and $A^+$ the
+  Moore-Penrose pseudoinverse of $A$. Solutions exist if and only if
+  $AA^+b=b$ and are given in this case by
   \[\{A^+b+(I-A^+A)y\;|\; y\in\R^n\}.\]
   \begin{Proof}
   If  $AA^+b=b$ we have for every $A^+b+(I-A^+A)y$ with $y\in\R^n$:
@@ -76,8 +98,11 @@ For a linear regression model with design matrix $X$ and variance $\sigma^2$ the
 
 \subsection{Linear Mixed Models}\index{Linear Mixed Models}
 In the \emph{linear mixed model} the response Y is given by
-\[Y=X\beta+Z\gamma+\epsilon\]
-with $X$ and $Z$ the fixed and random effects design matrices, $\epsilon\sim\sN(0,\Sigma)$ and $\gamma\sim\sN(0,D)$. Then\footnote{See for example \cite[chapter 5]{lee2006generalized}.} \[\Var(Y)=ZDZ^T+\Sigma.\]
+\[Y=X\beta+Z\gamma+\epsilon\] 
+with $X$ and $Z$ the fixed and random effects design matrices,
+$\epsilon\sim\sN(0,\Sigma)$ and
+$\gamma\sim\sN(0,D)$. Then\footnote{See for example \cite[chapter
+  5]{lee2006generalized}.} \[\Var(Y)=ZDZ^T+\Sigma.\]
 
 For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
 
@@ -142,9 +167,17 @@ summary(glht(fit, linfct=mcp(treatment="Dunnett")))
 \section{Appendix - Internals}
 
 \subsection{Naming conventions}
-Most functions exist as R and C/C++ variant, with the following naming conventions:
+Most functions exist as R and C/C++ variant, with the following naming
+conventions:
 
-We have functions in R and on the C/C++ level with the same name (in our folowing example \texttt{rcd}) that should be used in R and C/C++ respectively. The R function \texttt{rcd} calls the C function \texttt{rcd2R} which handles the conversion from and to the R structures the SEXP are pointing to. Apart from that we often provide an R function with a suffix \texttt{\_R}, i.e.\ in our example \texttt{rcd\_R}, which is a pure R function and reimplements the same functionality for testing purposes.
+We have functions in R and on the C/C++ level with the same name (in
+our folowing example \texttt{rcd}) that should be used in R and C/C++
+respectively. The R function \texttt{rcd} calls the C function
+\texttt{rcd2R} which handles the conversion from and to the R
+structures the SEXP are pointing to. Apart from that we often provide
+an R function with a suffix \texttt{\_R}, i.e.\ in our example
+\texttt{rcd\_R}, which is a pure R function and reimplements the same
+functionality for testing purposes.
 
 \lstset{language=C++}
 \begin{lstlisting}
@@ -162,7 +195,11 @@ createRCDesign_R <- function(X, v, model) {
 }
 \end{lstlisting}
 
-A variable $v$ means \emph{always} the original number of treatments. A variable $vv$ stands for the maximum number of different settings\footnote{For the no carry-over into self or placebo model there are actually less settings.}, either $v+v^2$ or for the second-order carry-over effects $v+v^2+v^3$.
+A variable $v$ means \emph{always} the original number of
+treatments. A variable $vv$ stands for the maximum number of different
+settings\footnote{For the no carry-over into self or placebo model
+  there are actually less settings.}, either $v+v^2$ or for the
+second-order carry-over effects $v+v^2+v^3$.
 
 \section{Updating the information matrix}
 

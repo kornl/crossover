@@ -15,12 +15,15 @@ The package and GUI support the following eight models.
 with\footnote{cf. \cite{jones2003design}, page 8}
 
 \begin{description}
-  \item[$\mu$] intercept,
-  \item[$\pi_j$] period effect for period $j$,
-  \item[$\tau_{d[i,j]}$] direct treatment effect for treatment $d[i,j]$ in period $j$ of sequence $i$,
-  \item[$\lambda_{d[i,j-1]}$] first-order carry-over effect (0 for $j-1$=0),
-  \item[$s_{ik}$] $k$th subject effect on sequence $i$, %TODO What is the most elegant way to handle this? We only need/want s_i?
-  \item[$e_{ijk}$] random error with zero mean and variance $\sigma^2$.
+\item[$\mu$] intercept,
+\item[$\pi_j$] period effect for period $j$,
+\item[$\tau_{d[i,j]}$] direct treatment effect for treatment $d[i,j]$
+  in period $j$ of sequence $i$,
+\item[$\lambda_{d[i,j-1]}$] first-order carry-over effect (0 for
+  $j-1$=0),
+\item[$s_{ik}$] $k$th subject effect on sequence
+  $i$, %TODO What is the most elegant way to handle this? We only need/want s_i?
+\item[$e_{ijk}$] random error with zero mean and variance $\sigma^2$.
 \end{description}
 
 which we can write as
@@ -31,11 +34,15 @@ which we can write as
 \pi\\ s
 \end{smallmatrix} \bigr)\]
 
-with $X$ and $Z$ called the \emph{treatment}\index{treatment design matrix} and \emph{block design matrices}\index{block design matrix}, respectively.
+with $X$ and $Z$ called the \emph{treatment}\index{treatment design
+  matrix} and \emph{block design matrices}\index{block design matrix},
+respectively.
 
-We call $H$ a \emph{link matrix}\index{link matrix} if $X=X_rH$ were $X_r$ is the design matrix for the row-column design.
-The rows of the link matrix specify all possible parameter combinations. Therefore $H$ has as many columns as there are parameters
-and in the row-column-setting $i$ parameter $j$ is included $h_{ij}$ times.
+We call $H$ a \emph{link matrix}\index{link matrix} if $X=X_rH$ were
+$X_r$ is the design matrix for the row-column design.  The rows of the
+link matrix specify all possible parameter combinations. Therefore $H$
+has as many columns as there are parameters and in the
+row-column-setting $i$ parameter $j$ is included $h_{ij}$ times.
 
 <<StandardAdditive, echo=TRUE>>=
 # Design:
@@ -62,7 +69,10 @@ X
 
 \subsection{Full set of interactions}\index{model!with full set of interactions}
 
-This model has further interaction parameters $\gamma_{ij}$ and a design matrix $X$ with $2*v+v^2$ columns:\footnote{Personally I think some of the overspecified parameters should be dropped, for example $\gamma_{ii}$ - but I'll take a look at this later.}
+This model has further interaction parameters $\gamma_{ij}$ and a
+design matrix $X$ with $2*v+v^2$ columns:%TODO\footnote{Personally I think
+%  some of the overspecified parameters should be dropped, for example
+%  $\gamma_{ii}$ - but I'll take a look at this later.}
 
 \[E(Y)=\mu + X \left( \begin{smallmatrix}
 \tau\\ \lambda\\ \gamma
@@ -82,7 +92,9 @@ X
 
 \subsection{Self-adjacency model}\index{model!self-adjacency model}\index{self-adjacency model}
 
-In the \emph{self-adjacency model} $\lambda_i$ is replaced by $\phi_i$ in case of carry-over into itself. The case $\phi=0$ represents the \emph{no carry-over into self model}.
+In the \emph{self-adjacency model} $\lambda_i$ is replaced by $\phi_i$
+in case of carry-over into itself. The case $\phi=0$ represents the
+\emph{no carry-over into self model}.
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda\\ \phi
@@ -102,7 +114,8 @@ X
 
 \subsection{Placebo model}\index{model!placebo model}\index{model!placebo model}
 
-In the placebo model there are no carry-over effects for the placebo treatment(s).
+In the placebo model there are no carry-over effects for the placebo
+treatment(s).
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda
@@ -122,7 +135,9 @@ X
 
 \subsection{No carry-over into self model}\index{model!no carry-over into self}
 
-This model differs from the standard additive model in the assumption that in the \emph{no carry-over into self model} no carry-over effect occurs if current and previous treatment are the same.
+This model differs from the standard additive model in the assumption
+that in the \emph{no carry-over into self model} no carry-over effect
+occurs if current and previous treatment are the same.
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda
@@ -142,7 +157,9 @@ X
 
 \subsection{Treatment decay model}\index{model!treatment decay}
 
-In contrast to the no carry-over into self model in the \emph{treatment decay model} we assume there are only (negative) carry-over effects if the current and previous treatment are the same.
+In contrast to the no carry-over into self model in the
+\emph{treatment decay model} we assume there are only (negative)
+carry-over effects if the current and previous treatment are the same.
 
 \[E(Y)=\mu + X \bigl( \begin{smallmatrix}
 \tau\\ \lambda
@@ -162,7 +179,10 @@ X
 
 \subsection{Proportionality model}\index{model!proportionality model}
 
-For the proportionality model we have no separate carry-over effects, but assume for period $i>1$ an additive proportion $p$ of the effect $\tau_{d(i-1,j)}$ from the previous treatment $d(i-1,j)$. This model is non-linear in $p$, therefore we assume $p$ is known.
+For the proportionality model we have no separate carry-over effects,
+but assume for period $i>1$ an additive proportion $p$ of the effect
+$\tau_{d(i-1,j)}$ from the previous treatment $d(i-1,j)$. This model
+is non-linear in $p$, therefore we assume $p$ is known.
 
 \[E(Y)=\mu + X_p\tau +Z\bigl( \begin{smallmatrix}
 \pi\\ s
@@ -180,7 +200,8 @@ X
 
 \subsection{Second-order carry-over effects}\index{model!with second-order carry-over effects}\index{second-order carry-over effects}
 
-In the model with second-order carry-over effects we do have another vector $\lambda_2$ of carry-over effects:
+In the model with second-order carry-over effects we do have another
+vector $\lambda_2$ of carry-over effects:
 
 \[E(Y)=\mu + X \left( \begin{smallmatrix}
 \tau\\ \lambda_1\\ \lambda_2
