@@ -213,9 +213,9 @@ getValues <- function(design, model=1, C, v) {
     CC <- t(C) %*% C
   }
   rcDesign <- rcd(design, v, model=model)
-  Ar <- infMatrix(rcDesign, v)
+  Ar <- infMatrix(rcDesign, v, model=model)
   H <- linkMatrix(model, v)
-  return(diag(ginv(t(H) %*% Ar %*% H) %*% CC))  
+  return(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))  
 }
 
 getDesignMatrix <- function(design, v) {
