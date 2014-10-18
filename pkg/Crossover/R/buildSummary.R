@@ -36,6 +36,8 @@ buildSummaryTable <- function(extended=FALSE) {
         variances <- general.carryover(design, model=1)$Var.trt.pair[upper.tri(diag(t))]        
         balance.delta <- max(variances)-min(variances)
         
+        # The following line is for the CRAN warning...
+        est1 <- est2 <- est3 <- est4 <- est5 <- est6 <- est7 <- est8 <- 0
         for (i in 1:8) {
           assign(paste("est", i, sep=""), estimable(design, t, i))
         }
