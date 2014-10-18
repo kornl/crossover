@@ -189,3 +189,21 @@ design.efficiency <- function(design) {
 					var.trt.pair.adj=var.trt.pair.adj,eff.trt.pair.adj=eff.trt.pair.adj,av.eff.trt.pair.adj=av.eff.trt.pair.adj))
 	
 }
+
+if (FALSE) {
+  design <- getDesign("williams5t")
+  design.efficiency(design)
+  design.efficiency2(design)
+}
+
+design.efficiency2 <- function(design, model=1) {
+  p <- dim(design)[1]
+  s <- dim(design)[2]
+  v <- length(levels(as.factor(design)))
+  m <- matrix(0, v, v)
+  #variances <- 1:(t*(t-1)/2)
+  variances <- Crossover:::getValues(design, model, v=v)
+  m[lower.tri(m)] <- variances
+  m[upper.tri(m)] <- t(m)[upper.tri(m)]
+  return(m)
+}
