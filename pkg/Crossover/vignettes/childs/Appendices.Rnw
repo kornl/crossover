@@ -75,6 +75,31 @@ $\sigma^2$ the information matrix is given by
   unique.
 \end{Def}
 
+\begin{Theorem}[Block matrix pseudoinverse]
+  For a block matrix
+  \[X:=\left[\begin{smallmatrix}
+  A & B\\  
+  \end{smallmatrix}\right]\]
+  we have
+  \[(X^TX)^+=\left(\left[\begin{smallmatrix}
+  A^T\\
+  B^T
+  \end{smallmatrix}\right]\left[\begin{smallmatrix}
+  A & B  
+  \end{smallmatrix}\right]\right)^+
+  =\left(\left[\begin{smallmatrix}
+  A^T A & A^T B\\
+  B^T A & B^T B  
+  \end{smallmatrix}\right]\right)^+
+  =\left[\begin{smallmatrix}
+  (A^T P_B^\perp A)^+ & -(A^T P_B^\perp A)^+A^TB(B^TB)^+\\
+  -(B^T P_A^\perp B)^+B^TA(A^TA)^+&(B^T P_A^\perp B)^+ 
+  \end{smallmatrix}\right]\]
+  with the orthogonal projection matrices $P_B^\perp=I-B(B^TB)^+B^T$, $P_A^\perp=I-A(A^TA)^+A^T$.
+  
+  For a proof see for example \url{http://en.wikipedia.org/wiki/Block_matrix_pseudoinverse}.
+\end{Theorem}
+
 \begin{Theorem}
   Let $Ax=b$ a linear equation system in $n$ variables and $A^+$ the
   Moore-Penrose pseudoinverse of $A$. Solutions exist if and only if
