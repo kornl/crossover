@@ -2,6 +2,7 @@
 set_parent('../Crossover.Rnw')
 library(multcomp)
 library(Crossover)
+library(MASS)
 @
 
 \section{Search strategy}\label{sec:search}
@@ -51,8 +52,7 @@ s <- 6
 p <- 3
 v <- 3
 model <- 1
-data(williams)
-design <- williams3t
+design <- getDesign("williams3t")
   
 rcDesign <- rcd(design, v, model)
 # JRW, p 2650, first equation on that page, whithout number
@@ -62,20 +62,25 @@ Xr <- rcdMatrix(rcDesign, v, model)
 Ar2 <- t(Xr) %*% (diag(s*p)-Crossover:::getPZ(s,p)) %*% Xr
 max(abs(Ar-Ar2))
 
+# Testing the Projection of Z: P_Z times Z should equal Z:
+max(abs(Crossover:::getPZ(s,p)%*%getZ(s,p)-getZ(s,p)))
+
 fXr <- cbind(Xr, getZ(s,p))
 Ar3 <- t(fXr) %*% fXr
-ginv(Ar3)[1:12,1:12]-ginv(Ar2)
+max(abs(ginv(Ar3)[1:12,1:12]-ginv(Ar2)))
 
 H <- linkMatrix(model=model,v=v)
 fX <- cbind(Xr%*%H, getZ(s,p))
 A1 <- t(fX) %*% fX
 A2 <- t(H)%*%Ar%*%H
 
-# While A1 and A2 differ:
+# While A1 and A2 of course differ (max(abs(A1[1:6,1:6]-A2))=2):
 
 ginv(A1)[1:6,1:6]
 ginv(A2)
 max(abs(ginv(A1)[1:6,1:6]-ginv(A2)))
+
+max(abs(ginv(A1, tol=10^-15)[1:6,1:6]-ginv(A2, tol=10^-15)))
 
 # The variances for the estimable contrasts are the same:
 
@@ -93,15 +98,15 @@ tdiff1 - tdiff2
 
 @
   
-\begin{Def}[Efficiency]
-  If the difference of two treatments, each replicated r times, is
+\begin{Def}[Efficiency]\index{efficiency}
+  If the difference of two treatments, each replicated $r$ times, is
   estimated in an \emph{ideal design} with residual variance
   $\sigma^2$, the variance of the estimated difference
   $\overline{y}\!_A-\overline{y}\!_B$ is
   \[V_I=\frac{2\sigma^2}{r}.\] 
   In a cross-over design the variance of a parameter estimates for $A$
   and $B$ are given by the corresponding elements $\sigma^2x_A$ and
-  $\sigma^2x_A$ of
+  $\sigma^2x_B$ of
   \[\sigma^2(X^TX)^{-1}\]
   with $X$ the crossover design matrix. The variance of the difference
   is $\sigma^2 (x_A + x_B - 2*x_{AB})$ where $x_{AB}$ is the element
@@ -109,6 +114,10 @@ tdiff1 - tdiff2
   estimates.  The efficiency
   is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\]
 \end{Def}
+
+If we have a model with $n$ parameters and a contrast matrix $C\in\R^{n\times n}$, the sum of the variances of the linear combinations given by $C$ is
+\[\trace(CH^TA_rHC^T).\]
+
 
 <<bibtex-search, results='asis', echo=FALSE>>=
 if (!exists("bibCall")) {

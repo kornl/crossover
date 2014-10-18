@@ -48,6 +48,7 @@
 
 \DeclareMathOperator{\range}{range}
 \DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\trace}{trace}
 
 \newcommand{\skp}[1]{\left\langle#1\right\rangle}
 
