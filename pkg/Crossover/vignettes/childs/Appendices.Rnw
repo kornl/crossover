@@ -1,6 +1,7 @@
 <<set-parent-appendices, echo=FALSE, cache=FALSE, include=FALSE>>=
-set_parent('Crossover.Rnw')
+set_parent('../Crossover.Rnw')
 library(multcomp)
+library(Crossover)
 @
 
 \begin{appendix} 
@@ -172,6 +173,6 @@ This section is work in progress.
 <<bibtex-appendices, results='asis', echo=FALSE>>=
 if (!exists("bibCall")) {
   # RStudio / bibtex / knitr child document workaround from http://tex.stackexchange.com/questions/31373/citations-with-no-bibliography-at-the-end
-  cat("\\newsavebox\\mytempbib \\savebox\\mytempbib{\\parbox{\\textwidth}{\\bibliography{literatur}}}")
+  cat("\\newsavebox\\mytempbib \\savebox\\mytempbib{\\parbox{\\textwidth}{\\bibliography{../literatur}}}")
 }
 @

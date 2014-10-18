@@ -62,7 +62,7 @@
 
 \begin{document}
 
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Crossover - A search algorithm and GUI for cross-over designs}
 
 \title{Crossover - A search algorithm and GUI for cross-over designs} 
@@ -111,6 +111,8 @@ library(MASS)
 library(multcomp)
 library(ggplot2)
 library(Matrix)
+# knitr has to be loaded for 'set_parent' and CRAN checks.
+library(knitr)
 bibCall <- TRUE
 
 @
@@ -190,11 +192,11 @@ In figure \ref{Algorithm} the preliminary graphical interface for the search alg
   \caption{\label{Algorithm} Panel for algorthmic search of cross-over designs.}
 \end{figure}
 
-<<appendices, child='Models.Rnw'>>=
+<<appendices, child='childs/Models.Rnw'>>=
 @
 
 
-<<appendices, child='Search.Rnw'>>=
+<<appendices, child='childs/Search.Rnw'>>=
 @
 
 \section{Creation of Crossover Designs from Partially Balanced Incomplete Block Designs with Two Associate Classes (PBIB(2))}
@@ -222,7 +224,7 @@ detach("namespace:Crossover")
 @
 
 
-<<appendices, child='Appendices.Rnw'>>=
+<<appendices, child='childs/Appendices.Rnw'>>=
 @
 
 \nocite{*}
