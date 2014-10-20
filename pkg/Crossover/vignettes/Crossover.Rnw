@@ -172,6 +172,10 @@ contains 241 designs from the following literature:
 \cite{russell1991construction}, \cite{lucas1956switchback},
 \cite{williams1949experimental}, \cite{prescott1994}, \cite{bate2002}
 
+Further \Sexpr{length(load(paste(system.file("data", package="Crossover"), "pbib2combine.rda", sep="/")))} 
+designs are constructed from partially balanced incomplete block designs from \cite{clatworthy1973tables}
+and balanced crossover designs.
+
 Depending on the numbers of treatments, periods and range of sequence
 you specify in the GUI appropriate designs from the catalogue will be
 shown.\footnote{You can get a table referencing all designs and the
