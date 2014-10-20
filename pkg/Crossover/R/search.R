@@ -180,10 +180,11 @@ getTrtPair <- function(design, model=1) {
 }
 
 getValues <- function(design, model=1, C, v) {
+  model <- getModelNr(model)
   if (missing(C)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
-    C <- cbind(Csub,matrix(0,dim(Csub)[1],v)) 
+    C <- appendZeroColumns(Csub, model, v)
     CC <- t(C) %*% C
   }
   rcDesign <- rcd(design, v, model=model)
