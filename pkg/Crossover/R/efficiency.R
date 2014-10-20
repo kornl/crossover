@@ -194,6 +194,33 @@ if (FALSE) {
   design <- getDesign("williams5t")
   design.efficiency(design)
   design.efficiency2(design)
+  
+  f <- cat
+  #f <- stop
+  # Test old versus new function:
+  path <- system.file("data", package="Crossover")
+  for (file in dir(path=path)) {  	 
+    if (file %in% c("clatworthy1.rda", "clatworthyC.rda", "pbib2combine.rda")) next
+    designs <- load(paste(path, file, sep="/"))
+    for (designS in designs) {
+      design <- get(designS)
+      r1 <- design.efficiency(design)
+      r2 <- design.efficiency2(design)
+      if(!isTRUE(all.equal(r1$var.trt.pair.adj, r2$var.trt.pair.adj))) f(paste("Unequal variances for",designS," (",max(abs(r1$var.trt.pair.adj - r2$var.trt.pair.adj)),")!\n"))
+      if(!isTRUE(all.equal(r1$eff.trt.pair.adj, r2$eff.trt.pair.adj))) {        
+        f(paste("Unequal efficiencies for",designS," (",max(abs(r1$eff.trt.pair.adj - r2$eff.trt.pair.adj))," - ",getCounts(design),")!\n"))
+      } else {
+        cat("Everything equal for",designS,"(",getCounts(design),").\n")
+      }
+    }
+  }
+}
+
+getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
+  s <- summary(as.factor(design))
+  if (length(unique(s))==1) return("")
+  if (long) return(paste(paste(names(s), " (", s,")", sep=""), collapse=", "))
+  return(paste(s, collapse=", "))
 }
 
 design.efficiency2 <- function(design, model=1) {
@@ -205,5 +232,14 @@ design.efficiency2 <- function(design, model=1) {
   variances <- Crossover:::getValues(design, model, v=v)
   m[lower.tri(m)] <- variances
   m[upper.tri(m)] <- t(m)[upper.tri(m)]
-  return(m)
+  # Ideal design
+  #variancesI <- Crossover:::getValues(design, model="No carry-over effects", v=v)
+  im <- matrix(0, v, v)
+  #im[lower.tri(im)] <- variancesI
+  #im[upper.tri(im)] <- t(im)[upper.tri(im)]  
+  im[row(im)!=col(im)] <- (v*2)/(p*s)
+  # Efficiency:
+  em <- im/m
+  diag(em) <- 0
+  return(list(var.trt.pair.adj=m, eff.trt.pair.adj=em))
 }
