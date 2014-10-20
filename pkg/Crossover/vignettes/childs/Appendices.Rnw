@@ -75,7 +75,7 @@ $\sigma^2$ the information matrix is given by
   unique.
 \end{Def}
 
-\begin{Theorem}[Block matrix pseudoinverse]
+\begin{Theorem}[Block matrix pseudoinverse] %TODO Write down proof. Check where ^+ and where possibly ^{-1} is needed.
   For a block matrix
   \[X:=\left[\begin{smallmatrix}
   A & B\\  

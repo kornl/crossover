@@ -112,7 +112,7 @@ tdiff1 - tdiff2
   is $\sigma^2 (x_A + x_B - 2*x_{AB})$ where $x_{AB}$ is the element
   of $X^TX$ specifying the covariance of the two treatment parameter
   estimates.  The efficiency
-  is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\]
+  is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\] %TODO What is x?
 \end{Def}
 
 If we have a model with $n$ parameters and a contrast matrix $C\in\R^{n\times n}$, the sum of the variances of the linear combinations given by $C$ is
