@@ -1,8 +1,16 @@
+# Alternative to getDesign without quotes. (Not exported yet.)
+design <- function(d, character.only = FALSE) {
+  if (!character.only) {
+    d <- as.character(substitute(d))
+  }
+  return(get(d, envir=Crossover.env))
+}
 
 dput2 <- function(x) {
   paste(capture.output(dput(x)), collapse = " ")
 }
 
+# Substitute Treatments with other treatments (needed for combine.PBIB):
 subs.treatment <- function(design, new.treatments) {
   x <- matrix(0, dim(design)[1], dim(design)[2])
   for (t in 1:max(design)) {
