@@ -380,9 +380,10 @@ arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
 arma::mat infMatrix(arma::mat rcDesign, int v, int model) {
     if (model == 3 || model == 7) {
          return NULL; // TODO Throw more meaningful error.
-    }
+    }    
     int vv = v+v*v;
     if (model==8) { vv = v+v*v+v*v*v; }
+    if (model==9) { vv = v; }
     
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;
