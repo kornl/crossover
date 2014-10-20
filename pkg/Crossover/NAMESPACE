@@ -22,7 +22,6 @@ export(searchCrossOverDesign)
 export(general.carryover)
 
 export(buildSummaryTable)
-export(getDesign)
 
 exportMethods(plot, print, show, getDesign)
 
