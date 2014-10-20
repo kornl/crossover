@@ -1,4 +1,4 @@
-\documentclass[a4paper, 10pt]{article}
+\documentclass[a4paper, 10pt]{report}
 \usepackage{natbib}
 \bibliographystyle{plainnat}
 \usepackage[T1]{fontenc}
@@ -120,7 +120,7 @@ bibCall <- TRUE
 
 \newpage
 
-\section{Introduction}
+\chapter{Introduction}
 
 This package provides more than two hundred cross-over design from
 literature, a search algorithm to find efficient cross-over designs
@@ -132,7 +132,7 @@ algorithm, is written using the R packages Rcpp and RcppArmadillo
 (\cite{eddelbuettel2011rcpp} and \cite{rcpparmadillo}). The GUI is
 written in Java and uses package rJava (\cite{rJava}).
 
-\subsection{Installation}
+\section{Installation}
 
 %If you don't already have R on your system, you can download a bundled
 %version of R and Crossover from \url{http://www.algorithm-forge.com/gMCP/bundle/}.
@@ -157,8 +157,8 @@ started with the command \texttt{CrossoverGUI()}.
 %\href{mailto:help@small-projects.de}{\texttt{help@small-projects.de}}.
 %We are eager to help and to learn about existing problems.
 
-\subsection{GUI Overview}
-\subsubsection{Catalogue}
+\section{GUI Overview}
+\subsection{Catalogue}
 The catalogue, collected and compiled by Professor Byron Jones,
 contains 241 designs from the following literature:
 \cite{anderson2002locally}, \cite{archdeacon1980some},
@@ -199,12 +199,12 @@ allow you to see only specific subsets:
   search runs are shown.
 \end{description}
 
-\subsubsection{Input own design}
+\subsection{Input own design}
 
 This tab provides you with the possibility to analyse your own designs
 easily or use them as starting points for the search algorithm.
 
-\subsubsection{Algorithm Search}
+\subsection{Algorithm Search}
 
 In figure \ref{Algorithm} the preliminary graphical interface for the
 search algorithm is shown with the following options:
@@ -257,7 +257,7 @@ search algorithm is shown with the following options:
 
 \section{Creation of Crossover Designs from Partially Balanced Incomplete Block Designs with Two Associate Classes (PBIB(2))}
 
-We start with a non-crossover PBIB(2) design. A great source for these
+We start with a non-crossover PBIB(2) design. A comprehensive source for these
 is \cite{clatworthy1973tables}.
 
 \section{Random Subject Effects Model}

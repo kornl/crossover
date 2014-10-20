@@ -5,7 +5,7 @@ library(Crossover)
 library(MASS)
 @
 
-\section{Search strategy}\label{sec:search}
+\chapter{Search strategy}\label{sec:search}
 Monte-Carlo search for first candidates, followed by parallel hill
 climbing search, extended by long jumps.
 

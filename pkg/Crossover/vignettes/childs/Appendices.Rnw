@@ -6,13 +6,11 @@ library(Crossover)
 
 \begin{appendix} 
 
-The appendices are all work in progress in the moment.
+\chapter{Appendix}
+
+The appendices are all work in progress.
 
 \section{Appendix - Row-Column Designs}
-
-This section is work in progress.
-
-\section{Appendix - Variance Balance / Partial Balance}
 
 \begin{Def}{Variance Balance}
   A design is \emph{variance balanced} if
@@ -20,10 +18,18 @@ This section is work in progress.
   treatment effects $\tau_i$, $\tau_j$, $1\leq i,j\leq n$, $i\neq j$.
 \end{Def}
 
-\begin{Def}{Partially balanced incomplete block design with two associate classes}
+\section{Appendix - Variance Balance / Partial Balance}
+
+\begin{Def}{Variance Balance}\index{variance balance}\index{balanced!variance}
+  A design is \emph{variance balanced} if
+  $\Var[\hat\tau_i-\hat\tau_j]$ is constant for all pairs of the $n$
+  treatment effects $\tau_i$, $\tau_j$, $1\leq i,j\leq n$, $i\neq j$.
+\end{Def}
+
+\begin{Def}{Partially balanced incomplete block design with two associate classes}\index{PBIB(2)}\index{partially balanced incomplete block design}
   A \emph{partially balanced incomplete block design with two
-    associate classes} (or short PBIBD(2) or sometimes even shorter
-  D(2)) is a design that fulfils the following (see
+    associate classes} (or short PBIBD(2)) % or sometimes even shorter D(2)) 
+    is a design that fulfils the following (see
   \cite{clatworthy1973tables}):
   \begin{itemize}
   \item There are $b$ blocks of $k$ units each.
@@ -51,14 +57,7 @@ This section is work in progress.
   \end{itemize}
 \end{Def}
 
-\section{Appendix - Matrix Algebra}
-
-\subsection{Fisher information}\index{Fisher information}\index{information matrix}
-
-For a linear regression model with design matrix $X$ and variance
-$\sigma^2$ the information matrix is given by
-\[\frac{1}{\sigma^2}X^TX.\]
-(Any constraints or citations?)
+\section{Appendix - Matrix Algebra / Linear Models}
 
 \subsection{Generalized inverse}
 
@@ -121,6 +120,13 @@ $\sigma^2$ the information matrix is given by
   %\end{Proof}
 \end{Theorem}
 
+\subsection{Fisher information}\index{Fisher information}\index{information matrix}
+
+For a linear regression model with design matrix $X$ and variance
+$\sigma^2$ the information matrix is given by
+\[\frac{1}{\sigma^2}X^TX.\]
+%TODO (Any constraints or citations?)
+
 \subsection{Linear Mixed Models}\index{Linear Mixed Models}
 In the \emph{linear mixed model} the response Y is given by
 \[Y=X\beta+Z\gamma+\epsilon\] 
@@ -133,7 +139,7 @@ For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
 
 \[\hat\beta=(X^tV^{-1}X)^{-1}X^tV^{-1}Y.\]
 
-<<mixed1, echo=TRUE>>=
+<<mixed1, echo=TRUE, include=FALSE>>=
 
 tc <- textConnection("subject period treatment outcome
 1 1 C 5.15
@@ -226,9 +232,9 @@ settings\footnote{For the no carry-over into self or placebo model
   there are actually less settings.}, either $v+v^2$ or for the
 second-order carry-over effects $v+v^2+v^3$.
 
-\section{Updating the information matrix}
+%\section{Updating the information matrix}
 
-This section is work in progress.
+%This section is work in progress.
 
 \end{appendix}
 
