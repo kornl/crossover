@@ -10,7 +10,7 @@ colnames(design) <- paste("s", 1:9, sep="")
 
 Pidgeon Citation misses author
 
-Problem with designs from archive which don't allow estimation of selected model?
+Elaborate on "#TODO Package matrix can be improved here (IMO)!"
 
 Package parallel?
 
