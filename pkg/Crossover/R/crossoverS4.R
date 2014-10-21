@@ -234,5 +234,8 @@ setMethod("getDesign", c("matrix"),
 
 setMethod("getDesign", c("character"),
           function(object, ...) {    	
-            return(get(object, envir=Crossover.env))
+            design <- get(object, envir=Crossover.env)            
+            rownames(design) <- paste("p", 1:dim(design)[1], sep="")
+            colnames(design) <- paste("s", 1:dim(design)[2], sep="")
+            return(design)
           })
