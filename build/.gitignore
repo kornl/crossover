@@ -1,1 +1,10 @@
 byron
+cache
+*.idx
+*.ilg
+*.ind
+*.log
+*-concordance.tex
+*.synctex.gz
+eff-investigation.pdf
+eff-investigation.tex
