@@ -42,16 +42,12 @@ design.efficiency <- function(design, model=1) {
   s <- dim(design)[2]
   v <- length(levels(as.factor(design)))
   m <- matrix(0, v, v)
-  #variances <- 1:(t*(t-1)/2)
-  variances <- Crossover:::getValues(design, model, v=v)
+  # Actual variances
+  variances <- getValues(design, model, v=v)
   m[lower.tri(m)] <- variances
   m[upper.tri(m)] <- t(m)[upper.tri(m)]
   # Ideal design
-  #variancesI <- Crossover:::getValues(design, model="No carry-over effects", v=v)
   im <- matrix(0, v, v)
-  #im[lower.tri(im)] <- variancesI
-  #im[upper.tri(im)] <- t(im)[upper.tri(im)]  
-  #if (abs(variancesI[1]-(v*2)/(p*s))>0.001) cat("getValues differs from simple formula (",variancesI[1],",",(v*2)/(p*s),").\n")
   vn <- sapply(1:v, function(x) {sum(design==x)})
   for (i in 1:v) {
     for (j in 1:v) {
@@ -63,5 +59,8 @@ design.efficiency <- function(design, model=1) {
   # Efficiency:
   em <- im/m
   diag(em) <- 0
-  return(list(var.trt.pair.adj=m, eff.trt.pair.adj=em))
+  return(list(xmat=cbind(rcdMatrix(rcd(design, v, model), v=v, model=model),  
+                         getZ(s=dim(design)[2],p=dim(design)[1])), 
+              var.trt.pair.adj=m, 
+              eff.trt.pair.adj=em))
 }
