@@ -85,8 +85,12 @@ design2integer <- function(design) {
 }
 
 getEff <- function(design) {
-	l <- design.efficiency(design)
-	return(c(l$av.eff.trt.pair, l$av.eff.trt.pair.adj))
+  average.eff <- rep(0, 9)
+  for (model in 1:9) {
+	  eff <- design.efficiency(design)$eff.trt.pair.adj
+    average.eff[model] <- mean(eff[row(eff)!=col(eff)])
+  }
+	return(average.eff)
 }
 
 CrossoverVersion <- function() {
