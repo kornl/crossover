@@ -190,7 +190,7 @@ design.efficiency.old <- function(design) {
   
 }
 
-test.eff <- function {
+test.eff <- function() {
   f <- stop
   # Test old versus new function:
   path <- system.file("data", package="Crossover")
@@ -200,12 +200,15 @@ test.eff <- function {
     for (designS in designs) {
       design <- get(designS)
       r1 <- design.efficiency(design)
-      r2 <- design.efficiency2(design)
+      r2 <- design.efficiency.old(design)
       if(!isTRUE(all.equal(r1$var.trt.pair.adj, r2$var.trt.pair.adj))) {
         f(paste("Unequal variances for",designS," (",max(abs(r1$var.trt.pair.adj - r2$var.trt.pair.adj)),")!\n"))
       }
       if(!isTRUE(all.equal(r1$eff.trt.pair.adj, r2$eff.trt.pair.adj))) {
         f(paste("Unequal efficiencies for",designS," (",max(abs(r1$eff.trt.pair.adj - r2$eff.trt.pair.adj))," - ",getCounts(design),")!\n"))
+      }
+      if(!isTRUE(all.equal(r1$xmat, r2$xmat.no.subjects, check.names=FALSE))) {
+        #f(paste("Unequal design matrices for",designS," (",max(abs(r1$eff.trt.pair.adj - r2$eff.trt.pair.adj))," - ",getCounts(design),")!\n"))
       }
     }
   }
