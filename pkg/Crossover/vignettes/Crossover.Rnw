@@ -199,6 +199,67 @@ allow you to see only specific subsets:
   search runs are shown.
 \end{description}
 
+\iffalse
+\subsubsection{Efficiency remarks when selecting a design}
+
+Efficiencies for a design $D$ are shown in comparision to an ideal design $D_I$ 
+where each treatment occurs equally often in $D$ and $D_I$.
+
+If for example we take a look at the design \texttt{pidgeon1}, we see that
+treatment 1 occurs nine times, while all other treatments occur only six times:
+
+<<pidgeon1, echo=TRUE>>=
+
+getDesign("pidgeon1")
+
+@
+
+The variances of the estimates for the treatment differences are given by:
+
+<<pidgenVar, echo=FALSE>>=
+design <- getDesign("pidgeon1")
+design.efficiency(design)$var.trt.pair.adj
+
+@
+
+In an ideal design the variances are:
+
+<<echo=FALSE>>=
+v <- length(levels(as.factor(design)))
+im <- matrix(0, v, v)
+vn <- sapply(1:v, function(x) {sum(design==x)})
+for (i in 1:v) {
+  for (j in 1:v) {
+    if (i!=j) {
+      im[i, j] <- 1/vn[i]+1/vn[j]
+    }
+  }
+}
+im
+
+@
+
+We see that the variances for comparing the first treatment to any other treatment are lower (0.3720) 
+than the variances of treatment difference estimates within the last three treatments.
+
+<<pidgenEff, echo=FALSE>>=
+
+design.efficiency(design)$eff.trt.pair.adj
+
+@
+
+The average efficiency is given by \Sexpr{mean(design.efficiency(design)$var.trt.pair.adj[upper.tri(design.efficiency(design)$var.trt.pair.adj)])},
+
+\begin{enumerate}
+\item A higher average efficiency does obviously not mean that a design is better 
+suited for a sepific problem. If you are interested in Dunnett type contrasts you 
+should use other designs as if you are interested in Tukey or Williams type contrasts.
+\item When comparing two designs with different 
+\item It is better to look directly at the variances of the 
+\end{enumerate}
+
+\fi
+
 \subsection{Input own design}
 
 This tab provides you with the possibility to analyse your own designs

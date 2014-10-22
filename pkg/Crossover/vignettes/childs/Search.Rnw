@@ -36,6 +36,7 @@ plot(x, type=2)
 # When we are finished we call 'detach("namespace:Crossover")'.
 @
 
+\iffalse 
 There are different approaches to calculate the Information matrix
 $A_r$ of the row-column design.  In the following code fragment we
 compare the two different approaches:
@@ -97,13 +98,14 @@ tdiff2 <- t(C)%*%ginv(A2)%*%C
 tdiff1 - tdiff2
 
 @
-  
+\fi 
+
 \begin{Def}[Efficiency]\index{efficiency}
-  If the difference of two treatments, each replicated $r$ times, is
+  If the difference of two treatments, replicated $r_1$ and $r_2$ times, is
   estimated in an \emph{ideal design} with residual variance
   $\sigma^2$, the variance of the estimated difference
   $\overline{y}\!_A-\overline{y}\!_B$ is
-  \[V_I=\frac{2\sigma^2}{r}.\] 
+  \[V_I=\left(\frac{1}{r_1}+\frac{1}{r_2}\right)\sigma^2.\] 
   In a cross-over design the variance of a parameter estimates for $A$
   and $B$ are given by the corresponding elements $\sigma^2x_A$ and
   $\sigma^2x_B$ of
@@ -112,7 +114,7 @@ tdiff1 - tdiff2
   is $\sigma^2 (x_A + x_B - 2*x_{AB})$ where $x_{AB}$ is the element
   of $X^TX$ specifying the covariance of the two treatment parameter
   estimates.  The efficiency
-  is \[E:=\frac{V_I}{V_C}=\frac{2}{rx}\;\in[0,1].\] %TODO What is x?
+  is \[E:=\frac{V_I}{V_C}=\frac{r_1+r_2}{r_1r_2(x_A + x_B - 2*x_{AB})}\;\in[0,1].\]
 \end{Def}
 
 If we have a model with $n$ parameters and a contrast matrix $C\in\R^{n\times n}$, the sum of the variances of the linear combinations given by $C$ is
