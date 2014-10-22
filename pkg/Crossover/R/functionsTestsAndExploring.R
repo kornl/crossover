@@ -58,7 +58,13 @@ compareApproaches <- function(design, models2check=c(1,2,3,4,5,6,7,8), stop.on.d
 }
 
 infMatrix_R <- function(X, v, model, method) {
-  if (model==8) { vv <- v+v*v+v*v*v } else { vv <- v+v*v } 
+  if (model==8) { 
+    vv <- v+v*v+v*v*v 
+  } else if (model==9) { 
+    vv <- v
+  } else {
+    vv <- v+v*v
+  }
   r <-sapply(1:vv, function(x) {sum(X==x)})
   p <- dim(X)[1]
   s <- dim(X)[2]
@@ -90,7 +96,13 @@ rcdMatrix_R <- function(rcDesign, v, model) {
   if (length(levels(as.factor(rcDesign)))<=v && model!=9) {
     warning("It looks like you called rcdMatrix with a crossover design,\nbut you should provide the row-column design.")
   }
-  if (model==8) { vv <- v+v*v+v*v*v } else { vv <- v+v*v } 
+  if (model==8) { #TODO Replace with method nParmeters(v, model)
+    vv <- v+v*v+v*v*v 
+  } else if (model==9) {
+    vv <- v
+  } else { 
+    vv <- v+v*v 
+  } 
   X <- matrix(0, prod(dim(rcDesign)), vv)
   for (j in 1:(dim(rcDesign)[2])) {
     for (i in 1:(dim(rcDesign)[1])) {
