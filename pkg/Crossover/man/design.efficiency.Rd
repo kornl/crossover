@@ -5,15 +5,23 @@
 pairwise comparison and the efficicency of each pairwise comparison for a
 cross-over design}
 \usage{
-design.efficiency(design)
+design.efficiency(design, model = 1)
 }
 \arguments{
 \item{design}{Cross-over design.}
+
+\item{model}{Model - one of the following: 1) "Standard additive model",
+2) "Second-order carry-over effects", 3) "Full set of interactions",
+4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
+model", 7) "Treatment decay model", 8) "Proportionality model", 9) "No carry-over effects".}
 }
 \value{
-list(xmat.no.subjects=xmat.no.subjects,
-var.trt.pair=var.trt.pair,eff.trt.pair=eff.trt.pair,av.eff.trt.pair=av.eff.trt.pair,
-var.trt.pair.adj=var.trt.pair.adj,eff.trt.pair.adj=eff.trt.pair.adj,av.eff.trt.pair.adj=av.eff.trt.pair.adj)
+A list with the following elements:
+\itemize{
+\item xmat Design matrix for the given model (including subject and period effects)
+\item var.trt.pair.adj Matrix of treament difference variances
+\item eff.trt.pair.adj Matrix of treament difference efficiencies
+}
 }
 \description{
 Function to read in a cross-over design and create the design matrix X, the
@@ -21,10 +29,6 @@ variance-covariance matrix of the parameter estimates (X'X)^-1, the variance
 of each pairwise comparison and the efficicency of each pairwise comparison.
 }
 \details{
-This is done for a model with fixed subject effects, period effects and
-treatments and for the above model with first-order carry-over effects
-added.
-
 See the vignette of this package for further details.
 }
 \examples{
@@ -32,7 +36,7 @@ data(fletcher)
 design.efficiency(fletcher1)
 }
 \author{
-Byron Jones, 18/11/2011
+Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
 \references{
 Jones, B., & Kenward, M. G. (2003). Design and analysis of

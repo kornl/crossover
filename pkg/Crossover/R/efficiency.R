@@ -17,9 +17,16 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 #' See the vignette of this package for further details.
 #' 
 #' @param design Cross-over design.
-#' @return list(xmat.no.subjects=xmat.no.subjects,
-#' var.trt.pair=var.trt.pair,eff.trt.pair=eff.trt.pair,av.eff.trt.pair=av.eff.trt.pair,
-#' var.trt.pair.adj=var.trt.pair.adj,eff.trt.pair.adj=eff.trt.pair.adj,av.eff.trt.pair.adj=av.eff.trt.pair.adj)
+#' @param model Model - one of the following: 1) "Standard additive model",
+#' 2) "Second-order carry-over effects", 3) "Full set of interactions",
+#' 4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
+#' model", 7) "Treatment decay model", 8) "Proportionality model", 9) "No carry-over effects". 
+#' @return A list with the following elements:
+#' \itemize{
+#' \item xmat Design matrix for the given model (including subject and period effects)
+#' \item var.trt.pair.adj Matrix of treament difference variances
+#' \item eff.trt.pair.adj Matrix of treament difference efficiencies
+#' }
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @references Jones, B., & Kenward, M. G. (2003). Design and analysis of
 #' cross-over trials (Vol. 98). Chapman & Hall.
