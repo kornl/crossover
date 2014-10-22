@@ -1,0 +1,332 @@
+\documentclass[a4paper, 10pt]{article}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+%\usepackage{tikz}
+%\usetikzlibrary{decorations,arrows,shapes}
+\usepackage[margin=0.9in]{geometry}
+%\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xspace}
+\usepackage{tabularx}
+\usepackage{makeidx}\makeindex
+\usepackage{algorithmic} 
+\usepackage{algorithm}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1mm}
+\newcommand{\commentout}[1]{}
+\renewcommand{\theequation}{\thesection.\arabic{\equation}}
+\numberwithin{equation}{section}
+
+\theoremstyle{definition}
+\newtheorem{Def}{Definition}[section]
+\newtheorem{Rem}[Def]{Remark}
+\newtheorem{RemDef}[Def]{Remark und Definition}
+\newtheorem{DefRem}[Def]{Definition und Remark}
+\newtheorem{Example}[Def]{Example}
+\theoremstyle{plain}
+\newtheorem{Theorem}[Def]{Theorem}
+\newtheorem{DefTheorem}[Def]{Definition and Theorem}
+\newtheorem{Corollary}[Def]{Corollary}
+\newtheorem{Lemma}[Def]{Lemma}
+
+\newcommand{\C}{\ensuremath{\mathbb{C}}\xspace}
+\newcommand{\R}{\ensuremath{\mathbb{R}}\xspace}
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}\xspace}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\NN}{\ensuremath{\mathbb{N}_0}\xspace}
+\newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
+\newcommand{\sF}{\ensuremath{\mathcal{F}}\xspace}
+\newcommand{\sN}{\ensuremath{\mathcal{N}}\xspace}
+\newcommand{\Pot}{\ensuremath{\mathfrak{Pot}}\xspace}
+\newcommand{\kronecker}{\raisebox{1pt}{\ensuremath{\:\otimes\:}}}
+
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\trace}{trace}
+
+\newcommand{\skp}[1]{\left\langle#1\right\rangle}
+
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\newcommand{\id}{\text{id}}
+
+\newenvironment{Proof}{\par\noindent\upshape\textit{Proof. }\nopagebreak}{\qed\par}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\begin{document}
+
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Crossover - A search algorithm and GUI for cross-over designs}
+
+\title{Crossover - A search algorithm and GUI for cross-over designs} 
+
+\author{Kornelius Rohmeyer}
+
+<<OptionsAndLibraries, include=FALSE, message=FALSE>>=
+if (exists("opts_chunk")) {
+  opts_chunk$set(concordance=TRUE)
+  opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=95))
+  #opts_chunk$set(size="footnotesize")
+  #opts_chunk$set(size="tiny")
+  opts_chunk$set(size="scriptsize") 
+  opts_chunk$set(cache=FALSE)
+  opts_chunk$set(autodep=TRUE)
+}
+
+# See http://yihui.name/knitr/hooks for the following code.
+CrossoverNamespace <- function(before, options, envir) {
+  if (before) {
+    ## code to be run before a chunk
+    #attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3)
+    attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
+  } else {
+    ## code to be run after a chunk
+    detach("namespace:Crossover")
+  }
+}
+
+if (exists("opts_chunk")) {
+  knit_hooks$set(withNameSpace = CrossoverNamespace)
+}
+
+library(Crossover, quietly=TRUE)
+options(width=128)
+options(digits=4)
+startGUI <- function(...) {invisible(NULL)}
+#options(prompt="> ", continue="+ ")
+library(MASS)
+library(multcomp)
+library(ggplot2)
+library(Matrix)
+# knitr has to be loaded for 'set_parent' and CRAN checks.
+library(knitr)
+bibCall <- TRUE
+attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
+
+@
+
+\subsubsection{Efficiency remarks when selecting a design}
+
+Efficiencies for a design $D$ are shown in comparision to an ideal design $D_I$ 
+where each treatment occurs equally often in $D$ and $D_I$.
+
+If for example we take a look at the design \texttt{pidgeon1}, we see that
+treatment 1 occurs nine times, while all other treatments occur only six times:
+
+<<pidgeon1, echo=FALSE>>=
+
+design <- getDesign("pidgeon1")
+rownames(design) <- paste("p", 1:3, sep="")
+colnames(design) <- paste("s", 1:9, sep="")
+design
+
+@
+
+The variances of the estimates for the treatment differences are given by:
+
+<<pidgenVar, echo=FALSE>>=
+
+design.efficiency(design)$var.trt.pair.adj
+
+@
+
+In an ideal design the variances are:
+
+<<pidgenVar2, echo=FALSE>>=
+
+design.efficiency(design)$var.trt.pair
+
+@
+
+Let's investigate the different methods and implementations for balaam4t:
+
+<<>>=
+
+design <- getDesign("balaam4t")
+estimable_R(getDesign("balaam4t"), 4, 1)
+
+p <- dim(design)[1]
+s <- dim(design)[2]
+v <- length(levels(as.factor(design)))	
+
+##subject factor
+subject<-rep(1:s, rep(p,s))
+##period factor
+per<-rep(1:p,  s)
+
+trt<-NULL
+for(i in 1:s){
+  trt<-c(trt, design[,i])
+}
+
+n<-s*p
+
+mean01<-matrix(1,n,1)
+subj01<-matrix(0,n,s)
+per01<-matrix(0,n,p)
+trt01<-matrix(0,n,v)
+car01<-matrix(0,n,v)	
+## subjects
+for(i in 1:s){
+  subj01[,i][subject==i]<-1
+}
+##periods
+for(i in 1:p){
+  per01[,i][per==i]<-1
+}
+## treatments
+for(i in 1:v){
+  trt01[,i][trt==i]<-1
+}
+##carry-over
+car01[,1:v][per==1]<-0
+for(j in 2:p){
+  car01[,1:v][per==j]<-trt01[,1:v][per==(j-1)]
+}
+
+xmat<-matrix(cbind(mean01,subj01,per01,trt01),n,(1+s+p+v),byrow=F)
+xtx<-t(xmat)%*%xmat
+
+xtx.inv<-ginv(xtx)
+n.cols.all<-1+s+p+v
+n.cols.trt.upp<-n.cols.all
+n.cols.trt.low<-n.cols.trt.upp-(v-1)
+xtx.inv.trt<-xtx.inv[n.cols.trt.low:n.cols.trt.upp,n.cols.trt.low:n.cols.trt.upp]
+
+## variances of pairwise comparisons
+## unadjusted for carry-over effects
+var.trt.pair<-matrix(0,v,v)
+for(i in 1:v){
+  for(j in 1:v){
+    if (i!=j) {
+      var.trt.pair[i,j]<-xtx.inv.trt[i,i]+xtx.inv.trt[j,j] - 2*xtx.inv.trt[i,j]
+    }
+  }
+}
+
+var.trt.pair
+
+xmat<-matrix(cbind(mean01,subj01,per01,trt01,car01),n,(1+s+p+2*v),byrow=F)
+  
+xtx<-t(xmat)%*%xmat
+## inverse of X'X matrix
+xtx.inv<-ginv(xtx)
+	
+## extract part of inverse for carry-over effects 
+n.cols.all<-1+s+p+2*v
+n.cols.car.upp<-n.cols.all
+n.cols.car.low<-n.cols.car.upp-(v-1)
+n.cols.trt.upp<-n.cols.car.low-1
+n.cols.trt.low<-n.cols.trt.upp-(v-1)
+## extract part of inverse for treatments adjusted for carry-over effects 
+xtx.inv.car.adj<-xtx.inv[n.cols.car.low:n.cols.car.upp,n.cols.car.low:n.cols.car.upp]
+xtx.inv.trt.adj<-xtx.inv[n.cols.trt.low:n.cols.trt.upp,n.cols.trt.low:n.cols.trt.upp]
+
+xtx.inv.trt.adj
+
+## variances of pairwise comparisons
+## unadjusted for carry-over effects
+var.trt.pair.adj<-matrix(0,v,v)
+for(i in 1:v){
+  for(j in 1:v){
+    if (i!=j) {
+      var.trt.pair.adj[i,j]<-xtx.inv.trt.adj[i,i]+xtx.inv.trt.adj[j,j] - 2*xtx.inv.trt.adj[i,j]
+    }
+  }
+}
+
+ var.trt.pair.adj
+
+############# Rebuilding with our functions: #############
+
+x <- cbind(rcdMatrix(design, v=4, model=9), getZ(s=dim(design)[2],p=dim(design)[1]))
+inv <- ginv(t(x)%*%x)
+var <- matrix(0,v,v)
+for(i in 1:v) {
+  for(j in 1:v) {
+    if (i!=j) {
+      var[i,j]<-inv[i,i]+inv[j,j] - 2*inv[i,j]
+    }
+  }
+}
+
+var
+
+############# Now with shortcut: ##############
+
+Csub <- contrMat(n=rep(1, v), type="Tukey")
+class(Csub) <- "matrix"
+C <- appendZeroColumns(Csub, model=9, v)
+CC <- t(C) %*% C
+
+rcDesign <- rcd(design, v, model=9)
+Ar <- infMatrix(rcDesign, v, model=9)
+H <- linkMatrix(model=9, v)
+diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C))
+
+############# This is not really used. Without row/column effects: ################
+
+xmat<-matrix(cbind(mean01,trt01),n,(1+v),byrow=F)
+xtx<-t(xmat)%*%xmat
+
+xtx.inv<-ginv(xtx)
+n.cols.all<-1+v
+n.cols.trt.upp<-n.cols.all
+n.cols.trt.low<-n.cols.trt.upp-(v-1)
+xtx.inv.trt<-xtx.inv[n.cols.trt.low:n.cols.trt.upp,n.cols.trt.low:n.cols.trt.upp]
+
+## variances of pairwise comparisons
+## unadjusted for carry-over effects
+var.trt.pair<-matrix(0,v,v)
+for(i in 1:v){
+  for(j in 1:v){
+    if (i!=j) {
+      var.trt.pair[i,j]<-xtx.inv.trt[i,i]+xtx.inv.trt[j,j] - 2*xtx.inv.trt[i,j]
+    }
+  }
+}
+
+var.trt.pair
+
+@
+
+We see that the variances for comparing the first treatment to any other treatment are lower (0.3720) 
+than the variances of treatment difference estimates within the last three treatments.
+
+<<pidgenEff>>=
+
+design.efficiency(design)$eff.trt.pair.adj
+design.efficiency2(design)$eff.trt.pair.adj
+
+# Variance by simple formula is the same as in design.efficiency:
+
+(v*2)/(p*s)
+
+# BUT Variance for crossovermodel is twice the variance in both getValue calls:
+
+Crossover:::getValues(design, model=1, v=v)
+Crossover:::getValues(design, model=9, v=v)
+
+
+
+@
+
+The average efficiency is given by \Sexpr{mean(design.efficiency(design)$var.trt.pair.adj[upper.tri(design.efficiency(design)$var.trt.pair.adj)])},
+
+\begin{enumerate}
+\item A higher average efficiency does obviously not mean that a design is better 
+suited for a sepific problem. If you are interested in Dunnett type contrasts you 
+should use other designs as if you are interested in Tukey or Williams type contrasts.
+\item When comparing two designs with different 
+\item It is better to look directly at the variances of the 
+\end{enumerate}
+
+\end{document}
