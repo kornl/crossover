@@ -55,8 +55,8 @@ getDesignText <- function(d, model=1, type="HTML", carryover=TRUE, digits=4, var
   }
   if (eff) {
     warn <- ""
-    if (model!=1) warn <- "(Warning: efficiency is calculated for model 1)"
-    m <- design.efficiency(d)$eff.trt.pair.adj
+    #if (model!=1) warn <- "(Warning: efficiency is calculated for model 1)"
+    m <- design.efficiency(d, model=model)$eff.trt.pair.adj
     result <- paste(result, "<b>Eff.trt.pair",warn,":</b><br>", getTable(m, type, forceInteger=FALSE, digits=digits, names=names),sep="")  
   }
   if (carryover) {
