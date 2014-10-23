@@ -10,9 +10,8 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 #' pairwise comparison and the efficicency of each pairwise comparison for a
 #' cross-over design
 #' 
-#' Function to read in a cross-over design and create the design matrix X, the
-#' variance-covariance matrix of the parameter estimates (X'X)^-1, the variance
-#' of each pairwise comparison and the efficicency of each pairwise comparison.
+#' Function to read in a cross-over design and create the design matrix X, 
+#' the variance of each pairwise comparison and the efficicency of each pairwise comparison.
 #' 
 #' See the vignette of this package for further details.
 #' 
