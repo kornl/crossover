@@ -72,7 +72,7 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
         		
         row+=2;
         
-        designTable = new DesignTable();	
+        designTable = new DesignTable(gui);	
         designTable.addMouseListener(this);
 		designTable.getSelectionModel().addListSelectionListener(this);
 		
@@ -160,8 +160,8 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 	public void valueChanged(ListSelectionEvent e) {
 		int i = designTable.getSelectedRow();
 		if (i == -1) return;
-		Design design = designTable.getModel().getDesigns().get(designTable.convertRowIndexToModel(i));
-		jta.showDesign(design);		
+		Design design = designTable.getModel().getDesigns().get(designTable.convertRowIndexToModel(i));		
+		jta.showDesign(design);
 	}
 
 	public void actionPerformed(ActionEvent e) {		

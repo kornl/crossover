@@ -8,8 +8,10 @@ import javax.swing.table.AbstractTableModel;
 public class DesignTableModel extends AbstractTableModel {
 
 	List<Design> designs = new Vector<Design>();
+	CrossoverGUI gui;
 
-	public DesignTableModel() {
+	public DesignTableModel(CrossoverGUI gui) {
+		this.gui = gui;
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
@@ -31,7 +33,7 @@ public class DesignTableModel extends AbstractTableModel {
 		switch (columnIndex) {
 		case 0: return "Title";
 		case 1: return "Sequences";
-		case 2: return "av.eff.trt.pair.adj";
+		case 2: return "av.eff.trt.pair";
 		case 3: return "balanced";
 		default: return null;
 		}
@@ -47,7 +49,7 @@ public class DesignTableModel extends AbstractTableModel {
 		case 0: return design.title;		                   
 		case 1: return design.s; // .getRSignature(); 
 		//case 2: return design.efficiencyUnadj;
-		case 2: return design.efficiencyAdj;
+		case 2: return design.effs[gui.getModel()-1];
 		case 3: return false;
 		default: return null;
 		}

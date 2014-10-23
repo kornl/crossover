@@ -18,8 +18,7 @@ public class Design {
 	public int s;
 	public int p;
 	String design;
-	Double efficiencyAdj = null;
-	Double efficiencyUnadj = null;
+	double[] effs = null;
 	String result = null;
 	String rName = null;
 	String uniqueName = null;
@@ -43,9 +42,7 @@ public class Design {
 		p = dim[0];
 		s = dim[1];		
 		design = RControl.getR().eval("paste(capture.output(dput("+uniqueName+")), collapse=\"\")").asRChar().getData()[0];
-		double[] eff = RControl.getR().eval("Crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
-		efficiencyUnadj = eff[0];
-		efficiencyAdj = eff[1];
+		effs = RControl.getR().eval("Crossover:::getEff("+uniqueName+")").asRNumeric().getData();
 	}
 	
 	/**
@@ -68,9 +65,7 @@ public class Design {
 		this.s = s;
 		this.p = p;
 		this.design = design;
-		double[] eff = RControl.getR().eval("Crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();
-		efficiencyUnadj = eff[0];
-		efficiencyAdj = eff[1];		
+		effs = RControl.getR().eval("Crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();	
 		saveDesign2R(true);
 	}
 	

@@ -14,6 +14,8 @@ Changes in version 0.1-13 (??-10-2014)
   (Replace this file in library/Crossover/data/.)
   Due to size they are (not yet) included in the CRAN package.
 
+- Efficiencies are now calculated for all models.
+
 Changes in version 0.1-12 (25-09-2014)
 ======================================
 

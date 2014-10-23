@@ -45,7 +45,7 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     	textArea.appendParagraph(textArea.makeBold(design.title + " ("+design.getRSignature()+")"));
     	textArea.appendParagraph("");
     	textArea.appendHTML(design.getHTMLTable());
-    	textArea.appendParagraph("<b>Av.eff.trt.pair.adj:</b> "+gui.df.format(design.efficiencyAdj));
+    	textArea.appendParagraph("<b>Av.eff.trt.pair.adj:</b> "+gui.df.format(design.effs[gui.getModel()-1]));
     	if (design.reference!=null) textArea.appendParagraph(textArea.makeBold("Reference: ")+"<i>"+design.reference.replaceAll("\\n", "<br>")+"</i>");
     	textArea.appendParagraph(getGeneralCarryover(design));	
 	}

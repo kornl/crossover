@@ -87,7 +87,7 @@ design2integer <- function(design) {
 getEff <- function(design) {
   average.eff <- rep(0, 9)
   for (model in 1:9) {
-	  eff <- design.efficiency(design)$eff.trt.pair.adj
+	  eff <- design.efficiency(design, model=model)$eff.trt.pair.adj
     average.eff[model] <- mean(eff[row(eff)!=col(eff)])
   }
 	return(average.eff)

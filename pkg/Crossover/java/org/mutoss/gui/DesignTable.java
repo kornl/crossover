@@ -11,8 +11,8 @@ public class DesignTable extends JTable {
 
 	TableRowSorter<DesignTableModel> sorter;
 	
-	public DesignTable() {
-		super(new DesignTableModel());
+	public DesignTable(CrossoverGUI gui) {
+		super(new DesignTableModel(gui));
 		sorter = new TableRowSorter<DesignTableModel>(getModel());
 		this.setRowSorter(sorter);
 		//setAutoCreateRowSorter(true);
