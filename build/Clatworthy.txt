@@ -1,0 +1,5 @@
+b blocks (rows) of k units (column)
+v treatments each of which occurs in r blocks
+
+=> vr=bk
+
