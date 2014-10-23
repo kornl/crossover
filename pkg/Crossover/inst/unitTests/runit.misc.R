@@ -70,6 +70,8 @@ test.strangeDesignInputs <- function() {
   
 }
 
-test.getEff() {
-  checkTrue(all(abs(getEff(getDesign("pidgeon1"))-0.712893817102914)<0.00001))
+test.getEff <- function() {
+  checkTrue(all(abs(getEff(getDesign("pidgeon1"))-c(0.712893817102914, 0.712893817102914, 0.715489015631601, 0.712893817102914, 
+                                                    0.712893817102914, 0.87962962962963, 0.106076388888889, 0.201785483035483, 
+                                                    0.87962962962963))<0.00001))
 }
