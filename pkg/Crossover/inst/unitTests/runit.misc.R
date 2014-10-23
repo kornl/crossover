@@ -69,3 +69,7 @@ test.strangeDesignInputs <- function() {
   myInv <- ginv(rcd(D, v, model=1))
   
 }
+
+test.getEff() {
+  checkTrue(all(abs(getEff(getDesign("pidgeon1"))-0.712893817102914)<0.00001))
+}
