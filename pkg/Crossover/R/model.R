@@ -166,7 +166,7 @@ rcdMatrix <- function(X, v, model) {
   return(.Call( "rcdMatrix2R", X, v, model, PACKAGE = "Crossover" ))
 }
 
-infMatrix <- function(X, v, model) {
-  model <- getModelNr(model)
-  return(.Call( "infMatrix2R", X, v, model, PACKAGE = "Crossover" ))
+infMatrix <- function(X, v, model, xtx=FALSE) {
+  model <- getModelNr(model)  
+  return(.Call( "infMatrix2R", X, v, model, xtx, PACKAGE = "Crossover" ))
 }

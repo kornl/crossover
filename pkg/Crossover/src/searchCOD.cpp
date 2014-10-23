@@ -161,7 +161,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP contra
   if (verbose) {
     bestDesign.print(Rcout, "Best design overall:");
     rcDesign = rcd(bestDesign, v, model);      
-    Ar = infMatrix(rcDesign, v, model);
+    Ar = infMatrix(rcDesign, v, model, false);
     s1 = trace(pinv(trans(linkM) * Ar * linkM) * tCC) ;
     Rprintf("Eff of design is: %f=%f.\n", effBest, s2/s1);    
   }
@@ -223,12 +223,13 @@ SEXP rcdMatrix2R(SEXP rcDesignS, SEXP vS, SEXP modelS) {
   END_RCPP
 }
 
-SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS) {
+SEXP infMatrix2R(SEXP designS, SEXP vS, SEXP modelS, SEXP xtxS) {
   BEGIN_RCPP
   int v = IntegerVector(vS)[0];
   int model = IntegerVector(modelS)[0];
   mat design = as<mat>(designS);  
-  return wrap(infMatrix(design, v, model));
+  bool xtx = is_true( any( LogicalVector(xtxS) ) );
+  return wrap(infMatrix(design, v, model, xtx));
   END_RCPP
 }
 
@@ -296,7 +297,7 @@ double getS1(mat rcDesign, int v, int model, mat linkM, mat tCC, bool randomS) {
         X =  join_rows(X, Z);
         return trace(pinv(trans(X) * X) * join_rows(join_cols(tCC, zeros<mat>(Z.n_cols, tCC.n_cols)),zeros<mat>(tCC.n_rows+Z.n_cols,Z.n_cols))); // TODO Cut submatrix from pinv(t(X)*X) instead of adding zeros to tCC.
     }
-  mat Ar = infMatrix(rcDesign, v, model);
+  mat Ar = infMatrix(rcDesign, v, model, false);
   mat A = trans(linkM) * Ar * linkM;
   double s1 = trace(pinv(A) * tCC);
   return s1;
@@ -377,16 +378,25 @@ arma::mat rcdMatrix(arma::mat rcDesign, int v, int model) {
     return(X);
 }
 
-arma::mat infMatrix(arma::mat rcDesign, int v, int model) {
-    if (model == 3 || model == 7) {
-         return NULL; // TODO Throw more meaningful error.
-    }    
-    int vv = v+v*v;
-    if (model==8) { vv = v+v*v+v*v*v; }
-    if (model==9) { vv = v; }
-    
+/**
+ * If parameter 'xtx' is true, the information matrix is calculated by
+ * pinv(trans(X) * X).
+ */
+arma::mat infMatrix(arma::mat rcDesign, int v, int model, bool xtx) {
   int p = rcDesign.n_rows;
   int s = rcDesign.n_cols;
+  
+  if ((model == 3 || model == 7) || xtx) {      
+    mat X = rcdMatrix(rcDesign, v, model);// * linkM;        
+    mat Z = getZ(s, p, false);        
+    //X = join_rows(X, Z);                
+    return trans(X) * (eye<mat>(Z.n_rows, Z.n_rows)-Z*pinv(trans(Z)*Z)*trans(Z)) * X; //TODO Proof that pinv is allowed here.
+  }    
+  
+  int vv = v+v*v;
+  if (model==8) { vv = v+v*v+v*v*v; }
+  if (model==9) { vv = v; }    
+
   vec r = zeros<vec>(vv);  
   mat NP = zeros<mat>(vv, p);
   mat NS = zeros<mat>(vv, s);
