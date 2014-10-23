@@ -39,10 +39,24 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 design.efficiency <- function(design, model=1) {
   p <- dim(design)[1]
   s <- dim(design)[2]
-  v <- length(levels(as.factor(design)))
+  v <- length(levels(as.factor(design)))   
+  #if(missing(C)) 
+  {
+    Csub <- contrMat(n=rep(1, v), type="Tukey")
+    class(Csub) <- "matrix"
+    C <- appendZeroColumns(Csub, model, v)
+  }
+  if (!estimable(design, v, model, C)) {
+    warning(paste("Not all treatment contrasts are estimable for model", model, "in this design."))
+    m <- matrix(NA, v, v)
+    return(list(xmat=cbind(rcdMatrix(rcd(design, v, model), v=v, model=model),  
+                           getZ(s=dim(design)[2],p=dim(design)[1])), 
+                var.trt.pair.adj=m, 
+                eff.trt.pair.adj=m))
+  }
   m <- matrix(0, v, v)
   # Actual variances
-  variances <- getValues(design, model, v=v)
+  variances <- getValues(design, model, C=C, v=v)
   m[lower.tri(m)] <- variances
   m[upper.tri(m)] <- t(m)[upper.tri(m)]
   # Ideal design
