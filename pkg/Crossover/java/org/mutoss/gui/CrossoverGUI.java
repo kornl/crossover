@@ -86,6 +86,9 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		{"Treatment", "Carry-over (1st order)", "Carry-over (2nd order)"},
 		{}
 	};
+	
+	public static final int PLACEBOMODEL = 3;
+	public static final int PROPORTIONALMODEL = 2;
 	 
 	/**
 	 * Constructor - you will not need to change things here
@@ -361,11 +364,11 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 	private void newModelSelected() {
 		algorithmPanel.createEffPanel();
-		if (jCBmodel.getSelectedIndex()==3) {
+		if (jCBmodel.getSelectedIndex()==PLACEBOMODEL) {
 			jtfParam.setEnabled(true);
 			pLabel.setEnabled(true);
 			pLabel.setText("Number of placebo treatments:");
-		} else if (jCBmodel.getSelectedIndex()==2) {
+		} else if (jCBmodel.getSelectedIndex()==PROPORTIONALMODEL) {
 			jtfParam.setEnabled(true);
 			pLabel.setEnabled(true);
 			pLabel.setText("Proportionality parameter:");
