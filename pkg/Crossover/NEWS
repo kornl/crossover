@@ -16,6 +16,8 @@ Changes in version 0.1-13 (??-10-2014)
 
 - Efficiencies are now calculated for all models.
 
+- Fixed wrongly disabled input field for placebo/proportional model input parameter.
+
 Changes in version 0.1-12 (25-09-2014)
 ======================================
 
