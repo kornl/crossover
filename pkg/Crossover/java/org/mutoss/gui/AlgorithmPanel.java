@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -56,9 +57,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	List<JTextField> effV = new Vector<JTextField>();
 	List<JTextField> nV = new Vector<JTextField>();
 	CellConstraints cc = new CellConstraints();
-	JRadioButton jbBalanceNothing = new JRadioButton("No balancing restrictions");
-	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences (may decrease efficiency)");
-	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods (may decrease efficiency)");
+	JRadioButton jbBalanceNothing = new JRadioButton("No balancing restrictions");	
+	JRadioButton jbBalanceSequences = new JRadioButton("Balance treatments in regard to sequences");	 
+	JRadioButton jbBalancePeriods = new JRadioButton("Balance treatments in regard to periods");
 	CrossoverGUI gui;	
 	JButton exportR = new JButton("Export to R");
 	JButton showAlgoPerformance = new JButton("Search algorithm plot");
@@ -187,7 +188,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	public JPanel getLeftSidePanel() {
 		lsPanel = new JPanel();
 		String cols = "5dlu, pref, 5dlu, fill:min:grow, 5dlu";
-        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
+        String rows = "5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu, pref, 5dlu";
         
         lsPanel.setLayout(new FormLayout(cols, rows));
 		
@@ -249,7 +250,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         ButtonGroup group = new ButtonGroup();
         group.add(jbBalanceNothing);
         group.add(jbBalanceSequences);
+        jbBalanceSequences.setToolTipText("May decrease efficiency");
         group.add(jbBalancePeriods);
+        jbBalancePeriods.setToolTipText("May decrease efficiency");
         jbBalanceNothing.setSelected(true);
               
         lsPanel.add(jbBalanceNothing, cc.xyw(2, row, 3));
@@ -260,7 +263,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
         row+=2;
         
         lsPanel.add(new JLabel("Contrasts:"), cc.xy(2, row));
-        lsPanel.add(jcbContrasts, cc.xy(4, row));
+        
+        row+=2;
+        
+        lsPanel.add(jcbContrasts, cc.xyw(2, row, 3));
 
         row+=2;    
         
@@ -359,8 +365,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		cbcWeights.fill = GridBagConstraints.BOTH;	
 		cbcWeights.gridx=0; cbcWeights.gridy=0;
 		cbcWeights.gridwidth = 1; cbcWeights.gridheight = 1;
-		cbcWeights.ipadx=5; cbcWeights.ipady=5;
+		//cbcWeights.ipadx=5; cbcWeights.ipady=5;
 		cbcWeights.weightx=1; cbcWeights.weighty=1;
+		cbcWeights.insets = new Insets(2, 2, 2, 2);
 		if (firstCall) fixedNumber.addActionListener(this);
 		ntPanel.setBorder(new ComponentTitledBorder(fixedNumber, ntPanel, BorderFactory.createTitledBorder("Weights:")));
 		//ntPanel.setBorder(BorderFactory.createTitledBorder("Number of treatment assignments"));
@@ -374,12 +381,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		int p = Integer.parseInt(gui.spinnerP.getModel().getValue().toString());
 		
 		for (int i=1; i<=v; i++) {        	
-        	labels.add("Treatment "+i+":");        	        	
+        	labels.add(" Treatment "+i+":");        	        	
         }      
         
 		nV.clear();
 		for (int i=0;i<labels.size();i++) {        		
-			nV.add(new JTextField(""+((s*p)/v+((i<(s*p)%v)?1:0)), 6));
+			nV.add(new JTextField(""+((s*p)/v+((i<(s*p)%v)?1:0)), 3));
 			ntPanel.add(new JLabel(labels.get(i)), cbcWeights);
 			cbcWeights.gridx++;
 			ntPanel.add(nV.get(i), cbcWeights);	
