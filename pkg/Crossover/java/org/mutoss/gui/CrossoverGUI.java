@@ -361,11 +361,11 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 	
 	private void newModelSelected() {
 		algorithmPanel.createEffPanel();
-		if (jCBmodel.getSelectedIndex()==4) {
+		if (jCBmodel.getSelectedIndex()==3) {
 			jtfParam.setEnabled(true);
 			pLabel.setEnabled(true);
 			pLabel.setText("Number of placebo treatments:");
-		} else if (jCBmodel.getSelectedIndex()==7) {
+		} else if (jCBmodel.getSelectedIndex()==2) {
 			jtfParam.setEnabled(true);
 			pLabel.setEnabled(true);
 			pLabel.setText("Proportionality parameter:");
