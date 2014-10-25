@@ -1,4 +1,5 @@
 estimable_R <- function(design, v, model, C, verbose=0) {
+  model <- getModelNr(model)
 	if(missing(C)) {
 		Csub <- contrMat(n=rep(1, v), type="Tukey")
 		class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
@@ -21,6 +22,7 @@ estimable_R <- function(design, v, model, C, verbose=0) {
 }
 
 estimable <- function(design, v, model, C, verbose=0) {
+  model <- getModelNr(model)
 	if(missing(C)) {
 		Csub <- contrMat(n=rep(1, v), type="Tukey")
 		class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
@@ -30,4 +32,8 @@ estimable <- function(design, v, model, C, verbose=0) {
 	linkM <- linkMatrix(model, v)
 	Z <- getZ(s=dim(design)[2],p=dim(design)[1])
 	return(.Call( "estimable2R", rcDesign, v, model, linkM, C, Z, verbose, PACKAGE = "Crossover" ))    
+}
+
+meanEff <- function(eff) {
+  mean(eff[upper.tri(eff)])
 }
