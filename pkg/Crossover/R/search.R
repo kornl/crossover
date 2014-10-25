@@ -179,7 +179,7 @@ getTrtPair <- function(design, model=1) {
   return(triu(gco$Var.trt.pair))
 }
 
-getValues <- function(design, model=1, C, v) {
+getValues <- function(design, model=1, C, v, ppp=0.5, placebos=1) {
   model <- getModelNr(model)
   if (missing(C)) {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
@@ -189,7 +189,7 @@ getValues <- function(design, model=1, C, v) {
   }
   rcDesign <- rcd(design, v, model=model)
   Ar <- infMatrix(rcDesign, v, model=model)
-  H <- linkMatrix(model, v)
+  H <- linkMatrix(model, v, ppp=ppp, placebos=placebos)
   return(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))  
 }
 

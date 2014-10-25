@@ -84,10 +84,10 @@ design2integer <- function(design) {
     return(matrix(as.integer(design), dim(design)[1]))
 }
 
-getEff <- function(design) {
+getEff <- function(design, ppp=0.5, placebos=1) {
   average.eff <- rep(0, 9)
   for (model in 1:9) {
-	  eff <- design.efficiency(design, model=model)$eff.trt.pair.adj
+	  eff <- design.efficiency(design, model=model,  model.param=list(ppp=0.5, placebos=1))$eff.trt.pair.adj
     average.eff[model] <- mean(eff[row(eff)!=col(eff)])
   }
 	return(average.eff)

@@ -20,6 +20,10 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 #' 2) "Second-order carry-over effects", 3) "Full set of interactions",
 #' 4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
 #' model", 7) "Treatment decay model", 8) "Proportionality model", 9) "No carry-over effects". 
+#' @param model.param List of additional model specific parameters. In the
+#' moment these are \code{ppp}, the proportionality parameter for the
+#' proportionality model, and \code{placebos}, the number of placebo treatments
+#' in the placebo model.
 #' @return A list with the following elements:
 #' \itemize{
 #' \item xmat Design matrix for the given model (including subject and period effects)
@@ -36,7 +40,7 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 #' design.efficiency(fletcher1)
 #' 
 #' @export design.efficiency
-design.efficiency <- function(design, model=1) {
+design.efficiency <- function(design, model=1, model.param=list()) {
   p <- dim(design)[1]
   s <- dim(design)[2]
   v <- length(levels(as.factor(design)))   
@@ -46,6 +50,7 @@ design.efficiency <- function(design, model=1) {
     class(Csub) <- "matrix"
     C <- appendZeroColumns(Csub, model, v)
   }
+  # TODO DO we have to add model.param to estimable?
   if (!estimable(design, v, model, C)) {
     warning(paste("Not all treatment contrasts are estimable for model", model, "in this design."))
     m <- matrix(NA, v, v)
@@ -56,7 +61,7 @@ design.efficiency <- function(design, model=1) {
   }
   m <- matrix(0, v, v)
   # Actual variances
-  variances <- getValues(design, model, C=C, v=v)
+  variances <- do.call(getValues, c(list(design, model, C=C, v=v), model.param))
   m[lower.tri(m)] <- variances
   m[upper.tri(m)] <- t(m)[upper.tri(m)]
   # Ideal design
