@@ -60,6 +60,8 @@ public class HTMLOutputPane extends JPanel implements ActionListener {
     				+", carryover="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showCarryOver", ""+false))?"TRUE":"FALSE")
     				+", digits="+Configuration.getInstance().getGeneralConfig().getDigits()
     				+", names="+(Boolean.parseBoolean(Configuration.getInstance().getProperty("showNames", ""+true))?"TRUE":"FALSE")
+    				+(gui.jCBmodel.getSelectedIndex()==gui.PLACEBOMODEL?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
+    				+(gui.jCBmodel.getSelectedIndex()==gui.PROPORTIONALMODEL?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
     				+")";
     		result += RControl.getR().eval(command).asRChar().getData()[0];
     	}
