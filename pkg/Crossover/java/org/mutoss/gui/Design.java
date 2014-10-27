@@ -135,4 +135,8 @@ public class Design {
 	public boolean isEstimable(int model) {
 		return RControl.getR().eval("Crossover:::estimable("+uniqueName+", "+t+", "+model+")").asRLogical().getData()[0];		
 	}
+
+	public String getUniqueName() {
+		return uniqueName;
+	}
 }
