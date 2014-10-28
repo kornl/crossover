@@ -1,5 +1,7 @@
 package org.mutoss.gui;
 
+import java.util.Hashtable;
+
 import org.mutoss.config.Configuration;
 
 /**
@@ -18,10 +20,10 @@ public class Design {
 	public int s;
 	public int p;
 	String design;
-	double[] effs = null;
 	String result = null;
 	String rName = null;
 	String uniqueName = null;
+	Hashtable<String, Double> ht = new Hashtable<String, Double>();
 	
 	public Design(String title, String rName) {
 		this(title, rName, null);
@@ -42,7 +44,6 @@ public class Design {
 		p = dim[0];
 		s = dim[1];		
 		design = RControl.getR().eval("paste(capture.output(dput("+uniqueName+")), collapse=\"\")").asRChar().getData()[0];
-		effs = RControl.getR().eval("Crossover:::getEff("+uniqueName+")").asRNumeric().getData();
 	}
 	
 	/**
@@ -65,8 +66,6 @@ public class Design {
 		this.s = s;
 		this.p = p;
 		this.design = design;
-		effs = RControl.getR().eval("Crossover:::getEff("+(rName==null?design:rName)+")").asRNumeric().getData();	
-		saveDesign2R(true);
 	}
 	
 	/**
@@ -134,6 +133,19 @@ public class Design {
 
 	public boolean isEstimable(int model) {
 		return RControl.getR().eval("Crossover:::estimable("+uniqueName+", "+t+", "+model+")").asRLogical().getData()[0];		
+	}
+	
+	public double getEff(int model, double param) {
+		String key = ""+model;
+		if (model==CrossoverGUI.PLACEBOMODEL || model==CrossoverGUI.PROPORTIONALMODEL) {
+			key = ""+model+"-"+param;			
+		}
+		Double v = ht.get(key);
+		if (v==null) {
+			v = RControl.getR().eval("design.efficiency("+getUniqueName()+", model="+model+", model.param=list(ppp="+param+", placebos="+param+")").asRNumeric().getData()[0];
+			ht.put(key, v);
+		}
+		return v;
 	}
 
 	public String getUniqueName() {
