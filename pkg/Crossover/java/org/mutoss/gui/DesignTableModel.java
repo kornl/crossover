@@ -49,14 +49,7 @@ public class DesignTableModel extends AbstractTableModel {
 		case 0: return design.title;		                   
 		case 1: return design.s; // .getRSignature(); 
 		//case 2: return design.efficiencyUnadj;
-		case 2:
-			//TODO Hashtable for uniquename+model+param
-			double eff = RControl.getR().eval("meanEff(design.efficiency("+design.getUniqueName() 
-					+ ", model=\""+gui.jCBmodel.getSelectedItem()+"\""
-					+(gui.jCBmodel.getSelectedIndex()==gui.PLACEBOMODEL?", model.param=list(placebos="+gui.jtfParam.getText()+")":"")
-					+(gui.jCBmodel.getSelectedIndex()==gui.PROPORTIONALMODEL?", model.param=list(ppp="+gui.jtfParam.getText()+")":"")
-					+")$eff.trt.pair.adj)").asRNumeric().getData()[0];
-			return eff;
+		case 2:	return design.getEff(gui.jCBmodel.getSelectedIndex()+1, gui.getParam());
 		case 3: return false;
 		default: return null;
 		}
