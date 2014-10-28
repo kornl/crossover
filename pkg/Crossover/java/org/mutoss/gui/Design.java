@@ -142,13 +142,14 @@ public class Design {
 		}
 		Double v = ht.get(key);
 		if (v==null) {
-			v = RControl.getR().eval("design.efficiency("+getUniqueName()+", model="+model+", model.param=list(ppp="+param+", placebos="+param+")").asRNumeric().getData()[0];
+			v = RControl.getR().eval("getOffDiagMean(design.efficiency("+getUniqueName()+", model="+model+", model.param=list(ppp="+param+", placebos="+param+"))$eff.trt.pair.adj)").asRNumeric().getData()[0];
 			ht.put(key, v);
 		}
 		return v;
 	}
 
 	public String getUniqueName() {
+		if (uniqueName==null) saveDesign2R(true);
 		return uniqueName;
 	}
 }
