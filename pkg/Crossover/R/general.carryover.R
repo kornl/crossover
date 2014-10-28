@@ -25,11 +25,10 @@
 #' @keywords misc
 #' @examples
 #' 
-#' data(fletcher)
-#' general.carryover(fletcher1, model=1)
+#' general.carryover(getDesign("fletcher1"), model=1)
 #' 
 #' @export general.carryover
-general.carryover<-function(design,model,t0=1,rho=0.5){  
+general.carryover<-function(design, model, t0=1, rho=0.5){  
   if (class(design)=="CrossoverSearchResult") {
       if(missing(model)) {
         model <- design@model
