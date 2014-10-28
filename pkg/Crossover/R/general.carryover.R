@@ -23,6 +23,8 @@
 #' @examples
 #' 
 #' general.carryover(getDesign("fletcher1"), model=1)
+#' general.carryover(getDesign("fletcher1"), model=2)
+#' general.carryover(getDesign("fletcher1"), model=3)
 #' 
 #' @export general.carryover
 general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, placebos=1, contrasts) {    
@@ -63,15 +65,19 @@ general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, pl
   result <- list()
   for (C in contrasts) {
     m <- matrix(0, v, v)
-    m[lower.tri(m)] <- diag(C %*% ginv(A) %*% t(C))
-    m[upper.tri(m)] <- t(m)[upper.tri(m)]
+    if (!estimable(design, v, model, C)) {
+      m[row(m)!=col(m)] <- NA
+    } else {
+      m[lower.tri(m)] <- diag(C %*% ginv(A) %*% t(C))
+      m[upper.tri(m)] <- t(m)[upper.tri(m)]
+    }
     result <- c(result, list(m))
   }
   names(result)[1] <- "Var.trt.pair"
-  if (length(list)==1) {
+  if (length(result)==2) {
     names(result)[2] <- "Var.car.pair"
   }
-  if (length(list)==2) {
+  if (length(result)==3) {
     names(result)[2:3] <- c("Var.car.pair.1", "Var.car.pair.2")
   }
   result$model <- model
