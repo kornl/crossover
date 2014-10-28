@@ -362,6 +362,10 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		}
 	}
 	
+	public double getParam() {
+		return Double.parseDouble(jtfParam.getText());
+	}
+	 
 	private void newModelSelected() {
 		algorithmPanel.createEffPanel();
 		if (jCBmodel.getSelectedIndex()==PLACEBOMODEL) {
