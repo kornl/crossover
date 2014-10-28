@@ -24,6 +24,7 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 #' moment these are \code{ppp}, the proportionality parameter for the
 #' proportionality model, and \code{placebos}, the number of placebo treatments
 #' in the placebo model.
+#' @param v Number of treatments
 #' @return A list with the following elements:
 #' \itemize{
 #' \item xmat Design matrix for the given model (including subject and period effects)
@@ -40,10 +41,10 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 #' design.efficiency(fletcher1)
 #' 
 #' @export design.efficiency
-design.efficiency <- function(design, model=1, model.param=list()) {
+design.efficiency <- function(design, model=1, model.param=list(), v=length(levels(as.factor(design)))) {
   p <- dim(design)[1]
   s <- dim(design)[2]
-  v <- length(levels(as.factor(design)))   
+  
   #if(missing(C)) 
   {
     Csub <- contrMat(n=rep(1, v), type="Tukey")
