@@ -548,7 +548,42 @@ general.carryover<-function(design, model, t0=1, rho=0.5){
 
 ####################################################################################################################
 
-general.carryover2 <-function(design, v, model, ppp=0.5, placebos=1){  
+parameterCount <- function(model, v) {
+  model <- getModelNr(model)
+  if (model %in% c(2,8)) {
+    return(c(v, v, v))
+  } else if (model %in% c(3,9)) {
+    return(c(v))
+  } else if (model == 7) {
+    return(c(v, v*v))
+  } else if (model %in% c(1,4,5,6) ) {
+    return(c(v, v))
+  }  
+}
+
+# getPairwiseContrasts(model=2, v=5)
+getPairwiseContrasts <- function(model, v) {
+  pc <- parameterCount(model, v)
+  contrasts <- list()
+  p.prev <- 0
+  p.follow <- sum(pc[-1])
+  for (p in pc) {
+    Csub <- contrMat(n=rep(1, v), type="Tukey")
+    class(Csub) <- "matrix"
+    C <- as.matrix(cbind(matrix(0,dim(Csub)[1], p.prev), Csub,matrix(0,dim(Csub)[1], p.follow)))
+    p.prev <- p.prev + p
+    p.follow <- p.follow - p
+    contrasts <- c(contrasts, list(C))
+  } 
+  return(contrasts)
+}
+
+general.carryover2 <-function(design, v, model, ppp=0.5, placebos=1, contrasts) {  
+  model <- getModelNr(model)  
+  return(C)
+  if(missing(contrasts)) {
+    contrasts <- getPairwiseContrasts(model, v)
+  }
   if (class(design)=="CrossoverSearchResult") {
     if(missing(model)) {
       model <- design@model
