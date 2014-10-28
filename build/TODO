@@ -1,3 +1,15 @@
+check for placebos not an integer in jtfParam!
+
+===
+
+estimable for carry-over for Placebo model is off, since there are zero columns.
+
+===
+
+Placebo model with v placebos should be the same as no-carry-over.
+
+===
+
 Efficiency higher than 1:
 
 IQBAL AND JONES CYCLIC DESIGN 21 (p = 6, n = 7, t = 7)
