@@ -101,3 +101,7 @@ CrossoverVersion <- function() {
 		return("unknown")
 	}
 }
+
+getOffDiagMean <- function(x) {
+  return(mean(x[row(x)!=col(x)]))
+}
