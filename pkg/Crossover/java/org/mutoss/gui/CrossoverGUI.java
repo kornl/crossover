@@ -29,6 +29,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -51,7 +53,7 @@ import org.mutoss.gui.dialogs.TellAboutOnlineUpate;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class CrossoverGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener, AbortListener {
+public class CrossoverGUI extends JFrame implements WindowListener, ActionListener, ChangeListener, ListSelectionListener, AbortListener, DocumentListener {
 	 static { // Static initializer block to set the Locale
 		 Locale.setDefault(Locale.ENGLISH);
 		 JComponent.setDefaultLocale(Locale.ENGLISH);			 
@@ -327,6 +329,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		modelPanel.add(jtfParam, cc.xy(4, row));
 		pLabel.setEnabled(false);
 		jtfParam.setEnabled(false);
+		jtfParam.getDocument().addDocumentListener(this);
 		return modelPanel;
 	}
 	
@@ -543,6 +546,30 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 
 	public int getModel() {		
 		return jCBmodel.getSelectedIndex()+1;
+	}
+
+	public void insertUpdate(DocumentEvent e) {
+		try {
+			newModelSelected();
+		} catch(Exception ex) {
+			
+		}		
+	}
+
+	public void removeUpdate(DocumentEvent e) {
+		try {
+			newModelSelected();
+		} catch(Exception ex) {
+			
+		}		
+	}
+
+	public void changedUpdate(DocumentEvent e) {
+		try {
+			newModelSelected();
+		} catch(Exception ex) {
+			
+		}		
 	}
 
 }
