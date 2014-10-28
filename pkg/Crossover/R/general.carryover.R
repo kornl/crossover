@@ -27,6 +27,7 @@
 #' general.carryover(getDesign("fletcher1"), model=1)
 #' general.carryover(getDesign("fletcher1"), model=2)
 #' general.carryover(getDesign("fletcher1"), model=3)
+#' general.carryover(getDesign("switchback4t"), model=7)
 #' 
 #' @export general.carryover
 general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, placebos=1, contrasts) {    
@@ -66,7 +67,8 @@ general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, pl
   
   result <- list()
   for (C in contrasts) {
-    m <- matrix(0, v, v)
+    n <- sum(colSums(C==0)<dim(C)[1])
+    m <- matrix(0, n, n)
     if (!estimable(design, v, model, C)) {
       # TODO We could check which rows of the contrast matrix are not estimable.
       m[row(m)!=col(m)] <- NA
@@ -94,24 +96,25 @@ parameterCount <- function(model, v) {
   } else if (model %in% c(3,9)) {
     return(c(v))
   } else if (model == 7) {
-    return(c(v, v*v))
+    return(c(v, v, v*v))
   } else if (model %in% c(1,4,5,6) ) {
     return(c(v, v))
   }  
 }
 
 # getPairwiseContrasts(model=2, v=5)
+# getPairwiseContrasts(7, 3)
 getPairwiseContrasts <- function(model, v) {
   pc <- parameterCount(model, v)
   contrasts <- list()
   p.prev <- 0
-  p.follow <- sum(pc[-1])
+  p.follow <- sum(pc)
   for (p in pc) {
-    Csub <- contrMat(n=rep(1, v), type="Tukey")
+    Csub <- contrMat(n=rep(1, p), type="Tukey")
     class(Csub) <- "matrix"
-    C <- as.matrix(cbind(matrix(0,dim(Csub)[1], p.prev), Csub,matrix(0,dim(Csub)[1], p.follow)))
-    p.prev <- p.prev + p
     p.follow <- p.follow - p
+    C <- as.matrix(cbind(matrix(0,dim(Csub)[1], p.prev), Csub,matrix(0,dim(Csub)[1], p.follow)))
+    p.prev <- p.prev + p    
     contrasts <- c(contrasts, list(C))
   } 
   return(contrasts)
