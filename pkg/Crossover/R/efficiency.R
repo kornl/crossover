@@ -37,8 +37,9 @@ getCounts <- function(design, long=FALSE, omit.balanced=TRUE) {
 #' @keywords misc
 #' @examples
 #' 
-#' data(fletcher)
-#' design.efficiency(fletcher1)
+#' design.efficiency(getDesign("fletcher1"))
+#' design.efficiency(getDesign("fletcher1"), model=7)
+#' design.efficiency(getDesign("switchback4t"), model=7)
 #' 
 #' @export design.efficiency
 design.efficiency <- function(design, model=1, model.param=list(), v=length(levels(as.factor(design)))) {
