@@ -5,7 +5,8 @@
 pairwise comparison and the efficicency of each pairwise comparison for a
 cross-over design}
 \usage{
-design.efficiency(design, model = 1)
+design.efficiency(design, model = 1, model.param = list(),
+  v = length(levels(as.factor(design))))
 }
 \arguments{
 \item{design}{Cross-over design.}
@@ -14,6 +15,13 @@ design.efficiency(design, model = 1)
 2) "Second-order carry-over effects", 3) "Full set of interactions",
 4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
 model", 7) "Treatment decay model", 8) "Proportionality model", 9) "No carry-over effects".}
+
+\item{model.param}{List of additional model specific parameters. In the
+moment these are \code{ppp}, the proportionality parameter for the
+proportionality model, and \code{placebos}, the number of placebo treatments
+in the placebo model.}
+
+\item{v}{Number of treatments}
 }
 \value{
 A list with the following elements:

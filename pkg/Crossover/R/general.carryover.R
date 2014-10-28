@@ -15,7 +15,9 @@
 #' @param contrasts Optionally a contrast matrix or a list of contrast matrix.
 #' If missing pairwise differences for treatment and carry-over parameters
 #' are calculated.
+#' @param v Number of treatments
 #' @return A list with the variances of the pairwise differences or specified contrasts.
+#' If contrasts are not estimable, NA is returned for variances.
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @references Jones, B., & Kenward, M. G. (2003). Design and analysis of
 #' cross-over trials (Vol. 98). Chapman & Hall.
@@ -66,6 +68,7 @@ general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, pl
   for (C in contrasts) {
     m <- matrix(0, v, v)
     if (!estimable(design, v, model, C)) {
+      # TODO We could check which rows of the contrast matrix are not estimable.
       m[row(m)!=col(m)] <- NA
     } else {
       m[lower.tri(m)] <- diag(C %*% ginv(A) %*% t(C))
