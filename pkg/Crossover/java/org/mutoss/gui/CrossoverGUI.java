@@ -385,10 +385,11 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 			pLabel.setText("Further model parameters:");
 		}
 		designPanel.valueChanged(null);	
-		int i = designPanel.designTable.getSelectedRow();
-		if (i == -1) return;
+		int i = designPanel.designTable.getSelectedRow();		
 		designPanel.designTable.getModel().fireTableDataChanged();
-		designPanel.designTable.setRowSelectionInterval(i, i);
+		if (i != -1) {
+			designPanel.designTable.setRowSelectionInterval(i, i);
+		}
 	}
 
 	/**
