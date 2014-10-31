@@ -8,6 +8,10 @@ creates design, where carry-over effects are not estimable.
 
 ===
 
+Implement user-defined covariance pattern.
+
+===
+
 estimable for carry-over for Placebo model is off, since there are zero columns.
 
 ===

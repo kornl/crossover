@@ -67,7 +67,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey)", "Comparing treatment 1 to each of the others (Dunnett)", "User defined"} );
 	String[] contrasts = new String[] {"Tukey", "Dunnett", "User defined"};
 	//JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
-	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autoregressive Error", "Equicorrelated Error", "User defined"});
+	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autoregressive Error", "Equicorrelated Error"}); //, "User defined"});
 	String[] correlations = new String[] {"NULL", "autoregressive", "equicorrelated", "user defined"};
 	JCheckBox fixedNumber = new JCheckBox("Specify exact number of treatment assignments:");
 	JCheckBox fixedSubjectEffects = new JCheckBox("Include fixed subject effects in design matrix.");
@@ -76,7 +76,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JLabel jlVar;
 	JTextField jtWithinSubjectRho;
 	//JTabbedPane jTabAlgo = new jTabAlgo;
-	String udcm;
+	//String udcm;
 	JSplitPane pane;
 	
 	ClassConfig ac = new ClassConfig(Configuration.getInstance(), AlgorithmPanel.class);
@@ -541,7 +541,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 
 	private String getCorrelation() {
 		if (jcbCorrelation.getSelectedIndex()==0) return "";
-		if (jcbCorrelation.getSelectedIndex()==3) return ", correlation="+udcm;		
+		//if (jcbCorrelation.getSelectedIndex()==3) return ", correlation="+udcm;		
 		return ", correlation=\""+correlations[jcbCorrelation.getSelectedIndex()]+"\", rho="+jtWithinSubjectRho.getText();
 	}
 
