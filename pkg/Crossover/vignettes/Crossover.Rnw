@@ -147,7 +147,7 @@ started with the command \texttt{CrossoverGUI()}.
 
 \begin{figure}[ht]
   \centering    
-  \includegraphics[width=0.7\textwidth]{figures/GUI.png}      
+  \includegraphics[width=0.8\textwidth]{figures/GUI.png}      
   \caption{\label{GUI} Cross-Over Design GUI.}
 \end{figure}
 
