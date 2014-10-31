@@ -39,6 +39,7 @@ See the vignette of this package for further details.
 general.carryover(getDesign("fletcher1"), model=1)
 general.carryover(getDesign("fletcher1"), model=2)
 general.carryover(getDesign("fletcher1"), model=3)
+general.carryover(getDesign("switchback4t"), model=7)
 }
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}

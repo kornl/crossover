@@ -39,8 +39,9 @@ the variance of each pairwise comparison and the efficicency of each pairwise co
 See the vignette of this package for further details.
 }
 \examples{
-data(fletcher)
-design.efficiency(fletcher1)
+design.efficiency(getDesign("fletcher1"))
+design.efficiency(getDesign("fletcher1"), model=7)
+design.efficiency(getDesign("switchback4t"), model=7)
 }
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
