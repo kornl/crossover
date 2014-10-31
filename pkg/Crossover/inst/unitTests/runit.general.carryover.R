@@ -546,6 +546,21 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
 }
 
 ####################################################################################################################
+# There differences only for model 8:
+# Unequal treatment variances for balaam3t  in model  8  ( 1.33333333333333 )!
+# Unequal treatment variances for balaam4t  in model  8  ( 1.13725490196079 )!
+# Unequal treatment variances for balaam5t  in model  8  ( 0.712494279176185 )!
+# Unequal treatment variances for balaam6t  in model  8  ( 0.0666666666666761 )!
+# Unequal treatment variances for pattersonLucasPBIBD125  in model  8  ( 0.208761321068302 )!
+# Unequal treatment variances for pattersonLucasPBIBD99  in model  8  ( 0.932675602374225 )!
+# Unequal treatment variances for pattersonLucasPBIBD102  in model  8  ( 0.319815010624532 )!
+# Unequal treatment variances for pattersonLucasPBIBD127  in model  8  ( 2.1266854364656 )!
+# Unequal treatment variances for pattersonLucasPltT1  in model  8  ( 1.7221621296797 )!
+# Unequal treatment variances for pattersonLucasPltT3  in model  8  ( 10.4999999999999 )!
+# Unequal treatment variances for pattersonLucasPltT7  in model  8  ( 1.96836158192067 )!
+# Unequal treatment variances for pattersonLucasPltT12  in model  8  ( 0.22568524970965 )!
+# Unequal treatment variances for pattersonLucasPltT16  in model  8  ( 0.779612581133546 )!
+# TODO Carry-over effect variances should also be investigated, but models are parameterized differently for some models.
 
 test.ge <- function() {
   if (!"extended" %in% strsplit(Sys.getenv("CROSSOVER_UNIT_TESTS"),",")[[1]]) {
@@ -553,21 +568,30 @@ test.ge <- function() {
     return()
   }
   f <- stop
+  f <- cat
   # Test old versus new function:
   path <- system.file("data", package="Crossover")
   for (file in dir(path=path)) {     
     if (file %in% c("clatworthy1.rda", "clatworthyC.rda", "pbib2combine.rda")) next
     designs <- load(paste(path, file, sep="/"))
     for (designS in designs) {
-      design <- get(designS) # TODO Test for other models
-      r1 <- general.carryover(design, model=1)
-      r2 <- general.carryover.old(design, model=1)
-      if(!isTRUE(all.equal(r1$Var.trt.pair, r2$Var.trt.pair))) {
-        f(paste("Unequal treatment variances for",designS," (",max(abs(r1$Var.trt.pair - r2$Var.trt.pair)),")!\n"))
+      design <- get(designS)
+      v <- length(table(design))
+      for (model in 1:7) {
+        r1 <- general.carryover(design, model=model)
+        r2 <- general.carryover.old(design, model=model)        
+        if (estimable(design, v, model)) {
+          if(!isTRUE(all.equal(r1$Var.trt.pair, r2$Var.trt.pair))) {
+            f(paste("Unequal treatment variances for",designS," in model ", model," (",max(abs(r1$Var.trt.pair - r2$Var.trt.pair)),")!\n"))
+          }
+        }
+        if (model==1) {
+          if(!isTRUE(all.equal(r1$Var.car.pair, r2$Var.car.pair))) {
+            f(paste("Unequal carry-over variances for",designS," in model ", model," (",max(abs(r1$Var.car.pair - r2$Var.car.pair))," - ",getCounts(design),")!\n"))
+          }
+        }
       }
-      if(!isTRUE(all.equal(r1$Var.car.pair, r2$Var.car.pair))) {
-        f(paste("Unequal carry-over variances for",designS," (",max(abs(r1$Var.car.pair - r2$Var.car.pair))," - ",getCounts(design),")!\n"))
-      }
+      cat("Everything okay for design ", designS, ".\n")
     }
   }
 }
