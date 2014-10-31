@@ -4,7 +4,7 @@ library(multcomp)
 library(Crossover)
 @
 
-\chapter{Models}\label{sec:models}
+\chapter{Models}\label{chap:models}
 
 The package and GUI support the following eight models.
 

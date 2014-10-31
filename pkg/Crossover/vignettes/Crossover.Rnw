@@ -79,7 +79,7 @@
 <<OptionsAndLibraries, include=FALSE, message=FALSE>>=
 if (exists("opts_chunk")) {
   opts_chunk$set(concordance=TRUE)
-  opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=95))
+  opts_chunk$set(tidy.opts=list(keep.blank.line=FALSE, width.cutoff=80))
   #opts_chunk$set(size="footnotesize")
   #opts_chunk$set(size="tiny")
   opts_chunk$set(size="scriptsize") 
@@ -104,7 +104,7 @@ if (exists("opts_chunk")) {
 }
 
 library(Crossover, quietly=TRUE)
-options(width=128)
+options(width=80)
 options(digits=4)
 startGUI <- function(...) {invisible(NULL)}
 #options(prompt="> ", continue="+ ")
@@ -157,8 +157,7 @@ started with the command \texttt{CrossoverGUI()}.
 %\href{mailto:help@small-projects.de}{\texttt{help@small-projects.de}}.
 %We are eager to help and to learn about existing problems.
 
-\section{GUI Overview}
-\subsection{Catalogue}
+\section{Overview}
 The catalogue, collected and compiled by Professor Byron Jones,
 contains 241 designs from the following literature:
 \cite{anderson2002locally}, \cite{archdeacon1980some},
@@ -176,6 +175,7 @@ Further \Sexpr{length(load(paste(system.file("data", package="Crossover"), "pbib
 designs are constructed from partially balanced incomplete block designs from \cite{clatworthy1973tables}
 and balanced crossover designs.
 
+\subsection{Design selection in the GUI}
 The GUI will show appropriate designs from the catalogue according to
 the number of treatments, periods and the range of sequences 
 the user enters.\footnote{A table referencing all available designs and the
@@ -194,14 +194,14 @@ allow you to see only specific subsets:
   will result in short delays when displaying the catalogue, since the
   crossdes algorithms are called.
 \item[Designs manually entered] All designs entered on tab
-  "\emph{Input own design}" are shown.
+  \emph{"Input own design"} are shown.
 \item[Designs from previous search runs] All designs from previous
   search runs are shown.
 \end{description}
 
 The column \text{av.eff.trt.pair} shows the \emph{average effiency of pairwise treatment parameter differences}.
 
-To define these efficiencies we compare a design $D$ with an "\emph{ideal design}" $D_I$ without period, subject or carry-over effects, 
+To define these efficiencies we compare a design $D$ with an \emph{"ideal design"} $D_I$ without period, subject or carry-over effects, 
 where each treatment $i\in\{1,\ldots,v\}$ occurs $n_i$ times in $D$ and $D_I$. 
 For $D_I$ the variance of the treatment parameter difference estimate $\hat\tau_i-\hat\tau_j$ for treatment $i$ and $j$ is $1/n_i+1/n_j$.
 We define the efficiency for a design $D$ as the quotient of the variances under $D_I$ and $D$, i.e.
@@ -210,6 +210,51 @@ We define the efficiency for a design $D$ as the quotient of the variances under
 
 %For a design $D$ the efficiency of the estimate of a treatment parameter difference is the quotient of the variances of this 
 
+The tab \emph{"Input own design"} provides you with the possibility to analyse and save your own designs
+easily or to use them as starting points for the search algorithm.
+
+The drop-down menu for \emph{model} let you specify which model
+you are interested. These models are described in detail in chapter
+\ref{chap:models}. In case of the placebo or proportionality model you can specify
+\emph{further model parameters} (namely the number of placebos and
+the proportionality parameter, respectively).
+
+\newpage
+\subsection{Designs in R}
+
+Our crossover designs in R are numeric matrices, where the elements represent the treatments, the rows represent the periods and the columns the subjects.
+
+A data frame referencing all available designs and the respective number of treatments, periods and sequences is available by calling the \texttt{buildSummaryTable()} function.
+
+Designs referenced in this table can be accessed via the \texttt{getDesign()} function. For example 
+the Williams design for three treatments is represented by a $3\times6$-matrix and assigns each of the three treatments once to each of the six subjects:
+
+<<williams3t, echo=TRUE>>=
+getDesign("williams3t")
+@
+
+Each treatment occurs six times, two times in the each period and each treatment follows each other treatment exactly two times.
+
+%\[Y_{ijk}=\mu+\pi_j+\tau_{d[i,j]}+\lambda_{d[i,j-1]}+s_{ik}+e_{ijk}\]
+
+If we are interested in the variance of the treatment parameter difference estimates, we can use the function \texttt{general.carryover}:
+
+<<general-carryover>>=
+
+design <- getDesign("williams3t")
+general.carryover(design, model=1)
+
+@
+
+We see that the Williams design is a balanced design.
+
+The following nine models which are discussed in chapter \ref{chap:models} are implemented:
+
+<<models, echo=FALSE>>=
+
+cat(paste(1:9, ": \"", Crossover:::models, "\"", sep=""), sep="\n")
+
+@
 
 \iffalse
 \subsubsection{Efficiency remarks when selecting a design}
@@ -272,22 +317,23 @@ should use other designs as if you are interested in Tukey or Williams type cont
 
 \fi
 
-\subsection{Input own design}
-
-This tab provides you with the possibility to analyse and save your own designs
-easily or to use them as starting points for the search algorithm.
-
+\newpage
 \subsection{Algorithm Search}
+
+\begin{figure}[ht]
+  \centering    
+  \includegraphics[width=0.5\textwidth]{figures/Algorithm.png}      
+  \caption{\label{Algorithm} Panel for algorthmic search of cross-over designs.}
+\end{figure}
 
 In figure \ref{Algorithm} the preliminary graphical interface for the
 search algorithm is shown with the following options:
 \begin{itemize}
-\item The drop-down menu for \emph{model} let you specify which model
-  you are interested. These models are described in detail in section
-  \ref{sec:models}.
-\item In case of the placebo or proportionality model you can specify
-  \emph{further model parameters} (namely the number of placebos and
-  the proportionality parameter, respectively).
+\item The \emph{covariance pattern} can be \emph{"Independence"}, 
+\emph{"Autoregressive Error"} or \emph{"Autoregressive Error"}.
+Except for \emph{"Independence"} a \emph{covariance pattern coefficient} $\rho$ has to
+be specified. %TODO 
+%TODO \item If you \emph{include fixed subject effects in the design matrix} $\ldots$
 \item Specify the exact \emph{number of sequences}. (The number of
   treatments and periods is already specified in the top panel of the
   GUI.)
@@ -307,19 +353,14 @@ search algorithm is shown with the following options:
   equal weights. Change the \emph{contrast weights} accordingly if you
   are interested in other contrasts or different weights.
   
-  \emph{User defined contrasts} can be used and a R matrix of $n$
-  contrasts (i.e. of dimension $n\times v$) will be used.
+  %\emph{User defined contrasts} can be used and a R matrix of $n$
+  %contrasts (i.e. of dimension $n\times v$) will be used.
 \item Pressing the \emph{"Compute Design"} button will start the
   search algorithm described in section \ref{sec:search}. After a few
   seconds the result will be shown in the previous empty text area on
   the right.
 \end{itemize}
 
-\begin{figure}[ht]
-  \centering    
-  \includegraphics[width=0.7\textwidth]{figures/Algorithm.png}      
-  \caption{\label{Algorithm} Panel for algorthmic search of cross-over designs.}
-\end{figure}
 
 <<appendices, child='childs/Models.Rnw'>>=
 @
@@ -402,6 +443,7 @@ $\tau_{d[i,j]}$& direct treatment effect for treatment $d[i,j]$ in period $j$ of
 $\lambda_{d[i,j-1]}$& first-order carry-over effect (0 for $j-1$=0)\\
 $s_{ik}$& $k$th subject effect on sequence $i$\\
 $e_{ijk}$& random error with zero mean and variance $\sigma^2$\\
+\\
 %\end{tabularx}\\
 %\begin{tabularx}{\textwidth}{lX}
 \multicolumn{2}{l}{\textbf{Functions}}\\
@@ -409,6 +451,7 @@ $X'$ & transpose of matrix $X$\\
 $X^+$ & Moore-Penrose pseudoinverse of $X$\\
 $\skp{\cdot,\cdot}$ & standard direct product $\skp{x,y}=\sum_{j=1}^nx_j\cdot y_j$ for $x,y\in\R^n$\\
 $\id_X$ & identity on $X$, i.e.\ $\id_X:\;X\rightarrow X,\;x\mapsto x$\\
+\\
 \multicolumn{2}{l}{\textbf{Other Symbols}}\\
 $\sN(\mu,\sigma^2)$ & Normal distribution with mean $\mu$ and variance $\sigma^2$.\\
 $\sN(\mu,\Sigma)$ & Multivariate normal distribution with mean $\mu$ and covariance matrix $\Sigma$.\\
