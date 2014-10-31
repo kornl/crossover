@@ -64,7 +64,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 	JButton exportR = new JButton("Export to R");
 	JButton showAlgoPerformance = new JButton("Search algorithm plot");
 	JCheckBox useCatalogueDesigns = new JCheckBox("Use designs from catalogue as starting point");
-	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey)", "Comparing treatment 1 to each of the others (Dunnett)", "User defined"} );
+	JComboBox jcbContrasts = new JComboBox(new String[] {"All pair comparisons (Tukey)", "Comparing treatment 1 to each of the others (Dunnett)"}); //, "User defined"} );
 	String[] contrasts = new String[] {"Tukey", "Dunnett", "User defined"};
 	//JComboBox jCBMixed = new JComboBox(new String[] {"Fixed subject effects model", "Random subject effects model"});
 	JComboBox jcbCorrelation = new JComboBox(new String[] {"Independence", "Autoregressive Error", "Equicorrelated Error"}); //, "User defined"});
