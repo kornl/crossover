@@ -10,23 +10,17 @@ library(Crossover)
 
 The appendices are all work in progress.
 
-\section{Appendix - Row-Column Designs}
-
-\begin{Def}{Variance Balance}
-  A design is \emph{variance balanced} if
-  $\Var[\hat\tau_i-\hat\tau_j]$ is constant for all pairs of the $n$
-  treatment effects $\tau_i$, $\tau_j$, $1\leq i,j\leq n$, $i\neq j$.
-\end{Def}
+%\section{Appendix - Row-Column Designs}
 
 \section{Appendix - Variance Balance / Partial Balance}
 
-\begin{Def}{Variance Balance}\index{variance balance}\index{balanced!variance}
+\begin{Def}[Variance Balance]\index{variance balance}\index{balanced!variance}
   A design is \emph{variance balanced} if
   $\Var[\hat\tau_i-\hat\tau_j]$ is constant for all pairs of the $n$
   treatment effects $\tau_i$, $\tau_j$, $1\leq i,j\leq n$, $i\neq j$.
 \end{Def}
 
-\begin{Def}{Partially balanced incomplete block design with two associate classes}\index{PBIB(2)}\index{partially balanced incomplete block design}
+\begin{Def}[Partially balanced incomplete block design with two associate classes]\index{PBIB(2)}\index{partially balanced incomplete block design}
   A \emph{partially balanced incomplete block design with two
     associate classes} (or short PBIBD(2)) % or sometimes even shorter D(2)) 
     is a design that fulfils the following (see
