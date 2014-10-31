@@ -176,11 +176,11 @@ Further \Sexpr{length(load(paste(system.file("data", package="Crossover"), "pbib
 designs are constructed from partially balanced incomplete block designs from \cite{clatworthy1973tables}
 and balanced crossover designs.
 
-Depending on the numbers of treatments, periods and range of sequence
-you specify in the GUI appropriate designs from the catalogue will be
-shown.\footnote{You can get a table referencing all designs and the
-  respective number of treatments, periods and sequences by calling
-  \texttt{buildSummaryTable()}.}  Further functions from package
+The GUI will show appropriate designs from the catalogue according to
+the number of treatments, periods and the range of sequences 
+the user enters.\footnote{A table referencing all available designs and the
+  respective number of treatments, periods and sequences is available 
+  by calling \texttt{buildSummaryTable()}.}  Further functions from package
 crossdes (\cite{crossdes}) are called to create designs for the
 specified values if possible.
 
@@ -198,6 +198,18 @@ allow you to see only specific subsets:
 \item[Designs from previous search runs] All designs from previous
   search runs are shown.
 \end{description}
+
+The column \text{av.eff.trt.pair} shows the \emph{average effiency of pairwise treatment parameter differences}.
+
+To define these efficiencies we compare a design $D$ with an "\emph{ideal design}" $D_I$ without period, subject or carry-over effects, 
+where each treatment $i\in\{1,\ldots,v\}$ occurs $n_i$ times in $D$ and $D_I$. 
+For $D_I$ the variance of the treatment parameter difference estimate $\hat\tau_i-\hat\tau_j$ for treatment $i$ and $j$ is $1/n_i+1/n_j$.
+We define the efficiency for a design $D$ as the quotient of the variances under $D_I$ and $D$, i.e.
+\[\frac{\Var_{D_I}(\hat\tau_i-\hat\tau_j)}{\Var_D(\hat\tau_i-\hat\tau_j)}
+=\frac{\frac1n_i+\frac1n_j}{\Var_D(\hat\tau_i-\hat\tau_j)}.\]
+
+%For a design $D$ the efficiency of the estimate of a treatment parameter difference is the quotient of the variances of this 
+
 
 \iffalse
 \subsubsection{Efficiency remarks when selecting a design}
@@ -262,8 +274,8 @@ should use other designs as if you are interested in Tukey or Williams type cont
 
 \subsection{Input own design}
 
-This tab provides you with the possibility to analyse your own designs
-easily or use them as starting points for the search algorithm.
+This tab provides you with the possibility to analyse and save your own designs
+easily or to use them as starting points for the search algorithm.
 
 \subsection{Algorithm Search}
 
@@ -316,10 +328,14 @@ search algorithm is shown with the following options:
 <<appendices, child='childs/Search.Rnw'>>=
 @
 
+\iffalse
+
 \section{Creation of Crossover Designs from Partially Balanced Incomplete Block Designs with Two Associate Classes (PBIB(2))}
 
 We start with a non-crossover PBIB(2) design. A comprehensive source for these
 is \cite{clatworthy1973tables}.
+
+\fi
 
 \section{Random Subject Effects Model}
 
