@@ -1,8 +1,10 @@
 <<set-parent-search, echo=FALSE, cache=FALSE, include=FALSE>>=
+library(knitr)
 set_parent('../Crossover.Rnw')
 library(multcomp)
 library(Crossover)
 library(MASS)
+library(xtable)
 @
 
 \chapter{Search strategy}\label{sec:search}
@@ -119,6 +121,114 @@ tdiff1 - tdiff2
 
 If we have a model with $n$ parameters and a contrast matrix $C\in\R^{n\times n}$, the sum of the variances of the linear combinations given by $C$ is
 \[\trace(CH^TA_rHC^T).\]
+
+
+\section*{Example for two treatments}
+
+<<include=FALSE>>=
+data(exampleSearchResults2t)
+@
+
+We compare our results with results from the algorithm of \cite{john2004crossover} that are presented in \cite[table~4.35-4.38, p.~202ff]{jones2003design} for s=6 sequences, p=4 periods and v=2 treatments under the constraint that each treatment should occur 12 times.
+
+The following shows all designs that were found. For some models the algorithm always returned only one design, but for some 2 or even 3 equally good designs were found.
+
+Here are all the designs as found by the above code. Actually there are only \Sexpr{length(unique(resultL))} different designs, since the following designs were already found for other models: \Sexpr{which(duplicated(resultL))}.
+
+\vspace*{1cm}
+
+<<echo=FALSE, results='asis'>>=
+
+options(xtable.include.rownames=FALSE, xtable.include.colnames=FALSE, xtable.floating=FALSE)
+
+df <- c()
+
+for (i in 1:length(resultL)) { 
+  design <- resultL[[i]]
+  cat("Design ",i,":\n")
+  print(xtable(design, digits=0)) 
+  var <- c()
+  var2 <- c()
+  for (m in models[1:8]) {
+    
+    #C <- Crossover:::contrMat2(type="Tukey", v=2, model=m, eff.factor=c(1,1,1))
+    #C <- contrMat(rep(1, Crossover:::nrOfParameters(model=i, v=v)), "Tukey")
+    
+    if (Crossover:::estimable_R(design, v=2, model=m)) {
+      var <- c(var, general.carryover(design, model=m)$Var.trt.pair[1,2]/4)      
+    } else {
+      var <- c(var, NA)      
+    }
+  }
+  df <- rbind(df, var)  
+}
+
+rownames(df) <- NULL
+df <- as.data.frame(df)
+colnames(df) <- c("Additive", "Self-adjacency", "Proportional", "Placebo", "No into self", "Decay", "Interaction", "2nd-order carry-over")
+df <- cbind(data.frame(Design=1:length(resultL)), df)
+
+options(xtable.include.colnames=TRUE, xtable.NA.string="Not estimable")
+
+cat("\\[\\]")
+
+cat("\\scriptsize")
+
+print(xtable(df, digits=3))
+
+# cat("\\[\\]")
+# print(xtable(df2, digits=3))
+# max(abs(df-df2))
+
+@
+
+\normalsize
+
+Note that for the full interaction model and the self-adjacency model we get the same results, because they are essentially the same models with \begin{equation*}
+\begin{split}
+\lambda^{SA}_1&=\lambda^{FI}_1+\gamma^{FI}_{12},\\
+\lambda^{SA}_2&=\lambda^{FI}_2+\gamma^{FI}_{21},\\
+\phi^{SA}_1&=\lambda^{FI}_1+\gamma^{FI}_{11},\text{ and}\\
+\phi^{SA}_2&=\lambda^{FI}_2+\gamma^{FI}_{22}.
+\end{split}
+\end{equation*}
+
+For the treatment decay model the algorithm provided us with a design where the treatment decay effect never occurs. Let's give a little bit of weight to this treatment decay effect:
+
+<<echo=FALSE, include=FALSE, eval=FALSE>>=
+
+TRIES <- 25
+resultSubL <- list()
+i <- 6
+model <- models[i]
+cat("======= ", model, " =======","\n")
+for (k in 1:TRIES) {
+  result <- sortDesign(getDesign(searchCrossOverDesign(s=s, p=p, v=v, model=model, v.rep=c(12,12), eff.factor=c(1,0.01), contrast="Tukey"))) #, start.designs=list(designs[[i]]))
+  already.found <- FALSE
+  for (design in resultSubL) {
+    if (all(result==design)) already.found <- TRUE
+  }
+  if (!already.found) {
+    resultSubL <- c(resultSubL, list(result))
+    print(getDesign(result))
+    cat("\nTreatment: ", general.carryover(designs[[i]], model=i)$Var.trt.pair[1,2]/4, "(literature) vs. ", general.carryover(result, model=i)$Var.trt.pair[1,2]/4,"\n")
+    gco <- general.carryover(designs[[i]], model=i)
+    if (!is.null(dim(gco[[2]]))) {
+      cat("(1st) Carryover: ", gco[[2]][1,2]/4, "(literature) vs. ", general.carryover(result, model=i)[[2]][1,2]/4,"\n\n")
+    }
+    cat(paste("designB",i,sep=""), "<-", Crossover:::dputMatrix(getDesign(result)))        
+  }
+}
+#resultL <- c(resultL, resultSubL)
+#save(resultL, file="resultL.RData")
+
+@
+
+
+As we can see we find the design from the book, when we give weights 100:1 for treatment / carry-over effects in the treatment decay model.
+(As seen in the first result section a zero weight for the carry-over effects results in a model with alternating treatments, so that there never occurs a treatment decay effect.)
+
+\subsubsection*{Summary}
 
 
 <<bibtex-search, results='asis', echo=FALSE>>=
