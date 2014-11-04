@@ -6,6 +6,9 @@ out$
 toc$
 blg$
 bbl$
+ilg$
+ind$
+idx$
 -concordance.tex$
 .synctex.gz$
 ^vignettes/cache$
@@ -13,3 +16,11 @@ bbl$
 ^inst/classes$
 ^java/classes$
 ^classes$
+^vignettes/childs/cache$
+^vignettes/childs/figure$
+^vignettes/childs/Appendices.pdf
+^vignettes/childs/Appendices.tex
+^vignettes/childs/Models.pdf
+^vignettes/childs/Models.tex
+^vignettes/childs/Search.pdf
+^vignettes/childs/Search.tex
