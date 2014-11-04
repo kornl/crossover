@@ -1,4 +1,32 @@
-contrMat2 <- function(type, v, model, eff.factor) {
+#' Create the design matrix, variance-covariance matrix, the variance of each
+#' pairwise comparison and the efficicency of each pairwise comparison for a
+#' cross-over design
+#' 
+#' Function to read in a cross-over design and create the design matrix X, 
+#' the variance of each pairwise comparison and the efficicency of each pairwise comparison.
+#' 
+#' See the vignette of this package for further details.
+#' 
+#' @param design Cross-over design.
+#' @param type Type of contrast. One of the following: "Dunnett", "Tukey".
+#' @param model Model - one of the following: 1) "Standard additive model",
+#' 2) "Second-order carry-over effects", 3) "Full set of interactions",
+#' 4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
+#' model", 7) "Treatment decay model", 8) "Proportionality model", 9) "No carry-over effects". 
+#' Can be specified as number or as 
+#' @param v Number of treatments
+#' @return A contrast matrix
+#' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
+#' @keywords misc
+#' @examples
+#' 
+#' contrMat2("Tukey", v=3, model=1)
+#' contrMat2("Dunnett", v=3, model=1)
+#' contrMat2("Dunnett", v=3, model=1, eff.factor=c(1, 0.1))
+#' contrMat2("Dunnett", v=3, model=8, eff.factor=c(1, 0.5))
+#' 
+#' @export contrMat2
+contrMat2 <- function(type, v, model, eff.factor=rep(1, length(parameterCount(model, v)))) {
   model <- getModelNr(model)
   if (type %in% c("Dunnett", "Tukey")) {
     Csub <- contrMat(n=rep(1, v), type=type)
@@ -9,7 +37,7 @@ contrMat2 <- function(type, v, model, eff.factor) {
     }
     Csub2 <- contrMat(n=rep(1, v), type="Tukey")
     class(Csub2) <- "matrix"
-    m <- matrix(0,dim(Csub)[1],v) # Csub is correct! Not Csub2.
+    m <- matrix(0, dim(Csub2)[1], dim(Csub)[2])
     if (model %in% c(1, 4, 5, 6)) { # v+v parameters
       C <- rbind(C*eff.factor[1], cbind(m, Csub2)*eff.factor[2])
     } else if (model %in% c(2, 8)) { # v+v+v parameters
@@ -20,11 +48,30 @@ contrMat2 <- function(type, v, model, eff.factor) {
       #C <- rbind(C)
       # TODO
     }
-    return(C)
-    
+    return(C)    
   }
   stop("Unrecognized argument for 'type'.")
 }
+
+# TODO Merge getPairwiseContrasts and contrMat2.
+# getPairwiseContrasts(model=2, v=5)
+# getPairwiseContrasts(7, 3)
+getPairwiseContrasts <- function(model, v) {
+  pc <- parameterCount(model, v)
+  contrasts <- list()
+  p.prev <- 0
+  p.follow <- sum(pc)
+  for (p in pc) {
+    Csub <- contrMat(n=rep(1, p), type="Tukey")
+    class(Csub) <- "matrix"
+    p.follow <- p.follow - p
+    C <- as.matrix(cbind(matrix(0,dim(Csub)[1], p.prev), Csub,matrix(0,dim(Csub)[1], p.follow)))
+    p.prev <- p.prev + p    
+    contrasts <- c(contrasts, list(C))
+  } 
+  return(contrasts)
+}
+
 
 nrOfParameters <- function(model, v) {
   model <- getModelNr(model)
@@ -32,6 +79,20 @@ nrOfParameters <- function(model, v) {
   if (model %in% c(1, 4, 5, 6)) return(2*v)
   if (model %in% c(2, 8)) return(3*v)
   if (model==7) return(v+v+v*v) 
+}
+
+
+parameterCount <- function(model, v) {
+  model <- getModelNr(model)
+  if (model %in% c(2,8)) {
+    return(c(v, v, v))
+  } else if (model %in% c(3,9)) {
+    return(c(v))
+  } else if (model == 7) {
+    return(c(v, v, v*v))
+  } else if (model %in% c(1,4,5,6) ) {
+    return(c(v, v))
+  }  
 }
 
 corMat <- function(correlation, s, p, rho, q=0) {

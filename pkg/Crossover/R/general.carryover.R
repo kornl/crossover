@@ -88,34 +88,3 @@ general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, pl
   result$model <- model
   return(result)
 }
-
-parameterCount <- function(model, v) {
-  model <- getModelNr(model)
-  if (model %in% c(2,8)) {
-    return(c(v, v, v))
-  } else if (model %in% c(3,9)) {
-    return(c(v))
-  } else if (model == 7) {
-    return(c(v, v, v*v))
-  } else if (model %in% c(1,4,5,6) ) {
-    return(c(v, v))
-  }  
-}
-
-# getPairwiseContrasts(model=2, v=5)
-# getPairwiseContrasts(7, 3)
-getPairwiseContrasts <- function(model, v) {
-  pc <- parameterCount(model, v)
-  contrasts <- list()
-  p.prev <- 0
-  p.follow <- sum(pc)
-  for (p in pc) {
-    Csub <- contrMat(n=rep(1, p), type="Tukey")
-    class(Csub) <- "matrix"
-    p.follow <- p.follow - p
-    C <- as.matrix(cbind(matrix(0,dim(Csub)[1], p.prev), Csub,matrix(0,dim(Csub)[1], p.follow)))
-    p.prev <- p.prev + p    
-    contrasts <- c(contrasts, list(C))
-  } 
-  return(contrasts)
-}
