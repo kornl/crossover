@@ -22,7 +22,7 @@ buildSummaryTable <- function(extended=FALSE) {
 	path <- system.file("data", package="Crossover")
 	for (file in dir(path=path)) {	
     # clatworthy1.rda contains the PBIB(2) designs while clatworthyC.rda / pbib2combine.rda contains the crossover designs.
-    if (file %in% c("clatworthy1.rda")) next
+    if (file %in% c("clatworthy1.rda", "exampleSearchResults2t.rda")) next
 		designs <- load(paste(path, file, sep="/"), envir=Crossover.env)
 		for (design in designs) {
 			dataset <- design
