@@ -156,7 +156,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 		jbBalanceNothing.setSelected(ac.getBoolProperty("jbBalanceNothing", true));
 		jbBalanceSequences.setSelected(ac.getBoolProperty("jbBalanceSequences", false));
 		jbBalancePeriods.setSelected(ac.getBoolProperty("jbBalancePeriods", false));
-		jcbContrasts.setSelectedIndex(ac.getIntProperty("contrast", 0));
+		int contrast = ac.getIntProperty("contrast", 0);
+		try {
+			jcbContrasts.setSelectedIndex(contrast);
+		} catch (Exception e) {
+			//Nothing to do. A previously available contrast is now not any more supported.
+		}
 			
 		useCatalogueDesigns.setSelected(ac.getBoolProperty("catalogue", false));
 		jtN2.setText(ac.getProperty("nRuns", "20"));
