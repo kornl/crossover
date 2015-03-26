@@ -1,5 +1,12 @@
 
-Changes in version 0.1-13 (??-10-2014)
+Changes in version 0.1-14 (26-03-2015)
+======================================
+
+- Fixed bug with designs from Crossdes
+
+- Extended documentation
+
+Changes in version 0.1-13 (31-10-2014)
 ======================================
 
 - It is possible to sort the design table (e.g. by efficiency or number of sequences).
@@ -41,7 +48,6 @@ Changes in version 0.1-12 (25-09-2014)
   the list of crossover designs.
 
 - Clean-up
-
 
 Features in version 0.1-11 (05-09-2014)
 =======================================
