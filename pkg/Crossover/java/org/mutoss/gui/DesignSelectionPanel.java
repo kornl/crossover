@@ -147,12 +147,6 @@ public class DesignSelectionPanel extends JPanel implements ListSelectionListene
 		ac.setBoolProperty("Search", jcbSearch.isSelected());
 	}
 	
-	
-	public DesignSelectionPanel(List<Design> designs, CrossoverGUI gui) {
-		this(gui);
-		setDesigns(designs);
-	}
-
 	public void setDesigns(List<Design> designs) {
 		designTable.setDesigns(designs);
 	}

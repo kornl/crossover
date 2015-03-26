@@ -136,10 +136,12 @@ public class Design {
 	}
 	
 	public double getEff(int model, double param) {
+		// Key for hash table
 		String key = ""+model;
+		// Efficiency for placebo and proportional depends also on model parameter
 		if (model==CrossoverGUI.PLACEBOMODEL || model==CrossoverGUI.PROPORTIONALMODEL) {
 			key = ""+model+"-"+param;			
-		}
+		}		
 		Double v = ht.get(key);
 		if (v==null) {
 			v = RControl.getR().eval("getOffDiagMean(design.efficiency("+getUniqueName()+", model="+model+", model.param=list(ppp="+param+", placebos="+param+"))$eff.trt.pair.adj)").asRNumeric().getData()[0];
