@@ -195,7 +195,7 @@ test.eff <- function() {
   # Test old versus new function:
   path <- system.file("data", package="Crossover")
   for (file in dir(path=path)) {     
-    if (file %in% c("clatworthy1.rda", "clatworthyC.rda", "pbib2combine.rda")) next
+    if (file %in% c("clatworthy1.rda", "clatworthyC.rda", "pbib2combine.rda", "exampleSearchResults2t.rda")) next
     designs <- load(paste(path, file, sep="/"))
     for (designS in designs) {
       design <- get(designS)
