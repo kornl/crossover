@@ -99,6 +99,11 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		super("CROSS-OVER DESIGN SEARCH TOOL");
 		//setIconImage((new ImageIcon(getClass().getResource("/org/mutoss/gui/graph/images/rjavaicon64.png"))).getImage());
 		
+		if (Configuration.getInstance().getGeneralConfig().failSafeMode() 
+				&& JOptionPane.showConfirmDialog(this, "Reset settings?", "Reset settings?", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+			Configuration.getInstance().clearConfiguration();
+		}
+		
 		if (!Configuration.getInstance().getGeneralConfig().failSafeMode() 
 				|| JOptionPane.showConfirmDialog(this, "Start Logging and Error Handler?", "Logging and error handler", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
 
