@@ -20,9 +20,9 @@ Otherwise the specified contrasts are used, see also the examples.}
 2) "Second-order carry-over effects", 3) "Full set of interactions",
 4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
 model", 7) "Treatment decay model", 8) "Proportionality model", 9) "No carry-over effects".
-Can be specified as number or as}
+Can be specified as number or as character string.}
 
-\item{design}{Cross-over design.}
+\item{eff.factor}{Weight applied to the different sub contrast matrices. A warning is given if it does not sum up to one. See examples.}
 }
 \value{
 A contrast matrix
@@ -40,8 +40,8 @@ contrMat2("Dunnett", v=3, model=1)
 contrMat2(c("Dunnett", "Dunnett"), v=3, model=1)
 contrMat2(c("Dunnett", "none"), v=3, model=1)
 contrMat2(c("Dunnett", "none", "none"), v=3, model=8)
-contrMat2("Dunnett", v=3, model=1, eff.factor=c(1, 0.1))
-contrMat2("Dunnett", v=3, model=8, eff.factor=c(1, 0.5))
+contrMat2("Dunnett", v=3, model=1, eff.factor=c(0.9, 0.1))
+contrMat2("Dunnett", v=3, model=8, eff.factor=c(0.5, 0.3, 0.2))
 }
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}

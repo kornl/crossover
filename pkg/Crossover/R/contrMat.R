@@ -7,16 +7,16 @@
 #' 
 #' See the vignette of this package for further details.
 #' 
-#' @param design Cross-over design.
 #' @param type Type of contrast. A character vector containing the following: "Dunnett", "Tukey", "none".
 #' If the length is 1, this contrast is only applied for the treatment effects and for carry-over effects a "Tukey" contrast is used.
 #' Otherwise the specified contrasts are used, see also the examples.
+#' @param v Number of treatments
 #' @param model Model - one of the following: 1) "Standard additive model",
 #' 2) "Second-order carry-over effects", 3) "Full set of interactions",
 #' 4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
 #' model", 7) "Treatment decay model", 8) "Proportionality model", 9) "No carry-over effects". 
-#' Can be specified as number or as 
-#' @param v Number of treatments
+#' Can be specified as number or as character string.
+#' @param eff.factor Weight applied to the different sub contrast matrices. A warning is given if it does not sum up to one. See examples.
 #' @return A contrast matrix
 #' @author Kornelius Rohmeyer \email{rohmeyer@@small-projects.de}
 #' @keywords misc
@@ -27,14 +27,17 @@
 #' contrMat2(c("Dunnett", "Dunnett"), v=3, model=1)
 #' contrMat2(c("Dunnett", "none"), v=3, model=1)
 #' contrMat2(c("Dunnett", "none", "none"), v=3, model=8)
-#' contrMat2("Dunnett", v=3, model=1, eff.factor=c(1, 0.1))
-#' contrMat2("Dunnett", v=3, model=8, eff.factor=c(1, 0.5))
+#' contrMat2("Dunnett", v=3, model=1, eff.factor=c(0.9, 0.1))
+#' contrMat2("Dunnett", v=3, model=8, eff.factor=c(0.5, 0.3, 0.2))
 #' 
 #' @export contrMat2
 contrMat2 <- function(type, v, model, eff.factor=rep(1, length(parameterCount(model, v)))) {
   model <- getModelNr(model)
   if (length(eff.factor)!=length(parameterCount(model, v))) {
     stop(paste("For model ", model, " the paramter eff.factor must have length ", length(parameterCount(model, v)), ".", sep=""))
+  }
+  if (!isTRUE(all.equal(1, sum(eff.factor), check.attributes = FALSE))) {
+    warning("Parameter eff.factor does not sum up to 1.")
   }
   if (length(type)!=length(parameterCount(model, v)) && length(type)==1) {
     type <- c(type, rep("Tukey", length(parameterCount(model, v))-1))
@@ -71,7 +74,7 @@ contrMat2 <- function(type, v, model, eff.factor=rep(1, length(parameterCount(mo
       m <- matrix(0, dim(Csub3)[1], dim(Csub)[2])
       
       C <- rbind(C*eff.factor[1], cbind(m, Csub2, matrix(0,dim(Csub2)[1],v))*eff.factor[2])      
-      C <- rbind(C, cbind(m, matrix(0,dim(Csub2)[1],v), Csub3)*eff.factor[2]) #TODO Feature: Do we want to allow an eff.factor[3]?
+      C <- rbind(C, cbind(m, matrix(0,dim(Csub2)[1],v), Csub3)*eff.factor[3])
     } else if (model %in% c(7)) { # Full set of interactions v+v+v^2
       warning("Full set of interactions are not yet implemented in contrMat2.")
       #C <- rbind(C)
