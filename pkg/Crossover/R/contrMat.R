@@ -8,7 +8,9 @@
 #' See the vignette of this package for further details.
 #' 
 #' @param design Cross-over design.
-#' @param type Type of contrast. One of the following: "Dunnett", "Tukey".
+#' @param type Type of contrast. A character vector containing the following: "Dunnett", "Tukey", "none".
+#' If the length is 1, this contrast is only applied for the treatment effects and for carry-over effects a "Tukey" contrast is used.
+#' Otherwise the specified contrasts are used, see also the examples.
 #' @param model Model - one of the following: 1) "Standard additive model",
 #' 2) "Second-order carry-over effects", 3) "Full set of interactions",
 #' 4) "Self-adjacency model", 5) "Placebo model", 6) "No carry-over into self
@@ -22,27 +24,54 @@
 #' 
 #' contrMat2("Tukey", v=3, model=1)
 #' contrMat2("Dunnett", v=3, model=1)
+#' contrMat2(c("Dunnett", "Dunnett"), v=3, model=1)
+#' contrMat2(c("Dunnett", "none"), v=3, model=1)
+#' contrMat2(c("Dunnett", "none", "none"), v=3, model=8)
 #' contrMat2("Dunnett", v=3, model=1, eff.factor=c(1, 0.1))
 #' contrMat2("Dunnett", v=3, model=8, eff.factor=c(1, 0.5))
 #' 
 #' @export contrMat2
 contrMat2 <- function(type, v, model, eff.factor=rep(1, length(parameterCount(model, v)))) {
   model <- getModelNr(model)
-  if (type %in% c("Dunnett", "Tukey")) {
-    Csub <- contrMat(n=rep(1, v), type=type)
+  if (length(eff.factor)!=length(parameterCount(model, v))) {
+    stop(paste("For model ", model, " the paramter eff.factor must have length ", length(parameterCount(model, v)), ".", sep=""))
+  }
+  if (length(type)!=length(parameterCount(model, v)) && length(type)==1) {
+    type <- c(type, rep("Tukey", length(parameterCount(model, v))-1))
+  }
+  if (length(type)!=length(parameterCount(model, v))) {
+    stop(paste("For model ", model, " the paramter type must have length ", length(parameterCount(model, v)), ".", sep=""))
+  }
+  if (all(type %in% c("Dunnett", "Tukey", "none"))) {
+    Csub <- contrMat(n=rep(1, v), type=type[1])
     class(Csub) <- "matrix"
     C <- appendZeroColumns(Csub, model=model, v)
     if (length(eff.factor)<=1 || all(eff.factor[-1]==0) || model %in% c(3,9)) {
       return(C)
     }
-    Csub2 <- contrMat(n=rep(1, v), type="Tukey")
-    class(Csub2) <- "matrix"
-    m <- matrix(0, dim(Csub2)[1], dim(Csub)[2])
+    if (length(type)>1) {      
+      if (type[2]=="none") {
+        Csub2 <- matrix(0, 0, v)
+      } else {
+        Csub2 <- contrMat(n=rep(1, v), type=type[2])
+        class(Csub2) <- "matrix"
+      }      
+      m <- matrix(0, dim(Csub2)[1], dim(Csub)[2])
+    }
     if (model %in% c(1, 4, 5, 6)) { # v+v parameters
       C <- rbind(C*eff.factor[1], cbind(m, Csub2)*eff.factor[2])
     } else if (model %in% c(2, 8)) { # v+v+v parameters
-      C <- rbind(C*eff.factor[1], cbind(m, Csub2, matrix(0,dim(Csub2)[1],v))*eff.factor[2])
-      C <- rbind(C*eff.factor[1], cbind(m, matrix(0,dim(Csub2)[1],v), Csub2)*eff.factor[2])      
+      
+      if (type[3]=="none") {
+        Csub3 <- matrix(0, 0, v)
+      } else {
+        Csub3 <- contrMat(n=rep(1, v), type=type[3])
+        class(Csub3) <- "matrix"
+      }
+      m <- matrix(0, dim(Csub3)[1], dim(Csub)[2])
+      
+      C <- rbind(C*eff.factor[1], cbind(m, Csub2, matrix(0,dim(Csub2)[1],v))*eff.factor[2])      
+      C <- rbind(C, cbind(m, matrix(0,dim(Csub2)[1],v), Csub3)*eff.factor[2]) #TODO Feature: Do we want to allow an eff.factor[3]?
     } else if (model %in% c(7)) { # Full set of interactions v+v+v^2
       warning("Full set of interactions are not yet implemented in contrMat2.")
       #C <- rbind(C)
