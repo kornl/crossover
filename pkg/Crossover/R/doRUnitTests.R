@@ -1,6 +1,6 @@
 ## Adapted and extended from the code from http://rwiki.sciviews.org/doku.php?id=developers:runit
 unitTestsCrossover <- function(extended=FALSE, java=FALSE, interactive=FALSE, junitLibrary, outputPath) {
-	if(!require("RUnit", quietly=TRUE)) {
+	if(!requireNamespace("RUnit", quietly=TRUE)) {
 		stop("Please install package RUnit to run the unit tests.")
 	}
 	if (extended) Sys.setenv(CROSSOVER_UNIT_TESTS=paste(Sys.getenv("CROSSOVER_UNIT_TESTS"),"extended"))
