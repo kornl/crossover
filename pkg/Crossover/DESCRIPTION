@@ -1,6 +1,6 @@
 Package: Crossover
 Type: Package
-Title: Crossover Designs
+Title: Analysis and Search of Crossover Designs
 Version: 0.1-14
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
