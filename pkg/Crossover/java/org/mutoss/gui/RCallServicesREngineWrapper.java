@@ -15,6 +15,11 @@ public class RCallServicesREngineWrapper extends RCallServicesREngine {
         //System.out.println("Calling R from thread " + Thread.currentThread().getId() + ".");
 		return super.eval("eval(expression("+expression+"), envir=Crossover:::Crossover.env)");
 	}
+	
+	public synchronized void evalVoid(String expression) throws REngineException {		
+        //System.out.println("Calling R from thread " + Thread.currentThread().getId() + ".");
+		super.evalVoid("eval(expression("+expression+"), envir=Crossover:::Crossover.env)");
+	}
 
 	public synchronized RObj evalInGlobalEnv(String expression) throws REngineException {
 		//System.out.println("Calling R from thread " + Thread.currentThread().getId() + ".");
