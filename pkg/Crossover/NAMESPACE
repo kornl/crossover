@@ -1,5 +1,7 @@
 useDynLib(Crossover)
 
+importFrom("stats", "runif") 
+importFrom("utils", "capture.output", "write.table", "packageVersion")
 importFrom(stats4, plot)
 import(methods)
 import(JavaGD)
