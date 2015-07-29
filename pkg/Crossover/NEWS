@@ -1,3 +1,11 @@
+Changes in version 0.1-15 (29-07-2015)
+======================================
+
+- Fixed errors when more than two users used the Crossover GUI on the same system
+
+- Fixed CRAN warnings
+
+- Improved error dialog
 
 Changes in version 0.1-14 (26-03-2015)
 ======================================
