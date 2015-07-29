@@ -1,31 +1,25 @@
 package org.mutoss.gui.dialogs;
 
-import java.awt.Desktop;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -35,13 +29,13 @@ import org.af.commons.errorhandling.HTTPPoster;
 import org.af.commons.logging.ApplicationLog;
 import org.af.commons.logging.LoggingSystem;
 import org.af.commons.threading.SafeSwingWorker;
-import org.af.commons.tools.OSTools;
 import org.af.commons.tools.StringTools;
 import org.af.commons.widgets.GUIToolKit;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 import org.mutoss.config.Configuration;
 import org.mutoss.gui.RControl;
 
@@ -60,6 +54,8 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 	protected JComboBox jcbReportLevel;
 	protected JCheckBox jcbScreenshot = new JCheckBox("Send screenshot of GUI window");	
 	
+    protected static Log logger = LogFactory.getLog(ErrorDialogChooseLevel.class);
+	
 	public JButton send = new JButton("Send directly");
 	public JButton emailClient = new JButton("Open email client");
 	public JButton createZip = new JButton("Save report file");
@@ -75,7 +71,7 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
     // throwable which caused the error, might be null
     protected final Object e;
     protected ApplicationLog al;
-    String subject;
+    String subjectShort, subjectLong;
 	
 	JTextArea jta;
 	
@@ -122,16 +118,18 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 		jta.setWrapStyleWord(true);
 		jta.setMargin(new Insets(4,4,4,4));
 		
-    	subject = "gMCP "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+
+		subjectShort = "gMCP "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+
     			" (R "+Configuration.getInstance().getGeneralConfig().getRVersionNumber()+") " +
     			"bug report from "+System.getProperty("user.name", "<unknown user name>")+
-    			" on "+System.getProperty("os.name", "<unknown OS>")+" : "+    			
+    			" on "+System.getProperty("os.name", "<unknown OS>");
+		
+    	subjectLong = subjectShort+" : "+    			
     			(message.length()<40?message:message.substring(0, 37)+"...");
 	    
 		int row = 2;
 		
 		JTextArea jlabel = new JTextArea("We are sorry that an error occurred.\n" +
-				"Please send the report below to "+ErrorHandler.getInstance().getDeveloperAddress()+" :"); // bugreport@small-projects.de		
+				"We would be pleased, if you could send the report below to "+ErrorHandler.getInstance().getDeveloperAddress()+" :"); // bugreport@small-projects.de		
 		jlabel.setOpaque(false);
 		jlabel.setEditable(false);
 		jlabel.setFont(jlabel.getFont().deriveFont(jlabel.getFont().getStyle() ^ Font.BOLD));
@@ -172,29 +170,44 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 	private void openEmailClient() {
 		try {
 			String mailto = "mailto:"+ErrorHandler.getInstance().getDeveloperAddress() //"bugreport@small-projects.de"
-					        +"?subject="+URLEncoder.encode(subject, "UTF-8").replace("+", "%20")
+					        +"?subject="+URLEncoder.encode(subjectLong, "UTF-8").replace("+", "%20")
 							+"&body="+URLEncoder.encode(jta.getText(), "UTF-8").replace("+", "%20");
 			//String uriString = URLEncoder.encode(mailto, "UTF-8").replace("+", "%20");
 			//System.out.println(uriString);
-			Desktop.getDesktop().mail(new URI(mailto));
+			
+			/* This is a Wrapper for Desktop.getDesktop().mail(uriMailTo);
+             * that will do that for Java >=6 and nothing for
+             * Java 5.
+             */    
+			// Long for Desktop.getDesktop().mail(new URI(mailto));
+    		try {	
+    			URI uriMailTo = new URI(mailto);
+    			Method main = Class.forName("java.awt.Desktop").getDeclaredMethod("getDesktop");
+    			Object obj = main.invoke(new Object[0]);
+    			Method second = obj.getClass().getDeclaredMethod("mail", new Class[] { URI.class }); 
+    			second.invoke(obj, uriMailTo);
+    		} catch (Exception e) {			
+    			logger.warn("No Desktop class in Java 5 or URI error.",e);
+    		}
+
+			dispose();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		} 
 	}
 
+	private String getSep(String title) {
+		return "\n************************* "+title+" *************************\n\n";
+	}
+	
 	private String getErrorReport(int level) {	
-		
-		String sep = "\n************************************************\n\n"; //"\n\n";
 		
 		if (level==0) return "Please reconsider reporting this error.";
 		String text = "gMCP "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+
     			" (R "+Configuration.getInstance().getGeneralConfig().getRVersionNumber()+") " +
     			"bug report from "+System.getProperty("user.name", "<unknown user name>")+
-    			" on "+System.getProperty("os.name", "<unknown OS>")+" : "+  message + "\n\n"+stacktrace+"\n\n"+getTraceBack();  			
+    			" on "+System.getProperty("os.name", "<unknown OS>")+" : "+  message +"\n" +getSep("R TraceBack")+getTraceBack()+"\n" + getSep("Java Stacktrace") +stacktrace;  			
     			//(message.length()<40?message:message.substring(0, 37)+"...");
 		if (level==1) return text;
 		
@@ -204,62 +217,48 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 			rhistory.add(RControl.getR().getHistory().get(i));
 		}
 		
-		text += sep+getRSessionInfo() /*+sep+getGraph()*/ +sep+StringTools.collapseStringList(rhistory,"\n");
+		text += getSep("R Session Info")+getRSessionInfo() /*+sep+getGraph()*/ +getSep("R GUI History")+StringTools.collapseStringList(rhistory,"\n");
 		if (level==2) return text;
 		
-		text += sep+getSystemInfo()+sep+getROptions();
+		text += getSep("System Info")+getSystemInfo()+getSep("R Options")+getROptions();
 		return text;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==close) {
 			dispose();
+			return;
 		}
 		if (e.getSource()==send) {
-			 SafeSwingWorker<Void, Void> worker = new SafeSwingWorker<Void, Void>() {
-		            @Override
-		            protected Void doInBackground() throws Exception {
-		            	(new HTTPPoster()).post(ErrorHandler.getInstance().getReportURL(), getInfoTable(), getAttachedFiles());                
-		            	return null;
-		            }
-		            
-					@Override
-		            protected void onFailure(Throwable t) {
-		                String msg = "Could not connect to server and send report.\n("+t.getMessage()+")\nPlease send mail manually!";
-		                logger.error(msg, t);
-		                JOptionPane.showMessageDialog(ErrorDialogChooseLevel.this, msg);
-		                //lockableUI.setLocked(false);
-		                
-		                // Open mail client in Java 6:
-		                String subject = "Error%20report";
-		                String body = "Description%20and%20contact%20information:";
-		                String mailtoURI = "mailto:"+ErrorHandler.getInstance().getDeveloperAddress()+"?SUBJECT="+subject+"&BODY="+body;
+			SafeSwingWorker<Void, Void> worker = new SafeSwingWorker<Void, Void>() {
+				@Override
+				protected Void doInBackground() throws Exception {
+					(new HTTPPoster()).post(ErrorHandler.getInstance().getReportURL(), getInfoTable(), getAttachedFiles());                
+					return null;
+				}
 
-		                /* This is a Wrapper for Desktop.getDesktop().mail(uriMailTo);
-		                 * that will do that for Java >=6 and nothing for
-		                 * Java 5.
-		                 */    
-		        		try {	
-		        			URI uriMailTo = new URI(mailtoURI);
-		        			Method main = Class.forName("java.awt.Desktop").getDeclaredMethod("getDesktop");
-		        			Object obj = main.invoke(new Object[0]);
-		        			Method second = obj.getClass().getDeclaredMethod("mail", new Class[] { URI.class }); 
-		        			second.invoke(obj, uriMailTo);
-		        		} catch (Exception e) {			
-		        			logger.warn("No Desktop class in Java 5 or URI error.",e);
-		        		}
-		            }
+				@Override
+				protected void onFailure(Throwable t) {
+					String msg = "Could not connect to server and send report.\n("+t.getMessage()+")\nPlease send mail manually!";
+					logger.error(msg, t);
+					JOptionPane.showMessageDialog(ErrorDialogChooseLevel.this, msg, "Could not send report", JOptionPane.ERROR_MESSAGE);
+					//lockableUI.setLocked(false);
 
-		            @Override
-		            protected void onSuccess(Void result) {                
-		                dispose();
-		                JOptionPane.showMessageDialog(ErrorDialogChooseLevel.this, "Report was sent.");
-		            }
-		        };
-		        worker.execute();
+					openEmailClient();		                
+				}
+
+				@Override
+				protected void onSuccess(Void result) {                
+					dispose();
+					JOptionPane.showMessageDialog(ErrorDialogChooseLevel.this, "Report was sent.");
+				}
+			};
+			worker.execute();
+			return;
 		}
 		if (e.getSource()==emailClient) {
 			openEmailClient();
+			return;
 		}
 		if (e.getSource()==createZip) {
 			PrintWriter out;
@@ -267,6 +266,7 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 			try {
 				JFileChooser fc = new JFileChooser(Configuration.getInstance().getClassProperty(this.getClass(), "ReportSaveDirectory"));
 				fc.setDialogType(JFileChooser.SAVE_DIALOG);		
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				int returnVal = fc.showSaveDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {			
 					f = fc.getSelectedFile();
@@ -277,9 +277,15 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 				} else {
 					return;
 				}
+				if (f.exists()) {
+					int answer = JOptionPane.showConfirmDialog(this, "File '"+f.getAbsolutePath()+"' exists.\n Do you want to overwrite it?", "File exists", JOptionPane.WARNING_MESSAGE);
+					if (answer!=JOptionPane.YES_OPTION) return;
+				}
 				out = new PrintWriter(f.getAbsolutePath());
 				out.println(jta.getText());
 				out.close();
+				dispose();
+				return;
 			} catch (FileNotFoundException e1) {
 				JOptionPane.showMessageDialog(this, "Error saving report:\n"+e1.getMessage(), "Error saving error report - oh my", JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
@@ -309,7 +315,7 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
     	}
     	
 
-    	table.put("Subject", subject);
+    	table.put("Subject", subjectLong);
     	return table;
     }
 	
