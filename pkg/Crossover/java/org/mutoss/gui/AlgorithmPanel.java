@@ -484,19 +484,21 @@ public class AlgorithmPanel extends JPanel implements ActionListener, ChangeList
 						jta.textArea.setCaretPosition(0);
 					} catch (CancellationException e) {
 						// Will be perhaps used in the future.
-					} catch (Throwable e) {
+					} catch (Throwable e) {						
 						String message = e.getMessage();
 						//System.out.println("\""+message+"\"");
 						if (message.equals("Error: \n")) message = "Empty message (most likely an error in the C++ code - please look at the R console for further output)\n\n";
-						JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);
-						String traceback = RControl.getR().eval("paste(unlist(traceback()),collapse=\"\\n\")").asRChar().getData()[0];
-						JDialog d = new JDialog(gui, "R Error", true);
-						d.add( new TextFileViewer(gui, "R Objects", "The following R code produced the following error:\n\n" +message+"\n\nTraceback:\n\n"+traceback+"\n\n"+
-										command, true) );
-						d.pack();
-						d.setSize(800, 600);
-						d.setVisible(true);
-						e.printStackTrace();
+						//JOptionPane.showMessageDialog(gui, "R call produced an error:\n\n"+message+"\nWe will open a window with R code to reproduce this error for investigation.", "Error in R Call", JOptionPane.ERROR_MESSAGE);						
+						String traceback = RControl.getR().eval("paste(capture.output(traceback()),collapse=\"\\n\")").asRChar().getData()[0];
+						throw new RuntimeException("The R code below produced the following error:\n\n" +message+"\n\n"+command);
+						
+						//JDialog d = new JDialog(gui, "R Error", true);
+						//TextFileViewer tf = new TextFileViewer(gui, "R Objects", "The R code below produced the following error:\n\n" +message+"\n\nTraceback:\n\n"+traceback+"\n\n"+command, true);
+						//d.add( tf );
+						//d.pack();
+						//d.setSize(800, 600);
+						//d.setVisible(true);
+						//e.printStackTrace();
 					} finally {
 						gui.glassPane.stop();
 					}
