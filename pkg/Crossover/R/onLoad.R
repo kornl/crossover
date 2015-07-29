@@ -1,6 +1,7 @@
 .onLoad <- function(libname, pkgname) {
 	if (!.jniInitialized) {
-		.jinit(parameters=c("-Xrs","-Xss1m"))
+	  .jinit(parameters=c("-Xrs", "-Xss1m",
+	                      paste0("-Djava.io.tmpdir=", tempdir())))
 	}
 	.jpackage(pkgname)
 	.jpackage("JavaGD")
