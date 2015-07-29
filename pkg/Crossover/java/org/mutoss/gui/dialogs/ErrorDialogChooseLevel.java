@@ -118,7 +118,7 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 		jta.setWrapStyleWord(true);
 		jta.setMargin(new Insets(4,4,4,4));
 		
-		subjectShort = "gMCP "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+
+		subjectShort = "Crossover "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+
     			" (R "+Configuration.getInstance().getGeneralConfig().getRVersionNumber()+") " +
     			"bug report from "+System.getProperty("user.name", "<unknown user name>")+
     			" on "+System.getProperty("os.name", "<unknown OS>");
@@ -204,10 +204,7 @@ public class ErrorDialogChooseLevel extends JDialog implements ActionListener {
 	private String getErrorReport(int level) {	
 		
 		if (level==0) return "Please reconsider reporting this error.";
-		String text = "gMCP "+Configuration.getInstance().getGeneralConfig().getVersionNumber()+
-    			" (R "+Configuration.getInstance().getGeneralConfig().getRVersionNumber()+") " +
-    			"bug report from "+System.getProperty("user.name", "<unknown user name>")+
-    			" on "+System.getProperty("os.name", "<unknown OS>")+" : "+  message +"\n" +getSep("R TraceBack")+getTraceBack()+"\n" + getSep("Java Stacktrace") +stacktrace;  			
+		String text = subjectShort +" : "+  message +"\n" +getSep("R TraceBack")+getTraceBack()+"\n" + getSep("Java Stacktrace") +stacktrace;  			
     			//(message.length()<40?message:message.substring(0, 37)+"...");
 		if (level==1) return text;
 		
