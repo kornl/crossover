@@ -12,6 +12,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -42,6 +43,7 @@ import org.af.commons.tools.OSTools;
 import org.af.commons.widgets.InfiniteProgressPanel;
 import org.af.commons.widgets.InfiniteProgressPanel.AbortListener;
 import org.af.commons.widgets.WidgetFactory;
+import org.apache.log4j.PropertyConfigurator;
 import org.jdesktop.swingworker.SwingWorker;
 import org.mutoss.config.ClassConfig;
 import org.mutoss.config.Configuration;
@@ -107,10 +109,20 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 		if (!Configuration.getInstance().getGeneralConfig().failSafeMode() 
 				|| JOptionPane.showConfirmDialog(this, "Start Logging and Error Handler?", "Logging and error handler", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
 
+			Properties log4jProperties = new Properties();
+			log4jProperties.setProperty("log4j.rootLogger", "DEBUG, READABLE_FILE");
+			log4jProperties.setProperty("log4j.appender.READABLE_FILE", "org.apache.log4j.FileAppender");
+			log4jProperties.setProperty("log4j.appender.READABLE_FILE.layout", "org.apache.log4j.PatternLayout");
+			log4jProperties.setProperty("log4j.appender.READABLE_FILE.layout.conversionPattern", "%-5p - %m%n       [%t] (%c:%M at %F:%L)%n");
+			log4jProperties.setProperty("log4j.appender.READABLE_FILE.File", "/tmp/mutoss.log");
+			log4jProperties.setProperty("log4j.appender.READABLE_FILE.append", "false");
+			PropertyConfigurator.configure(log4jProperties);
+			
 			// This Errorhandling should be uncommented for testing versions that should report errors:
 			if (!LoggingSystem.alreadyInitiated()) {
 				LoggingSystem.init(
 						"/org/mutoss/gui/commons-logging.properties",
+						//log4jProperties,
 						true,
 						false,
 						new ApplicationLog());
