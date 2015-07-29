@@ -49,6 +49,7 @@ import org.mutoss.config.ClassConfig;
 import org.mutoss.config.Configuration;
 import org.mutoss.gui.archive.DesignArchiveControl;
 import org.mutoss.gui.dialogs.ConfirmArchivePath;
+import org.mutoss.gui.dialogs.ErrorDialogChooseLevel;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
 import org.mutoss.gui.dialogs.TellAboutOnlineUpate;
 
@@ -126,7 +127,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 						true,
 						false,
 						new ApplicationLog());
-				ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
+				ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogChooseLevel.class);
 			} 
 
 			// Java 7 does not respect system property "sun.awt.exception.handler".
