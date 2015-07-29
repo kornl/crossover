@@ -120,7 +120,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 			PropertyConfigurator.configure(log4jProperties);
 			
 			// This Errorhandling should be uncommented for testing versions that should report errors:
-			if (!LoggingSystem.alreadyInitiated()) {
+			/*if (!LoggingSystem.alreadyInitiated()) {
 				LoggingSystem.init(
 						"/org/mutoss/gui/commons-logging.properties",
 						//log4jProperties,
@@ -128,7 +128,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 						false,
 						new ApplicationLog());
 				ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogChooseLevel.class);
-			} 
+			} */
 
 			// Java 7 does not respect system property "sun.awt.exception.handler".
 			// Eventually this fix should be included in afcommons.
