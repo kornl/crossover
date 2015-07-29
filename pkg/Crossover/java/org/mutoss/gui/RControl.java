@@ -9,6 +9,7 @@ import org.af.commons.logging.ApplicationLog;
 import org.af.commons.logging.LoggingSystem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mutoss.gui.dialogs.ErrorDialogChooseLevel;
 import org.mutoss.gui.dialogs.ErrorDialogSGTK;
 import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.REngineException;
@@ -42,7 +43,7 @@ public class RControl {
 					System.getProperty("eclipse") == null && !debug,
 					System.getProperty("eclipse") != null || debug,
 					new ApplicationLog());
-			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogSGTK.class);
+			ErrorHandler.init("rohmeyer@small-projects.de", "http://www.algorithm-forge.com/report/bugreport.php", true, true, ErrorDialogChooseLevel.class);
 		}
 		if (!Rengine.versionCheck()) {
             System.err.println("Error: API version of the Rengine class and the native binary differ.");
