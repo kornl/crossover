@@ -132,11 +132,7 @@ public class CrossoverGUI extends JFrame implements WindowListener, ActionListen
 
 			// Java 7 does not respect system property "sun.awt.exception.handler".
 			// Eventually this fix should be included in afcommons.
-			javax.swing.SwingUtilities.invokeLater(new Runnable() {
-				public void run() {		
-					Thread.currentThread().setUncaughtExceptionHandler(new DefaultExceptionHandler());
-				}
-			});
+			Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 		}
 		
 		if (Configuration.getInstance().getGeneralConfig().failSafeMode()) {
