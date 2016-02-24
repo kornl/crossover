@@ -4,13 +4,32 @@ Title: Analysis and Search of Crossover Designs
 Version: 0.1-15
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
-Description: Package Crossover provides different crossover designs from combinatorial or search algorithms as well as from literature and a GUI to access them.
-Depends: R (>= 3.0.2), rJava (>= 0.8-3), CommonJavaJars (>= 1.0.5), JavaGD, ggplot2
-Imports: MASS, crossdes (>= 1.1-1), xtable, methods, Matrix, multcomp, stats4, digest
-Suggests: knitr, RUnit, nlme
-SystemRequirements: Java (>= 5.0) 
+Description: Package Crossover provides different crossover designs from
+    combinatorial or search algorithms as well as from literature and a GUI to
+    access them.
+Depends:
+    R (>= 3.0.2),
+    rJava (>= 0.8-3),
+    CommonJavaJars (>= 1.0.5),
+    JavaGD,
+    ggplot2
+Imports:
+    MASS,
+    crossdes (>= 1.1-1),
+    xtable,
+    methods,
+    Matrix,
+    multcomp,
+    stats4,
+    digest
+Suggests:
+    knitr,
+    RUnit,
+    nlme
+SystemRequirements: Java (>= 5.0)
 LinkingTo: Rcpp (>= 0.10.3), RcppArmadillo (>= 0.2.0)
 License: GPL-2
 VignetteBuilder: knitr
 URL: https://github.com/kornl/Crossover/wiki
 BugReports: https://github.com/kornl/Crossover/issues
+RoxygenNote: 5.0.1
