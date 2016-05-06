@@ -9,7 +9,7 @@ The development version of this package can be directly installed with the R pac
 
     install.packages("devtools")
     library(devtools)
-    install_github("Crossover", username="kornl", subdir="pkg/Crossover")
+    install_github("kornl/Crossover", subdir="pkg/Crossover")
 
 But note that the crossover jar file is only rarely updated and it may be appropriate to build it yourself from the Java source code.
 
