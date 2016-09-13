@@ -94,10 +94,10 @@ CrossoverNamespace <- function(before, options, envir) {
   if (before) {
     ## code to be run before a chunk
     #attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3)
-    attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
+    attach(list2env(as.list(asNamespace("Crossover"))), name="exposed:Crossover", pos=3, warn.conflicts=FALSE)
   } else {
     ## code to be run after a chunk
-    detach("namespace:Crossover")
+    detach("exposed:Crossover")
   }
 }
 
@@ -400,7 +400,7 @@ For known $V:=\Var(Y)=ZDZ^T+\Sigma$ the MLE and BLUE is given by
 \[\hat\beta=(X^tV^{-1}X)^{-1}X^tV^{-1}Y.\]
 
 <<detachNameSpace, echo=TRUE, eval=FALSE, include=FALSE>>=
-detach("namespace:Crossover")
+detach("exposed:Crossover")
 @
 
 

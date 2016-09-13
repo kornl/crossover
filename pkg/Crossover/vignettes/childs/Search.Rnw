@@ -49,7 +49,7 @@ For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cit
 
 <<TestOfDifferentApproaches, echo=TRUE, eval=TRUE, withNameSpace=TRUE>>=
 
-attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
+attach(list2env(as.list(asNamespace("Crossover"))), name="exposed:Crossover", pos=3, warn.conflicts=FALSE)
 
 s <- 6
 p <- 3
