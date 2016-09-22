@@ -1,7 +1,7 @@
 Package: Crossover
 Type: Package
 Title: Analysis and Search of Crossover Designs
-Version: 0.1-15
+Version: 0.1-16
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
 Description: Package Crossover provides different crossover designs from
@@ -25,6 +25,7 @@ Imports:
 Suggests:
     knitr,
     RUnit,
+    testthat,
     nlme
 SystemRequirements: Java (>= 5.0)
 LinkingTo: Rcpp (>= 0.10.3), RcppArmadillo (>= 0.2.0)
