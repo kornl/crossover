@@ -1,4 +1,3 @@
-#TODO Include remarks from http://stackoverflow.com/questions/31380593/include-tests-in-binary-r-package
 ## Adapted and extended from the code from http://rwiki.sciviews.org/doku.php?id=developers:runit
 unitTestsCrossover <- function(extended=FALSE, java=FALSE, interactive=FALSE, junitLibrary, outputPath) {
 	if(!requireNamespace("testthat", quietly=TRUE)) {
@@ -14,6 +13,9 @@ unitTestsCrossover <- function(extended=FALSE, java=FALSE, interactive=FALSE, ju
 		Sys.setenv(CROSSOVER_UNIT_TEST_OPATH=outputPath)
 	}
   
+  pkg <- "Crossover" 
+  path <- system.file("tests", package=pkg)
+  if (length(dir(path=path))==0) warning("Tests seem not to be installed. Please use the --install-tests parameter to R CMD install, or INSTALL_opts = '--install-tests' argument to install.packages()")
   testthat:::test_package("Crossover")
 	
 	if (java || "java" %in% strsplit(Sys.getenv("CROSSOVER_UNIT_TESTS"),",")[[1]]) {
