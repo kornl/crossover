@@ -49,7 +49,7 @@ test.strangeDesignInputs <- function() {
   
   D <- matrix(as.numeric(as.factor(D)), dim(D)[1])  
   
-  myInv <- MASS::ginv(rcd(D, v, model=1))
+  myInv <- ginv(rcd(D, v, model=1))
   
 }
 

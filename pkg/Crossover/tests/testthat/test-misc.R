@@ -18,7 +18,7 @@ test.design.functions <- function () {
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))
   H <- linkMatrix(model=1, v)
-  var1 <- sum(diag(C %*% MASS::ginv(t(H) %*% Ar %*% H) %*% t(C)))
+  var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
   
   gco <- general.carryover(design, model=1)
   var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
@@ -70,7 +70,7 @@ test.strangeDesignInputs <- function() {
   
   D <- matrix(as.numeric(as.factor(D)), dim(D)[1])  
   
-  myInv <- MASS::ginv(rcd(D, v, model=1))
+  myInv <- ginv(rcd(D, v, model=1))
   
 }
 
