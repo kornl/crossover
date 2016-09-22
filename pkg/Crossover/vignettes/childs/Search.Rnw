@@ -49,7 +49,7 @@ For details (what are $N_p$, $N_s$, $P_z$, etc.) see \cite{j1995cyclic} and \cit
 
 <<TestOfDifferentApproaches, echo=TRUE, eval=TRUE, withNameSpace=TRUE>>=
 
-attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
+#attach(loadNamespace("Crossover"), name="namespace:Crossover", pos=3, warn.conflicts=FALSE)
 
 s <- 6
 p <- 3
@@ -149,7 +149,7 @@ for (i in 1:length(resultL)) {
   print(xtable(design, digits=0)) 
   var <- c()
   var2 <- c()
-  for (m in models[1:8]) {
+  for (m in Crossover:::models[1:8]) {
     
     #C <- Crossover:::contrMat2(type="Tukey", v=2, model=m, eff.factor=c(1,1,1))
     #C <- contrMat(rep(1, Crossover:::nrOfParameters(model=i, v=v)), "Tukey")
