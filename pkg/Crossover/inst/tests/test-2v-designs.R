@@ -104,3 +104,4 @@ test.2v.designs <- function() {
     
 }
 
+test.2v.designs()

@@ -213,3 +213,5 @@ test.eff <- function() {
     }
   }
 }
+
+test.eff()

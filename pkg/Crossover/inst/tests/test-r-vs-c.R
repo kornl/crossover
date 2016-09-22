@@ -8,16 +8,16 @@ test.r.vs.c <- function () {
       
       rcDesign <- rcd(design, v, model=model)
       rcDesign_R <- rcd_R(design, v, model=model)
-      checkTrue(max(abs(rcDesign-rcDesign_R))<0.00001)
+      expect_true(max(abs(rcDesign-rcDesign_R))<0.00001)
       
       options(warn=2)
-      checkException(rcdMatrix(design, v, model=model))
-      checkException(rcdMatrix_R(design, v, model=model))
+      expect_error(rcdMatrix(design, v, model=model))
+      expect_error(rcdMatrix_R(design, v, model=model))
       options(warn=1)
       
       rcDesignMat <- rcdMatrix(rcDesign, v, model=model)
       rcDesignMat_R <- rcdMatrix_R(rcDesign, v, model=model)
-      checkTrue(max(abs(rcDesignMat-rcDesignMat_R))<0.00001)
+      expect_true(max(abs(rcDesignMat-rcDesignMat_R))<0.00001)
       
       # TODO Implement infMatrix for model 3 and 7:
       if (!model %in% c(3,7)) {
@@ -27,11 +27,13 @@ test.r.vs.c <- function () {
       }
       Ar_R1 <- infMatrix_R(rcDesign, v, model=model, method=1)  
       Ar_R2 <- infMatrix_R(rcDesign, v, model=model, method=2)  
-      checkTrue(max(abs(Ar-Ar_R1))<0.00001)
-      checkTrue(max(abs(Ar_R2-Ar_R1))<0.00001)
+      expect_true(max(abs(Ar-Ar_R1))<0.00001)
+      expect_true(max(abs(Ar_R2-Ar_R1))<0.00001)
       
       d <- structure(c(2, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 2, 
                        2, 1, 1, 2, 1, 1, 2), .Dim = c(4L, 6L))
-      checkTrue(estimable_R(d, v=2, model=2)==estimable(d, v=2, model=2))
+      expect_true(estimable_R(d, v=2, model=2)==estimable(d, v=2, model=2))
   }
 }
+
+test.r.vs.c()

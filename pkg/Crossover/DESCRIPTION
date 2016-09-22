@@ -24,7 +24,6 @@ Imports:
     digest
 Suggests:
     knitr,
-    RUnit,
     testthat,
     nlme
 SystemRequirements: Java (>= 5.0)

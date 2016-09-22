@@ -106,7 +106,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -145,7 +145,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments and additive carry-overs
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt,Xmat.car)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -211,7 +211,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments and the two types of carry-over
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt,Xmat.car.1,Xmat.car.2)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -266,7 +266,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments 
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -308,7 +308,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments and no carry-over into self
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt,Xmat.car)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -358,7 +358,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments and no carry-over into self
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt,Xmat.car)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -408,7 +408,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments and no carry-over into self
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt,Xmat.car)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -467,7 +467,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments and interaction
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt,Xmat.car,Xmat.int)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -515,7 +515,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     ## model with mean, subjects, periods, treatments and additive carry-overs
     Xmat<-cbind(Xmat.mean,Xmat.subj,Xmat.per,Xmat.trt,Xmat.car.1,Xmat.car.2)
     XtX<-t(Xmat)%*%Xmat
-    XtX.inv<-ginv(XtX)
+    XtX.inv<-MASS::ginv(XtX)
     ## pairwise comparisons
     ## treatments
     Var.trt<-XtX.inv[(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt),(1+n.subj+n.per+1):(1+n.subj+n.per+n.trt)]
@@ -595,3 +595,5 @@ test.ge <- function() {
     }
   }
 }
+
+test.ge()

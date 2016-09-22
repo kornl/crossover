@@ -18,3 +18,4 @@ test.simulation <- function() {
     
 }
 
+test.simulation()

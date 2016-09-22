@@ -12,19 +12,21 @@ test.design.functions <- function () {
   Xr <- rcdMatrix(rcDesign, v, model=1)
   # JRW, p 2650, second equation on that page, number 11
   Ar2 <- t(Xr) %*% (diag(s*p)-getPZ(s,p)) %*% Xr
-  checkTrue(max(abs(Ar-Ar2))<0.00001)
+  expect_true(max(abs(Ar-Ar2))<0.00001)
   
   Csub <- contrMat(n=rep(1, v), type="Tukey")
   class(Csub) <- "matrix" #TODO Package matrix can be improved here (IMO)!
   C <- as.matrix(bdiag(Csub,Csub))
   H <- linkMatrix(model=1, v)
-  var1 <- sum(diag(C %*% ginv(t(H) %*% Ar %*% H) %*% t(C)))
+  var1 <- sum(diag(C %*% MASS::ginv(t(H) %*% Ar %*% H) %*% t(C)))
   
   gco <- general.carryover(design, model=1)
   var2 <- sum(gco$Var.trt.pair[lower.tri(gco$Var.trt.pair)]) + sum(gco$Var.car.pair[lower.tri(gco$Var.car.pair)])
   
-  # checkTrue(abs(var1-var2)<0.00001) This is often not true due to the fact that s*p are not much bigger than v.
+  # expect_true(abs(var1-var2)<0.00001) This is often not true due to the fact that s*p are not much bigger than v.
 }
+
+test.design.functions()
 
 test.brute.force.compare.approaches <- function() {
   if (!"extended" %in% strsplit(Sys.getenv("CROSSOVER_UNIT_TESTS"),",")[[1]]) {
@@ -54,6 +56,8 @@ test.brute.force.compare.approaches <- function() {
   }  
 }
 
+test.brute.force.compare.approaches()
+
 test.strangeDesignInputs <- function() {
   s <- 4 # number of sequences
   p <- 4 # number of periods
@@ -66,12 +70,16 @@ test.strangeDesignInputs <- function() {
   
   D <- matrix(as.numeric(as.factor(D)), dim(D)[1])  
   
-  myInv <- ginv(rcd(D, v, model=1))
+  myInv <- MASS::ginv(rcd(D, v, model=1))
   
 }
 
+test.strangeDesignInputs()
+
 test.getEff <- function() {
-  checkTrue(all(abs(getEff(getDesign("pidgeon1"))-c(0.712893817102914, 0.712893817102914, 0.715489015631601, 0.712893817102914, 
+  expect_true(all(abs(getEff(getDesign("pidgeon1"))-c(0.712893817102914, 0.712893817102914, 0.715489015631601, 0.712893817102914, 
                                                     0.712893817102914, 0.87962962962963, 0.106076388888889, 0.201785483035483, 
                                                     0.87962962962963))<0.00001))
 }
+
+test.getEff()
