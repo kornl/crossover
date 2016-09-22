@@ -1,7 +1,7 @@
 useDynLib(Crossover)
 
 importFrom("stats", "runif") 
-importFrom("utils", "capture.output", "write.table", "packageVersion")
+importFrom("utils", "capture.output", "write.table", "packageVersion", "installed.packages")
 importFrom("stats", "complete.cases")
 importFrom(stats4, plot)
 import(methods)
