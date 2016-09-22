@@ -14,6 +14,6 @@ LaTeX: pdfLaTeX
 
 BuildType: Package
 PackagePath: pkg/Crossover
-PackageInstallArgs: --with-keep.source
+PackageInstallArgs: --with-keep.source --install-tests
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd
