@@ -1,3 +1,10 @@
+Changes in version 0.1-16 (23-10-2016)
+======================================
+
+- Using testthat instead of RUnit and now compatible with byte-code compiler.
+
+- Warnings regarding missing JRI.jar and use of the GUI inside of RStudio.
+
 Changes in version 0.1-15 (29-07-2015)
 ======================================
 
