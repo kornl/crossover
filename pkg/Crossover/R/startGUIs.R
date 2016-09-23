@@ -20,6 +20,27 @@
 #' 
 #' @export CrossoverGUI
 CrossoverGUI <- function() {
+  if (!"jri.jar" %in% tolower(sapply(.jclassPath(), function(x) {substring(x, first=nchar(x)-6)}))) {
+    warning(paste(c("JRI.jar seems to be missing from the classpath.",
+                    "The graphical user interface will most likely not be available.",
+                    "Compile R with shared library enabled (--enable-R-shlib option)",
+                    "and reinstall rJava to use JRI functionality."), sep=" \n"))
+  }
+  
+  if ("tools:rstudio" %in% search()) {
+    if (interactive()) {
+      cat("Starting the graphical user interface from within RStudio may crash. \nPlease use R without RStudio for the GUI (all the other command line functions are fine).")
+      line <- "?"
+      while (!(tolower(line) %in% c("y","n") )) {
+        line <- readline("Do you want to start the GUI nevertheless? (y/n) ")
+      }
+      if (tolower(line)=="n") {
+        return(invisible(NULL))
+      }
+    } else {
+      warning("Starting the graphical user interface from within RStudio may crash. \nPlease use R without RStudio for the GUI (all the other command line functions are fine).")
+    }
+  }
 	invisible(.jnew("org/mutoss/gui/CrossoverGUI"))	
 }
 
