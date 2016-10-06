@@ -64,14 +64,13 @@ public class RControl {
 		try {
 			rcs = new RCallServicesREngineWrapper(new JRIEngine(rengine));
 			if (System.getProperty("eclipse") != null) {	
-				rcs.eval("require(Crossover)");
-				rcs.eval("require(JavaGD)");
+				rcs.eval("require(Crossover)");				
 				rcs.eval("warnings()"); /* Otherwise the first error will also show: 
 					In addition: Warning message:
 					In .jinit(parameters = "-Xrs") :
-					Cannot set VM parameters, because VM is running already.*/
- 
+					Cannot set VM parameters, because VM is running already.*/ 
 			}
+			rcs.eval("require(JavaGD)");
 		} catch (REngineException e) {
 			ErrorHandler.getInstance().makeErrDialog("Error creating RCallServicesREngine!", e);
 		}
