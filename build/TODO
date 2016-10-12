@@ -2,6 +2,27 @@ check for placebos not an integer in jtfParam!
 
 ===
 
+How can I do something like this?
+
+installing via 'install.libs.R' to /home/kornel/R/lib/R/library/stringi
+downloading ICU data library (icudt)
+the files will be extracted to: /home/kornel/R/lib/R/library/stringi/libs
+no icudt in a local repo
+versuche URL 'http://static.rexamine.com/packages/icudt55l.zip'
+Content type 'application/zip' length 10176327 bytes (9.7 MB)
+==================================================
+downloaded 9.7 MB
+
+or
+
+configure: Need to download and build NLopt
+trying URL 'http://ab-initio.mit.edu/nlopt/nlopt-2.4.2.tar.gz'
+Content type 'application/x-gzip' length 2361992 bytes (2.3 MB)
+==================================================
+downloaded 2.3 MB
+
+===
+
 searchCrossOverDesign(s=10, p=3, v=4, model="Full set of interactions", eff.factor=c(1,1,1), contrast="Tukey", balance.s=FALSE, balance.p=FALSE, random.subject=FALSE, n=c(2000,20), verbose=FALSE)
 
 creates design, where carry-over effects are not estimable.
