@@ -1,4 +1,4 @@
-useDynLib(Crossover)
+useDynLib(Crossover, .registration = TRUE)
 
 importFrom("stats", "runif") 
 importFrom("utils", "capture.output", "write.table", "packageVersion", "installed.packages")
