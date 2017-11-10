@@ -10,10 +10,8 @@ test.r.vs.c <- function () {
       rcDesign_R <- rcd_R(design, v, model=model)
       expect_true(max(abs(rcDesign-rcDesign_R))<0.00001)
       
-      options(warn=2)
-      expect_error(rcdMatrix(design, v, model=model))
-      expect_error(rcdMatrix_R(design, v, model=model))
-      options(warn=1)
+      expect_warning(rcdMatrix(design, v, model=model))
+      expect_warning(rcdMatrix_R(design, v, model=model))
       
       rcDesignMat <- rcdMatrix(rcDesign, v, model=model)
       rcDesignMat_R <- rcdMatrix_R(rcDesign, v, model=model)
@@ -36,4 +34,6 @@ test.r.vs.c <- function () {
   }
 }
 
-test.r.vs.c()
+test_that("R and C calculations give the same result", {
+  test.r.vs.c()
+})
