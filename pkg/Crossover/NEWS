@@ -3,6 +3,8 @@ Changes in version 0.1-17 (11-11-2017)
 
 - Native routine registration.
 
+- No warnings with testthat 2.0.0.
+
 Changes in version 0.1-16 (23-10-2016)
 ======================================
 
