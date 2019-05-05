@@ -6,9 +6,9 @@
 \usage{
 searchCrossOverDesign(s, p, v, model = "Standard additive model",
   eff.factor = 1, v.rep, balance.s = FALSE, balance.p = FALSE,
-  verbose = 0, model.param = list(), n = c(5000, 20), jumps = c(5, 50),
-  start.designs, random.subject = FALSE, contrast, correlation = NULL,
-  rho = 0)
+  verbose = 0, model.param = list(), n = c(5000, 20), jumps = c(5,
+  50), start.designs, random.subject = FALSE, contrast,
+  correlation = NULL, rho = 0)
 }
 \arguments{
 \item{s}{Number of sequences.}
@@ -96,13 +96,12 @@ plot(result)
 
 
 }
-\author{
-Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
-}
 \references{
 John, J. A., Russell, K. G., & Whitaker, D. (2004). CrossOver:
 an algorithm for the construction of efficient cross-over designs.
 Statistics in medicine, 23(17), 2645-2658.
 }
+\author{
+Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
+}
 \keyword{misc}
-

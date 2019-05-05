@@ -2,10 +2,10 @@
 % Please edit documentation in R/crossoverS4.R
 \docType{class}
 \name{CrossoverDesign-class}
-\alias{CrossoverDesign}
 \alias{CrossoverDesign-class}
-\alias{print,CrossoverDesign-method}
+\alias{CrossoverDesign}
 \alias{show,CrossoverDesign-method}
+\alias{print,CrossoverDesign-method}
 \title{Class CrossoverDesign}
 \description{
 A S4 class for Crossover designs: CrossoverDesign
@@ -22,6 +22,7 @@ description of design or reference. }
 \item{list("attr")}{ List with attributes. }
 \item{list("misc")}{ List with miscellaneous stuff - not used yet. } }
 }
+
 \examples{
 
 
@@ -40,4 +41,3 @@ new("CrossoverDesign", design)
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
 \keyword{graphs}
-

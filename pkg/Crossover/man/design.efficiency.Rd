@@ -46,12 +46,11 @@ design.efficiency(getDesign("fletcher1"), model=7)
 design.efficiency(getDesign("switchback4t"), model=7)
 
 }
-\author{
-Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
-}
 \references{
 Jones, B., & Kenward, M. G. (2003). Design and analysis of
 cross-over trials (Vol. 98). Chapman & Hall.
 }
+\author{
+Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
+}
 \keyword{misc}
-

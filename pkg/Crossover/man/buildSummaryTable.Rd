@@ -26,11 +26,10 @@ See also the documentation for the data files.
   buildSummaryTable()
 
 }
-\author{
-Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
-}
 \references{
 See the documentation for the data files.
 }
+\author{
+Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
+}
 \keyword{misc}
-

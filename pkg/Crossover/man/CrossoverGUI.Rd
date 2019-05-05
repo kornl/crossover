@@ -31,4 +31,3 @@ CrossoverGUI()
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
 \keyword{misc}
-

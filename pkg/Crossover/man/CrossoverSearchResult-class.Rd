@@ -2,10 +2,10 @@
 % Please edit documentation in R/crossoverS4.R
 \docType{class}
 \name{CrossoverSearchResult-class}
-\alias{CrossoverSearchResult}
 \alias{CrossoverSearchResult-class}
-\alias{print,CrossoverSearchResult-method}
+\alias{CrossoverSearchResult}
 \alias{show,CrossoverSearchResult-method}
+\alias{print,CrossoverSearchResult-method}
 \title{Class CrossoverSearchResult}
 \description{
 A S4 class for the search result for Crossover designs:
@@ -26,6 +26,7 @@ algorithm. TODO: Explain further.}
 algorithm was searching.}
 \item{list("misc")}{List - in the moment not used.}}
 }
+
 \examples{
 
 # n=c(100,10) is very small, but it's just an example and should not take much time
@@ -36,4 +37,3 @@ print(x)
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
-

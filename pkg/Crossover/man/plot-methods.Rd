@@ -49,4 +49,3 @@ plot(x, type=2)
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
-

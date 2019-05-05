@@ -23,4 +23,3 @@ Crossover:::getModelNr("Self-adjacency model")==Crossover:::getModelNr(2)
 "Self-adjacency model"==Crossover:::getModelNr(2, type="character")
 Crossover:::getModelNr("Self-adjacency model")==2
 }
-

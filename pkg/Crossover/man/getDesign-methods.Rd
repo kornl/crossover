@@ -4,8 +4,8 @@
 \name{getDesign}
 \alias{getDesign}
 \alias{getDesign,CrossoverSearchResult-method}
-\alias{getDesign,character-method}
 \alias{getDesign,matrix-method}
+\alias{getDesign,character-method}
 \title{Extract Design from a CrossoverSearchResult}
 \usage{
 \S4method{getDesign}{CrossoverSearchResult}(object, ...)
@@ -34,4 +34,3 @@ getDesign("williams4t")
 \author{
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
-

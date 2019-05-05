@@ -26,4 +26,3 @@ canonicalOrder(getDesign("switchback5t"))
 Kornelius Rohmeyer \email{rohmeyer@small-projects.de}
 }
 \keyword{misc}
-

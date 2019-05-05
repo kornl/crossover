@@ -25,4 +25,3 @@ Create a row column design
 \seealso{
 \code{\link{rcdMatrix}} gives the row-column design matrix.
 }
-

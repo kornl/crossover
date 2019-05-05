@@ -25,4 +25,3 @@ Create the design matrix for a given row column design
 \seealso{
 \code{\link{rcd}} gives the row-column design to a given crossover design.
 }
-
