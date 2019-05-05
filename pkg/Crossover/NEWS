@@ -1,3 +1,9 @@
+Changes in version 0.1-18 (05-05-2019)
+======================================
+
+- Fixing 'ignoring return value of function declared with warn_unused_result attribute' 
+  warning for CRAN.
+
 Changes in version 0.1-17 (11-11-2017)
 ======================================
 
