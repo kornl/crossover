@@ -28,7 +28,7 @@
 #' general.carryover.old(getDesign("fletcher1"), model=1)
 #' 
 general.carryover.old <- function(design, model, t0=1, rho=0.5){  
-  if (class(design)=="CrossoverSearchResult") {
+  if ("CrossoverSearchResult" %in% class(design)) {
     if(missing(model)) {
       model <- design@model
     } else {
@@ -36,7 +36,7 @@ general.carryover.old <- function(design, model, t0=1, rho=0.5){
     }
     design <- design@design      
   }
-  if (class(design)=="CrossoverDesign") {
+  if ("CrossoverDesign"  %in% class(design)) {
     if(missing(model)) {
       model <- design@model
     } else {

@@ -31,7 +31,7 @@
 #' 
 #' @export general.carryover
 general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, placebos=1, contrasts) {    
-  if (class(design)=="CrossoverSearchResult") {
+  if ("CrossoverSearchResult" %in% class(design)) {
     if(missing(model)) {
       model <- design@model
     } else {
@@ -39,7 +39,7 @@ general.carryover <-function(design, v=length(table(design)), model, ppp=0.5, pl
     }
     design <- design@design      
   }
-  if (class(design)=="CrossoverDesign") {
+  if ("CrossoverDesign" %in% class(design)) {
     if(missing(model)) {
       model <- design@model
     } else {

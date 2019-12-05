@@ -1,7 +1,7 @@
 Package: Crossover
 Type: Package
 Title: Analysis and Search of Crossover Designs
-Version: 0.1-18
+Version: 0.1-19
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
 Description: Package Crossover provides different crossover designs from
@@ -12,7 +12,8 @@ Depends:
     rJava (>= 0.8-3),
     CommonJavaJars (>= 1.0.5),
     JavaGD,
-    ggplot2
+    ggplot2,
+    Rcpp (>= 0.10.3)
 Imports:
     MASS,
     crossdes (>= 1.1-1),
