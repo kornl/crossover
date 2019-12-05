@@ -1,4 +1,4 @@
-useDynLib(Crossover, .registration = TRUE)
+RuseDynLib(Crossover, .registration = TRUE)
 
 importFrom("stats", "runif") 
 importFrom("utils", "capture.output", "write.table", "packageVersion", "installed.packages")
@@ -16,6 +16,7 @@ importFrom(Matrix, bdiag)
 importFrom(Matrix, triu)
 importFrom(crossdes, allcombs, des.MOLS, balmin.RMD, find.BIB, williams, williams.BIB)
 importFrom(xtable, xtable)
+importFrom(Rcpp, sourceCpp)
 
 export(CrossoverGUI)
 export(design.efficiency)
