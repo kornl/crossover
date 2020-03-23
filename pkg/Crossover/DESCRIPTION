@@ -9,9 +9,6 @@ Description: Package Crossover provides different crossover designs from
     access them.
 Depends:
     R (>= 3.0.2),
-    rJava (>= 0.8-3),
-    CommonJavaJars (>= 1.0.5),
-    JavaGD,
     ggplot2,
     Rcpp (>= 0.10.3)
 Imports:
@@ -20,6 +17,9 @@ Imports:
     xtable,
     methods,
     Matrix,
+    rJava (>= 0.8-3),
+    CommonJavaJars (>= 1.0.5),
+    JavaGD,
     multcomp,
     stats4,
     digest
