@@ -234,6 +234,9 @@ setMethod("getDesign", c("matrix"),
 
 setMethod("getDesign", c("character"),
           function(object, ...) {    	
+            if (!exists(".summary_table", envir=Crossover.env)) {
+              assign(".summary_table",  buildSummaryTable(), envir=Crossover.env)
+            }
             design <- get(object, envir=Crossover.env)            
             rownames(design) <- paste("p", 1:dim(design)[1], sep="")
             colnames(design) <- paste("s", 1:dim(design)[2], sep="")

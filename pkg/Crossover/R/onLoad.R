@@ -39,8 +39,6 @@
 	    }		
 	  }
 	}
-	
-	assign(".summary_table",  buildSummaryTable(), envir=Crossover.env)
 }  
 
 .onAttach <- function(libname, pkgname) {

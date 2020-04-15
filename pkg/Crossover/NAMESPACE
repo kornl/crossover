@@ -17,6 +17,7 @@ importFrom(Matrix, triu)
 importFrom(crossdes, allcombs, des.MOLS, balmin.RMD, find.BIB, williams, williams.BIB)
 importFrom(xtable, xtable)
 importFrom(Rcpp, sourceCpp)
+importFrom(RcppArmadillo, armadillo_version)
 
 export(CrossoverGUI)
 export(design.efficiency)

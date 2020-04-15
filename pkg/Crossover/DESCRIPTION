@@ -19,19 +19,19 @@ Imports:
     rJava (>= 0.8-3),
     CommonJavaJars (>= 1.0.5),
     Rcpp (>= 0.10.3),
+    RcppArmadillo (>= 0.2.0),
     JavaGD,
     multcomp,
     stats4,
     digest
-LinkingTo: 
-    Rcpp, 
-    RcppArmadillo
 Suggests:
     knitr,
     testthat,
     nlme
+LinkingTo: 
+    Rcpp (>= 0.10.3), 
+    RcppArmadillo (>= 0.2.0)
 SystemRequirements: Java (>= 5.0)
-LinkingTo: Rcpp (>= 0.10.3), RcppArmadillo (>= 0.2.0)
 License: GPL-2
 VignetteBuilder: knitr
 URL: https://github.com/kornl/Crossover/wiki

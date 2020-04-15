@@ -72,7 +72,10 @@
 searchCrossOverDesign <- function(s, p, v, model="Standard additive model", eff.factor=1,
                                   v.rep, balance.s=FALSE, balance.p=FALSE, verbose=0, model.param=list(), 
                                   n=c(5000, 20), jumps=c(5, 50), start.designs, random.subject=FALSE, contrast, correlation=NULL, rho=0) {
-  #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
+  if (!exists(".summary_table", envir=Crossover.env)) {
+    assign(".summary_table",  buildSummaryTable(), envir=Crossover.env)
+  }
+    #seed <<- .Random.seed #TODO Do not forget to remove this after testing! :)
   start.time <- proc.time()
   if (length(n)==1) {
     if (missing(start.designs)) { n <- c(n, 20) } else { n <- c(n, length(start.designs)) }
