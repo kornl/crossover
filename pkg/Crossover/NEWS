@@ -6,6 +6,7 @@ Changes in version 0.1-19 (04-01-2021)
 ======================================
 
 - Fixes that class(matrix(...)) gives a vector of length two in R 4.0.0.
+- importFrom("Rcpp", "evalCpp") in NAMESPACE
 
 Changes in version 0.1-18 (05-05-2019)
 ======================================
