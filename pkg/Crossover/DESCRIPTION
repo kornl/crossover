@@ -4,7 +4,7 @@ Title: Analysis and Search of Crossover Designs
 Version: 0.1-20
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
-Description: Crossover designs from combinatorial or search algorithms as well as from literature and a GUI to
+Description: Generate and analyse crossover designs from combinatorial or search algorithms as well as from literature and a GUI to
     access them.
 Depends:
     R (>= 3.0.2),
