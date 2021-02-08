@@ -35,10 +35,7 @@
 \newtheorem{Corollary}[Def]{Corollary}
 \newtheorem{Lemma}[Def]{Lemma}
 
-\newcommand{\C}{\ensuremath{\mathbb{C}}\xspace}
 \newcommand{\R}{\ensuremath{\mathbb{R}}\xspace}
-\newcommand{\Q}{\ensuremath{\mathbb{Q}}\xspace}
-\newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
 \newcommand{\NN}{\ensuremath{\mathbb{N}_0}\xspace}
 \newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
 \newcommand{\sF}{\ensuremath{\mathcal{F}}\xspace}
