@@ -1,7 +1,7 @@
 Package: Crossover
 Type: Package
 Title: Analysis and Search of Crossover Designs
-Version: 0.1-20
+Version: 0.1-21
 Author: Kornelius Rohmeyer
 Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
 Description: Generate and analyse crossover designs from combinatorial or search algorithms as well as from literature and a GUI to
