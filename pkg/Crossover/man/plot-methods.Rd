@@ -6,8 +6,7 @@
 \alias{plot,CrossoverSearchResult,missing-method}
 \title{Plots information about the search algorithm and its process.}
 \usage{
-\S4method{plot}{CrossoverSearchResult,missing}(x, y, type = 1,
-  show.jumps = FALSE)
+\S4method{plot}{CrossoverSearchResult,missing}(x, y, type = 1, show.jumps = FALSE)
 }
 \arguments{
 \item{x}{Result from searchCrossOverDesign.}

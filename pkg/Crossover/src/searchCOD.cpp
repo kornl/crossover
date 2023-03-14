@@ -136,9 +136,7 @@ SEXP searchCOD(SEXP sS, SEXP pS, SEXP vS, SEXP designS, SEXP linkMS, SEXP contra
           eOld = s2/s1;   
           eff[i] = s2/s1;
           bestDesignOfRun = design;
-          char ci[20];
-          sprintf(ci, "%d", i);
-          designsFoundSingleRun[(std::string("step")+ci).c_str()] = bestDesignOfRun;
+          designsFoundSingleRun[(std::string("step")+std::to_string(i)).c_str()] = bestDesignOfRun;
           if (verbose>2) {
             bestDesignOfRun.print(Rcout, "Best design of run:");
             Rprintf("Eff of design is: %f.\n", eOld);
