@@ -6,8 +6,12 @@
 pairwise comparison and the efficicency of each pairwise comparison for a
 cross-over design}
 \usage{
-contrMat2(type, v, model, eff.factor = rep(1,
-  length(parameterCount(model, v))))
+contrMat2(
+  type,
+  v,
+  model,
+  eff.factor = rep(1, length(parameterCount(model, v)))
+)
 }
 \arguments{
 \item{type}{Type of contrast. A character vector containing the following: "Dunnett", "Tukey", "none".

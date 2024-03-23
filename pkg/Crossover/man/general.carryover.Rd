@@ -4,8 +4,14 @@
 \alias{general.carryover}
 \title{Calculate variances of paramater contrasts}
 \usage{
-general.carryover(design, v = length(table(design)), model, ppp = 0.5,
-  placebos = 1, contrasts)
+general.carryover(
+  design,
+  v = length(table(design)),
+  model,
+  ppp = 0.5,
+  placebos = 1,
+  contrasts
+)
 }
 \arguments{
 \item{design}{Cross-over design.}

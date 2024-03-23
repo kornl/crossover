@@ -6,8 +6,12 @@
 pairwise comparison and the efficicency of each pairwise comparison for a
 cross-over design}
 \usage{
-design.efficiency(design, model = 1, model.param = list(),
-  v = length(levels(as.factor(design))))
+design.efficiency(
+  design,
+  model = 1,
+  model.param = list(),
+  v = length(levels(as.factor(design)))
+)
 }
 \arguments{
 \item{design}{Cross-over design.}

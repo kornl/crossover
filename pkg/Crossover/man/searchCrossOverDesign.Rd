@@ -4,11 +4,25 @@
 \alias{searchCrossOverDesign}
 \title{Search for a Cross-Over Design}
 \usage{
-searchCrossOverDesign(s, p, v, model = "Standard additive model",
-  eff.factor = 1, v.rep, balance.s = FALSE, balance.p = FALSE,
-  verbose = 0, model.param = list(), n = c(5000, 20), jumps = c(5,
-  50), start.designs, random.subject = FALSE, contrast,
-  correlation = NULL, rho = 0)
+searchCrossOverDesign(
+  s,
+  p,
+  v,
+  model = "Standard additive model",
+  eff.factor = 1,
+  v.rep,
+  balance.s = FALSE,
+  balance.p = FALSE,
+  verbose = 0,
+  model.param = list(),
+  n = c(5000, 20),
+  jumps = c(5, 50),
+  start.designs,
+  random.subject = FALSE,
+  contrast,
+  correlation = NULL,
+  rho = 0
+)
 }
 \arguments{
 \item{s}{Number of sequences.}

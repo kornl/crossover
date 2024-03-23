@@ -95,7 +95,7 @@ getEff <- function(design, ppp=0.5, placebos=1) {
 
 CrossoverVersion <- function() {
 	x <- try(as.character(packageVersion("Crossover")), silent=TRUE)
-	if (class(x)!="try-error") {
+	if (!is(class(x), "try-error")) {
 		return(x)
 	} else {
 		return("unknown")
