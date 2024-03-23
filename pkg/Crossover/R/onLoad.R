@@ -9,7 +9,7 @@
 	jars <- c("afcommons",
 			"commons-logging", "commons-lang", "jgoodies-common", "forms",  
 			"iText", "jhlir.jar", "jxlayer", 
-			"log4j", "swing-worker")
+			"log4j-1.2-api", "log4j-api", "log4j-core", "swing-worker")
 	
 	loadJars(jars)
 	

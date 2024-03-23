@@ -16,7 +16,7 @@ Imports:
     methods,
     Matrix,
     rJava (>= 0.8-3),
-    CommonJavaJars (>= 1.0.5),
+    CommonJavaJars (>= 1.1.0),
     Rcpp (>= 0.10.3),
     RcppArmadillo (>= 0.2.0),
     JavaGD,
