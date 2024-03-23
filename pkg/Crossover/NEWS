@@ -1,6 +1,10 @@
-Changes in version 0.1-21 (???)
+Changes in version 0.1-22 (14-03-2023)
 ======================================
--
+- Compatibility with log4J 2.
+
+Changes in version 0.1-21 (14-03-2023)
+======================================
+- Fixing use of sprintf.
 
 Changes in version 0.1-20 (08-02-2021)
 ======================================
