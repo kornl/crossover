@@ -35,4 +35,5 @@ License: GPL-2
 VignetteBuilder: knitr
 URL: https://github.com/kornl/Crossover/wiki
 BugReports: https://github.com/kornl/Crossover/issues
+Encoding: UTF-8
 RoxygenNote: 7.2.3
