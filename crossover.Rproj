@@ -15,5 +15,7 @@ LaTeX: pdfLaTeX
 BuildType: Package
 PackagePath: pkg/Crossover
 PackageInstallArgs: --with-keep.source --install-tests
+PackageBuildArgs: --compact-vignettes="gs+qpdf"
+PackageBuildBinaryArgs: --compact-vignettes="gs+qpdf"
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd
